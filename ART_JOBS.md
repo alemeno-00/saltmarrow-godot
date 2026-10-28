@@ -107,6 +107,18 @@ These come first because the first fight is being built next.
   - a block impact (4 frames, 32 × 32)
   - a staff head glowing with each school's colour (Storm, Faith, Mind, Star; 4 frames each, looped, 32 × 32)
   - Grounded Staff: Star backlash crackling down the staff into the floor (6 frames, 64 × 64)
+- [ ] Storm spell effects (`assets/effects/storm/`); see `docs/trees.md`, Storm:
+  - Spark bolt (4 frames, 64 × 32)
+  - Gust cone (6 frames, 96 × 96)
+  - Frost Grip, ice climbing a target's legs (6 frames, 64 × 64), plus a frozen-in-place overlay (looped)
+  - Chain Lightning arcs between targets (6 frames, made to stretch)
+  - ice tiles: water frozen over (4 variations, 32 × 32), plus thawing (4 frames)
+  - Thunderclap ring (6 frames, 96 × 96)
+  - Rime Coat, ice armour over Thomas (looped overlay, 64 × 64)
+  - Tempest storm over a 3×3 area (10 frames, 96 × 96)
+  - electrified water tiles (4 frames, looped, 32 × 32)
+  - a wet sheen overlay for wet characters (looped, 64 × 64)
+  - lightning, cold and burn hurt overlays for any character (4 frames each, 64 × 64)
 - [ ] Stealth reactions for every enemy (start with the Drowned Miner and the Faithful):
   - slumping unconscious (5 frames)
   - lying unconscious (2, looped)

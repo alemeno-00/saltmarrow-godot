@@ -164,3 +164,42 @@ How it plays:
 - Hold at Bay and Sweep keep enemies off you; Block and Vault get you out of trouble.
 - Channel, Spellstrike and Conduit make every spell hit harder.
 - Grounded Staff makes the staff the careful way to touch the Star.
+
+## Rules for all spells
+
+- **Each school gives a free basic spell** once learned, like a weapon's basic attack.
+- Bigger spells cost **Resolve**, use the **main action**, and need **one free hand** and **line of sight**.
+- Rolls are 2d10 + the school's stat, with three tiers and body-part injury chances, the same as weapons.
+- **The environment matters.** Water, darkness, armour and the enemy's nature change what a spell does.
+- **Friendly fire is on.** Areas, chains and electrified water hit Thomas too if he's inside them.
+- Storm, Faith and Mind are safe. Only the Star risks Phenomena.
+
+## Storm (Reason)
+
+Themes: **lightning, wind and cold**. Area damage, pushing, freezing, and using the water in the mines.
+
+- **Wet:** anyone standing in water. The Drowned are always wet. Lightning does more to wet targets and jumps between them.
+- **Ice:** frozen water. Anyone moving onto it rolls or falls prone.
+
+| Node | Type | Cost | Effect (worst / middle / best) | Injury |
+| --- | --- | --- | --- | --- |
+| Spark | basic spell | free | Range 6: 2 / 4 / 6 lightning; +2 against wet targets | |
+| **Row 1** | | | | |
+| 1. Gust | spell | 3 | A cone 3 squares long: 1 / 2 / 4 damage, push 1 / 2 / 3; blows out torches and braziers in the cone | |
+| 2. Static | passive | | Lightning jumps to one extra enemy that is wet or adjacent to the target | |
+| **Row 2** | | | | |
+| 3. Frost Grip | spell | 3 | Range 6: 2 / 4 / 6 cold; slowed / slowed / frozen in place | Leg (frostbite) 0 / 10 / 25% |
+| 4. Chain Lightning | spell | 5 | Range 6; one roll for the target and up to 2 more within 2 squares: 3 / 5 / 8 | Torso (burns) 0 / 10 / 20% |
+| 5. Cold Snap | passive | | Cold spells freeze water they touch into ice for 3 rounds | |
+| **Row 3** | | | | |
+| 6. Thunderclap | spell | 5 | Everyone adjacent: 2 / 4 / 6, push 2, dazed on best | |
+| 7. Ride the Wind | passive | | After a Storm spell, step 1 square without giving free strikes | |
+| 8. Rime Coat | maneuver | 3 | Ice armour: the next 2 hits are reduced by 3; melee attackers are slowed | |
+| **Row 4** | | | | |
+| 9. Tempest | spell | 7 | A 3×3 area within 8 squares: 4 / 7 / 10 lightning, push 1 outward. Water in the area stays electrified for 2 rounds | Torso (burns) 10 / 20 / 35% |
+| 10. The Storm's Due | capstone | | Extra Resolve when you push an enemy into something | |
+
+How it plays:
+
+- The map is the weapon: push enemies into water and electrify them, freeze it to trip them, gust them into walls, and blow out their lights.
+- Deadly in the flooded deep against the Drowned; weaker in dry catacombs.
