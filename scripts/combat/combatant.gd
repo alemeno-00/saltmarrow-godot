@@ -15,6 +15,7 @@ var free_strike := 2
 var basic: Dictionary = {}
 var abilities: Array = []
 var big: Dictionary = {}   # a telegraphed attack, if it has one
+var perks: Array[String] = []   # passives learned
 
 var dazed := 0       # rounds left
 var slowed := 0      # rounds left

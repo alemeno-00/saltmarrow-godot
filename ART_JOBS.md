@@ -174,6 +174,9 @@ These come first because the first fight is being built next. **Please do jobs 1
 - [ ] Star Phenomena effects (`assets/effects/star/`): salt frost spreading across floor tiles (6 frames, 32 × 32), lights guttering, a lagging shadow, a salt-water nosebleed on the portrait, and a tear in the air where something comes through (8 frames, 64 × 64).
 - [ ] Telegraph marks: the darkened-square effect under incoming big attacks.
 - [ ] An icon for every weapon, armour piece and consumable (list to follow).
+- [ ] **Skill icons** (`assets/ui/skills/<tree>/<node>.png`, 32 × 32): one for every node in `docs/trees.md`, starting with the ten Maces nodes (`skull_crack.png`, `weight_behind_it.png`, `knee_breaker.png`, `shatter.png`, `bone_deep.png`, `wide_arc.png`, `ringing_blows.png`, `sunder.png`, `execution.png`, `hammers_due.png`), plus `heavy_blow.png`. They go on the ability bar and the skill tree screen.
+- [ ] Level-up and mastery-point moments: a short glow rising off Thomas (8 frames, 64 × 64).
+- [ ] Skill tree screen frame (`assets/ui/skill_tree/`): a panel background, node frames in four states (learned, can learn, locked, not yet in the game), and the link lines.
 - [ ] The cast of Saltmarrow: a portrait and a map sprite for each person in `docs/characters.md`.
 - [ ] Tiles for the Forgotten Catacombs, the Blooming Deep and the under-sea tunnels.
 - [ ] The Saltmarrow town hub.

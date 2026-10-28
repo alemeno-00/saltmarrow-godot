@@ -80,6 +80,8 @@ func _initialize() -> void:
 			break
 		# best ability we can use
 		for i in [4, 3, 1, 2, 0]:
+			if i >= h.abilities.size():
+				continue
 			var ab: Dictionary = h.abilities[i]
 			if i == 3 and b.valid_targets(h, ab).size() < 2:
 				continue
@@ -102,6 +104,11 @@ func _initialize() -> void:
 				await _shot("3_telegraph")
 	await _frames(30)
 	await _shot("4_after")
+	game.progress.mastery["maces"] = 2
+	game._toggle_tree()
+	await _frames(3)
+	game.tree_screen._on_hover("knee_breaker")
+	await _shot("5_tree")
 	for l in game.combat_hud.history:
 		print("  ", l)
 	print("fight over after %d turns: winner=%s, Thomas stamina %d, dead=%s" % [turns, game.battle.winner if game.battle else "?", game.hero_unit.stamina, game.dead])

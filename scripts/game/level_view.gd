@@ -37,6 +37,10 @@ func _draw() -> void:
 					draw_rect(r, Color(0.27, 0.25, 0.23))
 					draw_rect(r.grow(-4), Color(0.36, 0.24, 0.14))
 					draw_rect(Rect2(r.position.x + 20, r.position.y + 15, 3, 3), Color(0.8, 0.7, 0.4))
+				Level.Tile.STAIRS:
+					draw_rect(r, Color(0.27, 0.25, 0.23))
+					for i in 4:
+						draw_rect(Rect2(r.position.x + 3, r.position.y + 4 + i * 6, TILE - 6 - i * 4, 4), Color(0.12, 0.11, 0.1).lerp(Color(0.02, 0.02, 0.03), i / 3.0))
 				Level.Tile.DOOR_OPEN:
 					draw_rect(r, Color(0.27, 0.25, 0.23))
 					draw_rect(Rect2(r.position.x + 2, r.position.y + 2, 6, TILE - 4), Color(0.3, 0.2, 0.12))

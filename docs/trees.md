@@ -17,6 +17,12 @@ Every tree follows the same pattern:
   - A **spell school** opens only from its tome.
   - **Reading a manual or tome gives one free point** in that tree.
 - **Tuning target:** your main weapon reaches its capstone around the middle of a good run; a second weapon gets about halfway; a third barely starts. This encourages one main weapon and a backup.
+- **Numbers in the game now:**
+  - Experience: 1 per minion, 4 per standard enemy. Level 2 at 5, then 15, 30, 50 (5 × level × (level + 1) / 2).
+  - Each level: +1 level point and +3 Stamina; a stat point every third level.
+  - Mastery: a mace point every 8 landed hits.
+- **The Fury starts with** Skull Crack and Weight Behind It. (Other backstories come later.)
+- Shatter and Sunder wait for armour and items.
 - Each node costs 1 point. Take a node by owning one connected to it in the row above, so a capstone takes at least 4 points.
 - Points stay spent for the rest of a life; death resets everything.
 - **Anyone can use any weapon.** The basic attack needs no points. Weapon abilities and passives need that weapon in hand.

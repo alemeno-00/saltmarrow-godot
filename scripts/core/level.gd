@@ -3,7 +3,7 @@ extends RefCounted
 ## One level's tiles and the rules for walking them.
 ## Pure data with no drawing, so it can be tested headless and saved as it is.
 
-enum Tile { WALL, FLOOR, DOOR_CLOSED, DOOR_OPEN, WATER }
+enum Tile { WALL, FLOOR, DOOR_CLOSED, DOOR_OPEN, WATER, STAIRS }
 
 const DIRS_8: Array[Vector2i] = [
 	Vector2i(0, -1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1),
@@ -16,6 +16,7 @@ var tiles: PackedByteArray
 var seed_value: int = 0
 var rooms: Array[Rect2i] = []
 var start: Vector2i = Vector2i.ZERO
+var stairs: Vector2i = Vector2i(-1, -1)
 
 var _astar := AStarGrid2D.new()
 
@@ -49,7 +50,7 @@ func set_tile(c: Vector2i, t: int) -> void:
 
 
 static func _passable(t: int) -> bool:
-	return t == Tile.FLOOR or t == Tile.DOOR_CLOSED or t == Tile.DOOR_OPEN or t == Tile.WATER
+	return t == Tile.FLOOR or t == Tile.DOOR_CLOSED or t == Tile.DOOR_OPEN or t == Tile.WATER or t == Tile.STAIRS
 
 
 func is_walkable(c: Vector2i) -> bool:
@@ -157,6 +158,11 @@ func generate(seed_in: int) -> void:
 					tiles[idx(Vector2i(x, y))] = Tile.WATER
 	start = rooms[0].get_center() if rooms.size() > 0 else Vector2i(1, 1)
 	tiles[idx(start)] = Tile.FLOOR
+	# stairs down in the far corner of the last room
+	if rooms.size() > 1:
+		var last := rooms[rooms.size() - 1]
+		stairs = last.end - Vector2i(2, 2)
+		tiles[idx(stairs)] = Tile.STAIRS
 	rebuild_paths()
 
 

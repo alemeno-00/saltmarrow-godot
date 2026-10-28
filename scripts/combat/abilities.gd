@@ -5,29 +5,50 @@ extends RefCounted
 
 static func _ab(id: String, name: String, cost: int, target: String, tiers: Array, part := "", injury := [0, 0, 0], needs := []) -> Dictionary:
 	return {"id": id, "name": name, "cost": cost, "action": "main", "target": target, "range": 1,
-		"tiers": tiers, "injury_part": part, "injury": injury, "needs": needs}
+		"tiers": tiers, "injury_part": part, "injury": injury, "needs": needs, "weapon": ""}
+
+
+static func _mace(ab: Dictionary) -> Dictionary:
+	ab.weapon = "mace"
+	return ab
+
+
+## Look up one of Thomas's abilities by id.
+static func by_id(id: String) -> Dictionary:
+	match id:
+		"heavy_blow":
+			return heavy_blow()
+		"skull_crack":
+			return skull_crack()
+		"knee_breaker":
+			return knee_breaker()
+		"wide_arc":
+			return wide_arc()
+		"execution":
+			return execution()
+	return {}
 
 
 # Thomas, maces
 
 static func heavy_blow() -> Dictionary:
-	return _ab("heavy_blow", "Heavy Blow", 0, "enemy", [{"dmg": 2}, {"dmg": 5}, {"dmg": 7, "push": 1}], "torso", [0, 0, 10])
+	return _mace(_ab("heavy_blow", "Heavy Blow", 0, "enemy", [{"dmg": 2}, {"dmg": 5}, {"dmg": 7, "push": 1}], "torso", [0, 0, 10]))
 
 
 static func skull_crack() -> Dictionary:
-	return _ab("skull_crack", "Skull Crack", 3, "enemy", [{"dmg": 3}, {"dmg": 5, "dazed": 1}, {"dmg": 8, "dazed": 1}], "head", [0, 15, 40])
+	return _mace(_ab("skull_crack", "Skull Crack", 3, "enemy", [{"dmg": 3}, {"dmg": 5, "dazed": 1}, {"dmg": 8, "dazed": 1}], "head", [0, 15, 40]))
 
 
 static func knee_breaker() -> Dictionary:
-	return _ab("knee_breaker", "Knee Breaker", 3, "enemy", [{"dmg": 3, "slowed": 2}, {"dmg": 5, "slowed": 2}, {"dmg": 7, "prone": true}], "leg", [10, 30, 60])
+	return _mace(_ab("knee_breaker", "Knee Breaker", 3, "enemy", [{"dmg": 3, "slowed": 2}, {"dmg": 5, "slowed": 2}, {"dmg": 7, "prone": true}], "leg", [10, 30, 60]))
 
 
 static func wide_arc() -> Dictionary:
-	return _ab("wide_arc", "Wide Arc", 5, "adjacent_all", [{"dmg": 3, "push": 1}, {"dmg": 5, "push": 2}, {"dmg": 7, "push": 3}], "arm", [0, 10, 20])
+	return _mace(_ab("wide_arc", "Wide Arc", 5, "adjacent_all", [{"dmg": 3, "push": 1}, {"dmg": 5, "push": 2}, {"dmg": 7, "push": 3}], "arm", [0, 10, 20]))
 
 
 static func execution() -> Dictionary:
-	return _ab("execution", "Execution", 7, "enemy", [{"dmg": 6}, {"dmg": 10}, {"dmg": 15, "crush": true}], "head", [30, 60, 100], ["dazed", "prone", "dying"])
+	return _mace(_ab("execution", "Execution", 7, "enemy", [{"dmg": 6}, {"dmg": 10}, {"dmg": 15, "crush": true}], "head", [30, 60, 100], ["dazed", "prone", "dying"]))
 
 
 # Enemies

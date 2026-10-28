@@ -8,6 +8,8 @@ extends Node2D
 ## Fighting (Draw Steel turns): click a lit square to move, click an enemy next to you to strike,
 ## 1-5 for abilities, F (or Shift-click) for a careful step that draws no free strikes, Q to stand, B to catch your breath, Enter to end the turn. R starts a new level.
 ##
+## K opens the skill tree. Stairs lead deeper; Thomas keeps everything he has learned. R starts a new life.
+##
 ## Outside a fight, enemies that are hunting or searching move one square each time Thomas takes a turn.
 ## An enemy that ran away comes back after a while, with friends.
 
@@ -36,6 +38,9 @@ var selected := -1       # the ability chosen, waiting for a target
 var stepping := false    # F pressed: the next click is a careful step
 var reach := {}          # squares Thomas can move to this turn
 var dead := false
+var progress: Progress
+var depth := 1
+var tree_screen: TreeScreen
 var returning: Array = []   # [Combatant, turns left] for enemies that ran and will come back
 
 var _hold_dir := Vector2i.ZERO
@@ -73,16 +78,33 @@ func _ready() -> void:
 	combat_hud.breath_pressed.connect(func(): _act(battle.hero_catch_breath()) if _can_act() else null)
 	combat_hud.end_turn_pressed.connect(_end_hero_turn)
 	combat_hud.step_pressed.connect(_toggle_step)
+	var layer := CanvasLayer.new()
+	layer.layer = 5
+	add_child(layer)
+	tree_screen = TreeScreen.new()
+	layer.add_child(tree_screen)
+	tree_screen.changed.connect(_apply_progress)
 	new_level(level_seed)
 
 
-func new_level(seed_in: int) -> void:
+## A fresh level. With `keep`, Thomas goes on down with everything he has; without it, a new life.
+func new_level(seed_in: int, keep := false) -> void:
 	Engine.time_scale = 1.0
 	level = Level.new(60, 40)
 	level.generate(seed_in)
 	view.show_level(level)
 	hero.place(level.start)
-	hero_unit = Bestiary.thomas()
+	if keep and hero_unit != null and not dead:
+		depth += 1
+		hero_unit.prone = false
+		hero_unit.dazed = 0
+		hero_unit.slowed = 0
+		hero_unit.resolve = 0
+		hero_unit.telegraph.clear()
+	else:
+		depth = 1
+		progress = Progress.fury()
+		hero_unit = Bestiary.thomas(progress)
 	hero_unit.cell = level.start
 	hero.sync(hero_unit)
 	gore.clear_all()
@@ -113,20 +135,36 @@ func clear_enemies() -> void:
 
 
 ## The first fight: a Drowned Miner and three Faithful, waiting a couple of rooms from the start.
+## Groups waiting in every third room, starting two rooms from the start. Deeper levels hold more.
 func _spawn_enemies() -> void:
-	if level.rooms.size() < 2:
-		return
-	var room := level.rooms[mini(2, level.rooms.size() - 1)]
-	var c := room.get_center()
-	_add_enemy(Bestiary.drowned_miner(), c)
-	var placed := 0
-	for d in [Vector2i(-2, 1), Vector2i(2, 1), Vector2i(0, 2), Vector2i(-2, -1), Vector2i(2, -1), Vector2i(1, 2), Vector2i(-1, 2)]:
-		if placed >= 3:
-			break
-		var p: Vector2i = c + d
-		if level.get_tile(p) == Level.Tile.FLOOR and _enemy_at(p) == null:
-			_add_enemy(Bestiary.faithful(), p)
-			placed += 1
+	var group := 0
+	for i in range(2, level.rooms.size(), 3):
+		var c := level.rooms[i].get_center()
+		var miner := group % 2 == 0
+		var want := 3 if miner else 3 + depth
+		if miner:
+			_add_enemy(Bestiary.drowned_miner(), c)
+		var placed := 0
+		for d in [Vector2i(-2, 1), Vector2i(2, 1), Vector2i(0, 2), Vector2i(-2, -1), Vector2i(2, -1), Vector2i(1, 2), Vector2i(-1, 2), Vector2i(0, -2), Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, 0)]:
+			if placed >= want:
+				break
+			var p: Vector2i = c + d
+			if level.get_tile(p) == Level.Tile.FLOOR and _enemy_at(p) == null:
+				_add_enemy(Bestiary.faithful(), p)
+				placed += 1
+		group += 1
+
+
+## After learning something: rebuild Thomas's abilities, passives and stats.
+func _apply_progress() -> void:
+	var ratio := float(hero_unit.stamina) / float(hero_unit.max_stamina)
+	hero_unit.max_stamina = progress.max_stamina()
+	hero_unit.stamina = maxi(hero_unit.stamina, roundi(ratio * hero_unit.max_stamina)) if hero_unit.stamina > 0 else hero_unit.stamina
+	hero_unit.might = int(progress.stats.might)
+	hero_unit.abilities = progress.abilities()
+	hero_unit.perks = progress.perks()
+	combat_hud.set_abilities(hero_unit.abilities)
+	_refresh()
 
 
 func _add_enemy(u: Combatant, c: Vector2i) -> void:
@@ -201,7 +239,15 @@ func try_step(dir: Vector2i) -> bool:
 	hero.move_to(to)
 	hero_unit.cell = to
 	_end_turn()
+	if level.get_tile(to) == Level.Tile.STAIRS and not in_fight():
+		_descend()
 	return true
+
+
+func _descend() -> void:
+	stop_walking()
+	new_level(level.seed_value + 1, true)
+	combat_hud.show_banner("Deeper.   Depth %d" % depth, 2.0)
 
 
 func _open(from: Vector2i, dir: Vector2i) -> bool:
@@ -325,6 +371,13 @@ func _can_act() -> bool:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_K or (event.keycode == KEY_ESCAPE and tree_screen.visible):
+			_toggle_tree()
+			get_viewport().set_input_as_handled()
+			return
+	if tree_screen.visible:
+		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R:
 		new_level(level.seed_value + 1)
 		return
@@ -436,6 +489,14 @@ func _on_ability_key(i: int) -> void:
 		_select(i)
 
 
+func _toggle_tree() -> void:
+	if tree_screen.visible:
+		tree_screen.visible = false
+	else:
+		stop_walking()
+		tree_screen.open(progress, not in_fight() and not dead)
+
+
 func _toggle_step() -> void:
 	if not _can_act():
 		return
@@ -497,6 +558,12 @@ func _play_one(e: Dictionary) -> void:
 			await _wait(0.6)
 		"log":
 			combat_hud.add_log(e.text)
+		"landed":
+			var tree_id: String = {"mace": "maces"}.get(e.weapon, "")
+			var got := progress.add_hit(tree_id)
+			if got == "point":
+				combat_hud.show_banner("A mace mastery point.   K to spend it after the fight.", 1.6)
+				await _wait(0.3)
 		"malice":
 			combat_hud.set_malice(e.value)
 		"malice_spend":
@@ -577,6 +644,12 @@ func _play_one(e: Dictionary) -> void:
 			_shake = 9.0
 			await _hitstop(0.1)
 		"death":
+			if e.unit != hero_unit:
+				var gained := progress.add_xp(1 if e.unit.kind == "minion" else 4)
+				if gained > 0:
+					hero_unit.max_stamina = progress.max_stamina()
+					hero_unit.stamina += 3 * gained
+					combat_hud.show_banner("Level %d.   K to see what you can learn." % progress.level, 1.8)
 			var v: ActorView = views[e.unit]
 			v.sync(e.unit)
 			gore.pool(v.position, 6.0 if e.unit.kind == "minion" else 10.0)
@@ -674,7 +747,8 @@ func _finish(winner: String) -> void:
 # ---------------------------------------------------------------- every frame
 
 func _process(delta: float) -> void:
-	_tick_input(delta)
+	if not tree_screen.visible:
+		_tick_input(delta)
 	_tick_walk(delta)
 	var target: Vector2 = _focus if _focus != null else hero.position
 	cam.position = cam.position.lerp(target, 1.0 - exp(-delta * 12.0))
@@ -769,4 +843,5 @@ func _update_hud() -> void:
 	elif in_fight():
 		hud.text = "Click a lit square to move  ·  click an enemy beside you to strike  ·  1-5 abilities  ·  F careful step  ·  Q stand  ·  B catch breath  ·  Enter end turn  ·  R new level"
 	else:
-		hud.text = "Turn %d  ·  WASD / arrows to move (two keys for diagonals), click to walk, Space to wait, wheel to zoom, R new level" % turn
+		var spend := progress.points_for("maces") + progress.level_points + progress.stat_points
+		hud.text = "Depth %d  ·  Level %d  ·  XP %d / %d  ·  K skills%s  ·  WASD / arrows to move, click to walk, Space to wait, wheel to zoom, R new life" % [depth, progress.level, progress.xp, progress.xp_needed(), " (points to spend!)" if spend > 0 else "", ]

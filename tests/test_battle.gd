@@ -16,7 +16,7 @@ func _room() -> Level:
 
 func _battle(enemies: Array, hero_cell := Vector2i(4, 3)) -> Battle:
 	level = _room()
-	var h := Bestiary.thomas()
+	var h := Bestiary.thomas_full()
 	h.cell = hero_cell
 	var b := Battle.new()
 	b.setup(level, h, enemies, 1)
@@ -294,7 +294,7 @@ func test_badly_hurt_miner_runs_and_escapes() -> void:
 	for x in range(1, 29):
 		level.set_tile(Vector2i(x, 2), Level.Tile.FLOOR)
 	level.rebuild_paths()
-	var h := Bestiary.thomas()
+	var h := Bestiary.thomas_full()
 	h.cell = Vector2i(2, 2)
 	var m := _at(Bestiary.drowned_miner(), Vector2i(4, 2))
 	m.stamina = 5
@@ -318,7 +318,9 @@ func test_losing_them_ends_the_fight() -> void:
 	level.rebuild_paths()
 	b.start(true)
 	b.hero_end_turn()
-	check(b.over and b.winner == "escaped", "with nothing able to see him, Thomas has lost them")
+	check(not b.over, "one round out of sight isn't enough")
+	b.hero_end_turn()
+	check(b.over and b.winner == "escaped", "two in a row, and Thomas has lost them")
 
 
 func test_careful_step_draws_no_free_strike() -> void:

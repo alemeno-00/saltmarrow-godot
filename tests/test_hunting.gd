@@ -43,3 +43,14 @@ func test_hunters_close_in_one_square_a_turn() -> void:
 		eq(game.level.find_path(m.cell, game.hero.grid_pos).size(), d0 - 1, "one square closer")
 	else:
 		check(true, "it closed in and spotted him")
+
+
+func test_stairs_keep_what_thomas_learned() -> void:
+	game.progress.add_xp(5)
+	game.hero_unit.stamina = 10
+	game._descend()
+	eq(game.depth, 2, "depth 2")
+	eq(game.progress.level, 2, "still level 2")
+	eq(game.hero_unit.stamina, 10, "still hurt")
+	game.new_level(99)
+	eq(game.progress.level, 1, "a new life starts again at level 1")

@@ -10,7 +10,7 @@ extends RefCounted
 ## Swarming Hymn (the Faithful surge forward together) and Press the Attack (a standard enemy strikes twice).
 ## Enemies flank: an enemy directly opposite an ally across Thomas attacks with an edge.
 ## A badly hurt standard enemy breaks and runs; if it gets out of sight it escapes, and will come back.
-## If no enemy can see Thomas at the end of their turns, he has lost them and the fight ends.
+## If no enemy can see Thomas at the end of their turns, twice in a row, he has lost them and the fight ends.
 
 const TIER_WORDS := ["weak", "solid", "strong"]
 const SIGHT := 7
@@ -31,6 +31,7 @@ var forced_rolls: Array = []   # queued [d1, d2] pairs, used by tests
 var injuries_on := true
 var malice := 0
 var last_seen := Vector2i.ZERO
+var hidden_rounds := 0   # enemy turns in a row that ended with no one seeing Thomas
 
 var _ev: Array = []
 
@@ -324,7 +325,8 @@ func _enemy_phase() -> void:
 		_end_turn(e)
 	if over:
 		return
-	if _hero_hidden():
+	hidden_rounds = hidden_rounds + 1 if _hero_hidden() else 0
+	if hidden_rounds >= 2:
 		over = true
 		winner = "escaped"
 		_log("Nothing can see Thomas. He has lost them, for now.")
@@ -541,7 +543,7 @@ func _walk(u: Combatant, path: Array) -> void:
 
 
 ## Forced movement straight away from `from`. Hitting a wall or a creature hurts: 1 damage per square left.
-func _push(t: Combatant, from: Vector2i, n: int) -> void:
+func _push(t: Combatant, from: Vector2i, n: int, pusher: Combatant = null) -> void:
 	var dir := Vector2i(signi(t.cell.x - from.x), signi(t.cell.y - from.y))
 	if dir == Vector2i.ZERO or n <= 0:
 		return
@@ -567,9 +569,13 @@ func _push(t: Combatant, from: Vector2i, n: int) -> void:
 			_log("The %s is slammed into the %s." % [t.name, other.name])
 		else:
 			_log("The %s is slammed into the wall." % t.name)
+		if pusher != null and pusher.perks.has("weight_behind_it"):
+			slam += 2
 		_damage(t, slam, false, 1)
 		if other != null:
 			_damage(other, slam, false, 1)
+		if pusher != null:
+			_hammers_due(pusher, "slam")
 
 
 # ---------------------------------------------------------------- attacks and damage
@@ -596,6 +602,8 @@ func _attack(u: Combatant, ab: Dictionary, targets: Array) -> bool:
 		edges -= 1
 	if targets.size() == 1 and targets[0].prone:
 		edges += 1
+	if targets.size() == 1 and targets[0].dazed > 0 and u.perks.has("ringing_blows") and ab.get("weapon", "") == "mace":
+		edges += 1
 	if targets.size() == 1 and u.team != hero.team and _flanks(u, u.cell) and targets[0] == hero:
 		edges += 1
 	var r := _roll(u.might, edges)
@@ -614,8 +622,16 @@ func _attack(u: Combatant, ab: Dictionary, targets: Array) -> bool:
 
 
 func _hit(u: Combatant, t: Combatant, ab: Dictionary, r: Dictionary) -> void:
-	var eff: Dictionary = ab.tiers[r.tier - 1]
+	var eff: Dictionary = (ab.tiers[r.tier - 1] as Dictionary).duplicate()
+	var mace: bool = ab.get("weapon", "") == "mace"
+	if mace and u.perks.has("weight_behind_it"):
+		if ab.id == "heavy_blow" and r.tier == 2:
+			eff.push = 1
+		if int(eff.get("push", 0)) > 0:
+			eff.push = int(eff.push) + 1
 	_emit({"t": "attack", "unit": u, "target": t})
+	if u == hero and ab.get("weapon", "") != "":
+		_emit({"t": "landed", "weapon": ab.weapon})
 	if eff.get("crush", false) and (t.kind == "minion" or t.kind == "standard"):
 		t.crushed = true
 		_emit({"t": "hit", "unit": t, "dmg": maxi(1, t.stamina), "crit": true, "tier": 3})
@@ -636,11 +652,25 @@ func _hit(u: Combatant, t: Combatant, ab: Dictionary, r: Dictionary) -> void:
 		_log("%s goes down." % ("Thomas" if t == hero else "The " + t.name))
 		_cancel_telegraph(t, "knocked down")
 	if int(eff.get("push", 0)) > 0:
-		_push(t, u.cell, int(eff.push))
+		_push(t, u.cell, int(eff.push), u)
 	if injuries_on and ab.injury_part != "" and not t.dead:
 		var chance: int = (ab.injury as Array)[r.tier - 1]
+		if mace and u.perks.has("bone_deep") and chance > 0:
+			chance += 15
 		if chance > 0 and rng.randi_range(1, 100) <= chance:
 			_injure(t, ab.injury_part)
+			if not t.dead and mace and u.perks.has("bone_deep"):
+				t.dazed = maxi(t.dazed, 1)
+			_hammers_due(u, "injury")
+
+
+## Capstone: extra Resolve when Thomas injures an enemy or slams one into something.
+func _hammers_due(u: Combatant, why: String) -> void:
+	if u != hero or not u.perks.has("hammers_due"):
+		return
+	u.resolve += 1
+	_emit({"t": "resolve", "value": u.resolve})
+	_log("The Hammer's Due: +1 Resolve.")
 
 
 func _damage(t: Combatant, dmg: int, crit: bool, tier: int) -> void:

@@ -56,7 +56,7 @@ What has been agreed so far. Claude keeps this file in step with the shared desi
   - **Press the Attack** (5): a standard enemy strikes a second time.
 - **Flanking:** an enemy directly opposite an ally, across Thomas, attacks with an edge.
 - **Breaking:** a standard enemy at 30% Stamina or less runs, once. If it gets out of sight it escapes. About 20 turns later it comes back, partly healed, with two Faithful, hunting Thomas.
-- **Losing them:** if no enemy can see Thomas at the end of their turns, and none is within 2 squares, the fight ends. They go and search where he was last seen.
+- **Losing them:** if no enemy can see Thomas at the end of their turns two rounds in a row, and none is within 2 squares, the fight ends. They go and search where he was last seen.
 
 ## Items
 
