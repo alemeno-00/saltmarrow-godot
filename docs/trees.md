@@ -60,3 +60,35 @@ How the themes connect:
 - Shatter and Sunder strip and punish armour.
 - Weight Behind It and Wide Arc control space.
 - Execution finishes anyone set up.
+
+## Swords (Might or Agility)
+
+The traditional longsword: a **jack of all trades**. One blade can cut (slashing, bleeding), thrust through armour gaps (piercing) or strike with the hilt (crushing, daze). It also has the duellist's parry and riposte. Dual-wielding belongs to Daggers.
+
+**Bleeding:** loses 2 Stamina at the start of each of its turns until treated or shaken off.
+
+**Triggered abilities** are used on an enemy's turn, in response to its attack.
+
+| Node | Type | Cost | Effect (worst / middle / best) | Injury |
+| --- | --- | --- | --- | --- |
+| Cut | basic attack | free | 2 / 5 / 7 slashing; bleeding on best | Torso 0 / 0 / 10% |
+| **Row 1** | | | | |
+| 1. Parry | triggered ability | 2, once per round | When a melee attack hits you, halve the damage | |
+| 2. Opening Cut | ability | 3 | 3 / 5 / 8 slashing; bleeding on middle and best | Torso 0 / 20 / 40% |
+| **Row 2** | | | | |
+| 3. Riposte | passive | | After a Parry, make a free Cut at the attacker | |
+| 4. Half-Sword | ability | 3 | Hand on the blade, thrust into the gaps: 3 / 5 / 7 piercing, **ignoring armour** | Torso 10 / 25 / 50% |
+| 5. Pommel Strike | ability | 3 | 2 / 4 / 6 crushing; dazed on middle and best | Head 0 / 15 / 30% |
+| **Row 3** | | | | |
+| 6. Lunge | ability | 3 | Step 2 squares, then strike: 3 / 6 / 9 piercing | Torso 0 / 10 / 25% |
+| 7. Changing Guard | passive | | A sword ability of a different kind (cut, thrust or hilt) from your last one has an edge | |
+| 8. Flowing Steel | passive | | After a Parry, your next sword ability costs 1 less | |
+| **Row 4** | | | | |
+| 9. Steel Rain | ability | 7 | Three strikes against adjacent enemies, each rolled separately: 3 / 4 / 6. **For each strike, choose** cut (bleeding on best), thrust (ignores armour) or hilt (dazed on best) | Arm 0 / 10 / 20% each |
+| 10. The Duellist's Due | capstone | | Extra Resolve when you parry or riposte | |
+
+How it plays:
+
+- Answer the enemy's swing with Parry and Riposte.
+- Choose the right tool for each enemy: bleed the unarmoured, half-sword the armoured, pommel the dangerous.
+- Changing Guard rewards switching between them.

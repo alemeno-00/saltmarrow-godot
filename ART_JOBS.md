@@ -60,7 +60,19 @@ These come first because the first fight is being built next.
 
 ## Later: Thomas in full
 
-- [ ] Thomas attacks for blades, daggers, flails, spears and staves, each with wind-up, strike, recovery and crit rows as in job 2.
+- [ ] Thomas attacks for longswords, daggers, flails, spears and staves, each with wind-up, strike, recovery and crit rows as in job 2.
+- [ ] **Thomas, longsword abilities** (`assets/characters/thomas/sword_abilities.png`). A plain longsword, held in two hands; see `docs/trees.md`, Swords. Rows:
+  1. Parry (4 frames: blade up, catching the blow)
+  2. Riposte (5)
+  3. Opening Cut (7, a diagonal draw-cut)
+  4. Half-Sword (7, left hand gripping the blade, short hard thrust)
+  5. Pommel Strike (6, reversing the sword to hit with the hilt)
+  6. Lunge (8, two quick steps forward into a thrust)
+  7. Steel Rain (14: three strikes in a row, a cut, a thrust and a hilt blow, so the game can mix them)
+- [ ] Sword effects (`assets/effects/sword/`):
+  - parry spark (4 frames, 32 × 32)
+  - a bleeding drip overlay for any character (6 frames, looped, 32 × 32)
+  - a blood trail left on the floor by bleeding characters (3 variations, 32 × 32)
 - [ ] Thomas casting poses for the Storm, Faith, Mind and Star spell schools.
 - [ ] Weapon swap animations: draw and stow for each weapon type (4 frames each), and pulling something from the bag (6).
 - [ ] Star casting in three strengths: Hushed (faint glow), Open, and Unbound (light pouring out of Thomas, salt crystals forming on him). 6 frames each.

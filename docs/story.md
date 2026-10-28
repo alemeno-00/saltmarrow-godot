@@ -60,7 +60,7 @@ What has been agreed so far. Claude keeps this file in step with the shared desi
 - **Weapon abilities need that weapon in hand.**
 - **Trees open by finding their manual or tome.**
 - **Levels:** 1 tree point per level, and a stat point every few levels. The stats are Might, Agility, Reason, Intuition and Presence.
-- **Weapon trees:** Maces, Swords, Daggers, Flails, Spears, Staves.
+- **Weapon trees:** Maces, Swords (the longsword), Daggers, Flails, Spears, Staves.
 - **Spell schools:**
   - Storm (Reason), Faith (Presence) and Mind (Intuition) are **safe**.
   - Star is the only dangerous school.
