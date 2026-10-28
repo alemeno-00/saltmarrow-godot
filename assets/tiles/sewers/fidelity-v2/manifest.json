@@ -1,0 +1,1356 @@
+{
+  "status": "unapproved visual revision",
+  "grid": 32,
+  "provenance": "New generated families, mechanical nearest-neighbour registration and hard-alpha cleanup; tall walls assembled from generated brick courses without vertically stretching their pixels; not original concept cutouts.",
+  "assets": [
+    {
+      "id": "floor_00",
+      "file": "terrain/floor_00.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "e54c3e4aa8a796bc7ac1cae4785a20a5e5c720332c06df9dd304878871ebea9f",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "floor_01",
+      "file": "terrain/floor_01.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "f91a1ce6667dcc4681b5edf17dd1fac9d9c9edb267aa2950a860c53b25c19f75",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        32,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "floor_02",
+      "file": "terrain/floor_02.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "49d1a02d936852474e624c14861531c0c0eca48b22699c7dc62f98c6d2d86b55",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        64,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "floor_03",
+      "file": "terrain/floor_03.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "2d0874579055901c142ef88406bd8524f058f36ab366c39b2f49bc87f0d796bf",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        96,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "floor_04",
+      "file": "terrain/floor_04.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "e787c67df621d9b97a9f327d1ed38d3cce546c18fa0c673112b1b5bf996ed10b",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        128,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "floor_05",
+      "file": "terrain/floor_05.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "fab0f847811430b52e9527174066d2ed8672f370c238363a954f08c2a449629f",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        160,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "floor_06",
+      "file": "terrain/floor_06.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "1a6f4ebe80317445f0cf46295b512f788af4ea3f71711bb9d35c91b9e5800c39",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        192,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "floor_07",
+      "file": "terrain/floor_07.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "8f23d00a5ca3e7ce65b452c8fc3b6c72d261c97c0b11265e42ec1639782aed6c",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        224,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "floor_08",
+      "file": "terrain/floor_08.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "74f3fb288c18dcd69ce025f94754359e67bef26b0ce46bc36ac99250a9b53cd6",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        256,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "floor_09",
+      "file": "terrain/floor_09.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "9eb8589a231ad3c80444a5a37c190a76c924b4bc67cc26c648253499dd016938",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        288,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "floor_10",
+      "file": "terrain/floor_10.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "aeb9d9a5cdc3f21f58ce34bd1e68734b43e86153ed73f5de6348b399fd0c8efa",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        320,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "floor_11",
+      "file": "terrain/floor_11.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "610fff613d9439ab99bf131fb1fa0a886e3a074d2d5c9c6dd2e2474bfd1e8aae",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        352,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "water_00",
+      "file": "terrain/water_00.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "a9a8dca38673d4f13d454d9f3f89f1d2b852e9c1d297b45d026eb97a7a636823",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        384,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": false,
+      "status": "unselected initial proportion study"
+    },
+    {
+      "id": "water_01",
+      "file": "terrain/water_01.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "67229b9bbb11fac214ee40f3f8430a4b894d69b952d4364c696d0d115c815601",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        416,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": false,
+      "status": "unselected initial proportion study"
+    },
+    {
+      "id": "water_02",
+      "file": "terrain/water_02.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "1fd901d6a4e04d2c470560ffe74e1a1ad34495193969209b320ff01356247e7f",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        448,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": false,
+      "status": "unselected initial proportion study"
+    },
+    {
+      "id": "water_03",
+      "file": "terrain/water_03.png",
+      "size": [
+        32,
+        32
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "eb1025c4f095379df90f6954cc26433cb7d51c17088d305fb6a28043eb7f1f4c",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        480,
+        0,
+        32,
+        32
+      ],
+      "selected_for_corridor": false,
+      "status": "unselected initial proportion study"
+    },
+    {
+      "id": "wall_0",
+      "file": "masonry/wall_0.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        32,
+        64
+      ],
+      "sha256": "d432006bb9e114949877908e2d60dca66a4792656f2ef3e6c4585f793657c0d2",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "selected_for_corridor": false,
+      "status": "unselected initial proportion study"
+    },
+    {
+      "id": "wall_1",
+      "file": "masonry/wall_1.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        32,
+        64
+      ],
+      "sha256": "c5f6329347b7cb1e3c7f9557657fc57203fb2f2daded75b463a0219e7d8c2839",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        64,
+        0,
+        64,
+        64
+      ],
+      "selected_for_corridor": false,
+      "status": "unselected initial proportion study"
+    },
+    {
+      "id": "wall_2",
+      "file": "masonry/wall_2.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        32,
+        64
+      ],
+      "sha256": "1e610c2c9bd1d8744cc7bc91c5db1307348ac69eb862b254e033399ba870beb1",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        128,
+        0,
+        64,
+        64
+      ],
+      "selected_for_corridor": false,
+      "status": "unselected initial proportion study"
+    },
+    {
+      "id": "wall_3",
+      "file": "masonry/wall_3.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        32,
+        64
+      ],
+      "sha256": "d81d65e3cf6990ce2f92b3f4d428462bdb27bec8968520c3b72b047e42a3b353",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        192,
+        0,
+        64,
+        64
+      ],
+      "selected_for_corridor": false,
+      "status": "unselected initial proportion study"
+    },
+    {
+      "id": "arch_wall",
+      "file": "masonry/arch_wall.png",
+      "size": [
+        96,
+        96
+      ],
+      "origin": [
+        48,
+        96
+      ],
+      "sha256": "9ab2ad6d91f5413bbff09846006cda318f3b928cc426f464efea6f505c8782eb",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        256,
+        0,
+        96,
+        96
+      ],
+      "selected_for_corridor": false,
+      "status": "unselected initial proportion study"
+    },
+    {
+      "id": "arch",
+      "file": "masonry/arch.png",
+      "size": [
+        96,
+        96
+      ],
+      "origin": [
+        48,
+        96
+      ],
+      "sha256": "dd5408b343197ebcf6e983b39e168bde01774f00f8303ed1773b08c7609f91be",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        352,
+        0,
+        96,
+        96
+      ],
+      "selected_for_corridor": false,
+      "status": "unselected initial proportion study"
+    },
+    {
+      "id": "pipe_wall",
+      "file": "masonry/pipe_wall.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        32,
+        64
+      ],
+      "sha256": "55e31e1d1eb5c0f45ab8cebbbc26ae8c85272d7db63c388f5ce9fb81699e85e2",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        448,
+        0,
+        64,
+        64
+      ],
+      "selected_for_corridor": false,
+      "status": "unselected initial proportion study"
+    },
+    {
+      "id": "pier",
+      "file": "masonry/pier.png",
+      "size": [
+        32,
+        64
+      ],
+      "origin": [
+        16,
+        64
+      ],
+      "sha256": "0482738687505a44ebf45edeac843c2ef6f48de30fde543deacef84d3366742f",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        0,
+        96,
+        32,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "deep_wall_0",
+      "file": "masonry/deep_wall_0.png",
+      "size": [
+        128,
+        128
+      ],
+      "origin": [
+        64,
+        128
+      ],
+      "sha256": "d96df2cf76fb78c023f20204a769bc2144df0732ee3b1fad83a40388499e8bf5",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        32,
+        96,
+        128,
+        128
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "deep_wall_1",
+      "file": "masonry/deep_wall_1.png",
+      "size": [
+        128,
+        128
+      ],
+      "origin": [
+        64,
+        128
+      ],
+      "sha256": "f405fa5a4db544fafe9aa157989a859456a40703f7e2cfab3632eac2d85e171a",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        160,
+        96,
+        128,
+        128
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "deep_wall_2",
+      "file": "masonry/deep_wall_2.png",
+      "size": [
+        128,
+        128
+      ],
+      "origin": [
+        64,
+        128
+      ],
+      "sha256": "0285f81d26e89e965f198c2c9506c15abffdec14ac59cede1d418f3aa16a5ead",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        288,
+        96,
+        128,
+        128
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "deep_pier",
+      "file": "masonry/deep_pier.png",
+      "size": [
+        32,
+        128
+      ],
+      "origin": [
+        16,
+        128
+      ],
+      "sha256": "02ff85a27ebd6c720d2f945fd548f67b02eb506e317c554f89d09145486f56a1",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        416,
+        96,
+        32,
+        128
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "bank_n",
+      "file": "masonry/bank_n.png",
+      "size": [
+        32,
+        16
+      ],
+      "origin": [
+        16,
+        16
+      ],
+      "sha256": "e86f90c342a4f86bb0127237252957b29694c8beab18859fce2435bfd8224e3c",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        448,
+        96,
+        32,
+        16
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "deep_pipe",
+      "file": "masonry/deep_pipe.png",
+      "size": [
+        32,
+        128
+      ],
+      "origin": [
+        16,
+        128
+      ],
+      "sha256": "db9ad1e1698f5da846680e76dcf170bbcac4b80773aa5be592aca9ab4ae00415",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        480,
+        96,
+        32,
+        128
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "water_big_0",
+      "file": "terrain/water_big_0.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        32,
+        32
+      ],
+      "sha256": "0dc4ed3ee179ec3b1a527463daa7395425632b23b24f820f860c4849b5681983",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        0,
+        32,
+        64,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "water_big_1",
+      "file": "terrain/water_big_1.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        32,
+        32
+      ],
+      "sha256": "d355c4626368d961bb470b4776308f52e9a9e5a9ba9bcde9a00fb623ae3fa595",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        64,
+        32,
+        64,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "water_big_2",
+      "file": "terrain/water_big_2.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        32,
+        32
+      ],
+      "sha256": "36a26b5c998acb612e66d913034c5dc6237d10c5298987877648dc6908d55304",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        128,
+        32,
+        64,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "water_big_3",
+      "file": "terrain/water_big_3.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        32,
+        32
+      ],
+      "sha256": "adc8d37077702ff7ef9421a9c29ca5b7fcfc83be2e9f6f3a241030ee5e5a1fb7",
+      "atlas": "terrain-atlas.png",
+      "region": [
+        192,
+        32,
+        64,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "deep_arch",
+      "file": "masonry/deep_arch.png",
+      "size": [
+        128,
+        128
+      ],
+      "origin": [
+        64,
+        128
+      ],
+      "sha256": "3b75301c74161f612413b486ee83ca3fa4a1b2d1e1993c8fef6e12b8ffb91cc8",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        0,
+        224,
+        128,
+        128
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "thomas",
+      "file": "actors/thomas.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        32,
+        56
+      ],
+      "frames": 1,
+      "facing": "right",
+      "status": "unapproved visual candidate",
+      "sha256": "b36ef3308e0872c984a5e2fb1d5824076ad887553d5c92a71e458a06113173d9",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        128,
+        224,
+        64,
+        64
+      ],
+      "selected_for_corridor": true
+    },
+    {
+      "id": "miner",
+      "file": "actors/miner.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        32,
+        56
+      ],
+      "frames": 1,
+      "facing": "right",
+      "status": "unapproved visual candidate",
+      "sha256": "008afca2ffd4de7758ff305b36ebc2732bd98216a875cda754c45d59350579e7",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        192,
+        224,
+        64,
+        64
+      ],
+      "selected_for_corridor": true
+    },
+    {
+      "id": "faithful",
+      "file": "actors/faithful.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        32,
+        56
+      ],
+      "frames": 1,
+      "facing": "right",
+      "status": "unapproved visual candidate",
+      "sha256": "7d2131b47a54acae502dbfa28f8319b79ba341eaf74ef74e58c735d2921aa06f",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        256,
+        224,
+        64,
+        64
+      ],
+      "selected_for_corridor": true
+    },
+    {
+      "id": "bridge",
+      "file": "props/bridge.png",
+      "size": [
+        64,
+        160
+      ],
+      "origin": [
+        32,
+        160
+      ],
+      "sha256": "9f401c62957a1ec018f4c52fe52b7a17461dbf51473b281b1c1788d7aff939ec",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        320,
+        224,
+        64,
+        160
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "drain",
+      "file": "props/drain.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        32,
+        64
+      ],
+      "sha256": "141a5ae1e349a2326478cc135b3d8681896dc7af143a76e3e766d1c62d25d060",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        384,
+        224,
+        64,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "torch",
+      "file": "props/torch.png",
+      "size": [
+        32,
+        48
+      ],
+      "origin": [
+        16,
+        48
+      ],
+      "sha256": "60119b7ac82641f56cbdd7fe7a7701696b11d985c817cdcbf9f97d7099f91361",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        448,
+        224,
+        32,
+        48
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "paving_0",
+      "file": "assemblies/paving_0.png",
+      "size": [
+        128,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "53a584b8e6b34da7b91bd4a5deba2c9461d69e33891ac3921572f4652a5bad4d",
+      "footprint": [
+        4,
+        2
+      ],
+      "join": "dark mortar perimeter; finite assembly, not a Wang autotile",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        0,
+        384,
+        128,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "paving_1",
+      "file": "assemblies/paving_1.png",
+      "size": [
+        128,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "2e1d4ae707a3871ab5029a07db9924e65ae7b52bfd60a88cfd5275ed35d2489c",
+      "footprint": [
+        4,
+        2
+      ],
+      "join": "dark mortar perimeter; finite assembly, not a Wang autotile",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        128,
+        384,
+        128,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "paving_2",
+      "file": "assemblies/paving_2.png",
+      "size": [
+        128,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "624e3cc3dc7d1af3ece178cd92e474c9d3574fe2f7281676da9894596002143c",
+      "footprint": [
+        4,
+        2
+      ],
+      "join": "dark mortar perimeter; finite assembly, not a Wang autotile",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        256,
+        384,
+        128,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "paving_3",
+      "file": "assemblies/paving_3.png",
+      "size": [
+        128,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "2c78b7155ad42a63082ceffb56153aa6b5de0a0d5b78588a681caef9d4388a0e",
+      "footprint": [
+        4,
+        2
+      ],
+      "join": "dark mortar perimeter; finite assembly, not a Wang autotile",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        384,
+        384,
+        128,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "paving_4",
+      "file": "assemblies/paving_4.png",
+      "size": [
+        128,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "82b850b981eb9fc9060e4ea520c7bb0c57281a1d7c9f68d74317c7d4612bca02",
+      "footprint": [
+        4,
+        2
+      ],
+      "join": "dark mortar perimeter; finite assembly, not a Wang autotile",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        0,
+        448,
+        128,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "paving_5",
+      "file": "assemblies/paving_5.png",
+      "size": [
+        128,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "75a9ebea900c352a2fea488c1e33246ec3b5e49bc5c67561bc87cbc6b78d7df4",
+      "footprint": [
+        4,
+        2
+      ],
+      "join": "dark mortar perimeter; finite assembly, not a Wang autotile",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        128,
+        448,
+        128,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "paving_small",
+      "file": "assemblies/paving_small.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "3957d9e921b54c60797fec687e9e95cf03db5812fec5be6c3ad2e5d4f5398573",
+      "footprint": [
+        2,
+        2
+      ],
+      "join": "cropped assembly with common mortar edge",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        256,
+        448,
+        64,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "paving_medium",
+      "file": "assemblies/paving_medium.png",
+      "size": [
+        96,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "9675eee35ea71333c97ffc704844f07a92b1caed2128a60db6501193f42ddcac",
+      "footprint": [
+        3,
+        2
+      ],
+      "join": "cropped assembly with common mortar edge",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        320,
+        448,
+        96,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "cracks",
+      "file": "overlays/cracks.png",
+      "size": [
+        128,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "d4f86074ce1e192d7a87b524eccafbc1c555214755776af1147cdc5588914c05",
+      "default_opacity": 0.45,
+      "alpha_coverage": 0.0228,
+      "repeat": "sparse purposeful placement; not a full-surface texture",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        0,
+        512,
+        128,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "damp",
+      "file": "overlays/damp.png",
+      "size": [
+        96,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "6b51cbfc3d8d232d9f8f5283b88395ee3c393e6ac163bbc503f5e709137f3be6",
+      "default_opacity": 0.48,
+      "alpha_coverage": 0.1077,
+      "repeat": "sparse purposeful placement; not a full-surface texture",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        128,
+        512,
+        96,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "salt",
+      "file": "overlays/salt.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "0a16304a4c38c9d984b8e0c8188590ca0a101d7854062b33b9faadc2e895aa9d",
+      "default_opacity": 0.28,
+      "alpha_coverage": 0.0586,
+      "repeat": "sparse purposeful placement; not a full-surface texture",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        224,
+        512,
+        64,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "moss",
+      "file": "overlays/moss.png",
+      "size": [
+        96,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "ded0932104bcb5dd8b3914be8d00d9b115365015ed3096ddd7d8459a97734ffd",
+      "default_opacity": 0.4,
+      "alpha_coverage": 0.0571,
+      "repeat": "sparse purposeful placement; not a full-surface texture",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        288,
+        512,
+        96,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "chips",
+      "file": "overlays/chips.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "83c6253e33fb066b1d9e1eaeea28a698c76f770dac4523582a61f373e19d3f7b",
+      "default_opacity": 0.65,
+      "alpha_coverage": 0.0586,
+      "repeat": "sparse purposeful placement; not a full-surface texture",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        384,
+        512,
+        64,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "silt",
+      "file": "overlays/silt.png",
+      "size": [
+        64,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "80f846f67f9e71b404470403d0a3b3f952cff7646a4808c8de90bd977ea637a5",
+      "default_opacity": 0.45,
+      "alpha_coverage": 0.061,
+      "repeat": "sparse purposeful placement; not a full-surface texture",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        448,
+        512,
+        64,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "repair",
+      "file": "overlays/repair.png",
+      "size": [
+        96,
+        64
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "04d273103a69f8b561951a5cb6dc9435ccf584d12e84ebc9dba20a971be9378b",
+      "default_opacity": 0.65,
+      "alpha_coverage": 0.1219,
+      "repeat": "sparse purposeful placement; not a full-surface texture",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        0,
+        576,
+        96,
+        64
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    },
+    {
+      "id": "seep",
+      "file": "overlays/seep.png",
+      "size": [
+        128,
+        32
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "collision": "none: cosmetic surface only",
+      "sha256": "12a9eb836b90f7d6ac1ac7bbc26269ff16e76e44b52ff38882dd20bead61531e",
+      "default_opacity": 0.5,
+      "alpha_coverage": 0.0872,
+      "repeat": "sparse purposeful placement; not a full-surface texture",
+      "atlas": "sprite-atlas.png",
+      "region": [
+        96,
+        576,
+        128,
+        32
+      ],
+      "selected_for_corridor": true,
+      "status": "unapproved visual candidate"
+    }
+  ],
+  "layer_order": [
+    "floor assemblies",
+    "sparse wear overlays",
+    "raised banks and walls",
+    "bridge and props",
+    "actors and effects"
+  ],
+  "water_binding": "64px substrates are sampled in four fixed 32px quadrants per 2x2 block; choose variation per block, not per quadrant",
+  "collision": "Use the authored ground mask; masonry overhang is not its ground footprint. The review arch has a 48px-wide visual aperture aligned with one clear ground cell (26,7). Bridge has one clear ground column (19) with rail overhang outside it."
+}
