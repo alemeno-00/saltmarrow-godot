@@ -287,3 +287,43 @@ Themes: **fear, illusion, unseen hands, reading intent.** Control and deception 
 - **Daggers:** Veil, then Backstab or Whisper.
 - **Storm:** Nightmare scatters enemies into water, then Tempest.
 - **Faith:** Confession frightens; Feedback burns every frightened enemy.
+
+## The Star (your highest stat)
+
+Themes: **warping space, salt, the tide, calling things up.** The strongest numbers in the game. Casting rules (Hushed, Open, Unbound, Phenomena and the Star's Reach) are in `docs/story.md`.
+
+**Every node in this tree raises Attunement by 1.** The capstone adds 2 more.
+
+| Node | Type | Cost | Effect (worst / middle / best) | Injury |
+| --- | --- | --- | --- | --- |
+| Pearl Ray | basic spell | free | Range 6: 3 / 5 / 8. Still a Star spell, so it can cause Phenomena | |
+| **Row 1** | | | | |
+| 1. Warp Step | maneuver | 3 | Blink 3 / 5 / 7 squares, leaving a ring of salt. No free strikes | |
+| 2. Foretaste | passive | | Once per fight, reroll a Phenomena roll, keeping the second result | |
+| **Row 2** | | | | |
+| 3. Crystallise | spell | 3 | Range 5: 3 / 5 / 8; slowed / held in place / limb crystallised | Arm or leg 20 / 40 / 70% |
+| 4. Fold | spell | 5 | Range 6: swap the places of any two creatures you can see, yourself included | |
+| 5. Feed on the Light | passive | | Whenever a Phenomenon happens, regain 3 Stamina | |
+| **Row 3** | | | | |
+| 6. The Tide Below | spell | 5 | Seawater wells up through a 3×3 area for 3 rounds: everyone inside is wet and slowed. **The Drowned heal in it** | |
+| 7. Pearl Eyes | passive | | See in darkness, and through walls within 3 squares | |
+| 8. Call | spell | 5 | Something comes through for 2 / 3 / 4 rounds and attacks the nearest creature, which may be you | |
+| **Row 4** | | | | |
+| 9. Starfall | spell | 7 | A 3×3 area within 8: 6 / 10 / 14; the ground becomes salt crystal. **Can't be cast Hushed** | Torso 20 / 40 / 60% |
+| 10. The Star's Due | capstone | | +2 Attunement. Extra Resolve whenever a Phenomenon happens | |
+
+- **The pull:** Feed on the Light and the capstone reward the Phenomena that everything else warns against.
+- **The safety nets:** Faith (Penance, Confession, Hallowed Ground) and Grounded Staff.
+
+### The Star changes Thomas
+
+As Attunement rises, Thomas shows the same signs as Agathe, on his sprite and portrait, and the town notices.
+
+| Attunement | Look | The town |
+| --- | --- | --- |
+| 0–2 | No sign | Normal |
+| 3–5 | **Pearl eyes**, a faint sheen | Agathe is warmer and calls him "child". Nell asks what he's been doing down there. |
+| 6–8 | Plus **light under the skin** at the throat and hands | Rook charges more for anything ordinary and less for star-metal. Children hide. Bram serves him last. |
+| 9+ | Plus **salt crystals** at his cuffs and hair; his breath mists pearl | Agathe invites him to pray with the congregation. Nell won't let him in. Mara won't look at him. Some townsfolk start following him at a distance. |
+
+- Death resets Attunement with everything else. **Marks of the star stay,** and some Marks start you a stage further along.

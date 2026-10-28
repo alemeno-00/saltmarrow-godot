@@ -143,6 +143,19 @@ These come first because the first fight is being built next.
   - the Drowned sinking into water (6 frames) and resurfacing (6 frames)
   - Carrion Brood frenzy (6 frames, looped)
   - confused, stumbling (6 frames, for every enemy)
+- [ ] Star spell effects (`assets/effects/star/`); see `docs/trees.md`, the Star. Pearl-white light, salt, seawater:
+  - Pearl Ray (4 frames, 64 × 32)
+  - Warp Step: Thomas vanishing and reappearing (6 frames each), and the ring of salt left behind (32 × 32)
+  - Crystallise: salt creeping over a limb (8 frames, 64 × 64), and a crystallised arm or leg overlay for any character
+  - Fold: two figures swapping in a twist of light (8 frames, 64 × 64)
+  - the Tide Below: seawater welling up through the floor (8 frames), deep-water tiles (4, looped), draining (6), 32 × 32
+  - Starfall: a falling shard and its impact (12 frames, 128 × 128), and salt-crystal floor tiles (4 variations, 32 × 32)
+- [ ] **The Called** (`assets/enemies/called/`): the thing that comes through for the Call spell and the Star's Reach. Not quite a body: a tall, wrong shape of pearl light and wet salt, too many joints, no face. Rows: arrive through a tear (8), idle (4), walk (6), attack (5), fade away (8).
+- [ ] **Thomas changing with the Star.** Overlays for every frame of his body sheet and for every portrait:
+  - stage 1: pearl eyes
+  - stage 2: plus faint light under the skin at the throat and hands
+  - stage 3: plus salt crystals at his cuffs and hair, and pearl breath (a small looped mist)
+- [ ] Townsfolk reactions to a changed Thomas: a second portrait for Agathe (delighted), Nell (afraid), Rook (calculating), Bram (uneasy) and Mara (turning away). Also a few townsfolk following him at a distance (map sprites, walk 6 and idle 4).
 - [ ] Stealth reactions for every enemy (start with the Drowned Miner and the Faithful):
   - slumping unconscious (5 frames)
   - lying unconscious (2, looped)

@@ -109,7 +109,7 @@ You earn it two ways:
 
 ### The Star school (after Dark Heresy's psykers)
 
-- **Attunement** rises with points in the Star tree, and sets the power of Star spells.
+- **Attunement** rises with points in the Star tree, and sets the power of Star spells. As it rises, Thomas visibly changes and the town reacts (see `docs/trees.md`).
 - Choose how to cast each spell, before rolling:
 
 | Mode | Power | Risk |
