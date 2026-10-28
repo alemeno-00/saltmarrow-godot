@@ -65,6 +65,7 @@ What has been agreed so far. Claude keeps this file in step with the shared desi
   - Storm (Reason), Faith (Presence) and Mind (Intuition) are **safe**.
   - Star is the only dangerous school.
 - **Other trees:** Stealth, Survival, Warfare.
+- Tree details are in `docs/trees.md`.
 - **Resolve** is the one resource. You gain it each turn of a fight, spend it on bigger abilities and spells, and it empties after the fight.
 
 ### Earning extra Resolve
@@ -84,7 +85,7 @@ You earn it two ways:
 
 | Tree capstone | Extra Resolve when you... |
 | --- | --- |
-| Maces | knock an enemy down or break its armour |
+| Maces | fracture a bone, break armour, or push an enemy into something |
 | Swords | parry or riposte |
 | Daggers | land a crit |
 | Flails | hit an enemy behind a shield or in cover |

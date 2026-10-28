@@ -38,11 +38,23 @@ These come first because the first fight is being built next.
   2. strike (3)
   3. recovery (3)
   4. crit strike (8, a bigger, slower overhead blow for slow motion)
+- [ ] **2b. Thomas, mace abilities** (`assets/characters/thomas/mace_abilities.png`). Same maul as job 2; see `docs/trees.md`, Maces. Each ability has wind-up, strike and recovery. Rows:
+  1. Skull Crack (8 frames: a short, fast overhead to the head)
+  2. Knee Breaker (8: a low sideways swing at the legs)
+  3. Shatter (9: a braced, two-handed smash into the chest)
+  4. Wide Arc (10: a full spin, maul held out)
+  5. Execution (12: raise high over a fallen enemy, hold, bring it down; the hold frames are for slow motion)
 - [ ] **3. Thomas portrait, health states** (`assets/portraits/thomas/`). Four separate files: `steady.png`, `hurt.png` (cut lip, bruised), `badly_hurt.png` (bloody, pale, jaw clenched), `dying.png` (grey, eyes half shut).
-- [ ] **4. A standard enemy: the Drowned Miner** (`assets/enemies/drowned_miner/`). A miner from the new seam, changed by working too long near the star: wet, salt-crusted, pearly eyes, a pick in both hands, moving slowly and wrong. Rows: idle (4), walk (6), attack wind-up tell (3, raising the pick high), attack (3), hurt (3), flee (6, stumbling away), death (6), dismembered death (6, an arm goes).
-- [ ] **5. A minion: the Faithful** (`assets/enemies/faithful/`). One of Agathe's congregation, gone down too early: a thin figure in a white chapel smock and a star-metal pin, barefoot, smiling. A smaller set: idle (4), walk (6), attack (4), death (6).
+- [ ] **4. A standard enemy: the Drowned Miner** (`assets/enemies/drowned_miner/`). A miner from the new seam, changed by working too long near the star: wet, salt-crusted, pearly eyes, a pick in both hands, moving slowly and wrong. Rows: idle (4), walk (6), attack wind-up tell (3, raising the pick high), attack (3), hurt (3), pushed back (3, stumbling backwards), slammed into a wall (3), dazed (4, swaying, looped), knocked prone (4), lying prone (2, looped), getting up (4), limping walk (6, broken leg), flee (6, stumbling away), death (6), dismembered death (6, an arm goes), skull crushed (6, for Execution).
+- [ ] **5. A minion: the Faithful** (`assets/enemies/faithful/`). One of Agathe's congregation, gone down too early: a thin figure in a white chapel smock and a star-metal pin, barefoot, smiling. A smaller set: idle (4), walk (6), attack (4), pushed back (3), knocked prone (4), death (6), skull crushed (6).
 - [ ] **6. Blood and gore set** (`assets/effects/gore/`). Blood pools (3 sizes), splatter (4 shapes), drag smears (2), a severed arm, a severed head, generic flesh chunks (4). All 32 × 32 so they sit on the floor.
 - [ ] **7. Hit effects** (`assets/effects/hits/`). A short impact flash for crushing, slashing and piercing (4 frames each, 64 × 64), and a bigger tier-3 impact (6 frames).
+- [ ] **7b. Mace effects** (`assets/effects/mace/`):
+  - dazed: a ringing shimmer over the head (6 frames, looped, 32 × 32, no cartoon stars)
+  - fracture: a sharp white crack flash at the impact point (4 frames, 32 × 32)
+  - wall slam: dust and grit bursting from a wall (5 frames, 64 × 64)
+  - armour pieces breaking off and clattering to the floor: a helm, a pauldron and a breastplate plate (each 6 frames, 32 × 32), plus their resting sprites
+  - Wide Arc: a heavy motion smear (4 frames, 96 × 96)
 - [ ] **8. Two d10 dice** (`assets/ui/dice/`). A ten-sided die tumbling (8 frames, 48 × 48), and its ten resting faces showing 1 to 10 as pips or marks, not numerals.
 - [ ] **9. The Salt Pits tiles** (`assets/tiles/salt_pits/`). The first biome: old mine workings with timber props. Floor (4 variations), wall (top and face, 4 variations), wall corners, a closed and open door, shallow water (4), rubble, and a timber prop. 32 × 32 each.
 
