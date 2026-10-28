@@ -1,0 +1,14 @@
+{
+	"assemblies_tested": 3000,
+	"engine": "4.7.2-stable (official)",
+	"failures": [],
+	"scope": "dry navigation, water-under connectivity, sealed bounds, ports, fixtures, determinism, sewer serialization; no hydraulic simulation or art fidelity certification",
+	"seed_count": 1000,
+	"unique_assemblies": 3000,
+	"unique_tile_layouts": 2655,
+	"water_states": [
+		"low",
+		"normal",
+		"high"
+	]
+}
