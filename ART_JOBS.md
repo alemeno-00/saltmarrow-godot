@@ -119,6 +119,16 @@ These come first because the first fight is being built next.
   - electrified water tiles (4 frames, looped, 32 × 32)
   - a wet sheen overlay for wet characters (looped, 64 × 64)
   - lightning, cold and burn hurt overlays for any character (4 frames each, 64 × 64)
+- [ ] Faith spell effects (`assets/effects/faith/`); see `docs/trees.md`, Faith. Warm, pale gold light, the old church's colour, never pearly (pearl is the star's):
+  - Rebuke (4 frames, 64 × 32)
+  - Mend glow over Thomas (6 frames, 64 × 64)
+  - Smite: a weapon wreathed in light, then a burst on impact (6 frames, 64 × 64)
+  - Hallowed Ground tiles, faint glowing marks on the floor (4 frames, looped, 32 × 32)
+  - Bind: chains of light (6 frames to form, then looped, 64 × 64)
+  - Confession: dark smoke passing from Thomas's hand into an enemy (6 frames, 64 × 64)
+  - the Old Bell: a ghostly bell and ring of sound (10 frames, 128 × 128)
+  - Release: a star-touched body crumbling into salt (8 frames, 64 × 64)
+  - a frightened enemy cowering and fleeing (6 frames, for every enemy)
 - [ ] Stealth reactions for every enemy (start with the Drowned Miner and the Faithful):
   - slumping unconscious (5 frames)
   - lying unconscious (2, looped)

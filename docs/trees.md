@@ -9,7 +9,18 @@ Every tree follows the same pattern:
 ## Scope
 
 - 13 trees, 130 nodes, 65 abilities.
-- A life tops out around **level 20**, about 20 points. That fills two trees, or goes deep in one and dips into others.
+- **Two kinds of points:**
+  - **Level points**, 1 per level, up to about 20 in a life. They're spent on **spell schools and the utility trees** (Stealth, Survival, Warfare).
+  - **Mastery points**, earned by **landing hits with a weapon type**. They can only be spent in that weapon's tree.
+- **How trees open:**
+  - A **weapon tree** opens after about 10 hits with that weapon type, or instantly from its manual.
+  - A **spell school** opens only from its tome.
+  - **Reading a manual or tome gives one free point** in that tree.
+- **Tuning target:** your main weapon reaches its capstone around the middle of a good run; a second weapon gets about halfway; a third barely starts. This encourages one main weapon and a backup.
+- Each node costs 1 point. Take a node by owning one connected to it in the row above, so a capstone takes at least 4 points.
+- Points stay spent for the rest of a life; death resets everything.
+- **Anyone can use any weapon.** The basic attack needs no points. Weapon abilities and passives need that weapon in hand.
+- **Combos should key off what you're holding or standing in, more than points in a second tree.** For example, Swinging Censer needs a flail in hand, not points in Flails.
 - **Backstories give two starting nodes**, so every life opens with options.
 - **Special weapons carry an ability of their own.** For example, a star-metal maul has a Star ability that risks Phenomena; a chapel censer-flail has a Faith one.
 - **Later, maybe:** hidden pairing passives that open when you invest in two particular trees. For example, Maces + Storm adds a lightning crack when you push an enemy into a wall.
@@ -203,3 +214,34 @@ How it plays:
 
 - The map is the weapon: push enemies into water and electrify them, freeze it to trip them, gust them into walls, and blow out their lights.
 - Deadly in the flooded deep against the Drowned; weaker in dry catacombs.
+
+## Faith (Presence)
+
+The old church's faith, the one Agathe abandoned. Its four jobs: **healing, crowd control, survivability, and the Star.** The Star creates Dread; Faith consumes it.
+
+- **Star-touched:** anything the star has changed (the Faithful, the Drowned, Hollow Faith, Carrion Brood). Faith is strongest against them, and weak against ordinary threats.
+- **Partner weapon:** flails. Their Faith combos only need a flail **in hand**.
+
+| Node | Type | Cost | Effect (worst / middle / best) | Injury |
+| --- | --- | --- | --- | --- |
+| Rebuke | basic spell | free | Range 5: 2 / 4 / 6 holy; +2 against star-touched; push 1 on best | |
+| **Row 1** | | | | |
+| 1. Mend | spell | 3 | Yourself: regain 4 / 6 / 9 Stamina; best also removes one condition | |
+| 2. Smite | maneuver | 3 | Your next weapon hit this turn adds 3 / 5 / 8 holy; dazes star-touched on best. **With a flail, it applies to every enemy that attack hits** | |
+| **Row 2** | | | | |
+| 3. Hallowed Ground | spell | 3 | The 3×3 around you for 3 rounds. Star-touched inside take 2 / 3 / 5 and attack with a bane. **Star spells cast from inside roll Phenomena twice and keep the lower** | |
+| 4. Bind | spell | 3 | Range 5: slowed / held in place / held in place and dazed, for 1 round | |
+| 5. Steady Prayer | passive | | Lose 1 Dread at the end of every fight | |
+| **Row 3** | | | | |
+| 6. Martyr's Grace | passive | | Once per fight, when you drop to dying, cast Mend on yourself for free | |
+| 7. Swinging Censer | passive | | While holding a flail, your Hallowed Ground moves with you | |
+| 8. Confession | maneuver | 2 | Touch an adjacent enemy: lose up to 3 Dread; it is frightened for that many rounds | |
+| **Row 4** | | | | |
+| 9. The Old Bell | spell | 7 | A phantom bell tolls. Star-touched within 5 flee in fear for 1 / 2 / 3 rounds; Thomas loses 2 Dread. On best, minions are **released** and crumble into salt, at peace | |
+| 10. Penance | capstone | | Faith abilities can be paid with **Dread instead of Resolve**, one for one. Extra Resolve when you heal or ward | |
+
+Combos:
+
+- **The Star loop:** cast a Star spell Unbound (+2 Dread), pay for Smite with that Dread through Penance, and Confess the rest onto an enemy.
+- **The walking sanctuary:** a flail, Swinging Censer and Hallowed Ground. Enemies near you weaken and burn, and Star spells you cast are safer.
+- **Holding the line:** Bind, the Old Bell and Confession stop enemies reaching you; Mend and Martyr's Grace keep you standing.

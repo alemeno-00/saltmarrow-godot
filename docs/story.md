@@ -58,8 +58,8 @@ What has been agreed so far. Claude keeps this file in step with the shared desi
 - **Weapons give the basic attack.** Each weapon type has its own free strike.
 - **Trees give abilities.** Each tree has about 10 nodes, half abilities and half passives. Abilities are Draw Steel power rolls: 2d10 + a stat, with three tiers.
 - **Weapon abilities need that weapon in hand.**
-- **Trees open by finding their manual or tome.**
-- **Levels:** 1 tree point per level, and a stat point every few levels. The stats are Might, Agility, Reason, Intuition and Presence.
+- **Weapon trees open by use** (about 10 hits) or a manual. **Spell schools open only from tomes.** A manual or tome also gives a free point.
+- **Points:** level points (1 per level) go to spell schools and utility trees. Weapons earn mastery points by landing hits. A stat point comes every few levels. The stats are Might, Agility, Reason, Intuition and Presence.
 - **Weapon trees:** Maces, Swords (the longsword), Daggers, Flails, Spears, Staves.
 - **Spell schools:**
   - Storm (Reason), Faith (Presence) and Mind (Intuition) are **safe**.
