@@ -15,7 +15,7 @@ Source conversation: [Saltmarrow Overhaul Plan](https://chatgpt.com/c/6adf1cb2-6
 
 The local `Game` workspace contains older Saltmarrow art. These files are recoverable, but their presence does not prove they are the recent conversation's final images. The town reference and v6 master look alike but have different byte hashes, so both are retained with distinct names. No artwork was generated to fill missing files, and no older class art is relabelled as Thomas Wren.
 
-Existing Godot files, assets, settings, scenes, scripts, workflows and tests are preserved. All additions are confined to this new folder under `assets/`, following the repository's art ownership boundary. These opaque environment compositions are archived as reference art, an intentional exception to the transparent production-sprite delivery format. Production exports still need the repository's PNG, hard-edge, 32px-grid and animation-layout requirements.
+Existing Godot files, assets, settings, scenes, scripts, workflows and tests are preserved. All additions are confined to this new folder under `assets/`, following the repository's art ownership boundary. These opaque environment compositions are retained only as review references. They do not satisfy the transparent production-sprite delivery format; see [guide conflicts](GUIDE-CONFLICTS.md). Production exports still need the repository's PNG, hard-edge, 32px-grid and animation-layout requirements.
 
 ## Completing recovery
 
