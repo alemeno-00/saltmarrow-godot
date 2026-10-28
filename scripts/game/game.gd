@@ -6,7 +6,10 @@ extends Node2D
 ## Clicking a square walks him there along the shortest safe route; any key stops him.
 ##
 ## Fighting (Draw Steel turns): click a lit square to move, click an enemy next to you to strike,
-## 1-5 for abilities, Q to stand, B to catch your breath, Enter to end the turn. R starts a new level.
+## 1-5 for abilities, F (or Shift-click) for a careful step that draws no free strikes, Q to stand, B to catch your breath, Enter to end the turn. R starts a new level.
+##
+## Outside a fight, enemies that are hunting or searching move one square each time Thomas takes a turn.
+## An enemy that ran away comes back after a while, with friends.
 
 signal turn_passed(turn: int)
 
@@ -15,7 +18,8 @@ const COMBO_WINDOW := 0.035   # how long to wait for a second key so two keys ma
 const REPEAT_DELAY := 0.17    # holding a key: first repeat
 const REPEAT_RATE := 0.12     # holding a key: following repeats
 const WALK_RATE := 0.11       # click-to-walk: time per square
-const SIGHT := 7              # how far enemies see, in squares
+const SIGHT := Battle.SIGHT   # how far enemies see, in squares
+const RETURN_AFTER := 20      # exploring turns before a runaway comes back
 
 @export var level_seed: int = 1
 
@@ -29,8 +33,10 @@ var views := {}          # Combatant -> ActorView
 var battle: Battle = null
 var busy := false        # events are playing; input waits
 var selected := -1       # the ability chosen, waiting for a target
+var stepping := false    # F pressed: the next click is a careful step
 var reach := {}          # squares Thomas can move to this turn
 var dead := false
+var returning: Array = []   # [Combatant, turns left] for enemies that ran and will come back
 
 var _hold_dir := Vector2i.ZERO
 var _hold_timer := 0.0
@@ -66,6 +72,7 @@ func _ready() -> void:
 	combat_hud.stand_pressed.connect(func(): _act(battle.hero_stand()) if _can_act() else null)
 	combat_hud.breath_pressed.connect(func(): _act(battle.hero_catch_breath()) if _can_act() else null)
 	combat_hud.end_turn_pressed.connect(_end_hero_turn)
+	combat_hud.step_pressed.connect(_toggle_step)
 	new_level(level_seed)
 
 
@@ -86,6 +93,7 @@ func new_level(seed_in: int) -> void:
 	dead = false
 	selected = -1
 	reach = {}
+	returning.clear()
 	combat_hud.set_abilities(hero_unit.abilities)
 	combat_hud.show_fight(false)
 	combat_hud.clear_log()
@@ -221,8 +229,69 @@ func stop_walking() -> void:
 func _end_turn() -> void:
 	turn += 1
 	turn_passed.emit(turn)
+	_enemies_explore()
 	_update_hud()
 	_check_spotted()
+
+
+## Outside a fight: hunters close in on Thomas, searchers go to where they last saw him, runaways come back.
+func _enemies_explore() -> void:
+	if in_fight() or dead:
+		return
+	for e in enemies:
+		if not e.alive() or e.state == "idle":
+			continue
+		var goal := hero.grid_pos if e.state == "hunting" else e.target
+		var p := level.find_path(e.cell, goal)
+		if not p.is_empty() and p[0] != hero.grid_pos and _enemy_at(p[0]) == null:
+			e.cell = p[0]
+			views[e].move_to(p[0])
+		if e.state == "searching" and e.cell == e.target:
+			e.state = "idle"
+	for r in returning.duplicate():
+		r[1] -= 1
+		if r[1] <= 0:
+			returning.erase(r)
+			_bring_back(r[0])
+
+
+## A runaway returns from somewhere Thomas can't see, partly healed, with two more Faithful.
+func _bring_back(u: Combatant) -> void:
+	var best := Vector2i(-1, -1)
+	var best_d := -1
+	for room in level.rooms:
+		var c := room.get_center()
+		var d := Battle.dist(c, hero.grid_pos)
+		if level.get_tile(c) == Level.Tile.FLOOR and _enemy_at(c) == null and not level.line_of_sight(c, hero.grid_pos) and d > best_d:
+			best_d = d
+			best = c
+	if best.x < 0:
+		return
+	u.fled = false
+	u.fleeing = false
+	u.stamina = maxi(u.stamina, int(u.max_stamina * 0.6))
+	u.prone = false
+	u.dazed = 0
+	u.slowed = 0
+	u.telegraph.clear()
+	u.cell = best
+	u.state = "hunting"
+	var v: ActorView = views[u]
+	v.visible = true
+	v.modulate.a = 1.0
+	v.place(best)
+	v.sync(u)
+	var added := 0
+	for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 1), Vector2i(-1, 1)]:
+		if added >= 2:
+			break
+		var p: Vector2i = best + d
+		if level.get_tile(p) == Level.Tile.FLOOR and _enemy_at(p) == null:
+			var f := Bestiary.faithful()
+			f.state = "hunting"
+			_add_enemy(f, p)
+			added += 1
+	combat_hud.show_banner("Somewhere behind you, bare feet on stone.", 2.2)
 
 
 ## Something with a line of sight to Thomas, close enough, starts a fight.
@@ -310,6 +379,9 @@ func _combat_input(event: InputEvent) -> bool:
 				if _can_act():
 					_act(battle.hero_catch_breath())
 				return true
+			KEY_F:
+				_toggle_step()
+				return true
 			KEY_ESCAPE:
 				_select(-1)
 				return true
@@ -318,6 +390,8 @@ func _combat_input(event: InputEvent) -> bool:
 			_select(-1)
 			return true
 		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.shift_pressed:
+				stepping = true
 			_combat_click(mouse_cell())
 			return true
 	return false
@@ -325,6 +399,11 @@ func _combat_input(event: InputEvent) -> bool:
 
 func _combat_click(c: Vector2i) -> void:
 	if not _can_act():
+		return
+	if stepping:
+		stepping = false
+		combat_hud.set_stepping(false)
+		_act(battle.hero_shift(c))
 		return
 	if selected >= 0:
 		var i := selected
@@ -357,7 +436,22 @@ func _on_ability_key(i: int) -> void:
 		_select(i)
 
 
+func _toggle_step() -> void:
+	if not _can_act():
+		return
+	if not stepping and battle.shift_cells().is_empty():
+		combat_hud.add_log("No maneuver left for a careful step." if battle.budget.maneuver <= 0 else "Nowhere to step.")
+		return
+	_select(-1)
+	stepping = not stepping
+	combat_hud.set_stepping(stepping)
+	overlay.queue_redraw()
+
+
 func _select(i: int) -> void:
+	if i >= 0 and stepping:
+		stepping = false
+		combat_hud.set_stepping(false)
 	selected = i
 	combat_hud.select(i)
 	overlay.queue_redraw()
@@ -403,6 +497,22 @@ func _play_one(e: Dictionary) -> void:
 			await _wait(0.6)
 		"log":
 			combat_hud.add_log(e.text)
+		"malice":
+			combat_hud.set_malice(e.value)
+		"malice_spend":
+			combat_hud.set_malice(e.value)
+			combat_hud.show_banner("Malice: " + e.name, 1.2)
+			_shake = 2.0
+			await _wait(0.45)
+		"flee":
+			views[e.unit].sync(e.unit)
+			await _wait(0.2)
+		"escape":
+			var v: ActorView = views[e.unit]
+			var tw := create_tween()
+			tw.tween_property(v, "modulate:a", 0.0, 0.5)
+			await _wait(0.5)
+			v.visible = false
 		"turn":
 			if e.unit == hero_unit:
 				combat_hud.show_banner("You're down. Q to stand." if hero_unit.prone else "Your turn", 1.2 if hero_unit.prone else 0.8)
@@ -529,8 +639,20 @@ func _finish(winner: String) -> void:
 	Engine.time_scale = 1.0
 	_select(-1)
 	combat_hud.show_fight(false)
-	if winner == "hero":
-		combat_hud.show_banner("The fight is over.", 2.0)
+	for u in enemies:
+		if u.fled and not returning.any(func(r): return r[0] == u):
+			returning.append([u, RETURN_AFTER])
+	if winner == "escaped":
+		combat_hud.show_banner("You've lost them, for now.", 2.0)
+		for u in enemies:
+			if u.alive():
+				u.state = "searching"
+				u.target = battle.last_seen
+				u.telegraph.clear()
+				views[u].sync(u)
+	if winner == "hero" or winner == "escaped":
+		if winner == "hero":
+			combat_hud.show_banner("The fight is over." if returning.is_empty() else "The fight is over. Something got away.", 2.0)
 		hero_unit.resolve = 0
 		hero_unit.prone = false
 		hero_unit.dazed = 0
@@ -541,6 +663,8 @@ func _finish(winner: String) -> void:
 			hero_unit.dying = false
 		hero.sync(hero_unit)
 		hero.place(hero_unit.cell)
+		battle = null
+		overlay.queue_redraw()
 	else:
 		dead = true
 		combat_hud.show_banner("Thomas Wren is dead.   Press R to wake again.", 99999.0)
@@ -643,6 +767,6 @@ func _update_hud() -> void:
 	elif dead:
 		hud.text = "R to start again"
 	elif in_fight():
-		hud.text = "Click a lit square to move  ·  click an enemy beside you to strike  ·  1-5 abilities  ·  Q stand  ·  B catch breath  ·  Enter end turn  ·  R new level"
+		hud.text = "Click a lit square to move  ·  click an enemy beside you to strike  ·  1-5 abilities  ·  F careful step  ·  Q stand  ·  B catch breath  ·  Enter end turn  ·  R new level"
 	else:
 		hud.text = "Turn %d  ·  WASD / arrows to move (two keys for diagonals), click to walk, Space to wait, wheel to zoom, R new level" % turn

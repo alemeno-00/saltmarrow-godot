@@ -33,9 +33,16 @@ var free_strike_ready := true
 var telegraph: Array[Vector2i] = []
 var big_cooldown := 0
 
+var fleeing := false     # broke and is running
+var fled := false        # got away; gone from the fight, may come back
+var fled_once := false   # only runs once
+var state := "idle"      # outside a fight: idle, hunting (coming for Thomas) or searching (going to where he was seen)
+var target := Vector2i.ZERO
 
+
+## Still in the fight: not dead and hasn't run off.
 func alive() -> bool:
-	return not dead
+	return not dead and not fled
 
 
 func move_speed() -> int:
@@ -78,4 +85,6 @@ func condition_words() -> Array[String]:
 		w.append({"head": "head wound", "arm": "broken arm", "leg": "broken leg", "torso": "deep wound"}[i])
 	if not telegraph.is_empty():
 		w.append("winding up a big blow")
+	if fleeing:
+		w.append("running")
 	return w

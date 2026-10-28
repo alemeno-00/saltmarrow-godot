@@ -233,3 +233,100 @@ func test_line_of_sight() -> void:
 	check(l.line_of_sight(Vector2i(1, 1), Vector2i(8, 6)), "an open room has sight across it")
 	l.set_tile(Vector2i(4, 3), Level.Tile.WALL)
 	check(not l.line_of_sight(Vector2i(2, 3), Vector2i(7, 3)), "a wall blocks sight")
+
+
+func test_malice_grows_each_round() -> void:
+	var m := _at(Bestiary.drowned_miner(), Vector2i(8, 6))
+	var b := _battle([m])
+	b.start(true)
+	eq(b.malice, 1, "the enemy side starts with 1 Malice")
+	b.forced_rolls = [[1, 1], [1, 1], [1, 1]]
+	b.hero_end_turn()
+	eq(b.malice, 2, "round 1: +1")
+	b.hero_end_turn()
+	check(b.malice >= 3, "and it keeps growing (spending aside)")
+
+
+func test_swarming_hymn_moves_the_faithful() -> void:
+	var a := _at(Bestiary.faithful(), Vector2i(8, 1))
+	var c := _at(Bestiary.faithful(), Vector2i(8, 6))
+	var b := _battle([a, c], Vector2i(1, 3))
+	b.start(true)
+	b.malice = 3   # +1 at the start of their turn makes 4, enough for the Hymn
+	var ev := b.hero_end_turn()
+	var spent := false
+	for e in ev:
+		if e.t == "malice_spend" and e.name == "Swarming Hymn":
+			spent = true
+	check(spent, "the Hymn is spent")
+	# each Faithful moved 2 (hymn) + 5 (its own turn) toward Thomas; both started 7 away
+	eq(Battle.dist(a.cell, b.hero.cell), 1, "the first one reached him")
+	eq(Battle.dist(c.cell, b.hero.cell), 1, "and so did the second")
+
+
+func test_flanking_gives_an_edge() -> void:
+	var a := _at(Bestiary.faithful(), Vector2i(3, 3))
+	var c := _at(Bestiary.faithful(), Vector2i(5, 3))
+	var b := _battle([a, c])
+	b.start(true)
+	b.forced_rolls = [[4, 4], [4, 4]]
+	var ev := b.hero_end_turn()
+	var edges: Array = []
+	for e in ev:
+		if e.t == "roll":
+			edges.append(e.roll.edges)
+	eq(edges, [1, 1], "both attack with an edge, being on opposite sides of him")
+
+
+func test_press_the_attack() -> void:
+	var m := _at(Bestiary.drowned_miner(), Vector2i(5, 3))
+	m.big = {}
+	var b := _battle([m])
+	b.start(true)
+	b.malice = 10
+	b.forced_rolls = [[3, 3], [3, 3]]
+	b.hero_end_turn()
+	eq(b.hero.stamina, 24 - 3 - 3, "the miner strikes twice")
+
+
+func test_badly_hurt_miner_runs_and_escapes() -> void:
+	level = Level.new(30, 5)
+	for x in range(1, 29):
+		level.set_tile(Vector2i(x, 2), Level.Tile.FLOOR)
+	level.rebuild_paths()
+	var h := Bestiary.thomas()
+	h.cell = Vector2i(2, 2)
+	var m := _at(Bestiary.drowned_miner(), Vector2i(4, 2))
+	m.stamina = 5
+	var b := Battle.new()
+	b.setup(level, h, [m], 1)
+	b.injuries_on = false
+	b.start(true)
+	b.hero_end_turn()
+	check(m.fled_once, "it broke and ran")
+	b.hero_end_turn()
+	b.hero_end_turn()
+	check(m.fled, "far enough down the tunnel, it escapes")
+	check(b.over and b.winner == "hero", "and the fight ends")
+
+
+func test_losing_them_ends_the_fight() -> void:
+	var m := _at(Bestiary.drowned_miner(), Vector2i(8, 3))
+	var b := _battle([m], Vector2i(2, 3))
+	for y in range(1, 7):
+		level.set_tile(Vector2i(5, y), Level.Tile.WALL)   # a solid wall: no way through, no sight
+	level.rebuild_paths()
+	b.start(true)
+	b.hero_end_turn()
+	check(b.over and b.winner == "escaped", "with nothing able to see him, Thomas has lost them")
+
+
+func test_careful_step_draws_no_free_strike() -> void:
+	var m := _at(Bestiary.drowned_miner(), Vector2i(5, 3))
+	var b := _battle([m])
+	b.start(true)
+	b.hero_shift(Vector2i(3, 3))
+	eq(b.hero.cell, Vector2i(3, 3), "stepped away")
+	eq(b.hero.stamina, 24, "with no free strike")
+	eq(b.budget.maneuver, 0, "it used the maneuver")
+	eq(b.budget.move, 5, "and none of his movement")

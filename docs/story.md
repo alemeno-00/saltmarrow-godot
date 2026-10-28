@@ -45,6 +45,13 @@ What has been agreed so far. Claude keeps this file in step with the shared desi
 - Minion squads, standard enemies, leaders and solos; the enemy side spends Draw Steel malice.
 - Only big attacks are telegraphed, by body language and darkened squares. Ability cards show all three tiers. The dice roll shows briefly, bigger on crits.
 - Fleeing costs a free strike; enemies chase and can lose you; wounded enemies flee and return with others.
+- **Careful step** (a maneuver): move one square without giving free strikes.
+- **Malice** (the enemy side's resource) grows every round: +1, plus 1 for every two rounds gone. Current spends:
+  - **Swarming Hymn** (4): every Faithful not yet beside Thomas surges 2 squares.
+  - **Press the Attack** (5): a standard enemy strikes a second time.
+- **Flanking:** an enemy directly opposite an ally, across Thomas, attacks with an edge.
+- **Breaking:** a standard enemy at 30% Stamina or less runs, once. If it gets out of sight it escapes. About 20 turns later it comes back, partly healed, with two Faithful, hunting Thomas.
+- **Losing them:** if no enemy can see Thomas at the end of their turns, and none is within 2 squares, the fight ends. They go and search where he was last seen.
 
 ## Items
 

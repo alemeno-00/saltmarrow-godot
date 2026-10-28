@@ -7,6 +7,7 @@ signal ability_pressed(index: int)
 signal stand_pressed
 signal breath_pressed
 signal end_turn_pressed
+signal step_pressed
 
 const INK := Color(0.9, 0.85, 0.75)
 const DIM := Color(0.6, 0.57, 0.52)
@@ -15,10 +16,12 @@ const AMBER := Color(1.0, 0.8, 0.45)
 var portrait: Portrait
 var dice: DiceView
 var resolve_label: Label
+var malice_label: Label
 var actions_label: Label
 var bar: HBoxContainer
 var ability_buttons: Array[Button] = []
 var stand_button: Button
+var step_button: Button
 var breath_button: Button
 var end_button: Button
 var card: Label
@@ -44,6 +47,9 @@ func _ready() -> void:
 
 	resolve_label = _label(Vector2(136, 720 - 128), 18, AMBER)
 	actions_label = _label(Vector2(136, 720 - 100), 14, INK)
+	malice_label = _label(Vector2(1280 - 220, 44), 16, Color(0.85, 0.35, 0.3))
+	malice_label.size = Vector2(206, 24)
+	malice_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 
 	log_label = _label(Vector2(14, 720 - 290), 13, DIM)
 	log_label.size = Vector2(430, 150)
@@ -119,6 +125,10 @@ func set_abilities(abilities: Array) -> void:
 		b.mouse_entered.connect(func(): _hovered = i; _show_card())
 		b.mouse_exited.connect(func(): _hovered = -1; _show_card())
 		ability_buttons.append(b)
+	step_button = _button("F  Careful step")
+	step_button.pressed.connect(func(): step_pressed.emit())
+	step_button.mouse_entered.connect(func(): _hint("Careful step   ·   maneuver\nMove one square without giving anyone a free strike.\nPress F (or hold Shift) and click a square next to you."))
+	step_button.mouse_exited.connect(func(): _show_card())
 	stand_button = _button("Q  Stand up")
 	stand_button.pressed.connect(func(): stand_pressed.emit())
 	breath_button = _button("B  Catch breath")
@@ -132,6 +142,18 @@ func select(i: int) -> void:
 	for j in ability_buttons.size():
 		ability_buttons[j].modulate = AMBER if j == i else Color.WHITE
 	_show_card()
+
+
+func _hint(text: String) -> void:
+	card.text = text
+	card_panel.visible = true
+	card_panel.reset_size()
+	card_panel.position.y = 720 - 76 - card_panel.size.y
+
+
+func set_stepping(on: bool) -> void:
+	if step_button:
+		step_button.modulate = AMBER if on else Color.WHITE
 
 
 func _show_card() -> void:
@@ -149,6 +171,7 @@ func show_fight(on: bool) -> void:
 	bar.visible = on
 	actions_label.visible = on
 	resolve_label.visible = on
+	malice_label.visible = on
 	log_label.visible = on
 	if not on:
 		card_panel.visible = false
@@ -172,8 +195,14 @@ func refresh(hero: Combatant, battle: Battle, can_act: bool) -> void:
 		var ab: Dictionary = _abilities[i]
 		ability_buttons[i].disabled = not (mine and can_act and battle.cannot_use(hero, ab) == "")
 	stand_button.disabled = not (mine and can_act and hero.prone and battle.budget.maneuver > 0)
+	step_button.disabled = not (mine and can_act and not hero.prone and battle.budget.maneuver > 0)
 	breath_button.disabled = not (mine and can_act and battle.budget.main > 0 and hero.recoveries > 0)
 	end_button.disabled = not (mine and can_act)
+
+
+## The enemy side's Malice: it grows every round, so long fights get worse.
+func set_malice(v: int) -> void:
+	malice_label.text = "Their Malice %d" % v
 
 
 func add_log(text: String) -> void:

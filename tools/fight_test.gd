@@ -42,14 +42,22 @@ func _initialize() -> void:
 		for e in game.enemies:
 			danger.append_array(e.telegraph)
 		if danger.has(h.cell):
+			# prefer a safe square that is still next to an enemy
+			var safe := Vector2i(-1, -1)
 			for c in game.reach:
 				if not danger.has(c):
-					game._combat_click(c)
-					await _until_ready()
-					break
-			game._end_hero_turn()
+					if safe.x < 0 or b.enemies_of(h).any(func(e): return Battle.adjacent(e.cell, c)):
+						safe = c
+			var shifts := b.shift_cells().filter(func(c): return not danger.has(c))
+			if not shifts.is_empty():
+				game._act(b.hero_shift(shifts[0]))
+				await _until_ready()
+			elif safe.x >= 0:
+				game._combat_click(safe)
+				await _until_ready()
+		if h.stamina < 8 and h.recoveries > 0 and b.budget.main > 0:
+			game._act(b.hero_catch_breath())
 			await _until_ready()
-			continue
 		# move next to the nearest enemy
 		var foes := b.enemies_of(h)
 		foes.sort_custom(func(a, c): return Battle.dist(a.cell, h.cell) < Battle.dist(c.cell, h.cell))
@@ -73,6 +81,8 @@ func _initialize() -> void:
 		# best ability we can use
 		for i in [4, 3, 1, 2, 0]:
 			var ab: Dictionary = h.abilities[i]
+			if i == 3 and b.valid_targets(h, ab).size() < 2:
+				continue
 			if b.cannot_use(h, ab) == "" and not b.valid_targets(h, ab).is_empty():
 				game._on_ability_key(i)
 				if game.selected >= 0:

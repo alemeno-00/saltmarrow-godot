@@ -5,8 +5,18 @@ extends RefCounted
 ##
 ## A round: Thomas takes his turn (move, maneuver, main action), then every enemy takes theirs.
 ## Thomas gains 2 Resolve at the start of each of his turns, and 1 more the first time he is hurt each round (Fury).
+##
+## The enemy side has Malice (Draw Steel's villain resource): it grows every round, and is spent on
+## Swarming Hymn (the Faithful surge forward together) and Press the Attack (a standard enemy strikes twice).
+## Enemies flank: an enemy directly opposite an ally across Thomas attacks with an edge.
+## A badly hurt standard enemy breaks and runs; if it gets out of sight it escapes, and will come back.
+## If no enemy can see Thomas at the end of their turns, he has lost them and the fight ends.
 
 const TIER_WORDS := ["weak", "solid", "strong"]
+const SIGHT := 7
+const HYMN_COST := 4
+const PRESS_COST := 5
+const FLEE_AT := 0.3
 
 var level: Level
 var units: Array[Combatant] = []
@@ -19,6 +29,8 @@ var winner := ""
 var rng := RandomNumberGenerator.new()
 var forced_rolls: Array = []   # queued [d1, d2] pairs, used by tests
 var injuries_on := true
+var malice := 0
+var last_seen := Vector2i.ZERO
 
 var _ev: Array = []
 
@@ -40,6 +52,8 @@ func roll_initiative() -> bool:
 func start(hero_first: bool) -> Array:
 	_ev = []
 	round = 1
+	malice = 1
+	last_seen = hero.cell
 	for u in units:
 		u.hurt_this_round = false
 		u.free_strike_ready = true
@@ -196,6 +210,32 @@ func hero_ability(idx: int, target_cell: Vector2i) -> Array:
 	return _flush()
 
 
+## Careful step (a maneuver): one square, without giving anyone a free strike.
+func hero_shift(c: Vector2i) -> Array:
+	if not is_hero_turn() or hero.prone or budget.maneuver <= 0:
+		return []
+	var d := c - hero.cell
+	if not adjacent(c, hero.cell) or not level.can_step(hero.cell, d) or occupant(c) != null:
+		return []
+	if level.get_tile(c) == Level.Tile.DOOR_CLOSED:
+		level.set_tile(c, Level.Tile.DOOR_OPEN)
+		_emit({"t": "door", "cell": c})
+	hero.cell = c
+	_emit({"t": "move", "unit": hero, "to": c})
+	_spend("maneuver")
+	return _flush()
+
+
+func shift_cells() -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	if not is_hero_turn() or hero.prone or budget.maneuver <= 0:
+		return out
+	for d in Level.DIRS_8:
+		if level.can_step(hero.cell, d) and occupant(hero.cell + d) == null:
+			out.append(hero.cell + d)
+	return out
+
+
 func hero_stand() -> Array:
 	if not is_hero_turn() or not hero.prone or budget.maneuver <= 0:
 		return []
@@ -270,16 +310,25 @@ func _spend(kind: String) -> void:
 
 
 func _enemy_phase() -> void:
+	malice += 1 + floori(round / 2.0)
+	_emit({"t": "malice", "value": malice})
+	_swarming_hymn()
 	for e in units.duplicate():
 		if over:
 			return
-		if e.team == hero.team or e.dead:
+		if e.team == hero.team or not e.alive():
 			continue
 		_begin_turn(e)
-		if not e.dead and not over:
+		if e.alive() and not over:
 			_enemy_act(e)
 		_end_turn(e)
 	if over:
+		return
+	if _hero_hidden():
+		over = true
+		winner = "escaped"
+		_log("Nothing can see Thomas. He has lost them, for now.")
+		_emit({"t": "end", "winner": winner})
 		return
 	round += 1
 	for u in units:
@@ -289,6 +338,15 @@ func _enemy_phase() -> void:
 
 
 func _enemy_act(e: Combatant) -> void:
+	if e.kind == "standard" and not e.fleeing and not e.fled_once and e.health_ratio() <= FLEE_AT and not hero.dying:
+		e.fleeing = true
+		e.fled_once = true
+		_cancel_telegraph(e, "breaking")
+		_emit({"t": "flee", "unit": e})
+		_log("The %s breaks and runs." % e.name)
+	if e.fleeing:
+		_flee(e)
+		return
 	if not e.telegraph.is_empty():
 		_big_attack(e)
 		_spend("main")
@@ -300,18 +358,12 @@ func _enemy_act(e: Combatant) -> void:
 		_spend("maneuver")
 	if hero.dead or over:
 		return
+	if sees_hero(e):
+		last_seen = hero.cell
+	var goal := hero.cell if sees_hero(e) or dist(e.cell, hero.cell) <= 2 else last_seen
 	if not adjacent(e.cell, hero.cell) and budget.move > 0:
-		var prev := reachable(e, budget.move)
-		var best := e.cell
-		var best_score := dist(e.cell, hero.cell) * 100
-		for c in prev:
-			var score := dist(c, hero.cell) * 100 + path_to(prev, e.cell, c).size()
-			if score < best_score:
-				best_score = score
-				best = c
-		if best != e.cell:
-			_walk(e, path_to(prev, e.cell, best))
-		if e.dead or over:
+		_approach(e, budget.move, goal)
+		if not e.alive() or over:
 			return
 	if adjacent(e.cell, hero.cell) and budget.main > 0:
 		if not e.big.is_empty() and e.big_cooldown <= 0:
@@ -321,7 +373,101 @@ func _enemy_act(e: Combatant) -> void:
 			_log("The %s raises its pick high..." % e.name)
 		else:
 			_attack(e, e.basic, [hero])
+			if e.kind == "standard" and malice >= PRESS_COST and not over and not hero.dead and adjacent(e.cell, hero.cell):
+				malice -= PRESS_COST
+				_emit({"t": "malice_spend", "name": "Press the Attack", "value": malice})
+				_log("Malice: the %s presses the attack." % e.name)
+				_attack(e, e.basic, [hero])
 		_spend("main")
+
+
+func sees_hero(e: Combatant) -> bool:
+	return dist(e.cell, hero.cell) <= SIGHT and level.line_of_sight(e.cell, hero.cell)
+
+
+func _hero_hidden() -> bool:
+	for e in enemies_of(hero):
+		if sees_hero(e) or dist(e.cell, hero.cell) <= 2:
+			return false
+	return true
+
+
+## Is `c` directly opposite one of e's allies, across Thomas? Standing there flanks him.
+func _flanks(e: Combatant, c: Vector2i) -> bool:
+	if not adjacent(c, hero.cell):
+		return false
+	var opposite := hero.cell * 2 - c
+	var o := occupant(opposite)
+	return o != null and o != e and o.team == e.team
+
+
+## Walk up to `limit` squares toward `goal`, preferring squares beside Thomas that flank him.
+func _approach(e: Combatant, limit: int, goal: Vector2i) -> void:
+	var prev := reachable(e, limit)
+	var best := e.cell
+	var best_score := dist(e.cell, goal) * 100
+	for c in prev:
+		var score := dist(c, goal) * 100 + path_to(prev, e.cell, c).size()
+		if goal == hero.cell and _flanks(e, c):
+			score -= 60
+		if score < best_score:
+			best_score = score
+			best = c
+	if best != e.cell:
+		_walk(e, path_to(prev, e.cell, best))
+
+
+## Malice: when there are at least two Faithful and some aren't yet beside Thomas, they all surge up to 2 squares.
+func _swarming_hymn() -> void:
+	var flock: Array[Combatant] = []
+	var far := false
+	for u in enemies_of(hero):
+		if u.style == "faithful":
+			flock.append(u)
+			if not adjacent(u.cell, hero.cell):
+				far = true
+	if flock.size() < 2 or not far or malice < HYMN_COST:
+		return
+	malice -= HYMN_COST
+	_emit({"t": "malice_spend", "name": "Swarming Hymn", "value": malice})
+	_log("Malice: the Faithful sing, and surge forward together.")
+	for f in flock:
+		if over:
+			return
+		if f.alive() and not f.prone and not adjacent(f.cell, hero.cell):
+			_approach(f, 2, hero.cell)
+
+
+## Run: as far from Thomas as it can get, out of his sight if possible. Out of sight and far enough, it escapes.
+func _flee(e: Combatant) -> void:
+	if e.prone:
+		e.prone = false
+		_emit({"t": "stand", "unit": e})
+		_spend("maneuver")
+	if budget.move > 0:
+		var prev := reachable(e, budget.move)
+		var best := e.cell
+		var best_score := _flee_score(e.cell)
+		for c in prev:
+			var score := _flee_score(c)
+			if score > best_score:
+				best_score = score
+				best = c
+		if best != e.cell:
+			_walk(e, path_to(prev, e.cell, best))
+	if not e.alive() or over:
+		return
+	var d := dist(e.cell, hero.cell)
+	if d > SIGHT or (d >= 4 and not level.line_of_sight(e.cell, hero.cell)):
+		e.fled = true
+		e.fleeing = false
+		_emit({"t": "escape", "unit": e})
+		_log("The %s limps away into the dark. It will be back." % e.name)
+		_check_over()
+
+
+func _flee_score(c: Vector2i) -> int:
+	return dist(c, hero.cell) * 10 + (15 if not level.line_of_sight(c, hero.cell) else 0)
 
 
 ## The squares a telegraphed blow will land on: where Thomas stands and either side of him.
@@ -449,6 +595,8 @@ func _attack(u: Combatant, ab: Dictionary, targets: Array) -> bool:
 	if u.injuries.has("arm"):
 		edges -= 1
 	if targets.size() == 1 and targets[0].prone:
+		edges += 1
+	if targets.size() == 1 and u.team != hero.team and _flanks(u, u.cell) and targets[0] == hero:
 		edges += 1
 	var r := _roll(u.might, edges)
 	_emit({"t": "roll", "unit": u, "ability": ab, "roll": r})
