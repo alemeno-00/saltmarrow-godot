@@ -23,7 +23,7 @@ How to use it:
 
 ## Now: the first playable fight
 
-These come first because the first fight is being built next.
+These come first because the first fight is being built next. **Please do jobs 1 to 8 (Thomas, the two enemies, gore, effects and dice) before more tiles:** the fight is playable now and needs its characters.
 
 - [ ] **1. Thomas, base body sheet** (`assets/characters/thomas/body.png`). Thomas from `docs/characters.md` in his dyed greatcoat and red scarf, no weapon in hand (weapons are separate layers, job 2). Rows:
   1. idle (4 frames, slow breathing)
@@ -57,7 +57,8 @@ These come first because the first fight is being built next.
   - Wide Arc: a heavy motion smear (4 frames, 96 × 96)
 - [ ] **7c. Thomas, careful step** (`assets/characters/thomas/body.png`, add a row 8): a guarded sidestep, maul held across his body (4 frames).
 - [ ] **8. Two d10 dice** (`assets/ui/dice/`). A ten-sided die tumbling (8 frames, 48 × 48), and its ten resting faces showing 1 to 10 as pips or marks, not numerals.
-- [ ] **9. The Salt Pits tiles** (`assets/tiles/salt_pits/`). The first biome: old mine workings with timber props. Floor (4 variations), wall (top and face, 4 variations), wall corners, a closed and open door, shallow water (4), rubble, and a timber prop. 32 × 32 each.
+- [ ] **9. The Sewers tiles** (`assets/tiles/sewers/`). **The first level:** the old town sewers under Saltmarrow, leading down into the mines. A first version is in review (pull request #3). Needs tiles that a generated level can use: floors, walls in every direction and corner, water channels with banks, bridges, doors, stairs down, and props. Not a single painted background.
+- [ ] **10. The Salt Pits tiles** (`assets/tiles/salt_pits/`). The second biome: old mine workings with timber props. Floor (4 variations), wall (top and face, 4 variations), wall corners, a closed and open door, shallow water (4), rubble, and a timber prop. 32 × 32 each.
 
 ## Later: Thomas in full
 

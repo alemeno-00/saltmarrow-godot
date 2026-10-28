@@ -29,6 +29,11 @@ What has been agreed so far. Claude keeps this file in step with the shared desi
 - **Backstories** are head starts: Fury (maces, Warfare), Shadow (daggers, Stealth), Elementalist (staves, Storm), Censor (flails, Faith), Talent (Mind, Survival).
 - **Survival:** full Stoneshard: hunger, thirst, fatigue, pain, sickness, injuries, Dread.
 
+## The levels
+
+- **The Sewers** come first: the old town sewers under Saltmarrow, which lead down into the mine workings.
+- Then the Salt Pits, the Forgotten Catacombs, the Blooming Deep, and the under-sea tunnels where the star fell.
+
 ## The loop
 
 - Take contracts in town, buy supplies, go down as an expedition. Walk back up, or reach an old **shaft landing** and ride the lift. Landings stay open for this life.
