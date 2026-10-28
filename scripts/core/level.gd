@@ -70,6 +70,23 @@ func can_step(from: Vector2i, dir: Vector2i) -> bool:
 	return true
 
 
+## Walls and closed doors block sight.
+func blocks_sight(c: Vector2i) -> bool:
+	var t := get_tile(c)
+	return t == Tile.WALL or t == Tile.DOOR_CLOSED
+
+
+## Can something at `a` see `b`? A straight line between the two squares, blocked by walls and closed doors.
+func line_of_sight(a: Vector2i, b: Vector2i) -> bool:
+	var n := maxi(absi(b.x - a.x), absi(b.y - a.y))
+	for i in range(1, n):
+		var t := float(i) / float(n)
+		var c := Vector2i(roundi(lerpf(a.x, b.x, t)), roundi(lerpf(a.y, b.y, t)))
+		if blocks_sight(c):
+			return false
+	return true
+
+
 ## A list of squares from `from` (excluded) to `to` (included), or empty if unreachable.
 func find_path(from: Vector2i, to: Vector2i) -> Array[Vector2i]:
 	var out: Array[Vector2i] = []

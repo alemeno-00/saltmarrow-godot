@@ -29,6 +29,7 @@ func _room() -> void:
 	l.set_tile(Vector2i(5, 3), Level.Tile.DOOR_CLOSED)
 	l.start = Vector2i(2, 3)
 	l.rebuild_paths()
+	game.clear_enemies()
 	game.level = l
 	game.view.show_level(l)
 	game.hero.place(l.start)

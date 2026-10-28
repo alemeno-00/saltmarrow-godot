@@ -2,7 +2,7 @@ extends SceneTree
 ## Runs every test file in tests/ headless:  godot --headless --path . -s tests/run_tests.gd
 ## Each test file extends RefCounted and has methods named test_*. A failed check throws, and the run exits 1.
 
-const FILES := ["res://tests/test_level.gd", "res://tests/test_movement.gd"]
+const FILES := ["res://tests/test_level.gd", "res://tests/test_movement.gd", "res://tests/test_power_roll.gd", "res://tests/test_battle.gd"]
 
 var failed := 0
 var passed := 0
