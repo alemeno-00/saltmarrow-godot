@@ -92,3 +92,44 @@ How it plays:
 - Answer the enemy's swing with Parry and Riposte.
 - Choose the right tool for each enemy: bleed the unarmoured, half-sword the armoured, pommel the dangerous.
 - Changing Guard rewards switching between them.
+
+## Daggers (Agility)
+
+The killer in the dark: **stealth, crits, bleeding, dual-wielding, and winning the fight before it starts.** The weakest weapon in a straight brawl.
+
+### Rules this tree uses
+
+- **Crits:** a natural 19 or 20 on the 2d10 gives the best tier plus the crit cinematic. Daggers widen the range.
+- **Unaware:** an enemy that hasn't spotted you, or can't see you. Attacks against it have an edge.
+- **Preparation abilities belong only to Daggers.**
+  - They're used while exploring, unseen, before a fight.
+  - They cost no Resolve. Instead they cost a few turns, some fatigue, and a quiet noise check. A failed check can alert enemies.
+  - What you set up is waiting when the fight begins.
+- **Unconscious:** out of the fight; takes no turns. Hurting it wakes it, but that hit is an automatic crit.
+
+| Node | Type | Cost | Effect (worst / middle / best) | Injury |
+| --- | --- | --- | --- | --- |
+| Stab | basic attack | free | 2 / 4 / 6 piercing | Torso 0 / 5 / 15% |
+| **Row 1** | | | | |
+| 1. Backstab | ability | 3 | Against an unaware or flanked enemy: 4 / 7 / 11 | Torso 10 / 30 / 50% |
+| 2. Twin Fangs | passive | | With a dagger in each hand, Stab hits twice; the off-hand hit does half damage | |
+| **Row 2** | | | | |
+| 3. Open the Vein | ability | 3 | 2 / 4 / 6; heavy bleeding (4 a turn) on middle and best | Arm or leg 10 / 25 / 40% |
+| 4. Throw | ability | 2 in a fight, free outside one | Range 5: 2 / 4 / 7; the dagger lands by the target. **Outside a fight:** knock out a lantern or brazier (the area goes dark), or clatter it off a far wall (one enemy wanders off alone to investigate) | Leg 0 / 10 / 20% |
+| 5. Study the Mark | preparation | | Watch an unaware enemy for 2 turns: learn its health, armour and abilities. Your first attack on it crits on 15+ | |
+| **Row 3** | | | | |
+| 6. Cut the Straps | preparation | | Creep up to an unaware enemy and slice its straps; one armour piece falls off when the fight starts | |
+| 7. Tripwire | preparation | | String a wire across a square. The first enemy through falls prone | Leg 40% |
+| 8. Killer's Eye | passive | | Dagger crits on a natural 17+ | |
+| **Row 4** | | | | |
+| 9. Whisper | ability or preparation | 5 in a fight; fatigue outside one | A hand over the mouth, a blow to the temple. Only against an unaware enemy. Silent: nearby enemies don't notice. Minions and standard enemies are knocked **unconscious** for 1 / 2 / 3 rounds; leaders and solos are only dazed. Used before a fight, the target stays down until the fight starts, then for those rounds | Head 0 / 10 / 25% |
+| 10. The Shadow's Due | capstone | | Extra Resolve when you land a crit | |
+
+How it plays:
+
+1. Study the leader.
+2. Cut its straps.
+3. String a tripwire on the escape route.
+4. Knock out the lantern.
+5. Lure one enemy off and Whisper it.
+6. Backstab the leader as the fight begins.

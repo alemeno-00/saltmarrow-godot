@@ -80,6 +80,30 @@ These come first because the first fight is being built next.
 - [ ] Armour and clothing as layers over every frame of the base body (head, body, hands, legs, feet, cloak). **This is the biggest job on the list;** we'll decide how far to take it after the first fight.
 - [ ] Portraits: in pain, Dread rising, bandaged head, swollen eye, arm in a sling, each Mark of the star, and one for each of the five backstories (Fury, Shadow, Elementalist, Censor, Talent).
 
+- [ ] **Thomas, dagger abilities** (`assets/characters/thomas/dagger_abilities.png`). A dagger in each hand; see `docs/trees.md`, Daggers. Rows:
+  1. twin stab (6 frames)
+  2. Backstab (7)
+  3. Open the Vein (6, a quick slash at the wrist or thigh)
+  4. Throw (5)
+  5. Study the Mark (4, crouched and still, eyes on the target; looped)
+  6. Cut the Straps (6, crouched behind someone, sawing)
+  7. Tripwire (8, kneeling and tying off a wire)
+  8. Whisper (8, from behind: hand over the mouth, a pommel blow to the temple)
+- [ ] Dagger props and effects (`assets/effects/dagger/`), each 32 × 32:
+  - a thrown dagger spinning (4 frames)
+  - a dagger lying on the floor
+  - a tripwire strung across a square, seen from above, plus a snapped one
+  - a lantern or brazier going out (6 frames)
+  - a clatter: a small spark and dust where a dagger hits stone (4 frames)
+- [ ] Stealth reactions for every enemy (start with the Drowned Miner and the Faithful):
+  - slumping unconscious (5 frames)
+  - lying unconscious (2, looped)
+  - waking (4)
+  - wandering off to investigate (6, head turned, uneasy)
+  - tripping on a wire (5)
+  - armour falling away as cut straps give (4)
+  - an alerted start (3, the moment it spots Thomas)
+
 ## Later: the world
 
 - [ ] Every enemy type, each with the rows from job 4, and a smaller set for minions.
