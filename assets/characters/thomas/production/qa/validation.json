@@ -1,0 +1,93 @@
+{
+  "standing": {
+    "width": 64,
+    "height": 64,
+    "alphaValues": [
+      0,
+      255
+    ],
+    "opaquePixels": 547,
+    "opaqueColours": 31,
+    "bbox": [
+      23,
+      10,
+      40,
+      55
+    ],
+    "solePixelsAtY55": [
+      30,
+      31,
+      32
+    ],
+    "sha256": "a8c245477babc6c9afb201e546ef9896fe0196f22e81695e846de9c1dc0f1bea",
+    "root": [
+      32,
+      56
+    ],
+    "animation": "Single still; no animation validation or completion claimed"
+  },
+  "portrait": {
+    "width": 128,
+    "height": 128,
+    "alphaValues": [
+      0,
+      255
+    ],
+    "opaquePixels": 9073,
+    "opaqueColours": 31,
+    "bbox": [
+      4,
+      7,
+      123,
+      123
+    ],
+    "solePixelsAtY55": [
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87,
+      88
+    ],
+    "sha256": "4052058b7bc19ea894485ad8d06e710104cb3181d86686b8478022cda060e903",
+    "animation": "Single portrait; no animation"
+  }
+}
