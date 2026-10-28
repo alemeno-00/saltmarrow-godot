@@ -50,6 +50,9 @@ These come first because the first fight is being built next.
 
 - [ ] Thomas attacks for blades, daggers, flails, spears and staves, each with wind-up, strike, recovery and crit rows as in job 2.
 - [ ] Thomas casting poses for the Storm, Faith, Mind and Star spell schools.
+- [ ] Weapon swap animations: draw and stow for each weapon type (4 frames each), and pulling something from the bag (6).
+- [ ] Star casting in three strengths: Hushed (faint glow), Open, and Unbound (light pouring out of Thomas, salt crystals forming on him). 6 frames each.
+- [ ] Thomas portrait and body overlay: arm turned to salt crystal (a Star's Reach injury).
 - [ ] Armour and clothing as layers over every frame of the base body (head, body, hands, legs, feet, cloak). **This is the biggest job on the list;** we'll decide how far to take it after the first fight.
 - [ ] Portraits: in pain, Dread rising, bandaged head, swollen eye, arm in a sling, each Mark of the star, and one for each of the five backstories (Fury, Shadow, Elementalist, Censor, Talent).
 
@@ -57,6 +60,7 @@ These come first because the first fight is being built next.
 
 - [ ] Every enemy type, each with the rows from job 4, and a smaller set for minions.
 - [ ] Severed parts for each enemy type.
+- [ ] Star Phenomena effects (`assets/effects/star/`): salt frost spreading across floor tiles (6 frames, 32 × 32), lights guttering, a lagging shadow, a salt-water nosebleed on the portrait, and a tear in the air where something comes through (8 frames, 64 × 64).
 - [ ] Telegraph marks: the darkened-square effect under incoming big attacks.
 - [ ] An icon for every weapon, armour piece and consumable (list to follow).
 - [ ] The cast of Saltmarrow: a portrait and a map sprite for each person in `docs/characters.md`.

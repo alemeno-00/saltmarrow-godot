@@ -52,3 +52,46 @@ What has been agreed so far. Claude keeps this file in step with the shared desi
 - Armour by slot with protection by damage type, weight, noise and wear.
 - Food, water, medicine, light, tools, throwables, manuals and tomes. The bag grid limits space; weight limits speed.
 - Town services: Tobias (weapons, repair), Nell (medicine, injuries), Bram (food, water), Rook (star-metal, rarities), Agathe (identifies strange things).
+
+## Skills, weapons and spells
+
+- **Weapons give the basic attack.** Each weapon type has its own free strike.
+- **Trees give abilities.** Each tree has about 10 nodes, half abilities and half passives. Abilities are Draw Steel power rolls: 2d10 + a stat, with three tiers.
+- **Weapon abilities need that weapon in hand.**
+- **Trees open by finding their manual or tome.**
+- **Levels:** 1 tree point per level, and a stat point every few levels. The stats are Might, Agility, Reason, Intuition and Presence.
+- **Weapon trees:** Maces, Swords, Daggers, Flails, Spears, Staves.
+- **Spell schools:**
+  - Storm (Reason), Faith (Presence) and Mind (Intuition) are **safe**.
+  - Star is the only dangerous school.
+- **Other trees:** Stealth, Survival, Warfare.
+- **Resolve** is the one resource. You gain it each turn of a fight, spend it on bigger abilities and spells, and it empties after the fight.
+
+### Swapping weapons
+
+- Two weapons are ready: one in hand, one on the belt or back. Swapping between them costs your **maneuver**.
+- Taking a weapon out of the bag costs your **main action**.
+- Dropping a weapon is free; it lands on the floor.
+- The Warfare node **Quick Hands** makes the first swap of each fight free.
+
+### The Star school (after Dark Heresy's psykers)
+
+- **Attunement** rises with points in the Star tree, and sets the power of Star spells.
+- Choose how to cast each spell, before rolling:
+
+| Mode | Power | Risk |
+| --- | --- | --- |
+| Hushed | Half Attunement; best result is tier 2 | No phenomena; costs 1 Dread |
+| Open | Full Attunement | Doubles on the 2d10 cause a Star Phenomenon |
+| Unbound | Attunement +2, and the result moves up one tier | Always causes a phenomenon, rolled with a bonus; costs 2 Dread |
+
+- **Star Phenomena:** roll d100 and add current Dread.
+  - Low results are eerie and mostly harmless: salt frost spreading, lights guttering, your shadow moving late, Ellen humming, the Faithful turning toward you, a salt-water nosebleed.
+  - High results reach the **Star's Reach**:
+    - the spell hits the wrong target or spreads
+    - Thomas is pulled to a random nearby square
+    - something comes through
+    - Agathe feels it and the level becomes alert
+    - an arm turns to salt crystal (a lasting injury)
+    - a permanent **Mark**
+    - at the very top, death
