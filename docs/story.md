@@ -67,6 +67,37 @@ What has been agreed so far. Claude keeps this file in step with the shared desi
 - **Other trees:** Stealth, Survival, Warfare.
 - **Resolve** is the one resource. You gain it each turn of a fight, spend it on bigger abilities and spells, and it empties after the fight.
 
+### Earning extra Resolve
+
+You earn it two ways:
+
+- **Your backstory** gives one trigger for that life.
+- **Each tree's capstone** (its deepest node) adds another. Reaching more capstones means more ways to earn Resolve.
+
+| Backstory | Extra Resolve when you... |
+| --- | --- |
+| Fury | are hurt |
+| Shadow | strike an enemy that can't see you |
+| Elementalist | hit two or more enemies with one ability |
+| Censor | are hurt by an enemy, or an enemy hurts someone near you |
+| Talent | make an enemy fail against you (a missed attack, or a resisted spell) |
+
+| Tree capstone | Extra Resolve when you... |
+| --- | --- |
+| Maces | knock an enemy down or break its armour |
+| Swords | parry or riposte |
+| Daggers | land a crit |
+| Flails | hit an enemy behind a shield or in cover |
+| Spears | strike an enemy as it moves into your reach |
+| Staves | block a hit |
+| Storm | push an enemy into something |
+| Faith | heal or ward |
+| Mind | frighten an enemy |
+| Star | cause a Star Phenomenon |
+| Stealth | start a fight unseen |
+| Survival | end your turn bleeding, poisoned or hungry |
+| Warfare | are surrounded by two or more enemies |
+
 ### Swapping weapons
 
 - Two weapons are ready: one in hand, one on the belt or back. Swapping between them costs your **maneuver**.
