@@ -1,0 +1,52 @@
+{
+  "status": "plan_only_no_animation_frames_delivered",
+  "frame_size": [64, 64],
+  "root": [32, 56],
+  "facing": "right",
+  "grid_size": [32, 32],
+  "coordinate_origin": "top_left_zero_based",
+  "row_numbers": "one_based",
+  "body": {
+    "target_path": "assets/characters/thomas/body.png",
+    "canvas": [384, 448],
+    "populated_cells": 37,
+    "trailing_empty_cells": 5,
+    "rows": [
+      {"row":1,"name":"idle","frames":4,"loop":true,"proposed_fps":4},
+      {"row":2,"name":"walk","frames":6,"loop":true,"proposed_fps":8},
+      {"row":3,"name":"sneak","frames":6,"loop":true,"proposed_fps":6},
+      {"row":4,"name":"hurt","frames":3,"loop":false,"proposed_fps":10},
+      {"row":5,"name":"wounded_walk","frames":6,"loop":true,"proposed_fps":6},
+      {"row":6,"name":"dying_crawl","frames":6,"loop":true,"proposed_fps":5},
+      {"row":7,"name":"death","frames":6,"loop":false,"hold_last":true,"proposed_fps":7}
+    ]
+  },
+  "mace": {
+    "target_path": "assets/characters/thomas/attack_mace.png",
+    "canvas": [512, 256],
+    "populated_cells": 17,
+    "trailing_empty_cells": 15,
+    "rows": [
+      {"row":1,"name":"wind_up","frames":3,"loop":false,"proposed_fps":6},
+      {"row":2,"name":"strike","frames":3,"loop":false,"proposed_fps":12},
+      {"row":3,"name":"recovery","frames":3,"loop":false,"proposed_fps":7},
+      {"row":4,"name":"crit","frames":8,"loop":false,"proposed_fps":6}
+    ]
+  },
+  "careful_step": {
+    "status": "pending_body_weapon_layer_decision",
+    "requested_row": 8,
+    "frames": 4,
+    "canvas_if_appended": [384, 512]
+  },
+  "validation_required_when_frames_exist": [
+    "dimensions_and_alpha",
+    "row_counts_and_blank_trailing_cells",
+    "root_and_sole_alignment",
+    "no_clipping_or_stray_pixels",
+    "hand_weapon_socket_continuity",
+    "distinct_pose_progression",
+    "loop_seams_and_foot_skating",
+    "native_size_dungeon_camera_review"
+  ]
+}
