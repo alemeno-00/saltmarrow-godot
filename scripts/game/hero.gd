@@ -1,9 +1,38 @@
 class_name Hero
 extends ActorView
-## Thomas on the map. Placeholder art (a figure in a dark greatcoat and Ellen's red scarf) until the real sprites arrive.
+## Thomas on the map. Uses ChatGPT's standing sprite (one still, facing right; mirrored to face left)
+## until the animated body sheet arrives. Falls back to a drawn placeholder if the image is missing.
+
+const SPRITE := "res://assets/characters/thomas/production/sprites/standing-candidate.png"
+const FEET := Vector2(32, 56)   # where his feet are in the 64 x 64 frame
+
+var _tex: Texture2D = null
+
+
+func _ready() -> void:
+	if ResourceLoader.exists(SPRITE):
+		_tex = load(SPRITE)
 
 
 func _draw_body() -> void:
+	if _tex != null:
+		# feet on the square's lower part, where the shadow is
+		var at := Vector2(-FEET.x, 12 - FEET.y)
+		if facing >= 0:
+			draw_texture_rect(_tex, Rect2(at, Vector2(64, 64)), false, _tint())
+		else:
+			draw_texture_rect(_tex, Rect2(at + Vector2(64, 0), Vector2(-64, 64)), false, _tint())
+		return
+	_draw_placeholder()
+
+
+func _tint() -> Color:
+	if dying:
+		return Color(0.75, 0.72, 0.72)
+	return Color.WHITE
+
+
+func _draw_placeholder() -> void:
 	var f := float(facing)
 	# legs
 	draw_rect(Rect2(-4, 4, 3, 8), Color("2a2622"))

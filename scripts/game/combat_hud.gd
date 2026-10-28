@@ -41,23 +41,23 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	portrait = Portrait.new()
-	portrait.position = Vector2(14, 720 - 132)
-	portrait.size = Vector2(112, 118)
+	portrait.position = Vector2(12, 720 - 152)
+	portrait.size = Vector2(132, 150)
 	add_child(portrait)
 
-	resolve_label = _label(Vector2(136, 720 - 128), 18, AMBER)
-	actions_label = _label(Vector2(136, 720 - 100), 14, INK)
+	resolve_label = _label(Vector2(156, 720 - 128), 18, AMBER)
+	actions_label = _label(Vector2(156, 720 - 100), 14, INK)
 	malice_label = _label(Vector2(1280 - 220, 44), 16, Color(0.85, 0.35, 0.3))
 	malice_label.size = Vector2(206, 24)
 	malice_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 
-	log_label = _label(Vector2(14, 720 - 290), 13, DIM)
+	log_label = _label(Vector2(14, 720 - 310), 13, DIM)
 	log_label.size = Vector2(430, 150)
 	log_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	log_label.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
 
 	bar = HBoxContainer.new()
-	bar.position = Vector2(136, 720 - 64)
+	bar.position = Vector2(156, 720 - 64)
 	bar.add_theme_constant_override("separation", 6)
 	add_child(bar)
 
@@ -237,8 +237,13 @@ class Portrait extends Control:
 	var dazed := false
 	var _words := ["Steady", "Hurt", "Badly hurt", "Dying"]
 
+	const ART := "res://assets/characters/thomas/production/sprites/steady-portrait-candidate.png"
+	var _tex: Texture2D = null
+
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if ResourceLoader.exists(ART):
+			_tex = load(ART)
 
 	func set_state(h: Combatant) -> void:
 		var s := 0
@@ -254,6 +259,9 @@ class Portrait extends Control:
 			queue_redraw()
 
 	func _draw() -> void:
+		if _tex != null:
+			_draw_art()
+			return
 		var o := Vector2(4, 4)
 		draw_rect(Rect2(Vector2.ZERO, Vector2(104, 104)), Color(0.05, 0.05, 0.06))
 		draw_rect(Rect2(Vector2.ZERO, Vector2(104, 104)), Color(0.45, 0.38, 0.28), false, 2.0)
@@ -298,6 +306,30 @@ class Portrait extends Control:
 			draw_rect(Rect2(Vector2.ZERO, Vector2(104, 104)), Color(0.7, 0.75, 1.0, 0.12))
 		var f := ThemeDB.fallback_font
 		draw_string(f, Vector2(0, 116), _words[state], HORIZONTAL_ALIGNMENT_CENTER, 104, 13, Color(0.9, 0.85, 0.75) if state < 2 else Color(0.95, 0.5, 0.45))
+
+
+	func _draw_art() -> void:
+		var box := Rect2(Vector2(2, 2), Vector2(128, 128))
+		draw_rect(box.grow(2), Color(0.45, 0.38, 0.28))
+		draw_rect(box, Color(0.05, 0.05, 0.06))
+		var tint: Color = [Color.WHITE, Color(0.95, 0.88, 0.86), Color(0.85, 0.74, 0.72), Color(0.58, 0.58, 0.62)][state]
+		draw_texture_rect(_tex, box, false, tint)
+		var blood := Color(0.42, 0.03, 0.05)
+		var p := box.position
+		# 128 x 128 face: mouth near (82, 60), eye near (82, 45), scarred cheek near (67, 47), brow near (75, 36)
+		if state >= 1:
+			draw_rect(Rect2(p + Vector2(81, 61), Vector2(1, 3)), blood)
+			draw_rect(Rect2(p + Vector2(80, 49), Vector2(4, 2)), Color(0.35, 0.22, 0.32, 0.4))
+		if state >= 2:
+			draw_rect(Rect2(p + Vector2(75, 34), Vector2(1, 7)), blood)
+			draw_rect(Rect2(p + Vector2(65, 52), Vector2(1, 5)), blood)
+			draw_rect(Rect2(p + Vector2(82, 64), Vector2(1, 4)), blood)
+		if state >= 3:
+			draw_rect(box, Color(0.1, 0.1, 0.14, 0.25))
+		if dazed:
+			draw_rect(box, Color(0.7, 0.75, 1.0, 0.12))
+		var f := ThemeDB.fallback_font
+		draw_string(f, Vector2(2, 146), _words[state], HORIZONTAL_ALIGNMENT_CENTER, 128, 13, Color(0.9, 0.85, 0.75) if state < 2 else Color(0.95, 0.5, 0.45))
 
 
 ## Two tumbling d10s, then the total and its tier. Bigger on a crit.

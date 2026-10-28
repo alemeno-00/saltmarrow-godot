@@ -93,6 +93,12 @@ func _initialize() -> void:
 				break
 		if turns == 2:
 			await _shot("2_fighting")
+			var keep := h.stamina
+			h.stamina = 6
+			game._refresh()
+			await _shot("2b_badly_hurt")
+			h.stamina = keep
+			game._refresh()
 		if h.stamina < 10 and h.recoveries > 0 and b.budget.main > 0:
 			game._act(b.hero_catch_breath())
 			await _until_ready()
