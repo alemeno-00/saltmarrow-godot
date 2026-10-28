@@ -133,3 +133,34 @@ How it plays:
 4. Knock out the lantern.
 5. Lure one enemy off and Whisper it.
 6. Backstab the leader as the fight begins.
+
+## Staves (Reason)
+
+The scholar's weapon: a two-handed quarterstaff that **blocks, trips and holds enemies off**, and above all **strengthens spells**.
+
+- **Spells don't need a staff.** One free hand is enough to cast, so sword-and-spell builds work.
+- A pure spellcaster still wants one, because a staff makes spells much stronger and safer.
+
+| Node | Type | Cost | Effect (worst / middle / best) | Injury |
+| --- | --- | --- | --- | --- |
+| Staff Strike | basic attack | free | 2 / 4 / 6 crushing | Head 0 / 0 / 10% |
+| **Row 1** | | | | |
+| 1. Block | triggered ability | 2, once per round | When any attack hits you, including ranged, reduce the damage by 5 | |
+| 2. Channel | passive | | Spells cast with a staff in hand do +2 damage and reach 2 squares further | |
+| **Row 2** | | | | |
+| 3. Sweep | ability | 3 | 2 / 4 / 6; knocked prone on middle and best | Leg 0 / 10 / 25% |
+| 4. Hold at Bay | ability | 3 | 2 / 4 / 6; push 1; the target can't step next to you until your next turn | |
+| 5. Quick Casting | passive | | Once per fight, cast a spell as a maneuver | |
+| **Row 3** | | | | |
+| 6. Vault | maneuver | 2 | Plant the staff and vault up to 2 squares over an enemy, gap or water, without giving free strikes | |
+| 7. Grounded Staff | passive | | Star spells cast with a staff in hand subtract 10 from the Phenomena roll | |
+| 8. Spellstrike | ability | 5 | A Staff Strike that also releases one of your known spells at the same target | |
+| **Row 4** | | | | |
+| 9. Conduit | ability | 7 | Your next spell this turn moves up one tier and can target one extra enemy | |
+| 10. The Scholar's Due | capstone | | Extra Resolve when you block a hit | |
+
+How it plays:
+
+- Hold at Bay and Sweep keep enemies off you; Block and Vault get you out of trouble.
+- Channel, Spellstrike and Conduit make every spell hit harder.
+- Grounded Staff makes the staff the careful way to touch the Star.

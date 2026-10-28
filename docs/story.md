@@ -64,6 +64,7 @@ What has been agreed so far. Claude keeps this file in step with the shared desi
 - **Spell schools:**
   - Storm (Reason), Faith (Presence) and Mind (Intuition) are **safe**.
   - Star is the only dangerous school.
+- **Spells need one free hand, not a staff.** A staff makes them stronger and safer.
 - **Other trees:** Stealth, Survival, Warfare.
 - Tree details are in `docs/trees.md`.
 - **Resolve** is the one resource. You gain it each turn of a fight, spend it on bigger abilities and spells, and it empties after the fight.

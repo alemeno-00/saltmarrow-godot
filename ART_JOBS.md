@@ -95,6 +95,18 @@ These come first because the first fight is being built next.
   - a tripwire strung across a square, seen from above, plus a snapped one
   - a lantern or brazier going out (6 frames)
   - a clatter: a small spark and dust where a dagger hits stone (4 frames)
+- [ ] **Thomas, staff abilities** (`assets/characters/thomas/staff_abilities.png`). A plain wooden quarterstaff held in two hands; see `docs/trees.md`, Staves. Rows:
+  1. Block (4 frames)
+  2. Sweep (6, a low swing at the legs)
+  3. Hold at Bay (5, a hard jab with the end of the staff)
+  4. Vault (8, planting the staff and swinging over)
+  5. Spellstrike (8, a strike that ends with light bursting from the head of the staff)
+  6. Conduit (8, staff raised, power gathering in it)
+- [ ] Casting with one hand while holding a weapon in the other, for each spell school. Spells don't need a staff, so sword-and-spell builds will use this.
+- [ ] Staff effects (`assets/effects/staff/`):
+  - a block impact (4 frames, 32 × 32)
+  - a staff head glowing with each school's colour (Storm, Faith, Mind, Star; 4 frames each, looped, 32 × 32)
+  - Grounded Staff: Star backlash crackling down the staff into the floor (6 frames, 64 × 64)
 - [ ] Stealth reactions for every enemy (start with the Drowned Miner and the Faithful):
   - slumping unconscious (5 frames)
   - lying unconscious (2, looped)
