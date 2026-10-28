@@ -129,6 +129,20 @@ These come first because the first fight is being built next.
   - the Old Bell: a ghostly bell and ring of sound (10 frames, 128 × 128)
   - Release: a star-touched body crumbling into salt (8 frames, 64 × 64)
   - a frightened enemy cowering and fleeing (6 frames, for every enemy)
+- [ ] Mind spell effects (`assets/effects/mind/`); see `docs/trees.md`, Mind. A cold violet shimmer, distorted rather than bright:
+  - Mind Spike (4 frames, 64 × 32), plus its echo jumping between Hollow Faith
+  - Unseen Hand: a faint distortion gripping a target (6 frames, 64 × 64)
+  - Read Intent: a faint ghost-image of each enemy's next move (looped, 64 × 64)
+  - Veil: Thomas fading to a heat-haze outline (6 frames, then looped)
+  - Phantom: a flickering illusory Thomas (looped), and it shattering when hit (6 frames)
+  - Turncoat: eyes clouding, turning on allies (overlay, 6 frames)
+  - Nightmare: a 3×3 area of shadowy shapes (10 frames, 96 × 96)
+- [ ] Mind reactions for each faction:
+  - the Faithful waking from the hymn: confusion, then running (8 frames)
+  - Hollow Faith frozen rigid in place (looped)
+  - the Drowned sinking into water (6 frames) and resurfacing (6 frames)
+  - Carrion Brood frenzy (6 frames, looped)
+  - confused, stumbling (6 frames, for every enemy)
 - [ ] Stealth reactions for every enemy (start with the Drowned Miner and the Faithful):
   - slumping unconscious (5 frames)
   - lying unconscious (2, looped)

@@ -245,3 +245,45 @@ Combos:
 - **The Star loop:** cast a Star spell Unbound (+2 Dread), pay for Smite with that Dread through Penance, and Confess the rest onto an enemy.
 - **The walking sanctuary:** a flail, Swinging Censer and Hallowed Ground. Enemies near you weaken and burn, and Star spells you cast are safer.
 - **Holding the line:** Bind, the Old Bell and Confession stop enemies reaching you; Mend and Martyr's Grace keep you standing.
+
+## Mind (Intuition)
+
+Themes: **fear, illusion, unseen hands, reading intent.** Control and deception rather than raw damage. It can make enemies unaware again mid-fight, so it pairs naturally with Daggers.
+
+- **Frightened:** flees, can't approach the one it fears, and attacks with a bane.
+- **Confused:** acts at random on its turn.
+
+| Node | Type | Cost | Effect (worst / middle / best) | Injury |
+| --- | --- | --- | --- | --- |
+| Mind Spike | basic spell | free | Range 6: 2 / 4 / 6 psychic, **ignores armour**. On best, the target's next attack has a bane | |
+| **Row 1** | | | | |
+| 1. Unseen Hand | spell | 3 | Range 6: push or pull 2 / 3 / 4 squares. On best you may instead rip the weapon from its hands | |
+| 2. Read Intent | passive | | See what every enemy will do on its next turn, including attacks too small to telegraph | |
+| **Row 2** | | | | |
+| 3. Terror | spell | 3 | Range 5: frightened for 1 / 2 / 3 rounds | |
+| 4. Veil | maneuver | 3 | Vanish from enemies' minds until you attack or your next turn ends. Enemies become **unaware** of you (enables Backstab and Whisper mid-fight) | |
+| 5. Feedback | passive | | Enemies you've frightened, confused or turned take 2 psychic at the start of each of their turns | |
+| **Row 3** | | | | |
+| 6. Phantom | spell | 3 | An illusory Thomas within 5 squares. Enemies that see it attack it instead, until it's hit or 2 rounds pass | |
+| 7. Turncoat | spell | 5 | Range 5, a minion or standard enemy: confused / attacks its nearest ally / **fights for you for 2 rounds** | |
+| 8. Quiet Mind | passive | | Immune to fear. Attempts to daze or confuse you have a bane | |
+| **Row 4** | | | | |
+| 9. Nightmare | spell | 7 | A 3×3 area within 6: 3 / 5 / 7 psychic, frightened for 1 / 2 / 3 rounds. Frightened enemies flee blindly, into water, traps or each other | |
+| 10. The Mind's Due | capstone | | Extra Resolve when you frighten an enemy | |
+
+### How Mind behaves on each faction
+
+| Faction | What's inside | Effect |
+| --- | --- | --- |
+| **The Faithful** | Recently converted, still human underneath | Normal. **Turncoat on best breaks the hymn:** the person wakes, remembers who they are, and leaves the deep for good. Spared, not killed. |
+| **Hollow Faith** | Emptied for the star; they share one hymn, like a hive | Terror and Nightmare **hold them in place** instead of making them flee. **Mind Spike echoes** to another Hollow within 3 squares. **Turncoat is one tier stronger.** |
+| **The Drowned** | Minds sunk far down | Frightened Drowned **sink into the nearest water**, vanish for those rounds, then resurface elsewhere, possibly behind you. With no water nearby, they freeze. Read Intent sometimes picks up **Ellen's humming**. |
+| **Carrion Brood** | Nothing left but hunger | **Fear becomes frenzy:** a frightened Brood attacks the nearest **wounded** creature, packmate or Thomas. |
+
+- **Read Intent hears the star** on any star-touched enemy: hymns, whispers, voices. Flavour only; Mind stays safe.
+
+### Combos
+
+- **Daggers:** Veil, then Backstab or Whisper.
+- **Storm:** Nightmare scatters enemies into water, then Tempest.
+- **Faith:** Confession frightens; Feedback burns every frightened enemy.
