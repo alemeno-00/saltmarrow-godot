@@ -1,0 +1,65 @@
+{
+  "status": "passed export checks; engine validation pending",
+  "checks": [
+    {
+      "name": "dimensions_alpha_atlas_hashes",
+      "passed": true,
+      "details": "68 exports: exact dimensions, RGBA, binary alpha, zero RGB on transparent pixels, byte-identical atlas crops, SHA-256 verified"
+    },
+    {
+      "name": "terrain_family_seams",
+      "passed": true,
+      "details": "64 directed edge comparisons across all floor and all water pairs, including self-repeat"
+    },
+    {
+      "name": "bank_compatible_seams",
+      "passed": true,
+      "details": "2048 exhaustive horizontal/vertical two-water-cell neighbourhoods; exact RGBA boundary equality"
+    },
+    {
+      "name": "bank_to_land_seams",
+      "passed": true,
+      "details": "Every flagged cardinal dry neighbour matches canonical floor edge exactly"
+    },
+    {
+      "name": "sprite_transparency",
+      "passed": true,
+      "details": "All 13 sprites have transparency; arch aperture is clear"
+    },
+    {
+      "name": "corridor_dry_connectivity",
+      "passed": true,
+      "details": {
+        "components": [
+          122
+        ],
+        "note": "Dry floor plus declared bridge cells; decorative props and runtime collision excluded."
+      }
+    },
+    {
+      "name": "junction_dry_connectivity",
+      "passed": true,
+      "details": {
+        "components": [
+          97
+        ],
+        "note": "Dry floor plus declared bridge cells; decorative props and runtime collision excluded."
+      }
+    },
+    {
+      "name": "cistern_dry_connectivity",
+      "passed": true,
+      "details": {
+        "components": [
+          120
+        ],
+        "note": "Dry floor plus declared bridge cells; decorative props and runtime collision excluded."
+      }
+    },
+    {
+      "name": "engine_validation",
+      "status": "not_run",
+      "details": "Godot is not installed. Export/assembly checks are not engine acceptance."
+    }
+  ]
+}

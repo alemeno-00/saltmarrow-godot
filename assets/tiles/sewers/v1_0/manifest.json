@@ -1,0 +1,2556 @@
+{
+  "version": "1.0-mvp",
+  "base_grid_px": [
+    32,
+    32
+  ],
+  "pixel_origin": "top left; x right, y down; anchors lie on pixel boundaries",
+  "provenance": "New AI-generated material, mechanically registered, palette-quantized, alpha-thresholded and assembled; not cropped from approved concept.",
+  "terrain_atlas": {
+    "file": "terrain_atlas.png",
+    "region_px": [
+      32,
+      32
+    ],
+    "columns": 8,
+    "margin": 0,
+    "separation": 0
+  },
+  "sprite_atlas": {
+    "file": "sprite_atlas.png",
+    "cell_px": [
+      64,
+      96
+    ],
+    "columns": 4,
+    "margin": 0,
+    "separation": 0
+  },
+  "assets": [
+    {
+      "id": "floor_dry",
+      "file": "tiles/floor_dry.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "552a98a0212386b65103b9acbc9a7dbe2e42c86ba487af9948770baeb10943ce"
+    },
+    {
+      "id": "floor_wet",
+      "file": "tiles/floor_wet.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "16e8d3ef803085b4be379e32742429e509cfc2198ca9ed9fa77559c89bcfc337"
+    },
+    {
+      "id": "floor_moss",
+      "file": "tiles/floor_moss.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "00dbe4ecccd3bc1438d08accfb9c628407314ca0f20105d534583e89999eae85"
+    },
+    {
+      "id": "floor_mud",
+      "file": "tiles/floor_mud.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "ce830963f00a4c2a458ce06819ed6d5375f423a5c9f1a878cf872d4544ac4572"
+    },
+    {
+      "id": "water_0",
+      "file": "tiles/water_0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "water_state": "deep; gameplay policy required",
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "64360dc83691d8f1b84bd10eb4e74220bc61f8a6df9024fde48646122f3adcde"
+    },
+    {
+      "id": "water_1",
+      "file": "tiles/water_1.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "water_state": "deep; gameplay policy required",
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "b2269779e3575184fd4ab8eb616027f3557a393479b84f7745cdc8752024e7d4"
+    },
+    {
+      "id": "water_2",
+      "file": "tiles/water_2.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "water_state": "deep; gameplay policy required",
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "48f644b4d9266a257d29588af7ce14d50f94df2e5b0c41072693ec32fe8d8b4b"
+    },
+    {
+      "id": "water_3",
+      "file": "tiles/water_3.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "water_state": "deep; gameplay policy required",
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        224,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        7,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "a6501c214dee0d9648a4cdd0e78fd102e7f57e77f046e39668ee244e16f8f97d"
+    },
+    {
+      "id": "bank_00",
+      "file": "tiles/bank_00.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 0,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "64360dc83691d8f1b84bd10eb4e74220bc61f8a6df9024fde48646122f3adcde"
+    },
+    {
+      "id": "bank_01",
+      "file": "tiles/bank_01.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 1,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "09f3489ed50d5b5b6129918d6793844cd180c78c0938aa79d9cc77605ed063e4"
+    },
+    {
+      "id": "bank_02",
+      "file": "tiles/bank_02.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 2,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "501b40875e1f5f34a30ca0f5b2d0e3e1eb265245cd9568ae3cddd1c92f955ddf"
+    },
+    {
+      "id": "bank_03",
+      "file": "tiles/bank_03.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 3,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "23b8a15dc8c861f3ffce4da6e601192c284902acf4527bb07283619b5b948482"
+    },
+    {
+      "id": "bank_04",
+      "file": "tiles/bank_04.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 4,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "c7f6f093cba44bac40ded1385949d56c7935fdb4b58ca2ff1f421b4524be918c"
+    },
+    {
+      "id": "bank_05",
+      "file": "tiles/bank_05.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 5,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "6e5f14f2a15e5471f8f473f3ef3320c7d4fa6ceeb291febfe9be8546a64de372"
+    },
+    {
+      "id": "bank_06",
+      "file": "tiles/bank_06.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 6,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "f64f0db2dff8f00b08549f3e96dd191ceaa4bc302b31e3d3d5937562030ee12d"
+    },
+    {
+      "id": "bank_07",
+      "file": "tiles/bank_07.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 7,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        224,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        7,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "1a29ff703ae0e707af456d6ed778d67d0456fe749ea4bbe0fe9d47878aa1a2b2"
+    },
+    {
+      "id": "bank_08",
+      "file": "tiles/bank_08.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 8,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "6740fca7bcf3b4a388e5bb4403affbe09a11b4e87aaeb0189d647312e3574d94"
+    },
+    {
+      "id": "bank_09",
+      "file": "tiles/bank_09.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 9,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "5b1f279ab0d122e78dd4da054500e4e495b555bc9a2a0ad7c0c1cb97fe28daba"
+    },
+    {
+      "id": "bank_0a",
+      "file": "tiles/bank_0a.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 10,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "30f84d05a98bd84314a514308c50f9b0f71e1aad86788e624c607f55831c53c9"
+    },
+    {
+      "id": "bank_0b",
+      "file": "tiles/bank_0b.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 11,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "0ab7351b9d170cbc49c3c2788522a8fc52916cce55391b7ea37de21ab58ef866"
+    },
+    {
+      "id": "bank_0c",
+      "file": "tiles/bank_0c.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 12,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "18c9e4dd0b860bcde0732c2f335d4f1ac1fa7a9eac4cb6c294d604f1bd170de8"
+    },
+    {
+      "id": "bank_0d",
+      "file": "tiles/bank_0d.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 13,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "46ba089a2e330e4e8c140dd85b3e5a1811b525710f059eaff6ab58c9b80fa1da"
+    },
+    {
+      "id": "bank_0e",
+      "file": "tiles/bank_0e.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 14,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "55c67e1eaa0c5f7529e2b4a9b92f3715040b218a3f5b7617d4be6ad3c86a91a3"
+    },
+    {
+      "id": "bank_0f",
+      "file": "tiles/bank_0f.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 15,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        224,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        7,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "1237b3678d8481085b2803f1880002307ace1604e88ab1864a0fc1b0f1223aa6"
+    },
+    {
+      "id": "bank_10",
+      "file": "tiles/bank_10.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 16,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "519615f4ab9cabf5b796a9a61693775c5918f81b30a916d35aa9d76b92ef63fd"
+    },
+    {
+      "id": "bank_14",
+      "file": "tiles/bank_14.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 20,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "713db0cee8dfa58c5183aeb4a1f8a00ded176ae45f4d3e6d290f8e5d571f9986"
+    },
+    {
+      "id": "bank_18",
+      "file": "tiles/bank_18.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 24,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "d991788f2e0299c97301290741c5c551f8dda85df6c08e12ca3c8355882f4a3f"
+    },
+    {
+      "id": "bank_1c",
+      "file": "tiles/bank_1c.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 28,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "89eb11564783b69e98b24fd4ab240f6c5e6baffd7e7244358a1eb90ced79484e"
+    },
+    {
+      "id": "bank_20",
+      "file": "tiles/bank_20.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 32,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "613e732d8d21ec7469b5978e18488f0edd5bb3aa0922f169191c55c9efb13f57"
+    },
+    {
+      "id": "bank_21",
+      "file": "tiles/bank_21.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 33,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "c29ade65b843dfd355ad442afeaaa14371a48af3d5a0fdd9c1eaf8354c338c59"
+    },
+    {
+      "id": "bank_28",
+      "file": "tiles/bank_28.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 40,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "eaf33f0b867ed79019f59f874dcdbb97b5cd5ab5aa3617d99648cbcf7c7670b3"
+    },
+    {
+      "id": "bank_29",
+      "file": "tiles/bank_29.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 41,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        224,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        7,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "b7741d1329429658f2940f344732013ff17e117bbb3047f8f6e5957e33333eb1"
+    },
+    {
+      "id": "bank_30",
+      "file": "tiles/bank_30.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 48,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "e94204fa85d7ffab045d90188a4876c4fd5d1365cbd569aea2c164593ef73bf3"
+    },
+    {
+      "id": "bank_38",
+      "file": "tiles/bank_38.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 56,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "ccc375fa2593abe83e7813ee7bd4f544f5e659513cfe1e19065b5aeb42e3bb90"
+    },
+    {
+      "id": "bank_40",
+      "file": "tiles/bank_40.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 64,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "056f45505fa43f91381b4c97c9e6b6a0d10de0e1ecfbcf914ef571c80dccb6d3"
+    },
+    {
+      "id": "bank_41",
+      "file": "tiles/bank_41.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 65,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "f5e7666e9ba6d3cae4bba96ad3c5adc2572b1f76f718695fda5f8ef8c045c899"
+    },
+    {
+      "id": "bank_42",
+      "file": "tiles/bank_42.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 66,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "e08a24114b24df4212da8da367c5e010f3b9fffdfa47be875b8eb10c8cae1512"
+    },
+    {
+      "id": "bank_43",
+      "file": "tiles/bank_43.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 67,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "644d73499519b10daba2c2920e019634815c28a3c709cd468d001d3b89d2f083"
+    },
+    {
+      "id": "bank_50",
+      "file": "tiles/bank_50.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 80,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "e3e92a9699d93f0625a93ca40dcf7b2da0ed23f6583070e8b8d1ffe08ea9864e"
+    },
+    {
+      "id": "bank_60",
+      "file": "tiles/bank_60.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 96,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        224,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        7,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "f03a51a8b3ccc74b4f774fa51076d002fa95ec941df51c3f606d07dd80993d04"
+    },
+    {
+      "id": "bank_61",
+      "file": "tiles/bank_61.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 97,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "89bbdfba482a65e7d07c83333a2b2b8f152e0bd44988c818c0d726db9e179422"
+    },
+    {
+      "id": "bank_70",
+      "file": "tiles/bank_70.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 112,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "36780302f878776a5b37f8ce7ed448b197ee27f794c1fff448e2fbe5789e8492"
+    },
+    {
+      "id": "bank_80",
+      "file": "tiles/bank_80.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 128,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "a97e462ff2e20875dcd7c2f8a058f9f094e4305c3fa50873d14d648e73beffd6"
+    },
+    {
+      "id": "bank_82",
+      "file": "tiles/bank_82.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 130,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "bc85bc4d1aac6a9562504cd80f5f96ba4f071447d938d074df388599286855ea"
+    },
+    {
+      "id": "bank_84",
+      "file": "tiles/bank_84.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 132,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "661bdb797297c3dd27f8407db8b2254ec4e4da55ab9fd31900907bbfcbbe2acb"
+    },
+    {
+      "id": "bank_86",
+      "file": "tiles/bank_86.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 134,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "e5d4fa66e663f5768b83b9d275f6c26cf5ab6853b9aed293bd619bb5d35a28cf"
+    },
+    {
+      "id": "bank_90",
+      "file": "tiles/bank_90.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 144,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "f873e677cdb751920274ab31f8828378c80f04cb482bc810cb4e9bcac9203b0c"
+    },
+    {
+      "id": "bank_94",
+      "file": "tiles/bank_94.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 148,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        224,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        7,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "ca4288c4e9e14f18b62a1e76245167299240650e7777f97268838bbd2c24f6ab"
+    },
+    {
+      "id": "bank_a0",
+      "file": "tiles/bank_a0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 160,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "0d48566a252d7144cc38e2eb2d2c43b6ae2da5b75afe38f82981374a7ef10679"
+    },
+    {
+      "id": "bank_b0",
+      "file": "tiles/bank_b0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 176,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "9db43c30696e0c09a81a54177ead241c692e67585bebedf74981e35e3a7832d1"
+    },
+    {
+      "id": "bank_c0",
+      "file": "tiles/bank_c0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 192,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "0f3d47ed41642b60152a2df95374277a9eb2455f330c0a71971856c20b6538f7"
+    },
+    {
+      "id": "bank_c2",
+      "file": "tiles/bank_c2.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 194,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "ab5bdd0b80d8a29b4cbf079d6b837cb992928da2ffa1759ff47b7c34cf811c3d"
+    },
+    {
+      "id": "bank_d0",
+      "file": "tiles/bank_d0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 208,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "ded61ad8b151cb47ad6ab86f30996c7f78168b043053f6081f710f728b65e8ae"
+    },
+    {
+      "id": "bank_e0",
+      "file": "tiles/bank_e0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 224,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "d32009ee17f4e2943aa77c1db5865dea012cda9ff09d5f9265be9c692c5a7a83"
+    },
+    {
+      "id": "bank_f0",
+      "file": "tiles/bank_f0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 240,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "8f94367218ddb355384a301a7aa2a56cff049d81aec87e9fca6adffaac510234"
+    },
+    {
+      "id": "wall_n",
+      "file": "sprites/wall_n.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "sprite_atlas.png",
+      "atlas_region_px": [
+        0,
+        0,
+        32,
+        64
+      ],
+      "atlas_cell": [
+        0,
+        0
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            0,
+            32
+          ],
+          [
+            32,
+            32
+          ],
+          [
+            32,
+            64
+          ],
+          [
+            0,
+            64
+          ]
+        ]
+      ],
+      "sha256": "1190626c64ab795d14aa6007715e2b9ce2477a11389560f7ea264052e5c6e8a6"
+    },
+    {
+      "id": "drain",
+      "file": "sprites/drain.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "sprite_atlas.png",
+      "atlas_region_px": [
+        64,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "961dd5e5569111ade79224fec183a7c811486dde726993eb0723419ad9724ea1"
+    },
+    {
+      "id": "pipe_h",
+      "file": "sprites/pipe_h.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "sprite_atlas.png",
+      "atlas_region_px": [
+        128,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "6a10f83d57e93c396b9709ff97ac773028a5f8be4eab2b87b66faf42f1d6cb79"
+    },
+    {
+      "id": "barrel",
+      "file": "sprites/barrel.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "sprite_atlas.png",
+      "atlas_region_px": [
+        192,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        0
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            7,
+            20
+          ],
+          [
+            25,
+            20
+          ],
+          [
+            25,
+            30
+          ],
+          [
+            7,
+            30
+          ]
+        ]
+      ],
+      "sha256": "34c30333c7a7c0c6bb2970fa7f354d63447b73bfc44013182e62b84a25093d13"
+    },
+    {
+      "id": "arch",
+      "file": "sprites/arch.png",
+      "dimensions": [
+        64,
+        96
+      ],
+      "origin_px": [
+        32,
+        96
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        2,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "sprite_atlas.png",
+      "atlas_region_px": [
+        0,
+        96,
+        64,
+        96
+      ],
+      "atlas_cell": [
+        0,
+        1
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            0,
+            64
+          ],
+          [
+            12,
+            64
+          ],
+          [
+            12,
+            96
+          ],
+          [
+            0,
+            96
+          ]
+        ],
+        [
+          [
+            52,
+            64
+          ],
+          [
+            64,
+            64
+          ],
+          [
+            64,
+            96
+          ],
+          [
+            52,
+            96
+          ]
+        ]
+      ],
+      "sha256": "859851e8367ee3bf422f7fc0ee32f9f712a967f20fe8cf15cd5f75353f009543"
+    },
+    {
+      "id": "crate",
+      "file": "sprites/crate.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "sprite_atlas.png",
+      "atlas_region_px": [
+        64,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        1
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            3,
+            17
+          ],
+          [
+            29,
+            17
+          ],
+          [
+            29,
+            31
+          ],
+          [
+            3,
+            31
+          ]
+        ]
+      ],
+      "sha256": "6d7379a2a647e0acdbe774bab3b76aff544769123636a0f16822be0d2de0bcd9"
+    },
+    {
+      "id": "rubble",
+      "file": "sprites/rubble.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "sprite_atlas.png",
+      "atlas_region_px": [
+        128,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "9e09bf36860c7929a7a1203220be8e7150135dec14ebe0f04cc0607e2336557e"
+    },
+    {
+      "id": "torch",
+      "file": "sprites/torch.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "sprite_atlas.png",
+      "atlas_region_px": [
+        192,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "be222f1f39390be2427e167cccfd92ae3ccd7c8c8b15ea68d5f70d523c24c1a2"
+    },
+    {
+      "id": "wall_side",
+      "file": "sprites/wall_side.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "vertical map axis; do not rotate wall_n",
+      "atlas": "sprite_atlas.png",
+      "atlas_region_px": [
+        0,
+        192,
+        32,
+        64
+      ],
+      "atlas_cell": [
+        0,
+        2
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            8,
+            32
+          ],
+          [
+            24,
+            32
+          ],
+          [
+            24,
+            64
+          ],
+          [
+            8,
+            64
+          ]
+        ]
+      ],
+      "sha256": "6f7ee0147cb4000b26def72371b5807ec160e3800e8132d41416969f15425161"
+    },
+    {
+      "id": "wall_curve_w",
+      "file": "sprites/wall_curve_w.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south; rounded wall end, not full cistern radius",
+      "atlas": "sprite_atlas.png",
+      "atlas_region_px": [
+        64,
+        192,
+        32,
+        64
+      ],
+      "atlas_cell": [
+        1,
+        2
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            0,
+            32
+          ],
+          [
+            32,
+            32
+          ],
+          [
+            32,
+            64
+          ],
+          [
+            0,
+            64
+          ]
+        ]
+      ],
+      "sha256": "4c1425fa5f634835df6300ccc3f8955212a5c80e8c365129719d93a93a34100d"
+    },
+    {
+      "id": "wall_curve_e",
+      "file": "sprites/wall_curve_e.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south; rounded wall end, not full cistern radius",
+      "atlas": "sprite_atlas.png",
+      "atlas_region_px": [
+        128,
+        192,
+        32,
+        64
+      ],
+      "atlas_cell": [
+        2,
+        2
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            0,
+            32
+          ],
+          [
+            32,
+            32
+          ],
+          [
+            32,
+            64
+          ],
+          [
+            0,
+            64
+          ]
+        ]
+      ],
+      "sha256": "42743a9a87e05fc7bf585415aa8f785a1ccb2cf123b37023cd471dc9597c80e5"
+    },
+    {
+      "id": "bridge_h",
+      "file": "sprites/bridge_h.png",
+      "dimensions": [
+        64,
+        32
+      ],
+      "origin_px": [
+        32,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        2,
+        1
+      ],
+      "facing": "east-west",
+      "traversable_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "atlas": "sprite_atlas.png",
+      "atlas_region_px": [
+        192,
+        192,
+        64,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "42c02f1e43966d1d8b1aec2dd87c3ecb768487f6b0e2c27087236c31689e5b4b"
+    },
+    {
+      "id": "bridge_v",
+      "file": "sprites/bridge_v.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        2
+      ],
+      "facing": "north-south",
+      "traversable_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "atlas": "sprite_atlas.png",
+      "atlas_region_px": [
+        0,
+        288,
+        32,
+        64
+      ],
+      "atlas_cell": [
+        0,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "dfe444beee4e11ebc38711133933ddeba4d643a3ab864b3e3114faac46076f43"
+    }
+  ]
+}
