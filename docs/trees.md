@@ -6,6 +6,14 @@ Every tree follows the same pattern:
 - Take a node by owning one connected to it in the row above.
 - Abilities roll 2d10 + a stat. Results are written as three tiers, **worst / middle / best**.
 
+## Scope
+
+- 13 trees, 130 nodes, 65 abilities.
+- A life tops out around **level 20**, about 20 points. That fills two trees, or goes deep in one and dips into others.
+- **Backstories give two starting nodes**, so every life opens with options.
+- **Special weapons carry an ability of their own.** For example, a star-metal maul has a Star ability that risks Phenomena; a chapel censer-flail has a Faith one.
+- **Later, maybe:** hidden pairing passives that open when you invest in two particular trees. For example, Maces + Storm adds a lightning crack when you push an enemy into a wall.
+
 ## Injuries (all weapons and enemies)
 
 - Each ability names a body part and an injury chance for each tier, shown on its card.
