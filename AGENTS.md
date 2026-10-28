@@ -7,14 +7,18 @@ Two AI assistants work here, with separate jobs:
 
 Please keep to your own folders, so changes don't collide. If art needs a code change to show up, describe it in the pull request and Claude will wire it in.
 
+## What to draw
+
+**`ART_JOBS.md` is the to-do list.** Work through it from the top, and tick off each job in the pull request that delivers it. Claude adds new jobs as the design grows.
+
+The story is in `docs/story.md` and the cast in `docs/characters.md`.
+
 ## Delivering art
 
 - Put files under `assets/<group>/`, for example `assets/characters/thomas/`, `assets/tiles/salt_pits/`.
 - PNG with transparency. Pixel art with hard edges; no smoothing or anti-aliasing.
-- The map grid is **32 × 32 pixels per square**. Character sprites stand on one square.
-- Sprite sheets: one row per animation (idle, walk, attack, hurt, death), frames left to right, every frame the same size, the character's feet in the same place in every frame.
+- Sizes, facing and sheet layout are in the table at the top of `ART_JOBS.md`.
 - Add a short `README.md` in each folder: what each file is, its frame size, frame counts per row, and the facing directions.
-- Follow the design docs: the story foundation and the characters-for-art sheet.
 - Open a pull request; don't push to `main` directly.
 
 ## Rules of the game that affect art
