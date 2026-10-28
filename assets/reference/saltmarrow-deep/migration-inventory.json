@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "recovery_date": "2026-10-28",
+  "repository": "alemeno-00/saltmarrow-godot",
+  "base_commit": "3f97eca413b73c942220b089a77195ddf0cc445a",
+  "source_conversation": "6adf1cb2-6234-83ec-8c9b-94411183e488",
+  "legacy_web_checkout_commit": "38a0441b9b44c00afaacdc6c075cb74295707363",
+  "source_workspace_root": "Game/ (paths below are relative to this workspace)",
+  "source_notes": "Legacy checkout had unrelated modified code; no code or modified files were copied. Git commit does not imply tracked status or approval of each copied artifact.",
+  "files": [
+    {
+      "path": "assets/reference/saltmarrow-deep/town-hub/town-style-reference.png",
+      "source_workspace_path": "outputs/biome-reset-mockups/town-style-reference.png",
+      "status": "Recovered local town reference; relationship to unavailable recent chat images unverified",
+      "bytes": 3428663,
+      "sha256": "3b4d09a0bd8b9c945f895c91437ea82066c72841481ba04db9764dcc8d3ead2b",
+      "width": 1518,
+      "height": 1036
+    },
+    {
+      "path": "assets/reference/saltmarrow-deep/town-hub/legacy-town-v6-master.png",
+      "source_workspace_path": "work/Saltmarrow/assets/town-v6/master.png",
+      "status": "Legacy web-game master; not confirmed as latest chat revision",
+      "bytes": 3623251,
+      "sha256": "a68eae30b2f27704b2c4c68f7977176a30c9bc1eda058a616acb4c3077c04fff",
+      "width": 1518,
+      "height": 1036
+    },
+    {
+      "path": "assets/reference/saltmarrow-deep/town-hub/legacy-generation-prompt.txt",
+      "source_workspace_path": "work/Saltmarrow/docs/town-v6/art-prompt.txt",
+      "status": "Verbatim legacy town prompt",
+      "bytes": 3132,
+      "sha256": "6f77f7a9a43cc63976758c6a32fd6b6e1e93df9d024fed4cc61818bd3ba89885"
+    },
+    {
+      "path": "assets/reference/saltmarrow-deep/apothecary/legacy-thorn-crop.webp",
+      "source_workspace_path": "work/Saltmarrow/assets/town-v6/sites/apothecary.webp",
+      "status": "Original legacy composite crop; not a standalone recent concept sheet",
+      "bytes": 60008,
+      "sha256": "4982cb75bd91b29be4775f1f95ae673eea2ced9638c6e96c5fbab449f14691ee",
+      "width": 384,
+      "height": 288
+    },
+    {
+      "path": "assets/reference/saltmarrow-deep/biomes/rotwater-sewers.png",
+      "source_workspace_path": "outputs/biome-reset-mockups/rotwater-sewers.png",
+      "status": "Legacy approval mockup; approval for Godot rebuild unverified",
+      "bytes": 2756651,
+      "sha256": "4ee03d9968b481379f8a49938ceb2eba4323b93935e54417eadce09e469538db",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "path": "assets/reference/saltmarrow-deep/biomes/blooming-deep.png",
+      "source_workspace_path": "outputs/biome-reset-mockups/blooming-deep.png",
+      "status": "Legacy approval mockup; approval for Godot rebuild unverified",
+      "bytes": 3326728,
+      "sha256": "e252fb957ca3f34c7c15b8967b958f3279fe707513318557880b6d5d1d2162d3",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "path": "assets/reference/saltmarrow-deep/biomes/forgotten-catacombs.png",
+      "source_workspace_path": "outputs/biome-reset-mockups/forgotten-catacombs.png",
+      "status": "Legacy approval mockup; approval for Godot rebuild unverified",
+      "bytes": 2926621,
+      "sha256": "2aa22e9081344ead547b0f5bf05e5f7fb80dde304f394f917d8ec87607daa77b",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "path": "assets/reference/saltmarrow-deep/biomes/salt-pits.png",
+      "source_workspace_path": "outputs/biome-reset-mockups/salt-pits.png",
+      "status": "Legacy approval mockup; approval for Godot rebuild unverified",
+      "bytes": 3323489,
+      "sha256": "93dc1abbbc673422b25d0f644b5325426fbb08ead26e190341dcea7b5fe4ddfd",
+      "width": 1536,
+      "height": 1024
+    },
+    {
+      "path": "assets/reference/saltmarrow-deep/biomes/legacy-design-notes-and-prompts.md",
+      "source_workspace_path": "outputs/biome-reset-mockups/design-notes-and-prompts.md",
+      "status": "Verbatim local design-preview notes; historical claims are not Godot validation",
+      "bytes": 11942,
+      "sha256": "9c1ef85757598c35ba7b8d5fb27a61e2ebeeb176a8ddd9561e5a74a189773ebb"
+    },
+    {
+      "path": "assets/reference/saltmarrow-deep/apothecary/legacy-thorn-crop.png",
+      "source_workspace_path": "work/Saltmarrow/assets/town-v6/sites/apothecary.webp",
+      "status": "Lossless-format PNG conversion using macOS sips; no resize or transparency removal",
+      "bytes": 216368,
+      "sha256": "e205cd176df76ba8e56a165b5bb4cb5f11ba509fbdb9578dcd0956181cb3a6bd",
+      "width": 384,
+      "height": 288
+    }
+  ],
+  "missing": [
+    {
+      "material": "Recent town hub image",
+      "status": "unavailable",
+      "reason": "No chat attachments or image URLs were exposed; recovered older local reference is not verified as this image."
+    },
+    {
+      "material": "Recent apothecary concept image",
+      "status": "unavailable",
+      "reason": "Only an older web-game composite crop was found."
+    },
+    {
+      "material": "Thomas Wren class concept sheets and revisions",
+      "status": "unavailable",
+      "reason": "No matching local filenames or readable attached image files were found; final revision state cannot be verified."
+    },
+    {
+      "material": "Character/story art bible and illustrations",
+      "status": "unavailable",
+      "reason": "Full document and images were absent from readable chat and local source search."
+    },
+    {
+      "material": "Story foundation and characters-for-art sheet",
+      "status": "unavailable",
+      "reason": "Referenced by repository AGENTS.md but absent from inspected repository tree and accessible conversation."
+    }
+  ]
+}
