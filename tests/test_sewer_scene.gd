@@ -21,13 +21,15 @@ func capture(name: String) -> void:
 	if not "--capture" in OS.get_cmdline_user_args():
 		return
 	await RenderingServer.frame_post_draw
-	root.get_texture().get_image().save_png("res://assets/tiles/sewers/playable/" + name + ".png")
+	var folder := "generated-fight" if "--generated" in OS.get_cmdline_user_args() else "playable"
+	root.get_texture().get_image().save_png("res://assets/tiles/sewers/" + folder + "/" + name + ".png")
 
 
 func _initialize() -> void:
 	await process_frame
 	root.size = Vector2i(1280, 720)
-	var packed: PackedScene = load("res://scenes/sewer_fight.tscn")
+	var generated := "--generated" in OS.get_cmdline_user_args()
+	var packed: PackedScene = load("res://scenes/generated_sewer_fight.tscn" if generated else "res://scenes/sewer_fight.tscn")
 	var g: Game = packed.instantiate()
 	root.add_child(g)
 	await process_frame
@@ -35,16 +37,37 @@ func _initialize() -> void:
 	await settle(g)
 	check(g.enemies.size() == 4, "scene spawns one miner and three Faithful")
 	check(g.in_fight(), "enemy sight starts Claude's Battle")
+	if g.battle == null:
+		g.queue_free()
+		await process_frame
+		quit(1)
+		return
 	check(g.battle.is_hero_turn(), "enemy initiative resolves to a playable hero turn")
-	check(g.view.get_script().resource_path.ends_with("sewer_view.gd"), "scene uses the imported corridor art renderer")
-	check(not g.level.is_walkable(Vector2i(20, 14)), "deep channel is blocked")
-	check(not g.level.is_walkable(Vector2i(10, 5)), "rear masonry is blocked")
-	var route := g.level.find_path(Vector2i(12, 9), Vector2i(12, 18))
-	check(not route.is_empty(), "rear and front maintenance walks connect over the bridge")
-	check(route.any(func(c): return c.x in [24, 25] and c.y == 14), "cross-channel path uses the timber crossing")
+	if generated:
+		check(g.level is SewerLevel, "fight uses generated sewer collision and module metadata")
+		check(g.view.get_script().resource_path.ends_with("sewer_tile_view.gd"), "fight renders actual generated cells and fixtures")
+		check(not g.level.is_walkable(Vector2i(30, 22)), "deep channel is blocked")
+		check(not g.level.find_path(g.level.start, Vector2i(30, 39)).is_empty(), "distant service chamber is reachable on dry ground")
+	else:
+		check(g.view.get_script().resource_path.ends_with("sewer_view.gd"), "scene uses the imported corridor art renderer")
+		check(not g.level.is_walkable(Vector2i(20, 14)), "deep channel is blocked")
+		check(not g.level.is_walkable(Vector2i(10, 5)), "rear masonry is blocked")
+		var route := g.level.find_path(Vector2i(12, 9), Vector2i(12, 18))
+		check(not route.is_empty(), "rear and front maintenance walks connect over the bridge")
+		check(route.any(func(c): return c.x in [24, 25] and c.y == 14), "cross-channel path uses the timber crossing")
 	await capture("fight-start")
 	var moved := false
 	var attacked := false
+	# Enemy initiative can already bring the nearest foe adjacent. Exercise a legal
+	# movement action explicitly instead of assuming an approach step is necessary.
+	if generated:
+		for direction in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
+			if g.level.can_step(g.hero_unit.cell, direction) and g._enemy_at(g.hero_unit.cell + direction) == null:
+				var before := g.hero_unit.cell
+				g.try_step(direction)
+				await settle(g)
+				moved = g.hero_unit.cell != before
+				if moved:break
 	for round_index in 4:
 		var nearest: Combatant = null
 		for e in g.enemies:
@@ -80,10 +103,12 @@ func _initialize() -> void:
 	event.physical_keycode = KEY_R
 	g.hero_unit.stamina = 1
 	var old_hero := g.hero_unit
+	var old_seed := g.level.seed_value
 	g._unhandled_input(event)
 	await process_frame
 	await settle(g)
 	check(g.hero_unit != old_hero and g.enemies.size() == 4 and g.hero_unit.stamina == g.hero_unit.max_stamina, "R restarts the encounter with fresh actors")
+	check(g.level.seed_value == old_seed + 1, "R advances the generation seed")
 	print("SEWER SCENE: %d failures" % failures.size())
 	g.queue_free()
 	await process_frame

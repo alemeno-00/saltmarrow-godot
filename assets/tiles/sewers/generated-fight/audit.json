@@ -1,0 +1,5 @@
+{
+	"cases": 300,
+	"failures": [],
+	"scope": "deterministic four-enemy placement, dry cells, no overlaps, reachability and sight-trigger eligibility; encounter balance not certified"
+}

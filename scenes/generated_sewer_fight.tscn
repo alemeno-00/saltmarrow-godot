@@ -1,0 +1,11 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/main.tscn" id="1"]
+[ext_resource type="Script" path="res://scripts/game/generated_sewer_fight.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/game/sewer_tile_view.gd" id="3"]
+
+[node name="GeneratedSewerFight" instance=ExtResource("1")]
+script = ExtResource("2")
+
+[node name="LevelView" parent="." index="0"]
+script = ExtResource("3")

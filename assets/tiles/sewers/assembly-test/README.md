@@ -1,5 +1,7 @@
 # Sewer assembler v0.1 — working topology prototype
 
+Subsequent integration: `play-generated-sewer.command` now opens a separate fight on these assembled layouts. See `../generated-fight/README.md`. The original fixed-backdrop fight remains available; the limits below describe the assembler itself.
+
 Implemented 29 October 2026. Open `test-sewers.command` at the repository root or `scenes/sewer_generation.tscn` in Godot. R/Right: next seed; Left: previous; L/N/H: low/normal/high water; S: compare generic rooms; T: optional old-MVP floor/water textures; P: dry AStar route. This scene actually runs the new assembler in Godot. The default topology view is deliberate: it verifies architecture and navigation independently of unapproved art.
 
 ## Implemented grammar
@@ -24,4 +26,4 @@ Commands: `godot --headless --path . -s tests/audit_sewers.gd` and `godot --head
 
 This is an initial reusable-piece grammar, **not the promised full 30-archetype library**. It has a bounded five-module trunk/branch topology, not arbitrary graph growth or room counts. Add further room purposes, genuine 90-degree curved tunnel modules, alternate graph patterns, sluice operation, stateful hazards and dedicated biome transitions before treating it as a complete biome generator.
 
-The assembler is available in the inspection scene; the original default procedural game and fixed-backdrop sewer fight remain unchanged. It has not been wired into a generated combat encounter. Finished wall/arch/corner art, modular sprite assembly, foreground occlusion and final prop/collision approval remain separate work. T uses earlier prototype textures and does not certify concept fidelity. The six-biome shared connection standard and other five biome grammars remain outstanding.
+The assembler is available in the inspection scene and the separate generated-fight scene; the original default procedural game and fixed-backdrop sewer fight remain unchanged. Generated combat uses the old MVP tile/prop renderer, not concept-quality art. Finished wall/arch/corner art, foreground occlusion and final prop/collision approval remain separate work. T uses earlier prototype textures and does not certify concept fidelity. The six-biome shared connection standard and other five biome grammars remain outstanding.
