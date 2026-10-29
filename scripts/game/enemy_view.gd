@@ -11,6 +11,49 @@ func _draw_body() -> void:
 			_miner()
 		"faithful":
 			_faithful()
+		"garrick":
+			_garrick()
+
+
+## Garrick, the First Shift: a huge Drowned foreman with a pick and a length of lift chain.
+func _garrick() -> void:
+	var f := float(facing)
+	var coat := Color("2c3a3c")
+	var salt := Color("d8d6cc")
+	# legs, wide-set
+	draw_rect(Rect2(-8, 6, 6, 10), Color("1f2224"))
+	draw_rect(Rect2(2, 6, 6, 10), Color("1f2224"))
+	# broad stooped body in a rotted foreman's coat, salt-crusted
+	draw_rect(Rect2(-11, -12, 22, 20), coat)
+	draw_rect(Rect2(-11, -12, 22, 3), Color("566c6e"))
+	draw_rect(Rect2(-11, 5, 4, 3), salt)
+	draw_rect(Rect2(7, -6, 4, 3), salt)
+	draw_rect(Rect2(-3, -2, 3, 2), salt)
+	# the brass tally tag at his neck
+	draw_rect(Rect2(-1, -9, 3, 3), Color("b88c40"))
+	# head sunk between the shoulders, pearl eyes
+	if crushed:
+		draw_rect(Rect2(-5 + 2 * f, -16, 10, 4), Color("5a0a0c"))
+	else:
+		draw_rect(Rect2(-5 + 2 * f, -21, 10, 9), Color("7f8e89"))
+		draw_rect(Rect2(-5 + 2 * f, -22, 10, 2), Color("33291f"))
+		draw_rect(Rect2(2 * f + (2 if f > 0 else -3), -18, 2, 1), Color("eef4ff"))
+		draw_rect(Rect2(-1 * f + (0 if f > 0 else -1), -18, 2, 1), Color("eef4ff"))
+	# the lift chain: wrapped round the back arm, swung high when winding up
+	var iron := Color("6f6c66")
+	var links: Array[Vector2] = []
+	if raised:
+		for i in 7:
+			links.append(Vector2(-f * (6 + i * 3), -14 - sin(i * 0.5) * 12))
+	else:
+		for i in 7:
+			links.append(Vector2(-f * (8 + i * 2), 2 + i * 2))
+	for p in links:
+		draw_rect(Rect2(p - Vector2(1.5, 1.5), Vector2(3, 3)), iron)
+	# the pick in the front hand
+	var wood := Color("5a4630")
+	draw_line(Vector2(9 * f, -4), Vector2(16 * f, -14), wood, 2.0)
+	draw_line(Vector2(13 * f, -18), Vector2(19 * f, -9), Color("8c8c88"), 2.0)
 
 
 func _miner() -> void:

@@ -3,7 +3,7 @@ extends RefCounted
 ## One level's tiles and the rules for walking them.
 ## Pure data with no drawing, so it can be tested headless and saved as it is.
 
-enum Tile { WALL, FLOOR, DOOR_CLOSED, DOOR_OPEN, WATER, STAIRS }
+enum Tile { WALL, FLOOR, DOOR_CLOSED, DOOR_OPEN, WATER, STAIRS, GATE_OPEN, GATE_SHUT }
 
 const DIRS_8: Array[Vector2i] = [
 	Vector2i(0, -1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1),
@@ -17,6 +17,11 @@ var seed_value: int = 0
 var rooms: Array[Rect2i] = []
 var start: Vector2i = Vector2i.ZERO
 var stairs: Vector2i = Vector2i(-1, -1)
+## The boss room on the deepest level (empty elsewhere), and the sluice gates in its walls.
+var outflow := Rect2i()
+var gates: Array[Vector2i] = []
+
+const OUTFLOW_SIZE := Vector2i(12, 9)
 
 var _astar := AStarGrid2D.new()
 
@@ -74,7 +79,7 @@ func can_step(from: Vector2i, dir: Vector2i) -> bool:
 ## Walls and closed doors block sight.
 func blocks_sight(c: Vector2i) -> bool:
 	var t := get_tile(c)
-	return t == Tile.WALL or t == Tile.DOOR_CLOSED
+	return t == Tile.WALL or t == Tile.DOOR_CLOSED or t == Tile.GATE_OPEN or t == Tile.GATE_SHUT
 
 
 ## Can something at `a` see `b`? A straight line between the two squares, blocked by walls and closed doors.
@@ -113,12 +118,21 @@ func rebuild_paths() -> void:
 
 
 ## Rooms joined by corridors, with doors where corridors meet rooms. Same seed, same level.
-func generate(seed_in: int) -> void:
+## `bottom`: the deepest level, where the last room is the Outflow and there are no stairs down.
+func generate(seed_in: int, bottom := false) -> void:
 	seed_value = seed_in
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_in
 	tiles.fill(Tile.WALL)
 	rooms.clear()
+	outflow = Rect2i()
+	gates.clear()
+	stairs = Vector2i(-1, -1)
+	if bottom:
+		# the Outflow is placed first so it is always big enough; it joins the rest last
+		outflow = Rect2i(width - OUTFLOW_SIZE.x - 3, rng.randi_range(2, height - OUTFLOW_SIZE.y - 3), OUTFLOW_SIZE.x, OUTFLOW_SIZE.y)
+		rooms.append(outflow)
+		_carve(outflow)
 	var tries := 0
 	while rooms.size() < 12 and tries < 400:
 		tries += 1
@@ -133,11 +147,12 @@ func generate(seed_in: int) -> void:
 		if clash:
 			continue
 		rooms.append(r)
-		for y in range(r.position.y, r.end.y):
-			for x in range(r.position.x, r.end.x):
-				tiles[idx(Vector2i(x, y))] = Tile.FLOOR
+		_carve(r)
 	# join each room to the next, in order of position, so everything connects
 	rooms.sort_custom(func(a: Rect2i, b: Rect2i) -> bool: return a.get_center().x + a.get_center().y * 0.3 < b.get_center().x + b.get_center().y * 0.3)
+	if bottom:
+		rooms.erase(outflow)
+		rooms.append(outflow)
 	for i in range(1, rooms.size()):
 		_corridor(rooms[i - 1].get_center(), rooms[i].get_center(), rng)
 	# a few extra loops so it isn't a straight line of rooms
@@ -150,7 +165,7 @@ func generate(seed_in: int) -> void:
 	_place_doors(rng)
 	# a pool of water in one room
 	if rooms.size() > 2:
-		var pr := rooms[rng.randi_range(1, rooms.size() - 1)]
+		var pr := rooms[rng.randi_range(1, rooms.size() - 1 if not bottom else rooms.size() - 2)]
 		var pc := pr.get_center()
 		for y in range(pc.y - 1, pc.y + 2):
 			for x in range(pc.x - 2, pc.x + 2):
@@ -158,12 +173,70 @@ func generate(seed_in: int) -> void:
 					tiles[idx(Vector2i(x, y))] = Tile.WATER
 	start = rooms[0].get_center() if rooms.size() > 0 else Vector2i(1, 1)
 	tiles[idx(start)] = Tile.FLOOR
+	if bottom:
+		_make_outflow()
 	# stairs down in the far corner of the last room
-	if rooms.size() > 1:
+	elif rooms.size() > 1:
 		var last := rooms[rooms.size() - 1]
 		stairs = last.end - Vector2i(2, 2)
 		tiles[idx(stairs)] = Tile.STAIRS
 	rebuild_paths()
+
+
+func _carve(r: Rect2i) -> void:
+	for y in range(r.position.y, r.end.y):
+		for x in range(r.position.x, r.end.x):
+			tiles[idx(Vector2i(x, y))] = Tile.FLOOR
+
+
+## The boss room: a channel of water across its middle, and two sluice gates in its walls.
+func _make_outflow() -> void:
+	var mid := outflow.get_center().y
+	for x in range(outflow.position.x, outflow.end.x):
+		tiles[idx(Vector2i(x, mid))] = Tile.WATER
+	# gates in solid wall (not where a corridor comes in), as far apart as possible: top wall first, then bottom
+	var spare: Array[Vector2i] = []
+	for wall_y in [outflow.position.y - 1, outflow.end.y]:
+		var found: Array[Vector2i] = []
+		for x in range(outflow.position.x + 1, outflow.end.x - 1):
+			var c := Vector2i(x, wall_y)
+			var outside := c + (Vector2i.UP if wall_y < outflow.position.y else Vector2i.DOWN)
+			if get_tile(c) == Tile.WALL and get_tile(outside) == Tile.WALL and get_tile(c + Vector2i.LEFT) == Tile.WALL and get_tile(c + Vector2i.RIGHT) == Tile.WALL:
+				found.append(c)
+		if found.size() >= 2:
+			gates = [found.front(), found.back()]
+			break
+		spare.append_array(found)
+	if gates.is_empty():
+		gates = spare.slice(0, 2)
+	for g in gates:
+		tiles[idx(g)] = Tile.GATE_OPEN
+
+
+## Rising water: every floor square in `area` beside water floods, unless water already covers `cap` of the area's open squares.
+## Returns the squares that flooded.
+func flood_step(area: Rect2i, cap: float) -> Array[Vector2i]:
+	var open := 0
+	var wet := 0
+	var fresh: Array[Vector2i] = []
+	for y in range(area.position.y, area.end.y):
+		for x in range(area.position.x, area.end.x):
+			var c := Vector2i(x, y)
+			var t := get_tile(c)
+			if t == Tile.WATER:
+				wet += 1
+				open += 1
+			elif t == Tile.FLOOR:
+				open += 1
+				for d in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT]:
+					if area.has_point(c + d) and get_tile(c + d) == Tile.WATER:
+						fresh.append(c)
+						break
+	if open == 0 or float(wet) / open >= cap:
+		return []
+	for c in fresh:
+		set_tile(c, Tile.WATER)
+	return fresh
 
 
 func _corridor(a: Vector2i, b: Vector2i, rng: RandomNumberGenerator) -> void:

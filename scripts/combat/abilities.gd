@@ -66,6 +66,23 @@ static func clutch() -> Dictionary:
 	return _ab("clutch", "Clutching Hands", 0, "enemy", [{"dmg": 1}, {"dmg": 2}, {"dmg": 4}])
 
 
+# Garrick, the First Shift (design/quick-specs/first-shift-boss-2026-10-29.md)
+
+static func pick_and_chain() -> Dictionary:
+	return _ab("pick_and_chain", "Pick and Chain", 0, "enemy", [{"dmg": 4}, {"dmg": 7}, {"dmg": 10}], "torso", [0, 10, 20])
+
+
+## Telegraphed: the chain swings back on one turn and sweeps five squares across Thomas on the next.
+static func lift_chain_sweep() -> Dictionary:
+	var ab := _ab("lift_chain_sweep", "Lift-Chain Sweep", 0, "area", [{"dmg": 8, "prone": true}, {"dmg": 12, "prone": true}, {"dmg": 16, "prone": true}])
+	ab.width = 2          # squares on each side of Thomas
+	ab.reach = 2          # the chain reaches two squares
+	ab.cooldown = 3
+	ab.cooldown_hurt = 2  # at half Stamina or less
+	ab.tell = "%s swings the chain back..."
+	return ab
+
+
 ## The ability card: what every tier does.
 static func describe(ab: Dictionary) -> String:
 	var cost := "free" if int(ab.cost) == 0 else "%d Resolve" % int(ab.cost)

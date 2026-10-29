@@ -17,6 +17,11 @@ const SIGHT := 7
 const HYMN_COST := 4
 const PRESS_COST := 5
 const FLEE_AT := 0.3
+# The First Shift (design/quick-specs/first-shift-boss-2026-10-29.md)
+const SLUICE_COST := 4      # Malice to reopen a sluice gate
+const WATER_STEP := 2       # squares of movement to enter water, unless the creature wades
+const DROWN_DAMAGE := 2     # starting a turn prone in water
+const WATER_CAP := 0.6      # water stops rising once it covers this much of the arena
 
 var level: Level
 var units: Array[Combatant] = []
@@ -33,6 +38,7 @@ var malice := 0
 var last_seen := Vector2i.ZERO
 var bystanders: Array[Combatant] = []   # enemies on the level not in the fight; they join if they see Thomas
 var hidden_rounds := 0   # enemy turns in a row that ended with no one seeing Thomas
+var arena := Rect2i()    # the Outflow, when this is the boss fight: water rises here while a gate is open
 
 var _ev: Array = []
 
@@ -112,12 +118,20 @@ func reachable(u: Combatant, limit: int) -> Dictionary:
 			continue
 		for d in Level.DIRS_8:
 			var n: Vector2i = c + d
-			if steps.has(n) or not level.can_step(c, d) or occupant(n) != null:
+			if n == u.cell or not level.can_step(c, d) or occupant(n) != null:
 				continue
-			steps[n] = steps[c] + 1
+			var cost: int = steps[c] + step_cost(u, n)
+			if cost > limit or (steps.has(n) and steps[n] <= cost):
+				continue
+			steps[n] = cost
 			prev[n] = c
 			queue.append(n)
 	return prev
+
+
+## Squares of movement it takes `u` to enter `c`: water slows anything that doesn't wade.
+func step_cost(u: Combatant, c: Vector2i) -> int:
+	return WATER_STEP if level.get_tile(c) == Level.Tile.WATER and not u.wades else 1
 
 
 static func path_to(prev: Dictionary, from: Vector2i, goal: Vector2i) -> Array[Vector2i]:
@@ -160,7 +174,7 @@ func hero_step(dir: Vector2i) -> Array:
 	if not is_hero_turn() or budget.move <= 0 or hero.prone:
 		return []
 	var to := hero.cell + dir
-	if not level.can_step(hero.cell, dir) or occupant(to) != null:
+	if not level.can_step(hero.cell, dir) or occupant(to) != null or step_cost(hero, to) > budget.move:
 		return []
 	_walk(hero, [to])
 	return _flush()
@@ -268,6 +282,31 @@ func hero_catch_breath() -> Array:
 	return _flush()
 
 
+## Shut a sluice gate next to Thomas. Uses the main action.
+func hero_shut_gate(c: Vector2i) -> Array:
+	if not is_hero_turn() or not level.gates.has(c) or level.get_tile(c) != Level.Tile.GATE_OPEN:
+		return []
+	if not adjacent(hero.cell, c):
+		_log("Too far from the gate.")
+		return _flush()
+	if budget.main <= 0:
+		_log("No main action left this turn.")
+		return _flush()
+	level.set_tile(c, Level.Tile.GATE_SHUT)
+	_emit({"t": "gate", "cell": c, "open": false})
+	_log("Thomas hauls the sluice gate shut." if level.gates.any(func(g): return level.get_tile(g) == Level.Tile.GATE_OPEN) else "Thomas hauls the last gate shut. The water stops rising.")
+	_spend("main")
+	return _flush()
+
+
+## The nearest open sluice gate next to Thomas, or (-1, -1).
+func gate_in_reach() -> Vector2i:
+	for g in level.gates:
+		if level.get_tile(g) == Level.Tile.GATE_OPEN and adjacent(hero.cell, g):
+			return g
+	return Vector2i(-1, -1)
+
+
 func hero_end_turn() -> Array:
 	if not is_hero_turn():
 		return []
@@ -289,6 +328,9 @@ func _begin_turn(u: Combatant) -> void:
 	if u.bleeding or (u.dying and u == hero):
 		_log("%s bleeds." % u.name)
 		_damage(u, 2, false, 1)
+	if u.prone and not u.dead and level.get_tile(u.cell) == Level.Tile.WATER:
+		_log("%s is under the water, drowning." % u.name)
+		_damage(u, DROWN_DAMAGE, false, 1)
 
 
 func _end_turn(u: Combatant) -> void:
@@ -314,6 +356,7 @@ func _spend(kind: String) -> void:
 func _enemy_phase() -> void:
 	malice += 1 + floori(round / 2.0)
 	_emit({"t": "malice", "value": malice})
+	_rise_water()
 	for o in bystanders.duplicate():
 		if o.alive() and (sees_hero(o) or dist(o.cell, hero.cell) <= 3):
 			bystanders.erase(o)
@@ -352,10 +395,12 @@ func _enemy_act(e: Combatant) -> void:
 		e.fled_once = true
 		_cancel_telegraph(e, "breaking")
 		_emit({"t": "flee", "unit": e})
-		_log("The %s breaks and runs." % e.name)
+		_log("%s breaks and runs." % e.title())
 	if e.fleeing:
 		_flee(e)
 		return
+	if e.kind == "solo":
+		_open_sluice()
 	if not e.telegraph.is_empty():
 		_big_attack(e)
 		_spend("main")
@@ -363,7 +408,7 @@ func _enemy_act(e: Combatant) -> void:
 	if e.prone:
 		e.prone = false
 		_emit({"t": "stand", "unit": e})
-		_log("The %s gets up." % e.name)
+		_log("%s gets up." % e.title())
 		_spend("maneuver")
 	if hero.dead or over:
 		return
@@ -377,9 +422,11 @@ func _enemy_act(e: Combatant) -> void:
 	if adjacent(e.cell, hero.cell) and budget.main > 0:
 		if not e.big.is_empty() and e.big_cooldown <= 0:
 			e.telegraph = _big_cells(e)
-			e.big_cooldown = 3
+			e.big_cooldown = int(e.big.get("cooldown", 3))
+			if e.health_ratio() <= 0.5:
+				e.big_cooldown = int(e.big.get("cooldown_hurt", e.big_cooldown))
 			_emit({"t": "telegraph", "unit": e, "cells": e.telegraph.duplicate()})
-			_log("The %s raises its pick high..." % e.name)
+			_log(String(e.big.get("tell", "%s raises its pick high...")) % e.title())
 		else:
 			_attack(e, e.basic, [hero])
 			if e.kind == "standard" and malice >= PRESS_COST and not over and not hero.dead and adjacent(e.cell, hero.cell):
@@ -471,7 +518,7 @@ func _flee(e: Combatant) -> void:
 		e.fled = true
 		e.fleeing = false
 		_emit({"t": "escape", "unit": e})
-		_log("The %s limps away into the dark. It will be back." % e.name)
+		_log("%s limps away into the dark. It will be back." % e.title())
 		_check_over()
 
 
@@ -479,12 +526,14 @@ func _flee_score(c: Vector2i) -> int:
 	return dist(c, hero.cell) * 10 + (15 if not level.line_of_sight(c, hero.cell) else 0)
 
 
-## The squares a telegraphed blow will land on: where Thomas stands and either side of him.
+## The squares a telegraphed blow will land on: where Thomas stands and `width` squares either side of him (1 unless the blow says).
 func _big_cells(e: Combatant) -> Array[Vector2i]:
 	var dir := hero.cell - e.cell
 	var side := Vector2i(-dir.y, dir.x)
+	var w := int(e.big.get("width", 1))
 	var out: Array[Vector2i] = []
-	for c in [hero.cell, hero.cell + side, hero.cell - side]:
+	for i in range(-w, w + 1):
+		var c := hero.cell + side * i
 		if level.is_walkable(c) and c != e.cell:
 			out.append(c)
 	return out
@@ -496,10 +545,10 @@ func _big_attack(e: Combatant) -> void:
 	_emit({"t": "telegraph_end", "unit": e})
 	var reach := false
 	for c in cells:
-		if adjacent(e.cell, c):
+		if dist(e.cell, c) <= int(e.big.get("reach", 1)):
 			reach = true
 	if not reach:
-		_log("The %s's blow comes down on empty stone." % e.name)
+		_log("%s's blow comes down on empty stone." % e.title())
 		return
 	_emit({"t": "smash", "unit": e, "cells": cells})
 	var targets: Array[Combatant] = []
@@ -518,7 +567,38 @@ func _cancel_telegraph(t: Combatant, why: String) -> void:
 		return
 	t.telegraph.clear()
 	_emit({"t": "telegraph_end", "unit": t})
-	_log("The %s is %s; its swing is broken." % [t.name, why])
+	_log("%s is %s; the swing is broken." % [t.title(), why])
+
+
+# ---------------------------------------------------------------- the Outflow
+
+func _gate_open() -> bool:
+	return level.gates.any(func(g): return level.get_tile(g) == Level.Tile.GATE_OPEN)
+
+
+## While a sluice gate stands open, the water in the arena spreads one square outward each round.
+func _rise_water() -> void:
+	if not arena.has_area() or not _gate_open():
+		return
+	var fresh := level.flood_step(arena, WATER_CAP)
+	if fresh.is_empty():
+		return
+	_emit({"t": "flood", "cells": fresh})
+	_log("The sluices roar. The water rises.")
+
+
+## Malice: the boss hauls a shut gate open again.
+func _open_sluice() -> void:
+	if not arena.has_area() or malice < SLUICE_COST:
+		return
+	for g in level.gates:
+		if level.get_tile(g) == Level.Tile.GATE_SHUT:
+			malice -= SLUICE_COST
+			level.set_tile(g, Level.Tile.GATE_OPEN)
+			_emit({"t": "malice_spend", "name": "Open the Sluice", "value": malice})
+			_emit({"t": "gate", "cell": g, "open": true})
+			_log("Malice: the sluice gate grinds open again.")
+			return
 
 
 # ---------------------------------------------------------------- movement
@@ -545,7 +625,7 @@ func _walk(u: Combatant, path: Array) -> void:
 			_emit({"t": "door", "cell": nxt})
 		u.cell = nxt
 		if u == active:
-			budget.move -= 1
+			budget.move -= step_cost(u, nxt)
 		_emit({"t": "move", "unit": u, "to": nxt})
 
 
@@ -554,6 +634,8 @@ func _push(t: Combatant, from: Vector2i, n: int, pusher: Combatant = null) -> vo
 	var dir := Vector2i(signi(t.cell.x - from.x), signi(t.cell.y - from.y))
 	if dir == Vector2i.ZERO or n <= 0:
 		return
+	if t.kind == "solo":
+		n = mini(n, 1)   # too heavy to drive far
 	var path: Array[Vector2i] = []
 	var slam := 0
 	var other: Combatant = null
@@ -573,12 +655,16 @@ func _push(t: Combatant, from: Vector2i, n: int, pusher: Combatant = null) -> vo
 	if slam > 0:
 		_emit({"t": "slam", "unit": t, "cell": t.cell + dir})
 		if other != null:
-			_log("The %s is slammed into the %s." % [t.name, other.name])
+			_log("%s is slammed into %s." % [t.title(), other.the()])
 		else:
-			_log("The %s is slammed into the wall." % t.name)
+			_log("%s is slammed into the wall." % t.title())
 		if pusher != null and pusher.perks.has("weight_behind_it"):
 			slam += 2
 		_damage(t, slam, false, 1)
+		if t.kind == "solo" and not t.dead:
+			t.dazed = maxi(t.dazed, 1)
+			_emit({"t": "status", "unit": t})
+			_log("%s's own weight drives him into it. He reels, dazed." % t.title())
 		if other != null:
 			_damage(other, slam, false, 1)
 		if pusher != null:
@@ -642,7 +728,7 @@ func _hit(u: Combatant, t: Combatant, ab: Dictionary, r: Dictionary) -> void:
 	if eff.get("crush", false) and (t.kind == "minion" or t.kind == "standard"):
 		t.crushed = true
 		_emit({"t": "hit", "unit": t, "dmg": maxi(1, t.stamina), "crit": true, "tier": 3})
-		_log("The %s's skull gives way." % t.name)
+		_log("%s's skull gives way." % t.title())
 		_kill(t)
 		return
 	_damage(t, int(eff.get("dmg", 0)), r.crit, r.tier)
@@ -650,13 +736,13 @@ func _hit(u: Combatant, t: Combatant, ab: Dictionary, r: Dictionary) -> void:
 		return
 	if eff.has("dazed"):
 		t.dazed = maxi(t.dazed, int(eff.dazed))
-		_log("The %s reels, dazed." % t.name if t != hero else "Thomas reels, dazed.")
+		_log("%s reels, dazed." % t.title())
 	if eff.has("slowed"):
 		t.slowed = maxi(t.slowed, int(eff.slowed))
 	if eff.get("prone", false) and not t.prone:
 		t.prone = true
 		_emit({"t": "prone", "unit": t})
-		_log("%s goes down." % ("Thomas" if t == hero else "The " + t.name))
+		_log("%s goes down." % t.title())
 		_cancel_telegraph(t, "knocked down")
 	if int(eff.get("push", 0)) > 0:
 		_push(t, u.cell, int(eff.push), u)
@@ -719,7 +805,7 @@ func _injure(t: Combatant, part: String) -> void:
 		t.bleeding = true
 	_emit({"t": "injury", "unit": t, "part": part})
 	var what: String = {"head": "a head wound", "arm": "a broken arm", "leg": "a broken leg", "torso": "a deep, bleeding wound"}[part]
-	_log("%s suffers %s." % ["Thomas" if t == hero else "The " + t.name, what])
+	_log("%s suffers %s." % [t.title(), what])
 
 
 func _kill(t: Combatant) -> void:
@@ -731,7 +817,7 @@ func _kill(t: Combatant) -> void:
 	if t == hero:
 		_log("Thomas Wren is dead.")
 	else:
-		_log("The %s is dead." % t.name)
+		_log("%s is dead." % t.title())
 	_check_over()
 
 
