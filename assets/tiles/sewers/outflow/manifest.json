@@ -1,0 +1,194 @@
+{
+  "grid_px": 32,
+  "assets": [
+    {
+      "file": "outflow_room.png",
+      "frame_size": [
+        448,
+        352
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "sha256": "97a1cc7a6251bb38c5958d8b6846d6616cc7ebfd2f9bc2c407c7e75a48ddde9a"
+    },
+    {
+      "file": "sluice_open.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        4
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "sha256": "ca9662368f7d152ea2d9ad4efccb8a2119e4f7ad8676f2917996dcbe6adabb52"
+    },
+    {
+      "file": "sluice_shutting.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        4
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "sha256": "43c5419e96774b6baccd578561175cdae0a10187b22c4a5ab34c3ecff5330233"
+    },
+    {
+      "file": "sluice_shut.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "sha256": "edb18a5d4386c990a6ada4650ba879fb11df11e2e614a6280a7d4a1211912198"
+    },
+    {
+      "file": "floor_flooding.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        4
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "sha256": "9ba10dac5453dd5fd09c44b2770cf34e5c8c3c86d3e72718d9b1cd5f0929e0cd"
+    },
+    {
+      "file": "tally_tag_floor.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "sha256": "0297df32c436a94f9726eaa4a1504d9e346e45eea169d17e7bfd1c6a2a91ad20"
+    },
+    {
+      "file": "tally_tag_icon.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "sha256": "50f62b6081ef7484b7ef255ef860a5277bca75aa40e46273bd0087e5e242a0de"
+    }
+  ],
+  "room_gates_px": [
+    [
+      96,
+      0
+    ],
+    [
+      320,
+      0
+    ]
+  ],
+  "lantern_glass_px": [
+    [
+      48,
+      15
+    ],
+    [
+      241,
+      15
+    ],
+    [
+      400,
+      15
+    ]
+  ],
+  "room_registration": {
+    "x_source": [
+      0,
+      103,
+      1312,
+      1415
+    ],
+    "x_target": [
+      0,
+      32,
+      416,
+      448
+    ],
+    "y_source": [
+      0,
+      112,
+      212,
+      420,
+      524,
+      624,
+      1001,
+      1112
+    ],
+    "y_target": [
+      0,
+      32,
+      64,
+      128,
+      160,
+      192,
+      320,
+      352
+    ],
+    "north_x_source": [
+      0,
+      103,
+      205,
+      304,
+      443,
+      650,
+      799,
+      974,
+      1112,
+      1312,
+      1415
+    ],
+    "north_x_target": [
+      0,
+      32,
+      64,
+      96,
+      128,
+      208,
+      272,
+      320,
+      352,
+      416,
+      448
+    ]
+  }
+}
