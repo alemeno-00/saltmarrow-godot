@@ -66,6 +66,13 @@ These come first because the first fight is being built next. **Please do jobs 1
 - [x] **12. The Outflow, painted as one room** (`assets/tiles/sewers/outflow/`). **Do this next, once your open pull requests are updated:** it is the test of painting whole rooms over a blockout instead of single tiles. Brief and blockout: `design/art-briefs/outflow/BRIEF.md` and `outflow-blockout.png` (448 × 352, 14 × 11 squares). Deliver `outflow_room.png` at exactly that size with neutral, even light (the game adds darkness and lantern light), plus these 32 × 32 pieces: a sluice gate open (water pouring through, 4 frames looped) and shut; the gate shutting (4 frames); a floor square flooding over (4 frames, floor to shallow water); and the brass tally tag lying on the floor, plus a 32 × 32 item icon of it. List each lantern's glass position in the README.
 - [ ] **12b. Flooded square variants** (`assets/tiles/sewers/outflow/`): three more versions of `floor_flooding.png`, same 4-frame format (`floor_flooding_2.png` to `_4.png`), so a flooded floor doesn't repeat as a visible grid. Rule for all future art: anything the game repeats comes in at least 3 variants (`design/art-briefs/README.md`).
 - [x] **13. The Sewers room kit, first batch** (`assets/tiles/sewers/rooms/`). **Do this next.** Paint one of each room layout (12) and six tunnel pieces over their blockouts in `scripts/levels/sewers/layouts/`, plus four sealed-doorway pieces. Brief: `design/art-briefs/sewer-rooms/BRIEF.md`; rules: `design/art-briefs/README.md`. More variants follow once the batch is approved.
+- [ ] **14. Room contents** (`assets/props/sewers/`). After job 13. Design: `design/quick-specs/room-contents-2026-10-30.md`. All transparent PNG, hard edges, neutral light (the game lights them), README per folder as usual:
+  - item icons, 32 × 32 with a 1 px dark outline: `salve.png`, `bandage.png`, `grate_key.png`
+  - caches, 32 × 32, two frames in one row (closed, opened): `crate.png`, `barrel.png`; and a dead miner with a satchel, 64 × 32 (two squares), closed and searched: `satchel_body.png`
+  - lore drops on the floor, 32 × 32: `letter.png` (a folded letter, Ellen's copper-red wax seal), `hymn_sheet.png`; and a dead miner lying with his brass tally tag showing, 64 × 32: `miner_tag_body.png`
+  - a valve wheel on its standpipe, 32 × 32, four frames turning: `valve.png`
+  - an iron grate across a 2-square tunnel, shut and open (two frames each): across a north-south tunnel 64 × 32 `grate_ns.png`, across an east-west tunnel 32 × 64 `grate_ew.png`
+  - floor clutter, 32 × 32, three variants each: `bones_1-3.png`, `debris_1-3.png`
 
 ## Later: Thomas in full
 

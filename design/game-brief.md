@@ -33,27 +33,33 @@ The MVP keeps the dive at the heart of it:
 1. Exploring generated levels, where an enemy that sees Thomas starts a fight. *Built.*
 2. Draw Steel fights against the Drowned Miner and the Faithful, with Malice, flanking, fleeing and returning enemies, losing them, and injuries. *Built.*
 3. The Maces tree, with levels, mastery and stat points. *Built, except Shatter and Sunder, which need armour.*
-4. The art for the first fight in the game (`ART_JOBS.md` jobs 1–8). *Mostly built: the last of it (Thomas's attacks, gore, dice) is in #22.*
-5. The Sewers room kit: levels assembled from painted rooms and connecting pieces, with a fixed bottom depth. Spec: `design/quick-specs/sewer-room-kit-2026-10-29.md`.
+4. The art for the first fight in the game (`ART_JOBS.md` jobs 1–8). *Built.*
+5. The Sewers room kit: levels assembled from painted rooms and connecting pieces, with a fixed bottom depth, lit by lanterns and braziers. Spec: `design/quick-specs/sewer-room-kit-2026-10-29.md`. *Built with stand-ins; paintings are art job 13.*
 6. A Sewers boss at the bottom. Beating it wins the run. *Built: the First Shift; its painted room is art job 12.*
 7. A win screen, a death screen, and a fresh start for the next life.
+8. Rooms with things in them (added after the first playtest, 2026-10-30): more enemies and patrols, lore drops kept in a journal across lives, a small set of items on a 4-slot belt, one puzzle per level (sluice valve or locked grate), events, and clutter. Spec: `design/quick-specs/room-contents-2026-10-30.md`.
+9. Characters drawn in 8 directions (added after the first playtest). Art from ChatGPT's proposal (#5), staged: idle and walk first.
 
 ## Out of scope — not building this
 `INTENT UNKNOWN` — proposed, not confirmed.
 - The town, contracts, shops and shaft landings.
-- Items, armour, the bag grid, and weapon swapping.
+- Armour, the bag grid, shops, crafting, and weapon swapping. (A small set of items on a belt is now in: MVP item 8.)
 - Hunger, thirst, fatigue, sickness and Dread.
 - Spell schools and the Star, including phenomena and Marks.
 - Weapon trees and backstories other than Fury and Maces.
 - Levels below the Sewers, and finding Ellen.
-- Treasure, secret, puzzle and trap rooms: they need items, hidden doors, and puzzle and trap rules first.
+- Secret rooms, traps, and puzzles beyond the sluice valve and the locked grate.
+- Thomas's lantern as a resource that burns oil.
 
 ## Build order
 1. Put the fight art in the game, to prove the fights feel heavy and costly.
 2. Build the Sewers room kit: the door standard, the generator that places painted rooms, then the paintings (once the painted Outflow proves the method).
 3. Design and build the Sewers boss and its fight. *Done.*
 4. Add the win and death screens and the restart.
-5. Tune how much each fight costs and how fast Thomas grows.
+5. Fill the rooms: enemies and patrols, then lore drops and the journal, then items and caches, then the puzzles, then events (room-contents spec).
+6. 8-direction characters: the game picks a direction's frames; ChatGPT draws idle and walk in 8 directions first.
+7. Tune how much each fight costs and how fast Thomas grows.
+8. The UI, later.
 
 ---
 **Who it's for / what they feel:** Players of tactical games and roguelikes who want every fight to feel heavy and dangerous, and to get stronger the deeper they go.
