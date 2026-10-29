@@ -52,3 +52,27 @@ func test_unused_doorways_are_sealed() -> void:
 			continue
 		var lay := RoomLayout.get_layout(p.layout)
 		eq(LevelView.sealed_doorways(p).size(), lay.doors.size() - (p.open as Array).size(), "%s: every unused doorway gets a seal" % p.layout)
+
+
+func test_lights_sit_on_the_painted_glass() -> void:
+	var glass := Lighting.painted_glass()
+	check(not glass.is_empty(), "ChatGPT's glass positions are read")
+	var checked := 0
+	for life in [7, 8, 9, 10]:
+		game.new_level(life)
+		for p in game.level.pieces:
+			var spots: Dictionary = glass.get(p.layout, {})
+			if spots.is_empty():
+				continue
+			var r: Rect2i = p.rect
+			for local in spots:
+				var src: Vector2i = local
+				var c: Vector2i = r.position + (Vector2i(r.size.x - 1 - src.x, src.y) if p.mirrored else src)
+				var at := Lighting.light_position(game.level, c)
+				var g: Vector2 = spots[local]
+				if p.mirrored:
+					g.x = r.size.x * Lighting.TILE - 1 - g.x
+				var want := Vector2(r.position) * Lighting.TILE + g
+				check(at.distance_to(want) <= Lighting.WALL_LIGHT_DROP + 0.5, "%s: the light at %s sits on its glass (%s vs %s)" % [p.layout, c, at, want])
+				checked += 1
+	check(checked > 20, "plenty of painted lights checked (%d)" % checked)

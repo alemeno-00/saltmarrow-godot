@@ -22,7 +22,14 @@ const TILE := 32
 ## The Outflow's lantern glass, in pixels from the painted room's top-left (assets/tiles/sewers/outflow/README.md).
 const OUTFLOW_GLASS: Array[Vector2] = [Vector2(48, 15), Vector2(241, 15), Vector2(400, 15)]
 
+## ChatGPT's record of every painted room's lantern and brazier glass (room-local pixels, by blockout square).
+const ROOMS_MANIFEST := "res://assets/tiles/sewers/rooms/manifest.json"
+const ROOMS_ART := "res://assets/tiles/sewers/rooms/"
+const WALL_LIGHT_DROP := 10.0   # a wall lantern casts from just below its glass, onto the floor
+
 static var _tex: Texture2D = null
+static var _glass := {}         # layout -> {blockout square: glass pixel}; empty until read
+static var _glass_read := false
 
 var _lights: Array[PointLight2D] = []
 var _time := 0.0
@@ -56,13 +63,53 @@ static func make_light(color: Color, energy: float, radius_squares: float) -> Po
 	return l
 
 
-## Every light in a level as [pixel position, is a brazier]: wall lanterns cast from just below their glass,
-## braziers from their bowl, and the Outflow from its painted glass.
+## The painted glass of every lantern and brazier in ChatGPT's room paintings, read once from its manifest
+## (exported with the web build: export_presets.cfg include_filter).
+static func painted_glass() -> Dictionary:
+	if not _glass_read:
+		_glass_read = true
+		var f := FileAccess.open(ROOMS_MANIFEST, FileAccess.READ)
+		if f != null:
+			var m = JSON.parse_string(f.get_as_text())
+			if m is Dictionary and m.get("assets") is Dictionary:
+				for layout in m.assets:
+					var spots := {}
+					for l in m.assets[layout].get("lights", []):
+						spots[Vector2i(int(l.blockout_cell[0]), int(l.blockout_cell[1]))] = Vector2(l.glass_centre_px[0], l.glass_centre_px[1])
+					_glass[layout] = spots
+	return _glass
+
+
+## Where a light square's light goes: on its painted glass if its room has a painting that records it,
+## otherwise the middle of the square (wall lanterns just below the glass, braziers at the bowl).
+static func light_position(level: Level, c: Vector2i) -> Vector2:
+	var brazier := level.get_tile(c) == Level.Tile.PROP
+	var drop := Vector2.ZERO if brazier else Vector2(0, WALL_LIGHT_DROP)
+	for p in level.pieces:
+		var r: Rect2i = p.rect
+		if p.kind == "outflow" or not r.has_point(c):
+			continue
+		var spots: Dictionary = painted_glass().get(p.layout, {})
+		if spots.is_empty() or not ResourceLoader.exists("%s%s/1.png" % [ROOMS_ART, p.layout]):
+			break
+		var local := c - r.position
+		if p.mirrored:
+			local.x = r.size.x - 1 - local.x
+		if not spots.has(local):
+			break
+		var g: Vector2 = spots[local]
+		if p.mirrored:
+			g.x = r.size.x * TILE - 1 - g.x
+		return Vector2(r.position) * TILE + g + drop
+	return Vector2(c) * TILE + (Vector2(16, 10) if brazier else Vector2(16, 26))
+
+
+## Every light in a level as [pixel position, is a brazier]: lanterns and braziers on their painted glass where a
+## painting records it, and the Outflow from its painted glass.
 static func light_points(level: Level) -> Array:
 	var out: Array = []
 	for c in level.lights:
-		var brazier := level.get_tile(c) == Level.Tile.PROP
-		out.append([Vector2(c) * TILE + (Vector2(16, 10) if brazier else Vector2(16, 26)), brazier])
+		out.append([light_position(level, c), level.get_tile(c) == Level.Tile.PROP])
 	if level.outflow.has_area():
 		var origin := Vector2(level.outflow.grow(1).position) * TILE
 		for g in OUTFLOW_GLASS:
