@@ -3,7 +3,7 @@
 | File | Frame / layout |
 | --- | --- |
 | bone-master.png |2172×724 source,tumbling8 then resting10 intended |
-| slate-master.png |1974×790 source,tumbling8 then resting10 intended |
+| slate-master.png |1967×799 source,tumbling8 then resting10 intended |
 | bone-candidate.png |48×48 cells,480×96;row1 tumbling8 plus2 empty,row2 resting10 intended |
 | slate-candidate.png |48×48 cells,480×96;same layout |
 | bone-3x.png |144×144 preview cells,1440×288 |
