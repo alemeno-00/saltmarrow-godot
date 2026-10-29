@@ -1,0 +1,697 @@
+{
+  "entry": {
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      "FLXXFDDF",
+      "FFXXFDDF",
+      "#......#",
+      "#......#",
+      "#......#",
+      "D......D",
+      "D......D",
+      "#####DD#"
+    ],
+    "lights": [
+      {
+        "cell": [
+          1,
+          0
+        ],
+        "centre_px": [
+          48,
+          15
+        ],
+        "kind": "wall"
+      }
+    ],
+    "mirrorable": false,
+    "blockout": "scripts/levels/sewers/layouts/entry.png"
+  },
+  "stairs": {
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      "FFFLFDDF",
+      "FFFFFDDF",
+      "#......#",
+      "#......#",
+      "#...S..#",
+      "D......D",
+      "D......D",
+      "#####DD#"
+    ],
+    "lights": [
+      {
+        "cell": [
+          3,
+          0
+        ],
+        "centre_px": [
+          112,
+          15
+        ],
+        "kind": "wall"
+      }
+    ],
+    "mirrorable": false,
+    "blockout": "scripts/levels/sewers/layouts/stairs.png"
+  },
+  "lore_a": {
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      "FFXXFDDF",
+      "FFXXFDDF",
+      "#B.....#",
+      "#......#",
+      "#.....B#",
+      "D......D",
+      "D......D",
+      "#####DD#"
+    ],
+    "lights": [
+      {
+        "cell": [
+          1,
+          2
+        ],
+        "centre_px": [
+          48,
+          79
+        ],
+        "kind": "standing"
+      },
+      {
+        "cell": [
+          6,
+          4
+        ],
+        "centre_px": [
+          208,
+          143
+        ],
+        "kind": "standing"
+      }
+    ],
+    "mirrorable": false,
+    "blockout": "scripts/levels/sewers/layouts/lore_a.png"
+  },
+  "lore_b": {
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      "FFFLFDDF",
+      "FFFFFDDF",
+      "#PP....#",
+      "#P.....#",
+      "#......#",
+      "D......D",
+      "D......D",
+      "#####DD#"
+    ],
+    "lights": [
+      {
+        "cell": [
+          3,
+          0
+        ],
+        "centre_px": [
+          112,
+          15
+        ],
+        "kind": "wall"
+      }
+    ],
+    "mirrorable": false,
+    "blockout": "scripts/levels/sewers/layouts/lore_b.png"
+  },
+  "junction_a": {
+    "size": [
+      384,
+      384
+    ],
+    "grid": [
+      "FLFFFDDFFFLF",
+      "FFFFFDDFFFFF",
+      "#..........#",
+      "#..P....P..#",
+      "#..........#",
+      "D..........D",
+      "D..........D",
+      "#..........#",
+      "#..B....B..#",
+      "#..........#",
+      "#..........#",
+      "#####DD#####"
+    ],
+    "lights": [
+      {
+        "cell": [
+          1,
+          0
+        ],
+        "centre_px": [
+          48,
+          15
+        ],
+        "kind": "wall"
+      },
+      {
+        "cell": [
+          10,
+          0
+        ],
+        "centre_px": [
+          336,
+          15
+        ],
+        "kind": "wall"
+      },
+      {
+        "cell": [
+          3,
+          8
+        ],
+        "centre_px": [
+          112,
+          271
+        ],
+        "kind": "standing"
+      },
+      {
+        "cell": [
+          8,
+          8
+        ],
+        "centre_px": [
+          272,
+          271
+        ],
+        "kind": "standing"
+      }
+    ],
+    "mirrorable": true,
+    "blockout": "scripts/levels/sewers/layouts/junction_a.png"
+  },
+  "junction_b": {
+    "size": [
+      384,
+      384
+    ],
+    "grid": [
+      "FFFLFDDFLFFF",
+      "FFFFFDDFFFFF",
+      "#,,,,,,,,,,#",
+      "#,........,#",
+      "#,.~~~~~~.,#",
+      "D,.~~~~~~.,D",
+      "D,.~~~~~~.,D",
+      "#,.~~~~~~.,#",
+      "#,........,#",
+      "#,.B....B.,#",
+      "#,,,,,,,,,,#",
+      "#####DD#####"
+    ],
+    "lights": [
+      {
+        "cell": [
+          3,
+          0
+        ],
+        "centre_px": [
+          112,
+          15
+        ],
+        "kind": "wall"
+      },
+      {
+        "cell": [
+          8,
+          0
+        ],
+        "centre_px": [
+          272,
+          15
+        ],
+        "kind": "wall"
+      },
+      {
+        "cell": [
+          3,
+          9
+        ],
+        "centre_px": [
+          112,
+          303
+        ],
+        "kind": "standing"
+      },
+      {
+        "cell": [
+          8,
+          9
+        ],
+        "centre_px": [
+          272,
+          303
+        ],
+        "kind": "standing"
+      }
+    ],
+    "mirrorable": true,
+    "blockout": "scripts/levels/sewers/layouts/junction_b.png"
+  },
+  "junction_c": {
+    "size": [
+      384,
+      384
+    ],
+    "grid": [
+      "FLFFFDDFFFLF",
+      "FFFFFDDFFFFF",
+      "#PP......PP#",
+      "#PP......PP#",
+      "#..........#",
+      "D...rrrr...D",
+      "D...r~~r...D",
+      "#...r~~r...#",
+      "#...r..r...#",
+      "#B........B#",
+      "#..........#",
+      "#####DD#####"
+    ],
+    "lights": [
+      {
+        "cell": [
+          1,
+          0
+        ],
+        "centre_px": [
+          48,
+          15
+        ],
+        "kind": "wall"
+      },
+      {
+        "cell": [
+          10,
+          0
+        ],
+        "centre_px": [
+          336,
+          15
+        ],
+        "kind": "wall"
+      },
+      {
+        "cell": [
+          1,
+          9
+        ],
+        "centre_px": [
+          48,
+          303
+        ],
+        "kind": "standing"
+      },
+      {
+        "cell": [
+          10,
+          9
+        ],
+        "centre_px": [
+          336,
+          303
+        ],
+        "kind": "standing"
+      }
+    ],
+    "mirrorable": true,
+    "blockout": "scripts/levels/sewers/layouts/junction_c.png"
+  },
+  "chamber_a": {
+    "size": [
+      384,
+      256
+    ],
+    "grid": [
+      "FLFFFDDFFFLF",
+      "FFFFFDDFFFFF",
+      "#..........#",
+      "#.P......P.#",
+      "#..........#",
+      "D..........D",
+      "D..........D",
+      "#####DD#####"
+    ],
+    "lights": [
+      {
+        "cell": [
+          1,
+          0
+        ],
+        "centre_px": [
+          48,
+          15
+        ],
+        "kind": "wall"
+      },
+      {
+        "cell": [
+          10,
+          0
+        ],
+        "centre_px": [
+          336,
+          15
+        ],
+        "kind": "wall"
+      }
+    ],
+    "mirrorable": true,
+    "blockout": "scripts/levels/sewers/layouts/chamber_a.png"
+  },
+  "chamber_b": {
+    "size": [
+      384,
+      256
+    ],
+    "grid": [
+      "FFFLFDDFLFFF",
+      "FFFFFDDFFFFF",
+      "#..........#",
+      "#~~~~..~~~~#",
+      "#~~~~..~~~~#",
+      "D..........D",
+      "D..........D",
+      "#####DD#####"
+    ],
+    "lights": [
+      {
+        "cell": [
+          3,
+          0
+        ],
+        "centre_px": [
+          112,
+          15
+        ],
+        "kind": "wall"
+      },
+      {
+        "cell": [
+          8,
+          0
+        ],
+        "centre_px": [
+          272,
+          15
+        ],
+        "kind": "wall"
+      }
+    ],
+    "mirrorable": true,
+    "blockout": "scripts/levels/sewers/layouts/chamber_b.png"
+  },
+  "chamber_c": {
+    "size": [
+      256,
+      384
+    ],
+    "grid": [
+      "FLFFFDDF",
+      "FFFFFDDF",
+      "#......#",
+      "#.P....#",
+      "#......#",
+      "D......D",
+      "D......D",
+      "#......#",
+      "#....B.#",
+      "#......#",
+      "#......#",
+      "#####DD#"
+    ],
+    "lights": [
+      {
+        "cell": [
+          1,
+          0
+        ],
+        "centre_px": [
+          48,
+          15
+        ],
+        "kind": "wall"
+      },
+      {
+        "cell": [
+          5,
+          8
+        ],
+        "centre_px": [
+          176,
+          271
+        ],
+        "kind": "standing"
+      }
+    ],
+    "mirrorable": false,
+    "blockout": "scripts/levels/sewers/layouts/chamber_c.png"
+  },
+  "flooded_a": {
+    "size": [
+      384,
+      384
+    ],
+    "grid": [
+      "FLFFFDDFFFLF",
+      "FFFFFDDFFFFF",
+      "#,,,,,,,,,,#",
+      "#,~~~~~~~~,#",
+      "#,~~~~~~~~,#",
+      "D,~~~~~~~~,D",
+      "D,~~~~~~~~,D",
+      "#,~~~~~~~~,#",
+      "#,~~~~~~~~,#",
+      "#,~B~~~~B~,#",
+      "#,,,,,,,,,,#",
+      "#####DD#####"
+    ],
+    "lights": [
+      {
+        "cell": [
+          1,
+          0
+        ],
+        "centre_px": [
+          48,
+          15
+        ],
+        "kind": "wall"
+      },
+      {
+        "cell": [
+          10,
+          0
+        ],
+        "centre_px": [
+          336,
+          15
+        ],
+        "kind": "wall"
+      },
+      {
+        "cell": [
+          3,
+          9
+        ],
+        "centre_px": [
+          112,
+          303
+        ],
+        "kind": "standing"
+      },
+      {
+        "cell": [
+          8,
+          9
+        ],
+        "centre_px": [
+          272,
+          303
+        ],
+        "kind": "standing"
+      }
+    ],
+    "mirrorable": true,
+    "blockout": "scripts/levels/sewers/layouts/flooded_a.png"
+  },
+  "flooded_b": {
+    "size": [
+      384,
+      384
+    ],
+    "grid": [
+      "FFFLFDDFLFFF",
+      "FFFFFDDFFFFF",
+      "#..........#",
+      "#...~~~~...#",
+      "#..~~~~~~..#",
+      "D.~~~~~~~~.D",
+      "D.~~~~~~~~.D",
+      "#..~~~~~~..#",
+      "#...~~~~...#",
+      "#B........B#",
+      "#..........#",
+      "#####DD#####"
+    ],
+    "lights": [
+      {
+        "cell": [
+          3,
+          0
+        ],
+        "centre_px": [
+          112,
+          15
+        ],
+        "kind": "wall"
+      },
+      {
+        "cell": [
+          8,
+          0
+        ],
+        "centre_px": [
+          272,
+          15
+        ],
+        "kind": "wall"
+      },
+      {
+        "cell": [
+          1,
+          9
+        ],
+        "centre_px": [
+          48,
+          303
+        ],
+        "kind": "standing"
+      },
+      {
+        "cell": [
+          10,
+          9
+        ],
+        "centre_px": [
+          336,
+          303
+        ],
+        "kind": "standing"
+      }
+    ],
+    "mirrorable": true,
+    "blockout": "scripts/levels/sewers/layouts/flooded_b.png"
+  },
+  "connector_ew": {
+    "size": [
+      128,
+      128
+    ],
+    "grid": [
+      "FFFF",
+      "D..D",
+      "D..D",
+      "####"
+    ],
+    "lights": [],
+    "mirrorable": false,
+    "blockout": "scripts/levels/sewers/layouts/connector_ew.png"
+  },
+  "connector_ns": {
+    "size": [
+      128,
+      128
+    ],
+    "grid": [
+      "#DD#",
+      "#..#",
+      "#..#",
+      "#DD#"
+    ],
+    "lights": [],
+    "mirrorable": false,
+    "blockout": "scripts/levels/sewers/layouts/connector_ns.png"
+  },
+  "connector_ne": {
+    "size": [
+      128,
+      128
+    ],
+    "grid": [
+      "#DD#",
+      "#..D",
+      "#..D",
+      "####"
+    ],
+    "lights": [],
+    "mirrorable": false,
+    "blockout": "scripts/levels/sewers/layouts/connector_ne.png"
+  },
+  "connector_nw": {
+    "size": [
+      128,
+      128
+    ],
+    "grid": [
+      "#DD#",
+      "D..#",
+      "D..#",
+      "####"
+    ],
+    "lights": [],
+    "mirrorable": false,
+    "blockout": "scripts/levels/sewers/layouts/connector_nw.png"
+  },
+  "connector_es": {
+    "size": [
+      128,
+      128
+    ],
+    "grid": [
+      "FFFF",
+      "#..D",
+      "#..D",
+      "#DD#"
+    ],
+    "lights": [],
+    "mirrorable": false,
+    "blockout": "scripts/levels/sewers/layouts/connector_es.png"
+  },
+  "connector_sw": {
+    "size": [
+      128,
+      128
+    ],
+    "grid": [
+      "FFFF",
+      "D..#",
+      "D..#",
+      "#DD#"
+    ],
+    "lights": [],
+    "mirrorable": false,
+    "blockout": "scripts/levels/sewers/layouts/connector_sw.png"
+  }
+}

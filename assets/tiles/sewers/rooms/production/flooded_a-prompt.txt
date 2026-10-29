@@ -1,0 +1,22 @@
+Use case: sketch-to-render. Paint IMAGE1 blockout into ONE coherent hand-painted pixel-art sewer room background. IMAGE2 is material craftsmanship reference ONLY; ignore its layout and lighting. Do not deliver a tile sheet or presentation board. Entire image fills canvas, no margin. The image is an exact orthographic rectangle; camera slightly angled down, no perspective convergence or isometric diamond.
+STRICT BLOCKOUT: Every 32px square must retain its kind. Grid and source colours are GUIDES, REMOVE all coloured guides and gridlines from painting. '#' darkgrey=wall TOP only, 'F' midgrey=north brick FACE, '.' quiet flat walkablefloor, ',' raised walkable stone, '~' shallowdarktealwater, 'P' solidblockingprop, 'r' LOW ironrailing, 'D' GREEN means clear DRY GREY FLOOR passage to edge, NEVER water, 'X' fixture INSIDEwall, 'S' stepsdown, 'L' northwallfacewith enclosedlantern, 'B' solidpropwith enclosedstandinglantern. North rooms have TWO full rows of brick wall FACE (64px deep), otherwallsonlyone row TOPS. Props must be SMALL TOP-DOWN objects completelycontained in allocated32x32cell footprints, maximum32px tall, not tall portraits; adjacentfloor stays clear. Props muststayinside allocatedcells, no collision overspill. DO NOT put water,furniture,pillars,debris,railings on ordinaryfloor. NEVER seal a green doorway, all must be fully open, two squareswide, at EXACT coordinates in grid even if off-centre. Doorlanding floorclear. Keep all perimeter material profiles plain and consistent to match other rooms.
+LIGHTING: soft NEUTRAL GREY AMBIENT EVENLY across entire room. NO baked lantern pools, NO vignette, NO fade to black, NO castshadows acrossfloor. Glass itself mutedamber, not brightflame, no halo. Empty dark stair/shaft crevice okay. Materials coldslate,charcoal,wetbrown brick andrustbrass, darktealwater only designatedcells. Reticent moss/salt/pearlysheen aroundwateredges. At least HALFfloor quiet lowcontrast irregular wornflagstones, no regularguidegrid. Detail on walls/props. Hard pixelclusters, sharpedges noAA no blur, around32colours. No characters, blood, droppeditems, movinggates, text,numerals,labels,borders. TransparentPNG only outside physicalroom if any; all floor opaque. Output same canvas aspectratio, exact target size or exact integer enlargement. Whole complete paintedroom, not cropped.
+
+LAYOUT flooded_a, native canvas 384x384px, 12columns x12rows. A wide cistern: all blue cells water, raised stone walkway pale cells around perimeter, TWO square lit pillars B standing in southern water. Walkway narrow but clear, no railings added.
+Rows TOP TO BOTTOM, each character one32pxsquare, xright/ydown (do not render this text):
+FLFFFDDFFFLF
+FFFFFDDFFFFF
+#,,,,,,,,,,#
+#,~~~~~~~~,#
+#,~~~~~~~~,#
+D,~~~~~~~~,D
+D,~~~~~~~~,D
+#,~~~~~~~~,#
+#,~~~~~~~~,#
+#,~B~~~~B~,#
+#,,,,,,,,,,#
+#####DD#####
+Exact doorway cells (x,y zero-based): [(5, 0), (6, 0), (5, 1), (6, 1), (0, 5), (11, 5), (0, 6), (11, 6), (5, 11), (6, 11)]
+Lightglass centres nativepixels: [[48, 15], [336, 15], [112, 303], [272, 303]]. Lamps must remain at theirmarkedcells.
+
+Northbrickface MUST fill TWO FULL rows0and1 (y0..63) exceptgreenpassage, not just one row. Greenpassagesare greyfloorfullwidthtoedge. SouthwallsTOPSONLY. Ignore materialreference geometry.
