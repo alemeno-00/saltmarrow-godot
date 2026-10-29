@@ -1,0 +1,19 @@
+{
+  "checks": [
+    "9 full-section PNGs: grid dimensions, hard alpha, transparent RGB, disjoint foreground/ground, exact reassembly",
+    "9 ordered section boundary profiles match pixel-for-pixel; interior stone-course continuity remains a visual review item",
+    "all 6 unrotated section orders: every dry cell reachable; port ground types match at both joins"
+  ],
+  "visual_acceptance": "Pending user review of actual engine renders; not concept-identical certification",
+  "engine_scope": "Both selected arrangements loaded, all dry cells reached, real exploration crosses both joins and returns via the lower walk, water blocked. See tests/test_sewer_sections.gd.",
+  "limitations": [
+    "no rotation or mirroring",
+    "north service gate closed",
+    "static water and baked environment light",
+    "only 2 selected orders, not 30 archetypes",
+    "ground includes fixed rear walls and fixed props; foreground is separately extracted"
+  ],
+  "engine_result": "PASS: two arrangements, both joins and lower return traversed through existing exploration; no script errors",
+  "core_result": "43 passed, 0 failed",
+  "tested_engine": "4.7.2 Compatibility; 4.6 not tested"
+}

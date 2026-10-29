@@ -1,0 +1,19 @@
+{
+  "engine": "Godot 4.7.2 Compatibility",
+  "scene": "res://scenes/fidelity_corridor.tscn",
+  "capture_size": [
+    1280,
+    720
+  ],
+  "overlays_changed_pixels": 11538,
+  "total_pixels": 921600,
+  "assertions": [
+    "arch threshold clear; piers blocked",
+    "bridge rail overhang not walkable",
+    "water blocked",
+    "dry path crosses bridge",
+    "overlay toggle preserves all movement cells"
+  ],
+  "core_tests": "43 passed, 0 failed",
+  "scope": "Isolated review corridor. No visual approval or concept-identical claim."
+}

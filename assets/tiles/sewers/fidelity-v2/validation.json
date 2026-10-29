@@ -1,0 +1,14 @@
+{
+  "technical_checks": [
+    "57 exports: dimensions, binary alpha, transparent RGB and hashes pass",
+    "320 ordered surface-edge comparisons pass (12 floor variants and four 64px water substrates)",
+    "9 ordered tall-wall joins match exactly",
+    "64 ordered multi-cell paving side joins share the same mortar boundary; no claim of arbitrary internal stone continuity",
+    "8 irregular overlays have real transparent surrounds and measured sparse alpha coverage",
+    "static character feet centres x32 \u00b10.5px, ground boundary y56; full silhouettes fit 64px frames",
+    "arch aperture is transparent",
+    "both native-size atlases have grid-aligned storage and byte-identical export regions"
+  ],
+  "visual_acceptance": "NOT APPROVED; no pixel-identical or concept-fidelity certification",
+  "engine": "Godot 4.7.2 Compatibility"
+}

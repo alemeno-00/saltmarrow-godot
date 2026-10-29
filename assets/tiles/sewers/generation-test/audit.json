@@ -1,0 +1,107 @@
+{
+	"elapsed_ms": 12309,
+	"engine": "4.7.2-stable (official)",
+	"failures": [],
+	"map_cells": [
+		60,
+		40
+	],
+	"rooms_range": [
+		12,
+		12
+	],
+	"sample_seeds": [
+		{
+			"doors": 17,
+			"rooms": 12,
+			"seed": 1,
+			"walkable": 764,
+			"water": 9
+		},
+		{
+			"doors": 21,
+			"rooms": 12,
+			"seed": 2,
+			"walkable": 734,
+			"water": 11
+		},
+		{
+			"doors": 17,
+			"rooms": 12,
+			"seed": 3,
+			"walkable": 693,
+			"water": 9
+		},
+		{
+			"doors": 14,
+			"rooms": 12,
+			"seed": 4,
+			"walkable": 626,
+			"water": 11
+		},
+		{
+			"doors": 15,
+			"rooms": 12,
+			"seed": 5,
+			"walkable": 705,
+			"water": 12
+		},
+		{
+			"doors": 18,
+			"rooms": 12,
+			"seed": 6,
+			"walkable": 658,
+			"water": 9
+		},
+		{
+			"doors": 15,
+			"rooms": 12,
+			"seed": 7,
+			"walkable": 671,
+			"water": 10
+		},
+		{
+			"doors": 16,
+			"rooms": 12,
+			"seed": 8,
+			"walkable": 619,
+			"water": 8
+		},
+		{
+			"doors": 23,
+			"rooms": 12,
+			"seed": 9,
+			"walkable": 705,
+			"water": 8
+		},
+		{
+			"doors": 17,
+			"rooms": 12,
+			"seed": 10,
+			"walkable": 640,
+			"water": 10
+		},
+		{
+			"doors": 16,
+			"rooms": 12,
+			"seed": 11,
+			"walkable": 698,
+			"water": 10
+		},
+		{
+			"doors": 17,
+			"rooms": 12,
+			"seed": 12,
+			"walkable": 681,
+			"water": 10
+		}
+	],
+	"scope": "Generic Level.generate only. Water/closed doors are walkable under current rules. Six biome grammars, 30 archetypes each, dry-only connectivity, art fidelity, combat balance and flooding states are not implemented or certified by this audit.",
+	"seed_first": 1,
+	"seed_last": 1000,
+	"unique_layouts": 1000,
+	"walkable_range": [
+		510,
+		890
+	]
+}

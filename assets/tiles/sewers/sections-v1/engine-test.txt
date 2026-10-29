@@ -1,0 +1,54 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 4.1 Metal - 90.5 - Compatibility - Using Device: Apple - Apple M4
+
+PASS arrangement 0 uses blocked deep water
+PASS all dry cells connect across arrangement 0
+PASS all water cells remain blocked
+PASS port profile 1 row 10 matches
+PASS port profile 1 row 11 matches
+PASS port profile 1 row 12 matches
+PASS port profile 1 row 13 matches
+PASS port profile 1 row 14 matches
+PASS port profile 1 row 15 matches
+PASS port profile 1 row 16 matches
+PASS port profile 1 row 17 matches
+PASS port profile 2 row 10 matches
+PASS port profile 2 row 11 matches
+PASS port profile 2 row 12 matches
+PASS port profile 2 row 13 matches
+PASS port profile 2 row 14 matches
+PASS port profile 2 row 15 matches
+PASS port profile 2 row 16 matches
+PASS port profile 2 row 17 matches
+PASS engine screenshot saved: arrangement-a
+PASS existing movement steps on the authored floor
+PASS actual exploration traverses both joins and returns on the lower walk
+PASS engine screenshot saved: corridor-detail
+PASS engine screenshot saved: junction-detail
+PASS engine screenshot saved: cistern-detail
+PASS arrangement 1 uses blocked deep water
+PASS all dry cells connect across arrangement 1
+PASS all water cells remain blocked
+PASS port profile 1 row 10 matches
+PASS port profile 1 row 11 matches
+PASS port profile 1 row 12 matches
+PASS port profile 1 row 13 matches
+PASS port profile 1 row 14 matches
+PASS port profile 1 row 15 matches
+PASS port profile 1 row 16 matches
+PASS port profile 1 row 17 matches
+PASS port profile 2 row 10 matches
+PASS port profile 2 row 11 matches
+PASS port profile 2 row 12 matches
+PASS port profile 2 row 13 matches
+PASS port profile 2 row 14 matches
+PASS port profile 2 row 15 matches
+PASS port profile 2 row 16 matches
+PASS port profile 2 row 17 matches
+PASS engine screenshot saved: arrangement-b
+PASS existing movement steps on the authored floor
+PASS actual exploration traverses both joins and returns on the lower walk
+PASS engine screenshot saved: cistern-detail
+PASS engine screenshot saved: corridor-detail
+PASS engine screenshot saved: junction-detail
+SEWER SECTIONS: 0 failures; visual acceptance remains user-reviewed
