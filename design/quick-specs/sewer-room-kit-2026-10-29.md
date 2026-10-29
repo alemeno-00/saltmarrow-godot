@@ -14,7 +14,10 @@ A level is a set of rooms joined by connecting pieces, on one grid with one door
 
 1. **Blocks.** Room and connector sizes, walls included, are multiples of 4 squares: 8 × 8, 12 × 8, 8 × 12 and 12 × 12. Connectors are 4 squares across: wall, a 2-square walkway, wall. The Outflow is the one exception and keeps its own 14 × 11 layout (`design/quick-specs/first-shift-boss-2026-10-29.md`, `design/art-briefs/outflow/`).
 2. **The door standard.** At most one door per side. A door is 2 squares wide, centred on its side. Each layout's data lists which sides have doors. A door is valid only if it faces a matching door in the next piece. Unused doors are walled off.
-3. **The blockout is the data.** Each layout is a small image with one flat colour per square: wall face, wall top, floor, shallow water, door, lantern spot (the Outflow blockout's colours). The game reads it to build the room's squares; ChatGPT paints over the same image, so rules and painting come from one file.
+3. **The blockout is the data.** Each layout is a small image with one flat colour per square, following `design/art-briefs/README.md` (the blockout standard, updated after the Outflow test): wall top, wall face, floor, raised walkway, shallow water, blocking prop, railing, door, special fixture, wall light, standing light. The game reads it to build the room's squares; ChatGPT paints over the same image, so rules and painting come from one file.
+   - **North walls are two squares thick** so their faces paint two squares tall; sizes above include them.
+   - **Two new tile types:** *prop* (blocks movement and sight) and *rail* (blocks movement, not sight). A raised walkway is walkable floor for now.
+   - **Every floor square has a light within about 6 squares;** junctions and chambers always have some shape (a walkway, railing, alcove or props).
 4. **Room types for the first version:**
 
    | Type | Size | Layouts | Paintings each | Notes |
@@ -54,6 +57,7 @@ Values live as named constants in the code, as with the boss: `assets/` belongs 
 
 - [ ] Over 300 seeds, every level is fully reachable, every door meets a matching door, and no door opens into a wall. *(test)*
 - [ ] Every placed room matches its blockout square for square, mirrored ones included. *(test)*
+- [ ] Props block movement and sight; rails block movement but not sight. *(test)*
 - [ ] No layout appears twice in a row; at most one lore room; the stairs or Outflow sit at the end of the longest branch. *(test)*
 - [ ] A layout without paintings is drawn with stand-in tiles; one with paintings shows a random one. *(test + retained screenshot)*
 - [ ] A new life gets a different layout; the same seed gives the same level. *(test)*
