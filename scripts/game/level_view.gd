@@ -5,14 +5,24 @@ extends Node2D
 
 const TILE := 32
 const OUTFLOW_ART := "res://assets/tiles/sewers/outflow/outflow_room.png"
+const OUTFLOW_DIR := "res://assets/tiles/sewers/outflow/"
+const SLUICE_FRAME := 0.18   # seconds per frame of the open sluice (README: 180 ms)
+const FLOOD_FRAME := 0.22    # seconds per frame of a square flooding (README: 220 ms)
 var level: Level
 var outflow_art: Texture2D = null   # the painted Outflow, walls included (14 x 11 squares)
+var _pieces := {}                   # the Outflow's moving pieces, by file name
+var _flooded_at := {}               # square -> when it flooded, to play the flooding frames once
 
 
 func show_level(l: Level) -> void:
 	level = l
 	if outflow_art == null and ResourceLoader.exists(OUTFLOW_ART):
 		outflow_art = load(OUTFLOW_ART)
+	if _pieces.is_empty():
+		for n in ["sluice_open", "sluice_shut", "floor_flooding"]:
+			if ResourceLoader.exists(OUTFLOW_DIR + n + ".png"):
+				_pieces[n] = load(OUTFLOW_DIR + n + ".png")
+	_flooded_at.clear()
 	queue_redraw()
 
 
@@ -35,7 +45,9 @@ func _draw() -> void:
 			var t := level.get_tile(c)
 			var r := Rect2(x * TILE, y * TILE, TILE, TILE)
 			var n := _noise(x, y)
-			if painted.has_point(c) and not _over_painting(c, t):
+			if painted.has_point(c):
+				if _over_painting(c, t):
+					_draw_painted_piece(c, t, r)
 				continue
 			match t:
 				Level.Tile.WALL:
@@ -81,9 +93,44 @@ func _draw() -> void:
 
 
 func _process(_delta: float) -> void:
-	# the open sluices move
-	if level != null and level.gates.any(func(g): return level.get_tile(g) == Level.Tile.GATE_OPEN):
+	# the open sluices move, and newly flooded squares play their frames
+	if level == null:
+		return
+	var now := Time.get_ticks_msec() / 1000.0
+	if level.gates.any(func(g): return level.get_tile(g) == Level.Tile.GATE_OPEN) or _flooded_at.values().any(func(t): return now - t < FLOOD_FRAME * 4.0):
 		queue_redraw()
+
+
+## ChatGPT's Outflow pieces, drawn over the painting: the sluice gates (open, looped; shut) and floor that has
+## flooded (four frames once, then the last held). Falls back to the drawn stand-ins without them.
+func _draw_painted_piece(c: Vector2i, t: int, r: Rect2) -> void:
+	var now := Time.get_ticks_msec() / 1000.0
+	var piece := ""
+	var frame := 0
+	match t:
+		Level.Tile.GATE_OPEN:
+			piece = "sluice_open"
+			frame = int(now / SLUICE_FRAME) % 4
+		Level.Tile.GATE_SHUT:
+			piece = "sluice_shut"
+		Level.Tile.WATER:
+			piece = "floor_flooding"
+			if not _flooded_at.has(c):
+				_flooded_at[c] = now
+			frame = mini(3, int((now - _flooded_at[c]) / FLOOD_FRAME))
+	if not _pieces.has(piece):
+		_draw_stand_in(t, r)
+		return
+	draw_texture_rect_region(_pieces[piece], r, Rect2(frame * TILE, 0, TILE, TILE))
+
+
+func _draw_stand_in(t: int, r: Rect2) -> void:
+	if t == Level.Tile.WATER:
+		draw_rect(r, Color(0.08, 0.16, 0.2))
+	elif t == Level.Tile.GATE_SHUT:
+		draw_rect(r.grow(-3), Color(0.22, 0.24, 0.25))
+	else:
+		draw_rect(r.grow(-4), Color(0.03, 0.05, 0.07))
 
 
 ## Inside the painted room, only what changes during the fight is drawn on top: the gates, and floor that has flooded.
