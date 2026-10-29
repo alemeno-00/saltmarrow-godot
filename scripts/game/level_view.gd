@@ -25,12 +25,63 @@ var _chunks: Array[Chunk] = []
 static var _room_art := {}          # layout -> Array of its paintings
 
 
-## One CHUNK x CHUNK patch of the level, drawn as its own item so only nearby lights reach it.
+## One CHUNK x CHUNK patch of the level, drawn as its own item so only nearby lights reach it. Its water squares
+## get a shimmering layer on top (canvas_env_water.gdshader), also per chunk for the same reason.
 class Chunk extends Node2D:
 	var view: LevelView
 	var region: Rect2i
+	var water: WaterLayer = null
 	func _draw() -> void:
 		view._draw_region(self, region)
+		# water can change during a fight (the Outflow floods): update the shimmer after drawing, not during it
+		var have: Array[Vector2i] = []
+		if water != null:
+			have = water.squares
+		if water_squares() != have:
+			refresh_water.call_deferred()
+	## Give this chunk's water squares their shimmering layer (or remove it when there's no water).
+	func refresh_water() -> void:
+		var squares := water_squares()
+		if squares.is_empty():
+			if water != null:
+				water.queue_free()
+				water = null
+			return
+		if water == null:
+			water = WaterLayer.new()
+			water.material = LevelView.water_material()
+			add_child(water)
+		water.squares = squares
+		water.queue_redraw()
+	func water_squares() -> Array[Vector2i]:
+		var out: Array[Vector2i] = []
+		for y in range(region.position.y, region.end.y):
+			for x in range(region.position.x, region.end.x):
+				if view.level.get_tile(Vector2i(x, y)) == Level.Tile.WATER:
+					out.append(Vector2i(x, y))
+		return out
+
+
+## The shimmer over a chunk's water squares: plain white squares that the water shader turns into moving light.
+class WaterLayer extends Node2D:
+	var squares: Array[Vector2i] = []
+	func _draw() -> void:
+		for c in squares:
+			draw_rect(Rect2(Vector2(c) * LevelView.TILE, Vector2(LevelView.TILE, LevelView.TILE)), Color.WHITE)
+
+
+static var _water_mat: ShaderMaterial = null
+
+
+static func water_material() -> ShaderMaterial:
+	if _water_mat == null:
+		_water_mat = ShaderMaterial.new()
+		_water_mat.shader = load("res://scripts/game/canvas_env_water.gdshader")
+	return _water_mat
+
+
+func chunks() -> Array[Chunk]:
+	return _chunks
 
 
 func show_level(l: Level) -> void:
@@ -68,6 +119,7 @@ func _make_chunks() -> void:
 			ch.region = Rect2i(cx, cy, CHUNK, CHUNK).intersection(Rect2i(0, 0, level.width, level.height))
 			add_child(ch)
 			_chunks.append(ch)
+			ch.refresh_water()
 
 
 ## Redrawing the view redraws its chunks (callers keep using queue_redraw()).

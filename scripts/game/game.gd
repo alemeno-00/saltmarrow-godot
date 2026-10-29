@@ -81,6 +81,7 @@ func hover_path() -> Array[Vector2i]:
 var lighting: Lighting
 var darkness: CanvasModulate
 var world_ui: CanvasLayer   # follows the camera but isn't dimmed: fight markers, hit flashes
+var ripples_made := 0       # ripples and splashes so far (tests read this)
 
 
 func _ready() -> void:
@@ -98,6 +99,7 @@ func _ready() -> void:
 	var lantern := Lighting.make_light(Lighting.HERO_LIGHT, Lighting.HERO_ENERGY, Lighting.HERO_RADIUS)
 	lantern.position = Vector2(0, 4)
 	hero.add_child(lantern)
+	hero.stepped.connect(_on_stepped)
 	world_ui = CanvasLayer.new()
 	world_ui.follow_viewport_enabled = true
 	add_child(world_ui)
@@ -167,6 +169,17 @@ func clear_enemies() -> void:
 
 ## The first fight: a Drowned Miner and three Faithful, waiting a couple of rooms from the start.
 ## Groups waiting in every third room, starting two rooms from the start. Deeper levels hold more.
+## Anyone stepping into water sends a ripple out across it.
+func _on_stepped(_from: Vector2i, to: Vector2i) -> void:
+	if level != null and level.get_tile(to) == Level.Tile.WATER:
+		_ripple(to, false)
+
+
+func _ripple(c: Vector2i, splash: bool) -> void:
+	ripples_made += 1
+	Ripple.spawn(gore, ActorView.cell_to_px(c) + Vector2(0, 9), splash)
+
+
 ## A level's seed: depth 1 uses the life's seed, deeper levels a mix of it and the depth. A new life (a new seed)
 ## gets a whole new world; the same life always gets the same levels.
 static func depth_seed(life: int, d: int) -> int:
@@ -220,6 +233,7 @@ func _add_enemy(u: Combatant, c: Vector2i) -> Combatant:
 	u.cell = c
 	var v := EnemyView.new()
 	v.style = u.style
+	v.stepped.connect(_on_stepped)
 	actors.add_child(v)
 	v.place(c)
 	v.facing = -1
@@ -725,6 +739,8 @@ func _play_one(e: Dictionary) -> void:
 			gore.splash(ActorView.cell_to_px(e.unit.cell), Vector2(e.cell - e.unit.cell), 2.0)
 			await _hitstop(0.08)
 		"prone", "stand", "status", "heal":
+			if e.t == "prone" and level.get_tile(e.unit.cell) == Level.Tile.WATER:
+				_ripple(e.unit.cell, true)
 			views[e.unit].sync(e.unit)
 			_refresh()
 			await _wait(0.12)
