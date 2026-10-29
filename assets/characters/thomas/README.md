@@ -1,11 +1,23 @@
 # Thomas Wren
 
-| File | Frame / canvas size | Rows and frame counts | Facing |
+| File | Frame / canvas | Rows and frame counts | Facing |
 | --- | --- | --- | --- |
-| body.png | 64×64 / 384×512 | 1 idle 4; 2 walk 6; 3 sneak 6; 4 hurt 3; 5 wounded walk 6; 6 dying crawl 6; 7 death 6; 8 careful step 4 | Right |
+| body.png | 64×64 / 384×512 | idle4; walk6; sneak6; hurt3; wounded walk6; dying crawl6; death6; careful step4 | Right |
+| attack_mace.png | 64×64 / 512×256 | wind-up3; strike3; recovery3; critical overhead8 | Right |
+| mace_abilities.png | 64×64 / 768×320 | Skull Crack8; Knee Breaker8; Shatter9; Wide Arc10; Execution12 | Right at start/end; full rotation during Wide Arc |
 
-Root is (32,56) in every frame; ground contact is the pixel row y55. Frames run left to right, no gaps, shorter rows have transparent trailing cells. Death is non-looping and its final frame holds. Suggested playback: idle 4 fps, walk 8, sneak 6, hurt 10, wounded walk 6, dying crawl 5, death 7.
+Root is (32,56) in every character frame; ground contact ends at pixel row y55. Frames run left to right, no gaps. Shorter rows have transparent trailing cells. Use only the listed populated counts, not the full sheet width. All PNGs have hard pixel edges and binary transparency; use nearest filtering and no mipmaps.
 
-`production/body-v2/` contains generated masters, export source, validation and nearest-neighbour animation previews. `production/animation-review/` is the rejected first study, retained for provenance; use body-v2 instead. Other production folders contain prior approved references and planning documents.
+Body rows1–7 are unarmed. Row8 is a guarded careful step with the maul held across Thomas's body,4 frames,non-looping. Death is non-looping and holds its final frame. Suggested fps: idle4,walk8,sneak6,hurt10,wounded walk6,dying crawl5,death7,careful step6.
 
-Claude integration: select only each row's populated count, do not include empty trailing cells. Row8 careful step has4 frames with the maul held across the body; see production/careful-step/. Weapon attack sheets remain separate. Use nearest texture filtering, no mipmaps, no smoothing. No code changes are included here.
+Both mace sheets contain the complete body and weapon; replace the body during an attack rather than overlaying a second Thomas. The maul is a heavy iron block head on a wooden haft,held in both hands. Suggested ordinary attack timing: wind-up6fps,strike12fps,recovery7fps,critical6fps. Each ability includes wind-up,strike and recovery. Execution frames5–7 are the raised hold for slow motion; exact phase splits are in production/abilities-v2/README.md.
+
+Source art,export and review files:
+
+- production/body-v2/: first seven body rows,generated masters,export source,validation and per-row GIF previews.
+- production/careful-step/: eighth row,source and enlarged preview. Appending it leaves the first seven rows unchanged.
+- production/mace-v1/: mace attack master,export,preview and validation; older rejected ability studies are retained for provenance.
+- production/abilities-v2/: final47-frame ability sheet sources,export,validation,phase splits and GIF previews. This supersedes the mace-v1 ability candidate.
+- production/animation-review/: rejected original body study; use body-v2 instead.
+
+Approved standing-candidate.png and steady-portrait-candidate.png stay at their original production/sprites/ paths. No code changes are included. Claude owns animation selection,timing and contact placement in gameplay. The current contract remains right-facing; the eight-direction proposal is separate and delivers no runtime frames here.
