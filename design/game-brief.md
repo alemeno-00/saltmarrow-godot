@@ -33,9 +33,9 @@ The MVP keeps the dive at the heart of it:
 1. Exploring generated levels, where an enemy that sees Thomas starts a fight. *Built.*
 2. Draw Steel fights against the Drowned Miner and the Faithful, with Malice, flanking, fleeing and returning enemies, losing them, and injuries. *Built.*
 3. The Maces tree, with levels, mastery and stat points. *Built, except Shatter and Sunder, which need armour.*
-4. The art for the first fight in the game (`ART_JOBS.md` jobs 1–8).
-5. The Sewers tileset in the generated levels, with a fixed bottom depth.
-6. A Sewers boss at the bottom. Beating it wins the run.
+4. The art for the first fight in the game (`ART_JOBS.md` jobs 1–8). *Mostly built: the last of it (Thomas's attacks, gore, dice) is in #22.*
+5. The Sewers room kit: levels assembled from painted rooms and connecting pieces, with a fixed bottom depth. Spec: `design/quick-specs/sewer-room-kit-2026-10-29.md`.
+6. A Sewers boss at the bottom. Beating it wins the run. *Built: the First Shift; its painted room is art job 12.*
 7. A win screen, a death screen, and a fresh start for the next life.
 
 ## Out of scope — not building this
@@ -46,11 +46,12 @@ The MVP keeps the dive at the heart of it:
 - Spell schools and the Star, including phenomena and Marks.
 - Weapon trees and backstories other than Fury and Maces.
 - Levels below the Sewers, and finding Ellen.
+- Treasure, secret, puzzle and trap rooms: they need items, hidden doors, and puzzle and trap rules first.
 
 ## Build order
 1. Put the fight art in the game, to prove the fights feel heavy and costly.
-2. Use the Sewers tiles in the generated levels.
-3. Design and build the Sewers boss and its fight.
+2. Build the Sewers room kit: the door standard, the generator that places painted rooms, then the paintings (once the painted Outflow proves the method).
+3. Design and build the Sewers boss and its fight. *Done.*
 4. Add the win and death screens and the restart.
 5. Tune how much each fight costs and how fast Thomas grows.
 
@@ -58,6 +59,8 @@ The MVP keeps the dive at the heart of it:
 **Who it's for / what they feel:** Players of tactical games and roguelikes who want every fight to feel heavy and dangerous, and to get stronger the deeper they go.
 
 **Art & audio direction:** Dark pixel art in cold slate, charcoal and wet browns with small amber lights. Graphic wounds that stay on screen, and no floating numbers. Audio isn't chosen yet.
+
+**Level art:** levels are assembled from **hand-painted rooms**, not single tiles. ChatGPT paints each room over a blockout at game scale with neutral light; the game adds the darkness and the lantern light. Each biome has **room types** (entry, junction, chamber, lore, connecting pieces, and later treasure, secret, puzzle and trap rooms). Each type has **a few layouts**, and each layout **several paintings**. All share **one door standard**, so any room joins any connector. Each biome's **boss room is painted once, by hand, and designed from its fight first**.
 
 **Reference game:** Stoneshard — skill trees that grow by use, and costly, grounded fights on a dungeon dive. The first version keeps one weapon tree and the dive, and drops survival and the overworld. The fight rules come from the Draw Steel tabletop RPG.
 
