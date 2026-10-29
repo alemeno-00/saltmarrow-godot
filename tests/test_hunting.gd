@@ -7,13 +7,12 @@ var game: Game
 
 func setup(t: SceneTree) -> void:
 	tree = t
-	game = load("res://scenes/main.tscn").instantiate()
-	tree.root.add_child(game)
-	await tree.process_frame
+	game = await add_game(tree)
 
 
 func teardown() -> void:
-	game.queue_free()
+	if game != null:
+		game.queue_free()
 
 
 func test_runaway_comes_back_with_friends() -> void:
