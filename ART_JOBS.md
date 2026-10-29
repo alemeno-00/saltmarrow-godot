@@ -57,6 +57,7 @@ These come first because the first fight is being built next. **Please do jobs 1
   - wall slam: dust and grit bursting from a wall (5 frames, 64 × 64)
   - armour pieces breaking off and clattering to the floor: a helm, a pauldron and a breastplate plate (each 6 frames, 32 × 32), plus their resting sprites
   - Wide Arc: a heavy motion smear (4 frames, 96 × 96)
+- [ ] **7d. Thomas, lying prone** (`assets/characters/thomas/body.png`, add a row 9): knocked down flat on his back or side, maul fallen beside him (2 frames, looped breathing), and getting up (4 frames) as row 10. Until then the game shows the first frame of his dying crawl.
 - [x] **7c. Thomas, careful step** (`assets/characters/thomas/body.png`, add a row 8): a guarded sidestep, maul held across his body (4 frames).
 - [ ] **8. Two d10 dice** (`assets/ui/dice/`). A ten-sided die tumbling (8 frames, 48 × 48), and its ten resting faces showing 1 to 10 as pips or marks, not numerals.
 - [ ] **9. The Sewers tiles** (`assets/tiles/sewers/`). **The first level:** the old town sewers under Saltmarrow, leading down into the mines. A first version is approved (`assets/tiles/sewers/v1_0/`, see Done) but not yet drawn by the game; this job is the full set it needs. Needs tiles that a generated level can use: floors, walls in every direction and corner, water channels with banks, bridges, doors, stairs down, and props. Not a single painted background.

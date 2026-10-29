@@ -671,6 +671,7 @@ func _play_one(e: Dictionary) -> void:
 			await _play_hit(e)
 		"push":
 			var v: ActorView = views[e.unit]
+			v.play_once("pushed_back")
 			for c in e.path:
 				var from := v.position
 				v.move_to(c, 0.07)
@@ -679,6 +680,8 @@ func _play_one(e: Dictionary) -> void:
 				await _wait(0.08)
 		"slam":
 			_shake = 7.0
+			views[e.unit].play_once("wall_slam")
+			OneShot.spawn(self, "res://assets/effects/mace/wall_slam.png", (ActorView.cell_to_px(e.unit.cell) + ActorView.cell_to_px(e.cell)) / 2.0, 10.0, e.cell.x < e.unit.cell.x)
 			gore.splash(ActorView.cell_to_px(e.unit.cell), Vector2(e.cell - e.unit.cell), 2.0)
 			await _hitstop(0.08)
 		"prone", "stand", "status", "heal":
@@ -734,6 +737,7 @@ func _play_hit(e: Dictionary) -> void:
 	var u: Combatant = e.unit
 	var v: ActorView = views[u]
 	v.hit_flash()
+	OneShot.spawn(self, "res://assets/effects/hits/tier_3.png" if e.tier >= 3 else "res://assets/effects/hits/crushing.png", v.position + Vector2(0, -10), 12.0)
 	var dmg: int = e.dmg
 	var away := Vector2.ZERO
 	if battle != null and battle.active != null and battle.active != u:

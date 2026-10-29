@@ -1,8 +1,13 @@
 class_name EnemyView
 extends ActorView
-## An enemy on the map. Placeholder drawings for the Drowned Miner and the Faithful.
+## An enemy on the map: the Drowned Miner and the Faithful from their sprite sheets,
+## Garrick as a drawn placeholder until his art arrives (ART_JOBS.md job 11).
 
 var style := "miner"
+
+
+func _ready() -> void:
+	sheet = Sheet.for_style(style)
 
 
 func _draw_body() -> void:
