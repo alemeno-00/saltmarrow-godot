@@ -11,3 +11,5 @@
 | export.py | Reproducible mechanical export from repository root |
 
 Built-in imagegen prompts requested a true ten-sided pentagonal trapezohedron,ivory-bone and charcoal-slate variants,8 tumbling orientations,10 resting faces with exactly1–10 pips,other facets unmarked,48px target,1px dark outline,transparent hard pixel art,no numerals/text/scene. Visual review found repeated pip counts and questionable facet geometry. Candidate export validates canvas and binary transparency only,not numerical accuracy. Final resting faces need individual correction and pip counting before runtime delivery. Sources excluded by .gdignore.
+
+Superseded: final job8 art is now delivered in the parent folder. v2/ contains corrected resting faces, matching tumbles and verified native pip counts. The failures above describe the retained first study only.
