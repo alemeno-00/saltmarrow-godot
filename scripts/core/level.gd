@@ -22,6 +22,12 @@ var outflow := Rect2i()
 var gates: Array[Vector2i] = []
 
 const OUTFLOW_SIZE := Vector2i(12, 9)
+# The Outflow's fixed layout, matching design/art-briefs/outflow/outflow-blockout.png (columns and rows inside the room).
+const OUTFLOW_CHANNEL_ROW := 4
+const OUTFLOW_GATE_COLUMNS := [2, 9]
+const OUTFLOW_LANTERN_COLUMNS := [0, 6, 11]
+const OUTFLOW_ENTRANCE_ROWS := [1, 2]
+const OUTFLOW_GAP := 4   # squares of solid rock kept between the Outflow and every other room
 
 var _astar := AStarGrid2D.new()
 
@@ -129,9 +135,9 @@ func generate(seed_in: int, bottom := false) -> void:
 	gates.clear()
 	stairs = Vector2i(-1, -1)
 	if bottom:
-		# the Outflow is placed first so it is always big enough; it joins the rest last
+		# The Outflow is placed first so it is always big enough. Its walls must stay whole for the painted room
+		# (design/art-briefs/outflow/), so every other room stays clear to its left and no corridor crosses it.
 		outflow = Rect2i(width - OUTFLOW_SIZE.x - 3, rng.randi_range(2, height - OUTFLOW_SIZE.y - 3), OUTFLOW_SIZE.x, OUTFLOW_SIZE.y)
-		rooms.append(outflow)
 		_carve(outflow)
 	var tries := 0
 	while rooms.size() < 12 and tries < 400:
@@ -139,6 +145,8 @@ func generate(seed_in: int, bottom := false) -> void:
 		var w := rng.randi_range(5, 11)
 		var h := rng.randi_range(4, 8)
 		var r := Rect2i(rng.randi_range(1, width - w - 2), rng.randi_range(1, height - h - 2), w, h)
+		if bottom and r.end.x > outflow.position.x - OUTFLOW_GAP:
+			continue
 		var clash := false
 		for o in rooms:
 			if r.grow(2).intersects(o):
@@ -150,9 +158,6 @@ func generate(seed_in: int, bottom := false) -> void:
 		_carve(r)
 	# join each room to the next, in order of position, so everything connects
 	rooms.sort_custom(func(a: Rect2i, b: Rect2i) -> bool: return a.get_center().x + a.get_center().y * 0.3 < b.get_center().x + b.get_center().y * 0.3)
-	if bottom:
-		rooms.erase(outflow)
-		rooms.append(outflow)
 	for i in range(1, rooms.size()):
 		_corridor(rooms[i - 1].get_center(), rooms[i].get_center(), rng)
 	# a few extra loops so it isn't a straight line of rooms
@@ -162,6 +167,8 @@ func generate(seed_in: int, bottom := false) -> void:
 			var b := rooms[rng.randi_range(0, rooms.size() - 1)]
 			if a != b:
 				_corridor(a.get_center(), b.get_center(), rng)
+	if bottom:
+		_join_outflow(rng)
 	_place_doors(rng)
 	# a pool of water in one room
 	if rooms.size() > 2:
@@ -174,6 +181,7 @@ func generate(seed_in: int, bottom := false) -> void:
 	start = rooms[0].get_center() if rooms.size() > 0 else Vector2i(1, 1)
 	tiles[idx(start)] = Tile.FLOOR
 	if bottom:
+		rooms.append(outflow)
 		_make_outflow()
 	# stairs down in the far corner of the last room
 	elif rooms.size() > 1:
@@ -189,28 +197,40 @@ func _carve(r: Rect2i) -> void:
 			tiles[idx(Vector2i(x, y))] = Tile.FLOOR
 
 
-## The boss room: a channel of water across its middle, and two sluice gates in its walls.
+## The boss room, laid out exactly as the blockout in design/art-briefs/outflow/ so the painted room lines up:
+## a water channel on the fifth row inside, two sluice gates in the north wall, a two-square entrance in the west wall.
 func _make_outflow() -> void:
-	var mid := outflow.get_center().y
+	var o := outflow.position
 	for x in range(outflow.position.x, outflow.end.x):
-		tiles[idx(Vector2i(x, mid))] = Tile.WATER
-	# gates in solid wall (not where a corridor comes in), as far apart as possible: top wall first, then bottom
-	var spare: Array[Vector2i] = []
-	for wall_y in [outflow.position.y - 1, outflow.end.y]:
-		var found: Array[Vector2i] = []
-		for x in range(outflow.position.x + 1, outflow.end.x - 1):
-			var c := Vector2i(x, wall_y)
-			var outside := c + (Vector2i.UP if wall_y < outflow.position.y else Vector2i.DOWN)
-			if get_tile(c) == Tile.WALL and get_tile(outside) == Tile.WALL and get_tile(c + Vector2i.LEFT) == Tile.WALL and get_tile(c + Vector2i.RIGHT) == Tile.WALL:
-				found.append(c)
-		if found.size() >= 2:
-			gates = [found.front(), found.back()]
-			break
-		spare.append_array(found)
-	if gates.is_empty():
-		gates = spare.slice(0, 2)
-	for g in gates:
+		tiles[idx(Vector2i(x, o.y + OUTFLOW_CHANNEL_ROW))] = Tile.WATER
+	gates.clear()
+	for gx in OUTFLOW_GATE_COLUMNS:
+		var g := Vector2i(o.x + gx, o.y - 1)
+		gates.append(g)
 		tiles[idx(g)] = Tile.GATE_OPEN
+
+
+## The corridor to the Outflow: from the nearest room to just outside its entrance, then through it.
+func _join_outflow(rng: RandomNumberGenerator) -> void:
+	var o := outflow.position
+	var outside := Vector2i(o.x - 2, o.y + OUTFLOW_ENTRANCE_ROWS[0])
+	var nearest := rooms[0]
+	for r in rooms:
+		if (r.get_center() - outside).length_squared() < (nearest.get_center() - outside).length_squared():
+			nearest = r
+	_corridor(nearest.get_center(), outside, rng)
+	for row in OUTFLOW_ENTRANCE_ROWS:
+		tiles[idx(Vector2i(o.x - 2, o.y + row))] = Tile.FLOOR
+		tiles[idx(Vector2i(o.x - 1, o.y + row))] = Tile.FLOOR
+
+
+## The wall squares where the painted room has its lanterns (the blockout's yellow marks).
+func outflow_lanterns() -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	if outflow.has_area():
+		for lx in OUTFLOW_LANTERN_COLUMNS:
+			out.append(outflow.position + Vector2i(lx, -1))
+	return out
 
 
 ## Rising water: every floor square in `area` beside water floods, unless water already covers `cap` of the area's open squares.

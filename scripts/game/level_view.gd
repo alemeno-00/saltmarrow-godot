@@ -1,25 +1,42 @@
 class_name LevelView
 extends Node2D
 ## Draws a Level. Placeholder stone, water and doors until the biome art is in.
+## The Outflow uses ChatGPT's painted room when it exists (design/art-briefs/outflow/BRIEF.md).
 
 const TILE := 32
+const OUTFLOW_ART := "res://assets/tiles/sewers/outflow/outflow_room.png"
 var level: Level
+var outflow_art: Texture2D = null   # the painted Outflow, walls included (14 x 11 squares)
 
 
 func show_level(l: Level) -> void:
 	level = l
+	if outflow_art == null and ResourceLoader.exists(OUTFLOW_ART):
+		outflow_art = load(OUTFLOW_ART)
 	queue_redraw()
+
+
+## The squares the painted Outflow covers: the room and its walls.
+func painted_area() -> Rect2i:
+	if outflow_art == null or level == null or not level.outflow.has_area():
+		return Rect2i()
+	return level.outflow.grow(1)
 
 
 func _draw() -> void:
 	if level == null:
 		return
+	var painted := painted_area()
+	if painted.has_area():
+		draw_texture_rect(outflow_art, Rect2(Vector2(painted.position) * TILE, Vector2(painted.size) * TILE), false)
 	for y in level.height:
 		for x in level.width:
 			var c := Vector2i(x, y)
 			var t := level.get_tile(c)
 			var r := Rect2(x * TILE, y * TILE, TILE, TILE)
 			var n := _noise(x, y)
+			if painted.has_point(c) and not _over_painting(c, t):
+				continue
 			match t:
 				Level.Tile.WALL:
 					if _touches_floor(c):
@@ -67,6 +84,13 @@ func _process(_delta: float) -> void:
 	# the open sluices move
 	if level != null and level.gates.any(func(g): return level.get_tile(g) == Level.Tile.GATE_OPEN):
 		queue_redraw()
+
+
+## Inside the painted room, only what changes during the fight is drawn on top: the gates, and floor that has flooded.
+func _over_painting(c: Vector2i, t: int) -> bool:
+	if t == Level.Tile.GATE_OPEN or t == Level.Tile.GATE_SHUT:
+		return true
+	return t == Level.Tile.WATER and c.y != level.outflow.position.y + Level.OUTFLOW_CHANNEL_ROW
 
 
 func _touches_floor(c: Vector2i) -> bool:

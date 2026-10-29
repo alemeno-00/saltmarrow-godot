@@ -71,6 +71,41 @@ func test_bottom_level_has_the_outflow() -> void:
 	check(reach.has(l.outflow.get_center()), "the Outflow can be reached from the start")
 
 
+## The painted room (design/art-briefs/outflow/) only lines up if every Outflow has the blockout's layout.
+func test_outflow_matches_the_blockout_on_every_seed() -> void:
+	for seed in 40:
+		var l := Level.new()
+		l.generate(seed, true)
+		var o := l.outflow
+		eq(o.size, Vector2i(12, 9), "seed %d: 12 x 9 inside" % seed)
+		eq(l.gates, [o.position + Vector2i(2, -1), o.position + Vector2i(9, -1)] as Array[Vector2i], "seed %d: gates on the blockout's red squares" % seed)
+		eq(l.outflow_lanterns(), [o.position + Vector2i(0, -1), o.position + Vector2i(6, -1), o.position + Vector2i(11, -1)] as Array[Vector2i], "seed %d: lanterns on the yellow marks" % seed)
+		var entrance: Array[Vector2i] = [o.position + Vector2i(-1, 1), o.position + Vector2i(-1, 2)]
+		var ring := o.grow(1)
+		var bad := 0
+		for y in range(ring.position.y, ring.end.y):
+			for x in range(ring.position.x, ring.end.x):
+				var c := Vector2i(x, y)
+				var t := l.get_tile(c)
+				if o.has_point(c):
+					var want := Level.Tile.WATER if y == o.position.y + 4 else Level.Tile.FLOOR
+					if t != want:
+						bad += 1
+				elif entrance.has(c):
+					if t != Level.Tile.FLOOR:
+						bad += 1
+				elif l.gates.has(c):
+					if t != Level.Tile.GATE_OPEN:
+						bad += 1
+				elif t != Level.Tile.WALL:
+					bad += 1
+		eq(bad, 0, "seed %d: every square of the room and its walls matches the blockout" % seed)
+		var reach := l.reachable_from(l.start)
+		check(reach.has(o.get_center()), "seed %d: the Outflow can be reached" % seed)
+		for r in l.rooms:
+			check(reach.has(r.get_center()), "seed %d: every room can be reached" % seed)
+
+
 func test_other_levels_have_stairs_and_no_outflow() -> void:
 	var l := Level.new()
 	l.generate(7)
