@@ -25,7 +25,7 @@ How to use it:
 
 These come first because the first fight is being built next. **Please do jobs 1 to 8 (Thomas, the two enemies, gore, effects and dice) before more tiles:** the fight is playable now and needs its characters.
 
-- [ ] **1. Thomas, base body sheet** — started: concept and a standing still approved. Animate from `production/sprites/standing-candidate.png`.
+- [x] **1. Thomas, base body sheet** — started: concept and a standing still approved. Animate from `production/sprites/standing-candidate.png`.
    (`assets/characters/thomas/body.png`). Thomas from `docs/characters.md` in his dyed greatcoat and red scarf, no weapon in hand (weapons are separate layers, job 2). Rows:
   1. idle (4 frames, slow breathing)
   2. walk (6)
