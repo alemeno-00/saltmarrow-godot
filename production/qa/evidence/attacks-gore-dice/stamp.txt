@@ -1,0 +1,6 @@
+Reviewed-Content-Hash: scripts/game/sheet.gd 337076b53247bfe30fd058f86e5b8cbdcc110165
+Reviewed-Content-Hash: scripts/game/actor_view.gd 4fe742b32b689f5a82a4348567aaa66dbdfc93c5
+Reviewed-Content-Hash: scripts/game/hero.gd fb7eb26b9d14f5ff51b46d6572cb0f809cda5512
+Reviewed-Content-Hash: scripts/game/gore.gd 2c710f3cd7059b26546e385e03faaee7f064ae68
+Reviewed-Content-Hash: scripts/game/combat_hud.gd 1c30ab5fbf876b36dce08371376b76d2bce7efca
+Reviewed-Content-Hash: scripts/game/game.gd 456555f97d4c3695ef1142634a7920a3c4c3a937

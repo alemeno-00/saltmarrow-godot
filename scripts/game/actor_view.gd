@@ -27,6 +27,7 @@ static var _dazed_tex: Texture2D = null
 var _anim := "idle"
 var _anim_t := 0.0
 var _once := ""         # a one-shot animation playing over everything else (hurt, attack, pushed back)
+var _queue: Array[String] = []   # one-shots to play after it, in order
 var _walk_linger := 0.0 # keep the walk going briefly between steps
 
 var _from_px := Vector2.ZERO
@@ -92,10 +93,24 @@ func hit_flash() -> void:
 func play_once(name: String) -> void:
 	if sheet == null or not sheet.has(name) or dead:
 		return
+	_queue.clear()
 	_once = name
 	_anim = name
 	_anim_t = 0.0
 	queue_redraw()
+
+
+## Play several one-shots back to back (wind-up, strike, recovery). Rows the sheet lacks are skipped.
+func play_sequence(names: Array[String]) -> void:
+	var have: Array[String] = []
+	if sheet != null:
+		for n in names:
+			if sheet.has(n):
+				have.append(n)
+	if have.is_empty() or dead:
+		return
+	play_once(have[0])
+	_queue = have.slice(1)
 
 
 ## Copy the look of a combatant: prone, dazed, dying, how hurt.
@@ -118,7 +133,10 @@ func _process(delta: float) -> void:
 		_anim_t += delta
 		_walk_linger = maxf(0.0, _walk_linger - delta)
 		if _once != "" and _anim_t >= sheet.duration(_once):
-			_once = ""
+			_once = _queue.pop_front() if not _queue.is_empty() else ""
+			if _once != "":
+				_anim = _once
+				_anim_t = 0.0
 		redraw = true
 	if _t < 1.0:
 		_t = minf(1.0, _t + delta / _step_time)
@@ -214,7 +232,7 @@ func _draw_sheet() -> void:
 		draw_set_transform(off, 0, mirror)
 	var src := sheet.frame_rect(_anim, _anim_t)
 	var at := Vector2(-Sheet.ROOT.x, 12 - Sheet.ROOT.y)
-	draw_texture_rect_region(sheet.texture, Rect2(at, Sheet.FRAME), src, _sheet_tint())
+	draw_texture_rect_region(sheet.texture_of(_anim), Rect2(at, Sheet.FRAME), src, _sheet_tint())
 	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 	if dazed and not dead:
 		_draw_dazed()

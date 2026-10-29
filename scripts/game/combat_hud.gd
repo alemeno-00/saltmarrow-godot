@@ -362,10 +362,18 @@ class DiceView extends Control:
 	var _hold := 0.0
 	var _r1 := 1
 	var _r2 := 1
+	## The bone die and the slate die (assets/ui/dice/): 8 tumbling frames, then a resting face with pips for 1-10.
+	var _tumble: Array = []
+	var _faces: Array = []
 
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 		visible = false
+		for d in ["bone", "slate"]:
+			var t := "res://assets/ui/dice/%s_tumble.png" % d
+			var f := "res://assets/ui/dice/%s_faces.png" % d
+			_tumble.append(load(t) if ResourceLoader.exists(t) else null)
+			_faces.append(load(f) if ResourceLoader.exists(f) else null)
 
 	func show_roll(r: Dictionary, who: String, what: String) -> void:
 		_roll = r
@@ -387,6 +395,16 @@ class DiceView extends Control:
 			visible = false
 		queue_redraw()
 
+	## One die: tumbling while the roll is in the air, then its face. Falls back to a drawn die without the art.
+	func _die_art(i: int, c: Vector2, n: int, s: float, settled: bool) -> bool:
+		var tex: Texture2D = _faces[i] if settled else _tumble[i]
+		if tex == null:
+			return false
+		var frame := n - 1 if settled else (int(_t * 12.0) + i * 3) % 8
+		var side := s * 2.2
+		draw_texture_rect_region(tex, Rect2(c - Vector2(side, side) / 2.0, Vector2(side, side)), Rect2(frame * 48, 0, 48, 48))
+		return true
+
 	func _die(c: Vector2, n: int, s: float, col: Color) -> void:
 		var pts := PackedVector2Array([c + Vector2(0, -s), c + Vector2(s * 0.9, -s * 0.15), c + Vector2(0, s), c + Vector2(-s * 0.9, -s * 0.15)])
 		draw_colored_polygon(pts, Color(0.12, 0.11, 0.1))
@@ -405,8 +423,10 @@ class DiceView extends Control:
 		var a: int = _roll.d1 if settled else _r1
 		var b: int = _roll.d2 if settled else _r2
 		var cx := size.x / 2.0
-		_die(Vector2(cx - s * 1.2, s + 8), a, s, col)
-		_die(Vector2(cx + s * 1.2, s + 8), b, s, col)
+		if not _die_art(0, Vector2(cx - s * 1.2, s + 8), a, s, settled):
+			_die(Vector2(cx - s * 1.2, s + 8), a, s, col)
+		if not _die_art(1, Vector2(cx + s * 1.2, s + 8), b, s, settled):
+			_die(Vector2(cx + s * 1.2, s + 8), b, s, col)
 		if settled:
 			var f := ThemeDB.fallback_font
 			var tier_word: String = ["weak", "solid", "strong"][int(_roll.tier) - 1]
