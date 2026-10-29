@@ -16,6 +16,7 @@ var basic: Dictionary = {}
 var abilities: Array = []
 var big: Dictionary = {}   # a telegraphed attack, if it has one
 var perks: Array[String] = []   # passives learned
+var wades := false      # the Drowned: water does not slow it
 
 var dazed := 0       # rounds left
 var slowed := 0      # rounds left
@@ -40,6 +41,16 @@ var fled_once := false   # only runs once
 var group := -1         # which band it belongs to; a band fights together
 var state := "idle"      # outside a fight: idle, hunting (coming for Thomas) or searching (going to where he was seen)
 var target := Vector2i.ZERO
+
+
+## How the fight log names it at the start of a sentence: "Garrick", "Thomas", or "The Drowned Miner".
+func title() -> String:
+	return name if kind == "hero" or kind == "solo" else "The " + name
+
+
+## The same, mid-sentence: "Garrick", or "the Drowned Miner".
+func the() -> String:
+	return name if kind == "hero" or kind == "solo" else "the " + name
 
 
 ## Still in the fight: not dead and hasn't run off.
