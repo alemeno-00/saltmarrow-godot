@@ -238,12 +238,18 @@ class Portrait extends Control:
 	var _words := ["Steady", "Hurt", "Badly hurt", "Dying"]
 
 	const ART := "res://assets/characters/thomas/production/sprites/steady-portrait-candidate.png"
+	## One portrait per health state (assets/portraits/thomas/README.md); chosen, not animated between.
+	const STATES := ["res://assets/portraits/thomas/steady.png", "res://assets/portraits/thomas/hurt.png",
+		"res://assets/portraits/thomas/badly_hurt.png", "res://assets/portraits/thomas/dying.png"]
 	var _tex: Texture2D = null
+	var _faces: Array = []
 
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_IGNORE
 		if ResourceLoader.exists(ART):
 			_tex = load(ART)
+		for p in STATES:
+			_faces.append(load(p) if ResourceLoader.exists(p) else null)
 
 	func set_state(h: Combatant) -> void:
 		var s := 0
@@ -259,6 +265,9 @@ class Portrait extends Control:
 			queue_redraw()
 
 	func _draw() -> void:
+		if _faces[state] != null:
+			_draw_face(_faces[state])
+			return
 		if _tex != null:
 			_draw_art()
 			return
@@ -307,6 +316,17 @@ class Portrait extends Control:
 		var f := ThemeDB.fallback_font
 		draw_string(f, Vector2(0, 116), _words[state], HORIZONTAL_ALIGNMENT_CENTER, 104, 13, Color(0.9, 0.85, 0.75) if state < 2 else Color(0.95, 0.5, 0.45))
 
+
+	## The painted portrait for this health state: the wounds are in the art.
+	func _draw_face(tex: Texture2D) -> void:
+		var box := Rect2(Vector2(2, 2), Vector2(128, 128))
+		draw_rect(box.grow(2), Color(0.45, 0.38, 0.28))
+		draw_rect(box, Color(0.05, 0.05, 0.06))
+		draw_texture_rect(tex, box, false)
+		if dazed:
+			draw_rect(box, Color(0.7, 0.75, 1.0, 0.12))
+		var f := ThemeDB.fallback_font
+		draw_string(f, Vector2(2, 146), _words[state], HORIZONTAL_ALIGNMENT_CENTER, 128, 13, Color(0.9, 0.85, 0.75) if state < 2 else Color(0.95, 0.5, 0.45))
 
 	func _draw_art() -> void:
 		var box := Rect2(Vector2(2, 2), Vector2(128, 128))

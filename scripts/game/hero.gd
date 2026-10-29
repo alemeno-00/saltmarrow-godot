@@ -1,29 +1,19 @@
 class_name Hero
 extends ActorView
-## Thomas on the map. Uses ChatGPT's standing sprite (one still, facing right; mirrored to face left)
-## until the animated body sheet arrives. Falls back to a drawn placeholder if the image is missing.
-
-const SPRITE := "res://assets/characters/thomas/production/sprites/standing-candidate.png"
-const FEET := Vector2(32, 56)   # where his feet are in the 64 x 64 frame
-
-var _tex: Texture2D = null
+## Thomas on the map: ChatGPT's animated body sheet (assets/characters/thomas/body.png), facing right and
+## mirrored to face left. Falls back to a drawn placeholder if the sheet is missing.
 
 
 func _ready() -> void:
-	if ResourceLoader.exists(SPRITE):
-		_tex = load(SPRITE)
+	sheet = Sheet.thomas()
 
 
 func _draw_body() -> void:
-	if _tex != null:
-		# feet on the square's lower part, where the shadow is
-		var at := Vector2(-FEET.x, 12 - FEET.y)
-		if facing >= 0:
-			draw_texture_rect(_tex, Rect2(at, Vector2(64, 64)), false, _tint())
-		else:
-			draw_texture_rect(_tex, Rect2(at + Vector2(64, 0), Vector2(-64, 64)), false, _tint())
-		return
 	_draw_placeholder()
+
+
+func _sheet_tint() -> Color:
+	return _tint()
 
 
 func _tint() -> Color:

@@ -1,7 +1,8 @@
 class_name ActorView
 extends Node2D
 ## A creature on the map: lives on a grid square, glides between squares, flinches, falls and dies.
-## Subclasses draw the body in _draw_body(). The real sprite sheets will replace these drawings.
+## With a sprite sheet (`sheet`), it plays the row that fits what the creature is doing.
+## Without one, subclasses draw a placeholder body in _draw_body().
 
 signal stepped(from: Vector2i, to: Vector2i)
 
@@ -19,6 +20,14 @@ var dazed := false
 var raised := false     # winding up a big blow
 var bleeding := false
 var hurt := 0.0         # 0 unhurt .. 1 nearly dead
+var sheet: Sheet = null # the art, when there is some
+
+const DAZED_STRIP := "res://assets/effects/mace/dazed.png"
+static var _dazed_tex: Texture2D = null
+var _anim := "idle"
+var _anim_t := 0.0
+var _once := ""         # a one-shot animation playing over everything else (hurt, attack, pushed back)
+var _walk_linger := 0.0 # keep the walk going briefly between steps
 
 var _from_px := Vector2.ZERO
 var _to_px := Vector2.ZERO
@@ -50,6 +59,7 @@ func move_to(c: Vector2i, time := STEP_TIME) -> void:
 	_to_px = cell_to_px(c)
 	_t = 0.0
 	_step_time = time
+	_walk_linger = 0.3
 	grid_pos = c
 	stepped.emit(from, c)
 	queue_redraw()
@@ -69,11 +79,23 @@ func face_toward(c: Vector2i) -> void:
 func lunge_at(c: Vector2i, strength := 8.0) -> void:
 	face_toward(c)
 	_lunge = (cell_to_px(c) - cell_to_px(grid_pos)).normalized() * strength
+	play_once("attack")
 	queue_redraw()
 
 
 func hit_flash() -> void:
 	flash = 1.0
+	play_once("hurt")
+
+
+## Play one row of the sheet through once, over whatever else it is doing (if the sheet has that row).
+func play_once(name: String) -> void:
+	if sheet == null or not sheet.has(name) or dead:
+		return
+	_once = name
+	_anim = name
+	_anim_t = 0.0
+	queue_redraw()
 
 
 ## Copy the look of a combatant: prone, dazed, dying, how hurt.
@@ -92,6 +114,12 @@ func sync(u: Combatant) -> void:
 func _process(delta: float) -> void:
 	_time += delta
 	var redraw := false
+	if sheet != null:
+		_anim_t += delta
+		_walk_linger = maxf(0.0, _walk_linger - delta)
+		if _once != "" and _anim_t >= sheet.duration(_once):
+			_once = ""
+		redraw = true
 	if _t < 1.0:
 		_t = minf(1.0, _t + delta / _step_time)
 		var e := 1.0 - pow(1.0 - _t, 2.0)
@@ -118,6 +146,9 @@ func _process(delta: float) -> void:
 
 
 func _draw() -> void:
+	if sheet != null:
+		_draw_sheet()
+		return
 	if dead:
 		draw_set_transform(Vector2(0, 8), PI / 2.0 * facing, Vector2.ONE)
 		_draw_body()
@@ -142,6 +173,68 @@ func _draw() -> void:
 	if bleeding:
 		var drip := fmod(_time * 1.5, 1.0)
 		draw_rect(Rect2(Vector2(2, 2 + drip * 9.0), Vector2(1, 2)), Color(0.45, 0.03, 0.05, 1.0 - drip))
+
+
+## Which row of the sheet fits what it is doing now.
+func _pick_anim() -> String:
+	if dead:
+		return "skull_crushed" if crushed and sheet.has("skull_crushed") else "death"
+	if _once != "":
+		return _once
+	if dying and sheet.has("dying_crawl"):
+		return "dying_crawl"
+	if prone:
+		for n in ["lying_prone", "knocked_prone", "prone"]:
+			if sheet.has(n):
+				return n
+		return "idle"
+	if raised and sheet.has("windup"):
+		return "windup"
+	if dazed and sheet.has("dazed"):
+		return "dazed"
+	if is_gliding() or _walk_linger > 0.0:
+		return "wounded_walk" if hurt >= 0.5 and sheet.has("wounded_walk") else "walk"
+	return "idle"
+
+
+func _draw_sheet() -> void:
+	var name := _pick_anim()
+	if name != _anim:
+		_anim = name
+		_anim_t = 0.0
+	if not dead:
+		draw_circle(Vector2(0, 12), 7.0, Color(0, 0, 0, 0.35))
+	var off := _lunge + Vector2(0, -_bob * 2.0)
+	# the art faces right; a mirrored transform turns it to face left
+	var mirror := Vector2(1 if facing >= 0 else -1, 1)
+	if prone and not dead and name == "idle":
+		# no lying-down row in this sheet: tip the standing frame over
+		draw_set_transform(off + Vector2(0, 7), PI / 2.0 * facing, mirror)
+	else:
+		draw_set_transform(off, 0, mirror)
+	var src := sheet.frame_rect(_anim, _anim_t)
+	var at := Vector2(-Sheet.ROOT.x, 12 - Sheet.ROOT.y)
+	draw_texture_rect_region(sheet.texture, Rect2(at, Sheet.FRAME), src, _sheet_tint())
+	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+	if dazed and not dead:
+		_draw_dazed()
+	if bleeding and not dead:
+		var drip := fmod(_time * 1.5, 1.0)
+		draw_rect(Rect2(Vector2(2, 2 + drip * 9.0), Vector2(1, 2)), Color(0.45, 0.03, 0.05, 1.0 - drip))
+
+
+## The ringing shimmer over a dazed head (assets/effects/mace/dazed.png, 6 frames, looped).
+func _draw_dazed() -> void:
+	if _dazed_tex == null and ResourceLoader.exists(DAZED_STRIP):
+		_dazed_tex = load(DAZED_STRIP)
+	if _dazed_tex == null:
+		return
+	var i := int(_time * 6.0) % 6
+	draw_texture_rect_region(_dazed_tex, Rect2(Vector2(-16, -46), Vector2(32, 32)), Rect2(i * 32, 0, 32, 32))
+
+
+func _sheet_tint() -> Color:
+	return Color.WHITE
 
 
 ## Blood on the body, more as it gets hurt.
