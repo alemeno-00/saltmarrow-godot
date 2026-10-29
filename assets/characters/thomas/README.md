@@ -2,6 +2,7 @@
 
 | File | Frame / canvas size | Rows and frame counts | Facing |
 | --- | --- | --- | --- |
+| attack_mace.png | 64×64 / 512×256 | wind-up 3; strike 3; recovery 3; critical strike 8 | Right |
 | body.png | 64×64 / 384×448 | 1 idle 4; 2 walk 6; 3 sneak 6; 4 hurt 3; 5 wounded walk 6; 6 dying crawl 6; 7 death 6 | Right |
 
 Root is (32,56) in every frame; ground contact is the pixel row y55. Frames run left to right, no gaps, shorter rows have transparent trailing cells. Death is non-looping and its final frame holds. Suggested playback: idle 4 fps, walk 8, sneak 6, hurt 10, wounded walk 6, dying crawl 5, death 7.

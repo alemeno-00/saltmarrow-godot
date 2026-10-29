@@ -34,7 +34,7 @@ These come first because the first fight is being built next. **Please do jobs 1
   5. wounded walk (6, limping, clutching his side)
   6. dying crawl (6, on the ground, dragging himself)
   7. death (6, ends lying still; last frame holds)
-- [ ] **2. Thomas, mace attack** (`assets/characters/thomas/attack_mace.png`). Holding a heavy maul. Rows:
+- [x] **2. Thomas, mace attack** (`assets/characters/thomas/attack_mace.png`). Holding a heavy maul. Rows:
   1. wind-up (3 frames, the frame before impact readable as a threat)
   2. strike (3)
   3. recovery (3)
