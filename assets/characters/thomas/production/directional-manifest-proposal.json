@@ -33,7 +33,7 @@
     "status": "pending_pose_authorship_and_measurement"
   },
   "blocking_review_gates": [
-    "same_anchor_actual_environment_1x_vs_1_25x_scale_comparison",
+    "user_scale_approval_after_inspected_1x_vs_1_25x_comparison_and_silhouette_cleanup",
     "approved_front_back_and_oblique_turnarounds",
     "anatomical_left_scar_and_equipment_asymmetry",
     "eight_authored_direction_pose_proofs",
