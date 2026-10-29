@@ -1,0 +1,2090 @@
+{
+  "grid_px": 32,
+  "assets": {
+    "junction_b": {
+      "registration": {
+        "core_source": [
+          103,
+          184,
+          1153,
+          1097
+        ],
+        "x_source": [
+          103,
+          209,
+          310,
+          940,
+          1045,
+          1153
+        ],
+        "x_target": [
+          32,
+          64,
+          96,
+          288,
+          320,
+          352
+        ],
+        "y_source": [
+          184,
+          292,
+          384,
+          809,
+          887,
+          996,
+          1097
+        ],
+        "y_target": [
+          64,
+          96,
+          128,
+          256,
+          288,
+          320,
+          352
+        ],
+        "north_bottom": 184,
+        "north_door_x": [
+          520,
+          736
+        ],
+        "side_door_y": [
+          516,
+          709
+        ],
+        "south_top": 1097,
+        "south_door_x": [
+          520,
+          736
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "junction_b/1.png",
+      "dimensions": [
+        384,
+        384
+      ],
+      "frame_size": [
+        384,
+        384
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": true,
+      "blockout": "scripts/levels/sewers/layouts/junction_b.png",
+      "ports_px": {
+        "n": [
+          160,
+          0,
+          64,
+          64
+        ],
+        "s": [
+          160,
+          352,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          160,
+          32,
+          64
+        ],
+        "e": [
+          352,
+          160,
+          32,
+          64
+        ]
+      },
+      "lights": [
+        {
+          "glass_centre_px": [
+            111,
+            18
+          ],
+          "blockout_cell": [
+            3,
+            0
+          ],
+          "kind": "wall"
+        },
+        {
+          "glass_centre_px": [
+            272,
+            18
+          ],
+          "blockout_cell": [
+            8,
+            0
+          ],
+          "kind": "wall"
+        },
+        {
+          "glass_centre_px": [
+            110,
+            299
+          ],
+          "blockout_cell": [
+            3,
+            9
+          ],
+          "kind": "standing"
+        },
+        {
+          "glass_centre_px": [
+            274,
+            299
+          ],
+          "blockout_cell": [
+            8,
+            9
+          ],
+          "kind": "standing"
+        }
+      ],
+      "sha256": "40cdf7bb5c45a51d1cf3b5cd233e7101cbb76769f85284cf643609c513f79cf7"
+    },
+    "junction_c": {
+      "registration": {
+        "core_source": [
+          104,
+          208,
+          1148,
+          1138
+        ],
+        "x_source": [
+          104,
+          314,
+          418,
+          521,
+          738,
+          835,
+          940,
+          1148
+        ],
+        "x_target": [
+          32,
+          96,
+          128,
+          160,
+          224,
+          256,
+          288,
+          352
+        ],
+        "y_source": [
+          208,
+          365,
+          501,
+          578,
+          816,
+          858,
+          932,
+          1047,
+          1138
+        ],
+        "y_target": [
+          64,
+          128,
+          160,
+          192,
+          256,
+          288,
+          288,
+          320,
+          352
+        ],
+        "north_bottom": 208,
+        "north_door_x": [
+          521,
+          738
+        ],
+        "side_door_y": [
+          519,
+          731
+        ],
+        "south_top": 1138,
+        "south_door_x": [
+          521,
+          738
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "junction_c/1.png",
+      "dimensions": [
+        384,
+        384
+      ],
+      "frame_size": [
+        384,
+        384
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": true,
+      "blockout": "scripts/levels/sewers/layouts/junction_c.png",
+      "ports_px": {
+        "n": [
+          160,
+          0,
+          64,
+          64
+        ],
+        "s": [
+          160,
+          352,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          160,
+          32,
+          64
+        ],
+        "e": [
+          352,
+          160,
+          32,
+          64
+        ]
+      },
+      "lights": [
+        {
+          "glass_centre_px": [
+            47,
+            14
+          ],
+          "blockout_cell": [
+            1,
+            0
+          ],
+          "kind": "wall"
+        },
+        {
+          "glass_centre_px": [
+            336,
+            15
+          ],
+          "blockout_cell": [
+            10,
+            0
+          ],
+          "kind": "wall"
+        },
+        {
+          "glass_centre_px": [
+            49,
+            299
+          ],
+          "blockout_cell": [
+            1,
+            9
+          ],
+          "kind": "standing"
+        },
+        {
+          "glass_centre_px": [
+            335,
+            299
+          ],
+          "blockout_cell": [
+            10,
+            9
+          ],
+          "kind": "standing"
+        }
+      ],
+      "sha256": "8508304afe8ea512ba5fe108d581a0117ac7917c01622d8263b235ab7d0bde81"
+    },
+    "chamber_a": {
+      "registration": {
+        "core_source": [
+          103,
+          184,
+          1435,
+          850
+        ],
+        "x_source": [
+          103,
+          275,
+          384,
+          1145,
+          1260,
+          1435
+        ],
+        "x_target": [
+          32,
+          64,
+          96,
+          288,
+          320,
+          352
+        ],
+        "y_source": [
+          184,
+          322,
+          458,
+          850
+        ],
+        "y_target": [
+          64,
+          96,
+          128,
+          224
+        ],
+        "north_bottom": 184,
+        "north_door_x": [
+          640,
+          896
+        ],
+        "side_door_y": [
+          604,
+          752
+        ],
+        "south_top": 850,
+        "south_door_x": [
+          640,
+          896
+        ]
+      },
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "file": "chamber_a/1.png",
+      "dimensions": [
+        384,
+        256
+      ],
+      "frame_size": [
+        384,
+        256
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": true,
+      "blockout": "scripts/levels/sewers/layouts/chamber_a.png",
+      "ports_px": {
+        "n": [
+          160,
+          0,
+          64,
+          64
+        ],
+        "s": [
+          160,
+          224,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          160,
+          32,
+          64
+        ],
+        "e": [
+          352,
+          160,
+          32,
+          64
+        ]
+      },
+      "lights": [
+        {
+          "glass_centre_px": [
+            51,
+            26
+          ],
+          "blockout_cell": [
+            1,
+            0
+          ],
+          "kind": "wall"
+        },
+        {
+          "glass_centre_px": [
+            331,
+            26
+          ],
+          "blockout_cell": [
+            10,
+            0
+          ],
+          "kind": "wall"
+        }
+      ],
+      "sha256": "062d958d62ea3ef33581f5d991922f8605af90903c386df250931ecd26284602"
+    },
+    "chamber_b": {
+      "registration": {
+        "core_source": [
+          128,
+          176,
+          1408,
+          880
+        ],
+        "x_source": [
+          128,
+          640,
+          896,
+          1408
+        ],
+        "x_target": [
+          32,
+          160,
+          224,
+          352
+        ],
+        "y_source": [
+          176,
+          380,
+          632,
+          880
+        ],
+        "y_target": [
+          64,
+          96,
+          160,
+          224
+        ],
+        "north_bottom": 176,
+        "north_door_x": [
+          640,
+          896
+        ],
+        "side_door_y": [
+          632,
+          880
+        ],
+        "south_top": 880,
+        "south_door_x": [
+          640,
+          896
+        ]
+      },
+      "source_dimensions": [
+        1536,
+        1024
+      ],
+      "file": "chamber_b/1.png",
+      "dimensions": [
+        384,
+        256
+      ],
+      "frame_size": [
+        384,
+        256
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": true,
+      "blockout": "scripts/levels/sewers/layouts/chamber_b.png",
+      "ports_px": {
+        "n": [
+          160,
+          0,
+          64,
+          64
+        ],
+        "s": [
+          160,
+          224,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          160,
+          32,
+          64
+        ],
+        "e": [
+          352,
+          160,
+          32,
+          64
+        ]
+      },
+      "lights": [
+        {
+          "glass_centre_px": [
+            111,
+            24
+          ],
+          "blockout_cell": [
+            3,
+            0
+          ],
+          "kind": "wall"
+        },
+        {
+          "glass_centre_px": [
+            272,
+            23
+          ],
+          "blockout_cell": [
+            8,
+            0
+          ],
+          "kind": "wall"
+        }
+      ],
+      "sha256": "339e1f79c132703b814393690b2a05f91224de046a445fa0faa8f92fb8695e07"
+    },
+    "chamber_c": {
+      "registration": {
+        "core_source": [
+          112,
+          216,
+          912,
+          1317
+        ],
+        "x_source": [
+          112,
+          264,
+          370,
+          655,
+          751,
+          912
+        ],
+        "x_target": [
+          32,
+          64,
+          96,
+          160,
+          192,
+          224
+        ],
+        "y_source": [
+          216,
+          339,
+          492,
+          937,
+          1119,
+          1317
+        ],
+        "y_target": [
+          64,
+          96,
+          128,
+          256,
+          288,
+          352
+        ],
+        "north_bottom": 216,
+        "north_door_x": [
+          640,
+          866
+        ],
+        "side_door_y": [
+          613,
+          817
+        ],
+        "south_top": 1317,
+        "south_door_x": [
+          640,
+          866
+        ]
+      },
+      "source_dimensions": [
+        1024,
+        1536
+      ],
+      "file": "chamber_c/1.png",
+      "dimensions": [
+        256,
+        384
+      ],
+      "frame_size": [
+        256,
+        384
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": false,
+      "blockout": "scripts/levels/sewers/layouts/chamber_c.png",
+      "ports_px": {
+        "n": [
+          160,
+          0,
+          64,
+          64
+        ],
+        "s": [
+          160,
+          352,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          160,
+          32,
+          64
+        ],
+        "e": [
+          224,
+          160,
+          32,
+          64
+        ]
+      },
+      "lights": [
+        {
+          "glass_centre_px": [
+            47,
+            21
+          ],
+          "blockout_cell": [
+            1,
+            0
+          ],
+          "kind": "wall"
+        },
+        {
+          "glass_centre_px": [
+            176,
+            272
+          ],
+          "blockout_cell": [
+            5,
+            8
+          ],
+          "kind": "standing"
+        }
+      ],
+      "sha256": "7d362486ffe5279ac340d80bcc75775aa15553e4d644e49b750820d2b46ee787"
+    },
+    "flooded_a": {
+      "registration": {
+        "core_source": [
+          107,
+          203,
+          1148,
+          1138
+        ],
+        "x_source": [
+          107,
+          199,
+          332,
+          425,
+          832,
+          923,
+          1057,
+          1148
+        ],
+        "x_target": [
+          32,
+          64,
+          96,
+          128,
+          256,
+          288,
+          320,
+          352
+        ],
+        "y_source": [
+          203,
+          300,
+          874,
+          1005,
+          1042,
+          1138
+        ],
+        "y_target": [
+          64,
+          96,
+          288,
+          320,
+          320,
+          352
+        ],
+        "north_bottom": 203,
+        "north_door_x": [
+          525,
+          729
+        ],
+        "side_door_y": [
+          517,
+          705
+        ],
+        "south_top": 1138,
+        "south_door_x": [
+          525,
+          729
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "flooded_a/1.png",
+      "dimensions": [
+        384,
+        384
+      ],
+      "frame_size": [
+        384,
+        384
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": true,
+      "blockout": "scripts/levels/sewers/layouts/flooded_a.png",
+      "ports_px": {
+        "n": [
+          160,
+          0,
+          64,
+          64
+        ],
+        "s": [
+          160,
+          352,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          160,
+          32,
+          64
+        ],
+        "e": [
+          352,
+          160,
+          32,
+          64
+        ]
+      },
+      "lights": [
+        {
+          "glass_centre_px": [
+            48,
+            17
+          ],
+          "blockout_cell": [
+            1,
+            0
+          ],
+          "kind": "wall"
+        },
+        {
+          "glass_centre_px": [
+            335,
+            16
+          ],
+          "blockout_cell": [
+            10,
+            0
+          ],
+          "kind": "wall"
+        },
+        {
+          "glass_centre_px": [
+            111,
+            298
+          ],
+          "blockout_cell": [
+            3,
+            9
+          ],
+          "kind": "standing"
+        },
+        {
+          "glass_centre_px": [
+            270,
+            299
+          ],
+          "blockout_cell": [
+            8,
+            9
+          ],
+          "kind": "standing"
+        }
+      ],
+      "sha256": "3867a03d2be13829d3aab58c391adc843a481c53eddfc60f4c2039cb5caa6c7a"
+    },
+    "flooded_b": {
+      "registration": {
+        "core_source": [
+          103,
+          129,
+          1151,
+          1130
+        ],
+        "x_source": [
+          103,
+          244,
+          345,
+          450,
+          802,
+          911,
+          1007,
+          1151
+        ],
+        "x_target": [
+          32,
+          64,
+          96,
+          128,
+          256,
+          288,
+          320,
+          352
+        ],
+        "y_source": [
+          129,
+          281,
+          421,
+          523,
+          733,
+          836,
+          946,
+          1048,
+          1130
+        ],
+        "y_target": [
+          64,
+          96,
+          128,
+          160,
+          224,
+          256,
+          288,
+          320,
+          352
+        ],
+        "north_bottom": 129,
+        "north_door_x": [
+          523,
+          731
+        ],
+        "side_door_y": [
+          523,
+          733
+        ],
+        "south_top": 1130,
+        "south_door_x": [
+          523,
+          731
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "flooded_b/1.png",
+      "dimensions": [
+        384,
+        384
+      ],
+      "frame_size": [
+        384,
+        384
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": true,
+      "blockout": "scripts/levels/sewers/layouts/flooded_b.png",
+      "ports_px": {
+        "n": [
+          160,
+          0,
+          64,
+          64
+        ],
+        "s": [
+          160,
+          352,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          160,
+          32,
+          64
+        ],
+        "e": [
+          352,
+          160,
+          32,
+          64
+        ]
+      },
+      "lights": [
+        {
+          "glass_centre_px": [
+            112,
+            23
+          ],
+          "blockout_cell": [
+            3,
+            0
+          ],
+          "kind": "wall"
+        },
+        {
+          "glass_centre_px": [
+            271,
+            23
+          ],
+          "blockout_cell": [
+            8,
+            0
+          ],
+          "kind": "wall"
+        },
+        {
+          "glass_centre_px": [
+            43,
+            303
+          ],
+          "blockout_cell": [
+            1,
+            9
+          ],
+          "kind": "standing"
+        },
+        {
+          "glass_centre_px": [
+            340,
+            303
+          ],
+          "blockout_cell": [
+            10,
+            9
+          ],
+          "kind": "standing"
+        }
+      ],
+      "sha256": "8cdc0b23f81585faa9f7ae894d594e3981b7da5adccfd7d4304f04e290536ebc"
+    },
+    "entry": {
+      "registration": {
+        "core_source": [
+          153,
+          290,
+          1094,
+          988
+        ],
+        "x_source": [
+          153,
+          1094
+        ],
+        "x_target": [
+          32,
+          224
+        ],
+        "y_source": [
+          290,
+          988
+        ],
+        "y_target": [
+          64,
+          224
+        ],
+        "north_bottom": 290,
+        "north_door_x": [
+          809,
+          1071
+        ],
+        "side_door_y": [
+          728,
+          988
+        ],
+        "south_top": 988,
+        "south_door_x": [
+          809,
+          1071
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "entry/1.png",
+      "dimensions": [
+        256,
+        256
+      ],
+      "frame_size": [
+        256,
+        256
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": false,
+      "blockout": "scripts/levels/sewers/layouts/entry.png",
+      "ports_px": {
+        "n": [
+          160,
+          0,
+          64,
+          64
+        ],
+        "s": [
+          160,
+          224,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          160,
+          32,
+          64
+        ],
+        "e": [
+          224,
+          160,
+          32,
+          64
+        ]
+      },
+      "lights": [
+        {
+          "glass_centre_px": [
+            52,
+            21
+          ],
+          "blockout_cell": [
+            1,
+            0
+          ],
+          "kind": "wall"
+        }
+      ],
+      "sha256": "7cf8cb61302feed21f8a4cd655971b7e4851040794337a128e5a3935dd1c4ba7"
+    },
+    "stairs": {
+      "registration": {
+        "core_source": [
+          199,
+          280,
+          1055,
+          988
+        ],
+        "x_source": [
+          199,
+          620,
+          780,
+          1055
+        ],
+        "x_target": [
+          32,
+          128,
+          160,
+          224
+        ],
+        "y_source": [
+          280,
+          510,
+          685,
+          988
+        ],
+        "y_target": [
+          64,
+          128,
+          160,
+          224
+        ],
+        "north_bottom": 280,
+        "north_door_x": [
+          810,
+          1066
+        ],
+        "side_door_y": [
+          727,
+          948
+        ],
+        "south_top": 988,
+        "south_door_x": [
+          810,
+          1066
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "stairs/1.png",
+      "dimensions": [
+        256,
+        256
+      ],
+      "frame_size": [
+        256,
+        256
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": false,
+      "blockout": "scripts/levels/sewers/layouts/stairs.png",
+      "ports_px": {
+        "n": [
+          160,
+          0,
+          64,
+          64
+        ],
+        "s": [
+          160,
+          224,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          160,
+          32,
+          64
+        ],
+        "e": [
+          224,
+          160,
+          32,
+          64
+        ]
+      },
+      "lights": [
+        {
+          "glass_centre_px": [
+            109,
+            22
+          ],
+          "blockout_cell": [
+            3,
+            0
+          ],
+          "kind": "wall"
+        }
+      ],
+      "sha256": "ab5e1642bbba8ec12f8d9c0a6f60fad6dd470915fa886dd28da5feb051eb610b"
+    },
+    "lore_a": {
+      "registration": {
+        "core_source": [
+          132,
+          273,
+          1119,
+          1057
+        ],
+        "x_source": [
+          132,
+          254,
+          1005,
+          1119
+        ],
+        "x_target": [
+          32,
+          64,
+          192,
+          224
+        ],
+        "y_source": [
+          273,
+          416,
+          568,
+          709,
+          1057
+        ],
+        "y_target": [
+          64,
+          96,
+          128,
+          160,
+          224
+        ],
+        "north_bottom": 273,
+        "north_door_x": [
+          790,
+          975
+        ],
+        "side_door_y": [
+          733,
+          875
+        ],
+        "south_top": 1057,
+        "south_door_x": [
+          790,
+          975
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "lore_a/1.png",
+      "dimensions": [
+        256,
+        256
+      ],
+      "frame_size": [
+        256,
+        256
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": false,
+      "blockout": "scripts/levels/sewers/layouts/lore_a.png",
+      "ports_px": {
+        "n": [
+          160,
+          0,
+          64,
+          64
+        ],
+        "s": [
+          160,
+          224,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          160,
+          32,
+          64
+        ],
+        "e": [
+          224,
+          160,
+          32,
+          64
+        ]
+      },
+      "lights": [
+        {
+          "glass_centre_px": [
+            50,
+            79
+          ],
+          "blockout_cell": [
+            1,
+            2
+          ],
+          "kind": "standing"
+        },
+        {
+          "glass_centre_px": [
+            204,
+            143
+          ],
+          "blockout_cell": [
+            6,
+            4
+          ],
+          "kind": "standing"
+        }
+      ],
+      "sha256": "c0e0a0d5a80ff645b6cfd0aa3a28ff2dec95653a3be596875633a5f579d944cc"
+    },
+    "lore_b": {
+      "registration": {
+        "core_source": [
+          155,
+          251,
+          1095,
+          1097
+        ],
+        "x_source": [
+          155,
+          313,
+          470,
+          1095
+        ],
+        "x_target": [
+          32,
+          64,
+          96,
+          224
+        ],
+        "y_source": [
+          251,
+          432,
+          583,
+          1097
+        ],
+        "y_target": [
+          64,
+          96,
+          128,
+          224
+        ],
+        "north_bottom": 251,
+        "north_door_x": [
+          784,
+          1047
+        ],
+        "side_door_y": [
+          744,
+          934
+        ],
+        "south_top": 1097,
+        "south_door_x": [
+          784,
+          1047
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "lore_b/1.png",
+      "dimensions": [
+        256,
+        256
+      ],
+      "frame_size": [
+        256,
+        256
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": false,
+      "blockout": "scripts/levels/sewers/layouts/lore_b.png",
+      "ports_px": {
+        "n": [
+          160,
+          0,
+          64,
+          64
+        ],
+        "s": [
+          160,
+          224,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          160,
+          32,
+          64
+        ],
+        "e": [
+          224,
+          160,
+          32,
+          64
+        ]
+      },
+      "lights": [
+        {
+          "glass_centre_px": [
+            111,
+            24
+          ],
+          "blockout_cell": [
+            3,
+            0
+          ],
+          "kind": "wall"
+        }
+      ],
+      "sha256": "d450b7b2419fe8c751cf6d870844c4f59b9872686fa951818758628bfabcb24d"
+    },
+    "junction_a": {
+      "registration": {
+        "source_file": "junction_a-final-master.png",
+        "core_source": [
+          122,
+          208,
+          1134,
+          1110
+        ],
+        "x_source": [
+          122,
+          316,
+          421,
+          836,
+          940,
+          1134
+        ],
+        "x_target": [
+          32,
+          96,
+          128,
+          256,
+          288,
+          352
+        ],
+        "y_source": [
+          208,
+          299,
+          423,
+          804,
+          916,
+          1110
+        ],
+        "y_target": [
+          64,
+          96,
+          128,
+          256,
+          288,
+          352
+        ],
+        "north_bottom": 126,
+        "north_door_x": [
+          530,
+          728
+        ],
+        "side_door_y": [
+          510,
+          703
+        ],
+        "south_top": 1110,
+        "south_door_x": [
+          530,
+          728
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "junction_a/1.png",
+      "dimensions": [
+        384,
+        384
+      ],
+      "frame_size": [
+        384,
+        384
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": true,
+      "blockout": "scripts/levels/sewers/layouts/junction_a.png",
+      "ports_px": {
+        "n": [
+          160,
+          0,
+          64,
+          64
+        ],
+        "s": [
+          160,
+          352,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          160,
+          32,
+          64
+        ],
+        "e": [
+          352,
+          160,
+          32,
+          64
+        ]
+      },
+      "lights": [
+        {
+          "glass_centre_px": [
+            49,
+            25
+          ],
+          "blockout_cell": [
+            1,
+            0
+          ],
+          "kind": "wall"
+        },
+        {
+          "glass_centre_px": [
+            334,
+            26
+          ],
+          "blockout_cell": [
+            10,
+            0
+          ],
+          "kind": "wall"
+        },
+        {
+          "glass_centre_px": [
+            111,
+            267
+          ],
+          "blockout_cell": [
+            3,
+            8
+          ],
+          "kind": "standing"
+        },
+        {
+          "glass_centre_px": [
+            270,
+            267
+          ],
+          "blockout_cell": [
+            8,
+            8
+          ],
+          "kind": "standing"
+        }
+      ],
+      "sha256": "62eee36bf0056bd27de45a611d883c1d5d0bad5df745924d18a4245ad4b924d7"
+    },
+    "connector_ew": {
+      "registration": {
+        "connector": true,
+        "x_source": [
+          0,
+          314,
+          940,
+          1254
+        ],
+        "x_target": [
+          0,
+          32,
+          96,
+          128
+        ],
+        "y_source": [
+          0,
+          294,
+          950,
+          1254
+        ],
+        "y_target": [
+          0,
+          32,
+          96,
+          128
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "connector_ew/1.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "frame_size": [
+        128,
+        128
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": false,
+      "blockout": "scripts/levels/sewers/layouts/connector_ew.png",
+      "ports_px": {
+        "w": [
+          0,
+          32,
+          32,
+          64
+        ],
+        "e": [
+          96,
+          32,
+          32,
+          64
+        ]
+      },
+      "lights": [],
+      "sha256": "84d79c121680f5d0b9a4e1782279dccd35a74d60a9582d554ce3756124ba5e14"
+    },
+    "connector_ns": {
+      "registration": {
+        "connector": true,
+        "x_source": [
+          0,
+          314,
+          945,
+          1254
+        ],
+        "x_target": [
+          0,
+          32,
+          96,
+          128
+        ],
+        "y_source": [
+          0,
+          314,
+          940,
+          1254
+        ],
+        "y_target": [
+          0,
+          32,
+          96,
+          128
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "connector_ns/1.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "frame_size": [
+        128,
+        128
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": false,
+      "blockout": "scripts/levels/sewers/layouts/connector_ns.png",
+      "ports_px": {
+        "n": [
+          32,
+          0,
+          64,
+          32
+        ],
+        "s": [
+          32,
+          96,
+          64,
+          32
+        ]
+      },
+      "lights": [],
+      "sha256": "97f815a160652529676ffe8b81c14d1e866ab82cdcfea41d5dcdec187a2cdc03"
+    },
+    "connector_ne": {
+      "registration": {
+        "connector": true,
+        "x_source": [
+          77,
+          384,
+          867,
+          1177
+        ],
+        "x_target": [
+          0,
+          32,
+          96,
+          128
+        ],
+        "y_source": [
+          77,
+          378,
+          883,
+          1177
+        ],
+        "y_target": [
+          0,
+          32,
+          96,
+          128
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "connector_ne/1.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "frame_size": [
+        128,
+        128
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": false,
+      "blockout": "scripts/levels/sewers/layouts/connector_ne.png",
+      "ports_px": {
+        "n": [
+          32,
+          0,
+          64,
+          32
+        ],
+        "e": [
+          96,
+          32,
+          32,
+          64
+        ]
+      },
+      "lights": [],
+      "sha256": "8cef4d3fb0ff9f2bb20989e881337c9a7da95bc17b559f1eeb979143cfa7d0b4"
+    },
+    "connector_nw": {
+      "registration": {
+        "connector": true,
+        "x_source": [
+          46,
+          345,
+          909,
+          1208
+        ],
+        "x_target": [
+          0,
+          32,
+          96,
+          128
+        ],
+        "y_source": [
+          46,
+          325,
+          910,
+          1208
+        ],
+        "y_target": [
+          0,
+          32,
+          96,
+          128
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "connector_nw/1.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "frame_size": [
+        128,
+        128
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": false,
+      "blockout": "scripts/levels/sewers/layouts/connector_nw.png",
+      "ports_px": {
+        "n": [
+          32,
+          0,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          32,
+          32,
+          64
+        ]
+      },
+      "lights": [],
+      "sha256": "f36e63885500c54e6000761c1124e554f7c2aeae0d55c08c031d0a21b7c1e665"
+    },
+    "connector_es": {
+      "registration": {
+        "connector": true,
+        "replace_wall_tops": true,
+        "x_source": [
+          0,
+          267,
+          921,
+          1254
+        ],
+        "x_target": [
+          0,
+          32,
+          96,
+          128
+        ],
+        "y_source": [
+          0,
+          214,
+          751,
+          1254
+        ],
+        "y_target": [
+          0,
+          32,
+          96,
+          128
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "connector_es/1.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "frame_size": [
+        128,
+        128
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": false,
+      "blockout": "scripts/levels/sewers/layouts/connector_es.png",
+      "ports_px": {
+        "s": [
+          32,
+          96,
+          64,
+          32
+        ],
+        "e": [
+          96,
+          32,
+          32,
+          64
+        ]
+      },
+      "lights": [],
+      "sha256": "2b26287de138463584274a886bf2df6732bb459558d8ddb575f974b60fca86a6"
+    },
+    "connector_sw": {
+      "registration": {
+        "connector": true,
+        "replace_wall_tops": true,
+        "x_source": [
+          0,
+          313,
+          951,
+          1254
+        ],
+        "x_target": [
+          0,
+          32,
+          96,
+          128
+        ],
+        "y_source": [
+          0,
+          252,
+          871,
+          1254
+        ],
+        "y_target": [
+          0,
+          32,
+          96,
+          128
+        ]
+      },
+      "source_dimensions": [
+        1254,
+        1254
+      ],
+      "file": "connector_sw/1.png",
+      "dimensions": [
+        128,
+        128
+      ],
+      "frame_size": [
+        128,
+        128
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "mirrorable": false,
+      "blockout": "scripts/levels/sewers/layouts/connector_sw.png",
+      "ports_px": {
+        "s": [
+          32,
+          96,
+          64,
+          32
+        ],
+        "w": [
+          0,
+          32,
+          32,
+          64
+        ]
+      },
+      "lights": [],
+      "sha256": "88ccb4b3706690734f877a44e4858a7b86eea54efe931c0b8f02a4450bc86359"
+    },
+    "sealed/north": {
+      "file": "sealed/north.png",
+      "dimensions": [
+        64,
+        64
+      ],
+      "frame_size": [
+        64,
+        64
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "sha256": "30bca02d18cd74f16846a28a7802777c79f21786c9747dce029ea35ed090a25f"
+    },
+    "sealed/south": {
+      "file": "sealed/south.png",
+      "dimensions": [
+        64,
+        32
+      ],
+      "frame_size": [
+        64,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "sha256": "476f87109a54ac05bc12915ba30088025768d13f9016aeaeec05212a9d59f19b"
+    },
+    "sealed/west": {
+      "file": "sealed/west.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "frame_size": [
+        32,
+        64
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "sha256": "96f79118f01e3bd96c702a826a3b77fbe9a83771dd4dc977dfc5b6671837d644"
+    },
+    "sealed/east": {
+      "file": "sealed/east.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "frame_size": [
+        32,
+        64
+      ],
+      "rows": [
+        1
+      ],
+      "origin_px": [
+        0,
+        0
+      ],
+      "sha256": "464a7a2cbb507c5c5d80488e53a5968502d95d3cfbdcdc302d08d9dc0c65f0de"
+    }
+  },
+  "port_edge_width_px": 4,
+  "wall_top_provenance": "Three direct crops of generated junction_c masonry; not fabricated geometry.",
+  "status": "Art review; game lighting and visual acceptance belong to Claude/Julian."
+}
