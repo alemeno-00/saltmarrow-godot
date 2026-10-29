@@ -1,0 +1,60 @@
+{
+  "new_png_assets": 34,
+  "reference_assets_unchanged": 68,
+  "all_reference_hashes_match": true,
+  "all_256_bank_inputs_covered": true,
+  "normalized_bank_masks": 47,
+  "binary_alpha": true,
+  "front_door_clearance": {
+    "n": {
+      "walking_band_y": [
+        55,
+        69
+      ],
+      "minimum_clear_width_px": 17,
+      "row_widths": [
+        18,
+        18,
+        18,
+        18,
+        17,
+        17,
+        17,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        21
+      ]
+    },
+    "s": {
+      "walking_band_y": [
+        55,
+        69
+      ],
+      "minimum_clear_width_px": 21,
+      "row_widths": [
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        22,
+        24,
+        26
+      ]
+    }
+  },
+  "new_asset_frames": "Each file is a single static image; no animation frames in atlas storage rows.",
+  "engine_import_collision_and_occlusion": "Claude integration required; not tested by this exporter."
+}

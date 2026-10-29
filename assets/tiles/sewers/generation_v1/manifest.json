@@ -1,0 +1,3839 @@
+{
+  "version": "sewer-generation-1",
+  "base_grid_px": [
+    32,
+    32
+  ],
+  "pixel_origin": "Top left; +x right,+y down; anchors are pixel boundaries.",
+  "base_pack": "../v1_0/manifest.json",
+  "new_assets": [
+    {
+      "id": "wall_n",
+      "file": "walls/wall_n.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        56,
+        108,
+        207,
+        414
+      ],
+      "sha256": "21699c4a1127f53b4ca55d19c24f49456a7c60c62dfd08ec21b2f59ed7394b97",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        0,
+        0,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "wall_e",
+      "file": "walls/wall_e.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        318,
+        108,
+        434,
+        430
+      ],
+      "sha256": "75377ab27f050bb7d9ca0ed594eab1f470ff4cf2f3fa4333a833c788a598832c",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        32,
+        0,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "wall_s",
+      "file": "walls/wall_s.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        556,
+        108,
+        727,
+        414
+      ],
+      "sha256": "e44e675a6c7dc50309b865c7568401f7531e35ad8e322122e4d087548838a03c",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        64,
+        0,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "wall_w",
+      "file": "walls/wall_w.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        840,
+        108,
+        955,
+        430
+      ],
+      "sha256": "097f932f5567657a99284caa975efe5ed56f2658413bbd6b262e61338eedd343",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        96,
+        0,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "corner_outer_ne",
+      "file": "walls/corner_outer_ne.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        55,
+        595,
+        214,
+        928
+      ],
+      "sha256": "72424f221effb0658a1f93e273f3957845f635113f91bb85736dc401fe6f5d7e",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        128,
+        0,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "corner_outer_se",
+      "file": "walls/corner_outer_se.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        307,
+        595,
+        467,
+        929
+      ],
+      "sha256": "6ba038d7909b4c45cae3863c6239af858a6ddf5c3618bb9c54be013ce2a8c128",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        160,
+        0,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "corner_outer_sw",
+      "file": "walls/corner_outer_sw.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        556,
+        594,
+        715,
+        929
+      ],
+      "sha256": "eabacb8fee8a09ff1afb9ab7909ff07cec7476f27575f858c7a601f4fb3cb07e",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        192,
+        0,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "corner_outer_nw",
+      "file": "walls/corner_outer_nw.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        810,
+        594,
+        971,
+        928
+      ],
+      "sha256": "2b6ec2b59590ec467cd85852014c615f897f716cbae717c164bcf3bfa47b8d5c",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        224,
+        0,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "corner_inner_ne",
+      "file": "walls/corner_inner_ne.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        44,
+        1061,
+        224,
+        1388
+      ],
+      "sha256": "fe6bf50652773d0625d61bf9a88b94acd9f2726b4b4997524dd5703df5007a38",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        0,
+        64,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "corner_inner_se",
+      "file": "walls/corner_inner_se.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        299,
+        1061,
+        479,
+        1387
+      ],
+      "sha256": "7e30a2a899f405328060a4ebbb0c293879ded9c9054a582598fb0fa6cefc98cc",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        32,
+        64,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "corner_inner_sw",
+      "file": "walls/corner_inner_sw.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        544,
+        1061,
+        724,
+        1387
+      ],
+      "sha256": "e3ac091c1ba8360a768145de0b6b5c455bffaf120349ee08a8a6f0f8eac511ce",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        64,
+        64,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "corner_inner_nw",
+      "file": "walls/corner_inner_nw.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        799,
+        1061,
+        981,
+        1388
+      ],
+      "sha256": "a946cd8212b6ea81ac67acfd3909b2836d275671db374cf66a61b99f968db3bc",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        96,
+        64,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "endcap_n",
+      "file": "walls/endcap_n.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        60,
+        154,
+        200,
+        391
+      ],
+      "sha256": "bc9aee125fc874176affc68cc7e681fdd08d0dddf7b5c68f4f8357b035e600dc",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        128,
+        64,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "endcap_e",
+      "file": "walls/endcap_e.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        308,
+        148,
+        449,
+        398
+      ],
+      "sha256": "c2df1d7750819732628c9b12cad3149ae8827e83c048f986b74d84d64f1317c9",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        160,
+        64,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "endcap_s",
+      "file": "walls/endcap_s.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        567,
+        156,
+        715,
+        396
+      ],
+      "sha256": "0b093c71cc8c5c9e6ad583704bbb5d64a64f59d1efe6ff9902c35d85c5f67a29",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        192,
+        64,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "endcap_w",
+      "file": "walls/endcap_w.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        831,
+        147,
+        974,
+        398
+      ],
+      "sha256": "691454f0a2d73076126dc5bc07fcf673c6c9323972ffd724c70085d80dc3d365",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        224,
+        64,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "pillar",
+      "file": "walls/pillar.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "walls",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        696,
+        1134,
+        824,
+        1327
+      ],
+      "sha256": "354aa61181295acf9493d567960a6c785b039662a2dd51143d97210f64e65137",
+      "atlas": "walls_atlas.png",
+      "atlas_region_px": [
+        0,
+        128,
+        32,
+        64
+      ]
+    },
+    {
+      "id": "cap_t_n",
+      "file": "caps/cap_t_n.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "caps",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        26,
+        655,
+        237,
+        880
+      ],
+      "layer": "optional_plan_cap",
+      "placement_note": "Plan-view junction cap; not a substitute for an upright wall face.",
+      "sha256": "ac95359001646acf3ff159a3b19eacbc668ce50a06c171679f35ae993dad688e",
+      "atlas": "caps_atlas.png",
+      "atlas_region_px": [
+        0,
+        0,
+        32,
+        32
+      ]
+    },
+    {
+      "id": "cap_t_e",
+      "file": "caps/cap_t_e.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "caps",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        275,
+        576,
+        451,
+        880
+      ],
+      "layer": "optional_plan_cap",
+      "placement_note": "Plan-view junction cap; not a substitute for an upright wall face.",
+      "sha256": "a1b305f885d946d1f2e1fb475c4fabaab185ee14a1cfcb7e68014505abb1afc9",
+      "atlas": "caps_atlas.png",
+      "atlas_region_px": [
+        32,
+        0,
+        32,
+        32
+      ]
+    },
+    {
+      "id": "cap_t_s",
+      "file": "caps/cap_t_s.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "caps",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        506,
+        576,
+        744,
+        759
+      ],
+      "layer": "optional_plan_cap",
+      "placement_note": "Plan-view junction cap; not a substitute for an upright wall face.",
+      "sha256": "22876265e18db7efac9dd147e694a29340ef363e84cc10d5180cea22ba383a36",
+      "atlas": "caps_atlas.png",
+      "atlas_region_px": [
+        64,
+        0,
+        32,
+        32
+      ]
+    },
+    {
+      "id": "cap_t_w",
+      "file": "caps/cap_t_w.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "caps",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        810,
+        576,
+        998,
+        880
+      ],
+      "layer": "optional_plan_cap",
+      "placement_note": "Plan-view junction cap; not a substitute for an upright wall face.",
+      "sha256": "0d7d7c19706bf4935b5edd1b6d2556cd37e3db9e02257543be9ce7393d402a68",
+      "atlas": "caps_atlas.png",
+      "atlas_region_px": [
+        96,
+        0,
+        32,
+        32
+      ]
+    },
+    {
+      "id": "cap_cross",
+      "file": "caps/cap_cross.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "caps",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        121,
+        1027,
+        456,
+        1361
+      ],
+      "layer": "optional_plan_cap",
+      "placement_note": "Plan-view junction cap; not a substitute for an upright wall face.",
+      "sha256": "d5a14052e6b63377d086e787b47dca7328d0d5595a4e255ca8addeaa5f461385",
+      "atlas": "caps_atlas.png",
+      "atlas_region_px": [
+        128,
+        0,
+        32,
+        32
+      ]
+    },
+    {
+      "id": "door_n_closed",
+      "file": "doors/door_n_closed.png",
+      "dimensions": [
+        64,
+        80
+      ],
+      "origin_px": [
+        32,
+        72
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "doors",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        120,
+        67,
+        389,
+        410
+      ],
+      "state": "closed",
+      "pair": "door_n",
+      "registration": {
+        "source_root": [
+          254.5,
+          410
+        ],
+        "source_scale": 0.1749271137026239
+      },
+      "visual_overhang": "Frame may extend into neighbouring solid-wall cells; open leaf is decorative, not collision.",
+      "sha256": "473d06173d9a3701e6a09affbfb75e99ee2c72d77fcf62ac4d6c99de2a7778dd",
+      "atlas": "doors_atlas.png",
+      "atlas_region_px": [
+        0,
+        0,
+        64,
+        80
+      ]
+    },
+    {
+      "id": "door_e_closed",
+      "file": "doors/door_e_closed.png",
+      "dimensions": [
+        64,
+        80
+      ],
+      "origin_px": [
+        32,
+        72
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "doors",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        604,
+        67,
+        726,
+        410
+      ],
+      "state": "closed",
+      "pair": "door_e",
+      "registration": {
+        "source_root": [
+          647,
+          410
+        ],
+        "source_scale": 0.1749271137026239
+      },
+      "visual_overhang": "Frame may extend into neighbouring solid-wall cells; open leaf is decorative, not collision.",
+      "sha256": "45c228513a7b69dafe542b8f5bab9bf79ad42f6b6aef3e89e95b836451ab148e",
+      "atlas": "doors_atlas.png",
+      "atlas_region_px": [
+        64,
+        0,
+        64,
+        80
+      ]
+    },
+    {
+      "id": "door_s_closed",
+      "file": "doors/door_s_closed.png",
+      "dimensions": [
+        64,
+        80
+      ],
+      "origin_px": [
+        32,
+        72
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "doors",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        986,
+        67,
+        1258,
+        410
+      ],
+      "state": "closed",
+      "pair": "door_s",
+      "registration": {
+        "source_root": [
+          1122,
+          410
+        ],
+        "source_scale": 0.1749271137026239
+      },
+      "visual_overhang": "Frame may extend into neighbouring solid-wall cells; open leaf is decorative, not collision.",
+      "sha256": "387c0056f205fd312cc81c948cb96f058627f614d6b56675aa4855d239b8df18",
+      "atlas": "doors_atlas.png",
+      "atlas_region_px": [
+        128,
+        0,
+        64,
+        80
+      ]
+    },
+    {
+      "id": "door_w_closed",
+      "file": "doors/door_w_closed.png",
+      "dimensions": [
+        64,
+        80
+      ],
+      "origin_px": [
+        32,
+        72
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "doors",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        1492,
+        67,
+        1617,
+        410
+      ],
+      "state": "closed",
+      "pair": "door_w",
+      "registration": {
+        "source_root": [
+          1572,
+          410
+        ],
+        "source_scale": 0.1749271137026239
+      },
+      "visual_overhang": "Frame may extend into neighbouring solid-wall cells; open leaf is decorative, not collision.",
+      "sha256": "477bb90ed05d287d75ae7e07bae86f30cfad32616388c01fa356846e93680a4e",
+      "atlas": "doors_atlas.png",
+      "atlas_region_px": [
+        192,
+        0,
+        64,
+        80
+      ]
+    },
+    {
+      "id": "door_n_open",
+      "file": "doors/door_n_open.png",
+      "dimensions": [
+        64,
+        80
+      ],
+      "origin_px": [
+        32,
+        72
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "doors",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        117,
+        472,
+        390,
+        833
+      ],
+      "state": "open",
+      "pair": "door_n",
+      "registration": {
+        "source_root": [
+          254.5,
+          817
+        ],
+        "source_scale": 0.1749271137026239
+      },
+      "visual_overhang": "Frame may extend into neighbouring solid-wall cells; open leaf is decorative, not collision.",
+      "sha256": "d806c4ac52a7735b238233fa0c7a76724888ff55f8718f1d6672258a7bed72db",
+      "atlas": "doors_atlas.png",
+      "atlas_region_px": [
+        0,
+        80,
+        64,
+        80
+      ]
+    },
+    {
+      "id": "door_e_open",
+      "file": "doors/door_e_open.png",
+      "dimensions": [
+        64,
+        80
+      ],
+      "origin_px": [
+        32,
+        72
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "doors",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        602,
+        472,
+        777,
+        817
+      ],
+      "state": "open",
+      "pair": "door_e",
+      "registration": {
+        "source_root": [
+          647,
+          817
+        ],
+        "source_scale": 0.1749271137026239
+      },
+      "visual_overhang": "Frame may extend into neighbouring solid-wall cells; open leaf is decorative, not collision.",
+      "sha256": "168e740bc969694600913e252decd1a0c9d8dfa5259328c39e0d20b1f59ae04a",
+      "atlas": "doors_atlas.png",
+      "atlas_region_px": [
+        64,
+        80,
+        64,
+        80
+      ]
+    },
+    {
+      "id": "door_s_open",
+      "file": "doors/door_s_open.png",
+      "dimensions": [
+        64,
+        80
+      ],
+      "origin_px": [
+        32,
+        72
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "doors",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        985,
+        472,
+        1268,
+        828
+      ],
+      "state": "open",
+      "pair": "door_s",
+      "registration": {
+        "source_root": [
+          1122,
+          817
+        ],
+        "source_scale": 0.1749271137026239
+      },
+      "visual_overhang": "Frame may extend into neighbouring solid-wall cells; open leaf is decorative, not collision.",
+      "sha256": "f25fbf75c0d7b1584d59faf2339c816d3839e97f29632566e927e432d23ff9c6",
+      "atlas": "doors_atlas.png",
+      "atlas_region_px": [
+        128,
+        80,
+        64,
+        80
+      ]
+    },
+    {
+      "id": "door_w_open",
+      "file": "doors/door_w_open.png",
+      "dimensions": [
+        64,
+        80
+      ],
+      "origin_px": [
+        32,
+        72
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "doors",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        1439,
+        471,
+        1618,
+        816
+      ],
+      "state": "open",
+      "pair": "door_w",
+      "registration": {
+        "source_root": [
+          1572,
+          817
+        ],
+        "source_scale": 0.1749271137026239
+      },
+      "visual_overhang": "Frame may extend into neighbouring solid-wall cells; open leaf is decorative, not collision.",
+      "sha256": "8da3307693787c26434fa85f9fe31a62b63460de76ef6e10bd3724dd34005015",
+      "atlas": "doors_atlas.png",
+      "atlas_region_px": [
+        192,
+        80,
+        64,
+        80
+      ]
+    },
+    {
+      "id": "stairs_down_n",
+      "file": "stairs/stairs_down_n.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "stairs",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        355,
+        106,
+        684,
+        431
+      ],
+      "descends_toward": "n",
+      "sha256": "dd477f999b28bbf74dbe3f643b1f8f4be65644cf8e2061bad67f77c06c68ffee",
+      "atlas": "stairs_atlas.png",
+      "atlas_region_px": [
+        0,
+        0,
+        32,
+        32
+      ]
+    },
+    {
+      "id": "stairs_down_e",
+      "file": "stairs/stairs_down_e.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "stairs",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        852,
+        106,
+        1181,
+        431
+      ],
+      "descends_toward": "e",
+      "sha256": "79e618fe0fea5a4cbbc14fa09a004ad6e5d1a718a49868cf7f430b34f3ff44b0",
+      "atlas": "stairs_atlas.png",
+      "atlas_region_px": [
+        32,
+        0,
+        32,
+        32
+      ]
+    },
+    {
+      "id": "stairs_down_s",
+      "file": "stairs/stairs_down_s.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "stairs",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        355,
+        587,
+        684,
+        910
+      ],
+      "descends_toward": "s",
+      "sha256": "5b03c0a5e8154844e8245dba6909c3a02d02babe7b57c169d33ecf8cd1d3b715",
+      "atlas": "stairs_atlas.png",
+      "atlas_region_px": [
+        64,
+        0,
+        32,
+        32
+      ]
+    },
+    {
+      "id": "stairs_down_w",
+      "file": "stairs/stairs_down_w.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "kind": "stairs",
+      "rows": 1,
+      "frames": 1,
+      "source_bounds": [
+        852,
+        587,
+        1181,
+        910
+      ],
+      "descends_toward": "w",
+      "sha256": "14c3730dfb1f62b36aadb26faeeffc87dd2bb3c2ee6e860e2fc71b3b8e89974f",
+      "atlas": "stairs_atlas.png",
+      "atlas_region_px": [
+        96,
+        0,
+        32,
+        32
+      ]
+    }
+  ],
+  "reference_assets": [
+    {
+      "id": "v1.floor_dry",
+      "file": "../v1_0/tiles/floor_dry.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "552a98a0212386b65103b9acbc9a7dbe2e42c86ba487af9948770baeb10943ce",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.floor_wet",
+      "file": "../v1_0/tiles/floor_wet.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "16e8d3ef803085b4be379e32742429e509cfc2198ca9ed9fa77559c89bcfc337",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.floor_moss",
+      "file": "../v1_0/tiles/floor_moss.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "00dbe4ecccd3bc1438d08accfb9c628407314ca0f20105d534583e89999eae85",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.floor_mud",
+      "file": "../v1_0/tiles/floor_mud.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "ce830963f00a4c2a458ce06819ed6d5375f423a5c9f1a878cf872d4544ac4572",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.water_0",
+      "file": "../v1_0/tiles/water_0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "water_state": "deep; gameplay policy required",
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "64360dc83691d8f1b84bd10eb4e74220bc61f8a6df9024fde48646122f3adcde",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.water_1",
+      "file": "../v1_0/tiles/water_1.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "water_state": "deep; gameplay policy required",
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "b2269779e3575184fd4ab8eb616027f3557a393479b84f7745cdc8752024e7d4",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.water_2",
+      "file": "../v1_0/tiles/water_2.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "water_state": "deep; gameplay policy required",
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "48f644b4d9266a257d29588af7ce14d50f94df2e5b0c41072693ec32fe8d8b4b",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.water_3",
+      "file": "../v1_0/tiles/water_3.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "water_state": "deep; gameplay policy required",
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        224,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        7,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "a6501c214dee0d9648a4cdd0e78fd102e7f57e77f046e39668ee244e16f8f97d",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_00",
+      "file": "../v1_0/tiles/bank_00.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 0,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "64360dc83691d8f1b84bd10eb4e74220bc61f8a6df9024fde48646122f3adcde",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_01",
+      "file": "../v1_0/tiles/bank_01.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 1,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "09f3489ed50d5b5b6129918d6793844cd180c78c0938aa79d9cc77605ed063e4",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_02",
+      "file": "../v1_0/tiles/bank_02.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 2,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "501b40875e1f5f34a30ca0f5b2d0e3e1eb265245cd9568ae3cddd1c92f955ddf",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_03",
+      "file": "../v1_0/tiles/bank_03.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 3,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "23b8a15dc8c861f3ffce4da6e601192c284902acf4527bb07283619b5b948482",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_04",
+      "file": "../v1_0/tiles/bank_04.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 4,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "c7f6f093cba44bac40ded1385949d56c7935fdb4b58ca2ff1f421b4524be918c",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_05",
+      "file": "../v1_0/tiles/bank_05.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 5,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "6e5f14f2a15e5471f8f473f3ef3320c7d4fa6ceeb291febfe9be8546a64de372",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_06",
+      "file": "../v1_0/tiles/bank_06.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 6,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "f64f0db2dff8f00b08549f3e96dd191ceaa4bc302b31e3d3d5937562030ee12d",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_07",
+      "file": "../v1_0/tiles/bank_07.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 7,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        224,
+        32,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        7,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "1a29ff703ae0e707af456d6ed778d67d0456fe749ea4bbe0fe9d47878aa1a2b2",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_08",
+      "file": "../v1_0/tiles/bank_08.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 8,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "6740fca7bcf3b4a388e5bb4403affbe09a11b4e87aaeb0189d647312e3574d94",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_09",
+      "file": "../v1_0/tiles/bank_09.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 9,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "5b1f279ab0d122e78dd4da054500e4e495b555bc9a2a0ad7c0c1cb97fe28daba",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_0a",
+      "file": "../v1_0/tiles/bank_0a.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 10,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "30f84d05a98bd84314a514308c50f9b0f71e1aad86788e624c607f55831c53c9",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_0b",
+      "file": "../v1_0/tiles/bank_0b.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 11,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "0ab7351b9d170cbc49c3c2788522a8fc52916cce55391b7ea37de21ab58ef866",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_0c",
+      "file": "../v1_0/tiles/bank_0c.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 12,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "18c9e4dd0b860bcde0732c2f335d4f1ac1fa7a9eac4cb6c294d604f1bd170de8",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_0d",
+      "file": "../v1_0/tiles/bank_0d.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 13,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "46ba089a2e330e4e8c140dd85b3e5a1811b525710f059eaff6ab58c9b80fa1da",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_0e",
+      "file": "../v1_0/tiles/bank_0e.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 14,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "55c67e1eaa0c5f7529e2b4a9b92f3715040b218a3f5b7617d4be6ad3c86a91a3",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_0f",
+      "file": "../v1_0/tiles/bank_0f.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 15,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        224,
+        64,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        7,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "1237b3678d8481085b2803f1880002307ace1604e88ab1864a0fc1b0f1223aa6",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_10",
+      "file": "../v1_0/tiles/bank_10.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 16,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "519615f4ab9cabf5b796a9a61693775c5918f81b30a916d35aa9d76b92ef63fd",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_14",
+      "file": "../v1_0/tiles/bank_14.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 20,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "713db0cee8dfa58c5183aeb4a1f8a00ded176ae45f4d3e6d290f8e5d571f9986",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_18",
+      "file": "../v1_0/tiles/bank_18.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 24,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "d991788f2e0299c97301290741c5c551f8dda85df6c08e12ca3c8355882f4a3f",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_1c",
+      "file": "../v1_0/tiles/bank_1c.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 28,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "89eb11564783b69e98b24fd4ab240f6c5e6baffd7e7244358a1eb90ced79484e",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_20",
+      "file": "../v1_0/tiles/bank_20.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 32,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "613e732d8d21ec7469b5978e18488f0edd5bb3aa0922f169191c55c9efb13f57",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_21",
+      "file": "../v1_0/tiles/bank_21.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 33,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "c29ade65b843dfd355ad442afeaaa14371a48af3d5a0fdd9c1eaf8354c338c59",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_28",
+      "file": "../v1_0/tiles/bank_28.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 40,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "eaf33f0b867ed79019f59f874dcdbb97b5cd5ab5aa3617d99648cbcf7c7670b3",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_29",
+      "file": "../v1_0/tiles/bank_29.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 41,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        224,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        7,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "b7741d1329429658f2940f344732013ff17e117bbb3047f8f6e5957e33333eb1",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_30",
+      "file": "../v1_0/tiles/bank_30.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 48,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "e94204fa85d7ffab045d90188a4876c4fd5d1365cbd569aea2c164593ef73bf3",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_38",
+      "file": "../v1_0/tiles/bank_38.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 56,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "ccc375fa2593abe83e7813ee7bd4f544f5e659513cfe1e19065b5aeb42e3bb90",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_40",
+      "file": "../v1_0/tiles/bank_40.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 64,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "056f45505fa43f91381b4c97c9e6b6a0d10de0e1ecfbcf914ef571c80dccb6d3",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_41",
+      "file": "../v1_0/tiles/bank_41.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 65,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "f5e7666e9ba6d3cae4bba96ad3c5adc2572b1f76f718695fda5f8ef8c045c899",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_42",
+      "file": "../v1_0/tiles/bank_42.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 66,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "e08a24114b24df4212da8da367c5e010f3b9fffdfa47be875b8eb10c8cae1512",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_43",
+      "file": "../v1_0/tiles/bank_43.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 67,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "644d73499519b10daba2c2920e019634815c28a3c709cd468d001d3b89d2f083",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_50",
+      "file": "../v1_0/tiles/bank_50.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 80,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "e3e92a9699d93f0625a93ca40dcf7b2da0ed23f6583070e8b8d1ffe08ea9864e",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_60",
+      "file": "../v1_0/tiles/bank_60.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 96,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        224,
+        128,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        7,
+        4
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "f03a51a8b3ccc74b4f774fa51076d002fa95ec941df51c3f606d07dd80993d04",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_61",
+      "file": "../v1_0/tiles/bank_61.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 97,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "89bbdfba482a65e7d07c83333a2b2b8f152e0bd44988c818c0d726db9e179422",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_70",
+      "file": "../v1_0/tiles/bank_70.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 112,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "36780302f878776a5b37f8ce7ed448b197ee27f794c1fff448e2fbe5789e8492",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_80",
+      "file": "../v1_0/tiles/bank_80.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 128,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "a97e462ff2e20875dcd7c2f8a058f9f094e4305c3fa50873d14d648e73beffd6",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_82",
+      "file": "../v1_0/tiles/bank_82.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 130,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "bc85bc4d1aac6a9562504cd80f5f96ba4f071447d938d074df388599286855ea",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_84",
+      "file": "../v1_0/tiles/bank_84.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 132,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "661bdb797297c3dd27f8407db8b2254ec4e4da55ab9fd31900907bbfcbbe2acb",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_86",
+      "file": "../v1_0/tiles/bank_86.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 134,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "e5d4fa66e663f5768b83b9d275f6c26cf5ab6853b9aed293bd619bb5d35a28cf",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_90",
+      "file": "../v1_0/tiles/bank_90.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 144,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "f873e677cdb751920274ab31f8828378c80f04cb482bc810cb4e9bcac9203b0c",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_94",
+      "file": "../v1_0/tiles/bank_94.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 148,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        224,
+        160,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        7,
+        5
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "ca4288c4e9e14f18b62a1e76245167299240650e7777f97268838bbd2c24f6ab",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_a0",
+      "file": "../v1_0/tiles/bank_a0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 160,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        0,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        0,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "0d48566a252d7144cc38e2eb2d2c43b6ae2da5b75afe38f82981374a7ef10679",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_b0",
+      "file": "../v1_0/tiles/bank_b0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 176,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        32,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "9db43c30696e0c09a81a54177ead241c692e67585bebedf74981e35e3a7832d1",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_c0",
+      "file": "../v1_0/tiles/bank_c0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 192,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        64,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "0f3d47ed41642b60152a2df95374277a9eb2455f330c0a71971856c20b6538f7",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_c2",
+      "file": "../v1_0/tiles/bank_c2.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 194,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        96,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "ab5bdd0b80d8a29b4cbf079d6b837cb992928da2ffa1759ff47b7c34cf811c3d",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_d0",
+      "file": "../v1_0/tiles/bank_d0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 208,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        128,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        4,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "ded61ad8b151cb47ad6ab86f30996c7f78168b043053f6081f710f728b65e8ae",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_e0",
+      "file": "../v1_0/tiles/bank_e0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 224,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        160,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        5,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "d32009ee17f4e2943aa77c1db5865dea012cda9ff09d5f9265be9c692c5a7a83",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bank_f0",
+      "file": "../v1_0/tiles/bank_f0.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "kind": "terrain",
+      "neighbour_mask": 240,
+      "mask_bits": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "NE",
+        "SE",
+        "SW",
+        "NW"
+      ],
+      "atlas": "../v1_0/terrain_atlas.png",
+      "atlas_region_px": [
+        192,
+        192,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        6,
+        6
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "8f94367218ddb355384a301a7aa2a56cff049d81aec87e9fca6adffaac510234",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.wall_n",
+      "file": "../v1_0/sprites/wall_n.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "../v1_0/sprite_atlas.png",
+      "atlas_region_px": [
+        0,
+        0,
+        32,
+        64
+      ],
+      "atlas_cell": [
+        0,
+        0
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            0,
+            32
+          ],
+          [
+            32,
+            32
+          ],
+          [
+            32,
+            64
+          ],
+          [
+            0,
+            64
+          ]
+        ]
+      ],
+      "sha256": "1190626c64ab795d14aa6007715e2b9ce2477a11389560f7ea264052e5c6e8a6",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.drain",
+      "file": "../v1_0/sprites/drain.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "../v1_0/sprite_atlas.png",
+      "atlas_region_px": [
+        64,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "961dd5e5569111ade79224fec183a7c811486dde726993eb0723419ad9724ea1",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.pipe_h",
+      "file": "../v1_0/sprites/pipe_h.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "../v1_0/sprite_atlas.png",
+      "atlas_region_px": [
+        128,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        0
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "6a10f83d57e93c396b9709ff97ac773028a5f8be4eab2b87b66faf42f1d6cb79",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.barrel",
+      "file": "../v1_0/sprites/barrel.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "../v1_0/sprite_atlas.png",
+      "atlas_region_px": [
+        192,
+        0,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        0
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            7,
+            20
+          ],
+          [
+            25,
+            20
+          ],
+          [
+            25,
+            30
+          ],
+          [
+            7,
+            30
+          ]
+        ]
+      ],
+      "sha256": "34c30333c7a7c0c6bb2970fa7f354d63447b73bfc44013182e62b84a25093d13",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.arch",
+      "file": "../v1_0/sprites/arch.png",
+      "dimensions": [
+        64,
+        96
+      ],
+      "origin_px": [
+        32,
+        96
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        2,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "../v1_0/sprite_atlas.png",
+      "atlas_region_px": [
+        0,
+        96,
+        64,
+        96
+      ],
+      "atlas_cell": [
+        0,
+        1
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            0,
+            64
+          ],
+          [
+            12,
+            64
+          ],
+          [
+            12,
+            96
+          ],
+          [
+            0,
+            96
+          ]
+        ],
+        [
+          [
+            52,
+            64
+          ],
+          [
+            64,
+            64
+          ],
+          [
+            64,
+            96
+          ],
+          [
+            52,
+            96
+          ]
+        ]
+      ],
+      "sha256": "859851e8367ee3bf422f7fc0ee32f9f712a967f20fe8cf15cd5f75353f009543",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.crate",
+      "file": "../v1_0/sprites/crate.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "../v1_0/sprite_atlas.png",
+      "atlas_region_px": [
+        64,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        1,
+        1
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            3,
+            17
+          ],
+          [
+            29,
+            17
+          ],
+          [
+            29,
+            31
+          ],
+          [
+            3,
+            31
+          ]
+        ]
+      ],
+      "sha256": "6d7379a2a647e0acdbe774bab3b76aff544769123636a0f16822be0d2de0bcd9",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.rubble",
+      "file": "../v1_0/sprites/rubble.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "../v1_0/sprite_atlas.png",
+      "atlas_region_px": [
+        128,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        2,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "9e09bf36860c7929a7a1203220be8e7150135dec14ebe0f04cc0607e2336557e",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.torch",
+      "file": "../v1_0/sprites/torch.png",
+      "dimensions": [
+        32,
+        32
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south-facing wall/arch; other objects fixed overhead",
+      "atlas": "../v1_0/sprite_atlas.png",
+      "atlas_region_px": [
+        192,
+        96,
+        32,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        1
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "be222f1f39390be2427e167cccfd92ae3ccd7c8c8b15ea68d5f70d523c24c1a2",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.wall_side",
+      "file": "../v1_0/sprites/wall_side.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "vertical map axis; do not rotate wall_n",
+      "atlas": "../v1_0/sprite_atlas.png",
+      "atlas_region_px": [
+        0,
+        192,
+        32,
+        64
+      ],
+      "atlas_cell": [
+        0,
+        2
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            8,
+            32
+          ],
+          [
+            24,
+            32
+          ],
+          [
+            24,
+            64
+          ],
+          [
+            8,
+            64
+          ]
+        ]
+      ],
+      "sha256": "6f7ee0147cb4000b26def72371b5807ec160e3800e8132d41416969f15425161",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.wall_curve_w",
+      "file": "../v1_0/sprites/wall_curve_w.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south; rounded wall end, not full cistern radius",
+      "atlas": "../v1_0/sprite_atlas.png",
+      "atlas_region_px": [
+        64,
+        192,
+        32,
+        64
+      ],
+      "atlas_cell": [
+        1,
+        2
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            0,
+            32
+          ],
+          [
+            32,
+            32
+          ],
+          [
+            32,
+            64
+          ],
+          [
+            0,
+            64
+          ]
+        ]
+      ],
+      "sha256": "4c1425fa5f634835df6300ccc3f8955212a5c80e8c365129719d93a93a34100d",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.wall_curve_e",
+      "file": "../v1_0/sprites/wall_curve_e.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        1
+      ],
+      "facing": "south; rounded wall end, not full cistern radius",
+      "atlas": "../v1_0/sprite_atlas.png",
+      "atlas_region_px": [
+        128,
+        192,
+        32,
+        64
+      ],
+      "atlas_cell": [
+        2,
+        2
+      ],
+      "collision_polygons_top_left_px": [
+        [
+          [
+            0,
+            32
+          ],
+          [
+            32,
+            32
+          ],
+          [
+            32,
+            64
+          ],
+          [
+            0,
+            64
+          ]
+        ]
+      ],
+      "sha256": "42743a9a87e05fc7bf585415aa8f785a1ccb2cf123b37023cd471dc9597c80e5",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bridge_h",
+      "file": "../v1_0/sprites/bridge_h.png",
+      "dimensions": [
+        64,
+        32
+      ],
+      "origin_px": [
+        32,
+        32
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        2,
+        1
+      ],
+      "facing": "east-west",
+      "traversable_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "atlas": "../v1_0/sprite_atlas.png",
+      "atlas_region_px": [
+        192,
+        192,
+        64,
+        32
+      ],
+      "atlas_cell": [
+        3,
+        2
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "42c02f1e43966d1d8b1aec2dd87c3ecb768487f6b0e2c27087236c31689e5b4b",
+      "read_only_reference": true
+    },
+    {
+      "id": "v1.bridge_v",
+      "file": "../v1_0/sprites/bridge_v.png",
+      "dimensions": [
+        32,
+        64
+      ],
+      "origin_px": [
+        16,
+        64
+      ],
+      "kind": "sprite",
+      "footprint_cells": [
+        1,
+        2
+      ],
+      "facing": "north-south",
+      "traversable_cells": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "atlas": "../v1_0/sprite_atlas.png",
+      "atlas_region_px": [
+        0,
+        288,
+        32,
+        64
+      ],
+      "atlas_cell": [
+        0,
+        3
+      ],
+      "collision_polygons_top_left_px": [],
+      "sha256": "dfe444beee4e11ebc38711133933ddeba4d643a3ab864b3e3114faac46076f43",
+      "read_only_reference": true
+    }
+  ],
+  "wall_boundary_directions": {
+    "n": "north room boundary; floor to south",
+    "e": "east boundary; floor to west",
+    "s": "south foreground boundary; floor to north",
+    "w": "west boundary; floor to east"
+  },
+  "corners": "Suffix is the pair of map-axis branches meeting at the corner; outer is convex, inner recessed. Choose from room geometry, not texture rotation.",
+  "cap_suffix": "cap_t_n is missing its north branch; analogous E/S/W. Caps are optional plan-view overlays, not upright wall substitutes.",
+  "collision_handoff": "Code owner assigns collision/navigation and door state. Never infer collision from alpha or animate atlas storage rows.",
+  "art_only": true,
+  "status": "draft study; not integration-ready",
+  "known_gaps": [
+    "Repeated side-wall caps and corner geometry do not join seamlessly.",
+    "North/south directional walls currently both show faces; camera convention needs revision.",
+    "North doorway minimum lower aperture is 17px, narrower than 18px approved Thomas silhouette.",
+    "T/cross caps are plan-view overlays, not complete upright wall junctions."
+  ]
+}
