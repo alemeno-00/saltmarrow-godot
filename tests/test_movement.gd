@@ -7,15 +7,14 @@ var game: Game
 
 func setup(t: SceneTree) -> void:
 	tree = t
-	game = load("res://scenes/main.tscn").instantiate()
-	tree.root.add_child(game)
-	await tree.process_frame
+	game = await add_game(tree)
 
 
 func teardown() -> void:
 	for a in ["move_up", "move_down", "move_left", "move_right"]:
 		Input.action_release(a)
-	game.queue_free()
+	if game != null:
+		game.queue_free()
 
 
 ## A small hand-made room so the tests know exactly what is where.
