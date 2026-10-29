@@ -1,0 +1,42 @@
+{
+  "status": "proposal_only_no_directional_assets_delivered",
+  "compatibility_manifest": "animation-manifest.json",
+  "frame_size": [64, 64],
+  "root": [32, 56],
+  "grid_size": [32, 32],
+  "coordinates": "top_left_origin_x_right_y_down",
+  "perspective": "orthogonal_slightly_elevated_top_down_not_isometric",
+  "direction_order": ["N", "NE", "E", "SE", "S", "SW", "W", "NW"],
+  "directions": {
+    "N": {"step": [0, -1], "authored": true, "mirror_of": null},
+    "NE": {"step": [1, -1], "authored": true, "mirror_of": null},
+    "E": {"step": [1, 0], "authored": true, "mirror_of": null},
+    "SE": {"step": [1, 1], "authored": true, "mirror_of": null},
+    "S": {"step": [0, 1], "authored": true, "mirror_of": null},
+    "SW": {"step": [-1, 1], "authored": true, "mirror_of": null},
+    "W": {"step": [-1, 0], "authored": true, "mirror_of": null},
+    "NW": {"step": [-1, -1], "authored": true, "mirror_of": null}
+  },
+  "authored_field_meaning": "planned_authorship_not_completed_art",
+  "delivered_direction_count": 0,
+  "planned_sheet_pattern": "directional/body_<lowercase_direction>.png",
+  "sheet_canvas_per_direction": [384, 448],
+  "row_order": ["idle", "walk", "sneak", "hurt", "wounded_walk", "dying_crawl", "death"],
+  "row_frame_counts": [4, 6, 6, 3, 6, 6, 6],
+  "populated_cells_per_direction": 37,
+  "planned_populated_cells_total": 296,
+  "unused_trailing_cells": "transparent",
+  "weapons": {
+    "baked_into_body": false,
+    "registration": "same_frame_root_direction_row_frame",
+    "socket_coordinates": null,
+    "status": "pending_pose_authorship_and_measurement"
+  },
+  "blocking_review_gates": [
+    "same_anchor_actual_environment_1x_vs_1_25x_scale_comparison",
+    "approved_front_back_and_oblique_turnarounds",
+    "anatomical_left_scar_and_equipment_asymmetry",
+    "eight_authored_direction_pose_proofs",
+    "direction_motion_loop_socket_and_occlusion_validation"
+  ]
+}
