@@ -1,0 +1,98 @@
+[
+  {
+    "file": "severed_arm.png",
+    "frame": [
+      32,
+      32
+    ],
+    "rows": 1,
+    "frames": 1,
+    "source_bounds": [
+      71,
+      155,
+      527,
+      502
+    ],
+    "occupied_max_dimension": 22
+  },
+  {
+    "file": "severed_head.png",
+    "frame": [
+      32,
+      32
+    ],
+    "rows": 1,
+    "frames": 1,
+    "source_bounds": [
+      633,
+      137,
+      942,
+      477
+    ],
+    "occupied_max_dimension": 14
+  },
+  {
+    "file": "flesh_chunk_1.png",
+    "frame": [
+      32,
+      32
+    ],
+    "rows": 1,
+    "frames": 1,
+    "source_bounds": [
+      1139,
+      226,
+      1457,
+      480
+    ],
+    "occupied_max_dimension": 10
+  },
+  {
+    "file": "flesh_chunk_2.png",
+    "frame": [
+      32,
+      32
+    ],
+    "rows": 1,
+    "frames": 1,
+    "source_bounds": [
+      72,
+      658,
+      475,
+      877
+    ],
+    "occupied_max_dimension": 12
+  },
+  {
+    "file": "flesh_chunk_3.png",
+    "frame": [
+      32,
+      32
+    ],
+    "rows": 1,
+    "frames": 1,
+    "source_bounds": [
+      627,
+      666,
+      993,
+      910
+    ],
+    "occupied_max_dimension": 11
+  },
+  {
+    "file": "flesh_chunk_4.png",
+    "frame": [
+      32,
+      32
+    ],
+    "rows": 1,
+    "frames": 1,
+    "source_bounds": [
+      1136,
+      674,
+      1453,
+      910
+    ],
+    "occupied_max_dimension": 10
+  }
+]
