@@ -22,6 +22,7 @@ const REPEAT_RATE := 0.12     # holding a key: following repeats
 const WALK_RATE := 0.11       # click-to-walk: time per square
 const SIGHT := Battle.SIGHT   # how far enemies see, in squares
 const RETURN_AFTER := 20      # exploring turns before a runaway comes back
+const BOTTOM_DEPTH := 3       # the Outflow and Garrick are on this level; beating him wins the run
 
 @export var level_seed: int = 1
 
@@ -43,6 +44,8 @@ var depth := 1
 var veteran := false     # F9: test as a high-level Thomas
 var tree_screen: TreeScreen
 var returning: Array = []   # [Combatant, turns left] for enemies that ran and will come back
+var tag_cell := Vector2i(-1, -1)   # where Garrick's tally tag lies, once he is dead
+var won := false
 
 var _hold_dir := Vector2i.ZERO
 var _hold_timer := 0.0
@@ -91,8 +94,11 @@ func _ready() -> void:
 ## A fresh level. With `keep`, Thomas goes on down with everything he has; without it, a new life.
 func new_level(seed_in: int, keep := false) -> void:
 	Engine.time_scale = 1.0
+	var next_depth := depth + 1 if keep and hero_unit != null and not dead else 1
 	level = Level.new(60, 40)
-	level.generate(seed_in)
+	level.generate(seed_in, next_depth >= BOTTOM_DEPTH)
+	tag_cell = Vector2i(-1, -1)
+	won = false
 	view.show_level(level)
 	hero.place(level.start)
 	if keep and hero_unit != null and not dead:
@@ -139,7 +145,11 @@ func clear_enemies() -> void:
 ## Groups waiting in every third room, starting two rooms from the start. Deeper levels hold more.
 func _spawn_enemies() -> void:
 	var group := 0
+	if level.outflow.has_area():
+		_add_enemy(Bestiary.garrick(), level.outflow.get_center()).group = 1000
 	for i in range(2, level.rooms.size(), 3):
+		if level.rooms[i] == level.outflow:
+			continue
 		var c := level.rooms[i].get_center()
 		var miner := group % 2 == 0
 		var want := 3 if miner else 3 + depth
@@ -243,7 +253,19 @@ func try_step(dir: Vector2i) -> bool:
 	_end_turn()
 	if level.get_tile(to) == Level.Tile.STAIRS and not in_fight():
 		_descend()
+	elif to == tag_cell and not in_fight():
+		_win()
 	return true
+
+
+## Garrick's tally tag is in Thomas's hand: the run is won.
+func _win() -> void:
+	stop_walking()
+	won = true
+	tag_cell = Vector2i(-1, -1)
+	view.queue_redraw()
+	combat_hud.show_banner("Garrick's brass tally tag, still on its cord. The First Shift is over.\nYou have won this run.   Press R to begin again.", 99999.0)
+	_update_hud()
 
 
 func _descend() -> void:
@@ -373,6 +395,8 @@ func _start_battle() -> void:
 	battle = Battle.new()
 	battle.setup(level, hero_unit, fighting, level.seed_value * 7919 + turn)
 	battle.bystanders = others
+	if level.outflow.has_area() and fighting.any(func(u): return u.kind == "solo"):
+		battle.arena = level.outflow
 	combat_hud.clear_log()
 	combat_hud.show_fight(true)
 	_act(battle.start(battle.roll_initiative()))
@@ -400,7 +424,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		new_level(level.seed_value + 1)
 		combat_hud.show_banner("Test: a level 10 veteran with every mace skill." if veteran else "Back to a fresh Thomas.", 2.5)
 		return
-	if dead:
+	if dead or won:
 		return
 	if in_fight() and _combat_input(event):
 		get_viewport().set_input_as_handled()
@@ -454,6 +478,14 @@ func _combat_input(event: InputEvent) -> bool:
 			KEY_F:
 				_toggle_step()
 				return true
+			KEY_G:
+				if _can_act():
+					var g := battle.gate_in_reach()
+					if g.x >= 0:
+						_act(battle.hero_shut_gate(g))
+					else:
+						combat_hud.add_log("No open sluice gate within reach.")
+				return true
 			KEY_ESCAPE:
 				_select(-1)
 				return true
@@ -483,7 +515,9 @@ func _combat_click(c: Vector2i) -> void:
 		_act(battle.hero_ability(i, c))
 		return
 	var e := _enemy_at(c)
-	if e != null and Battle.adjacent(e.cell, hero_unit.cell):
+	if level.gates.has(c):
+		_act(battle.hero_shut_gate(c))
+	elif e != null and Battle.adjacent(e.cell, hero_unit.cell):
 		_act(battle.hero_ability(0, c))   # clicking an enemy next to you is a basic attack
 	elif reach.has(c):
 		_act(battle.hero_move_to(c))
@@ -617,6 +651,14 @@ func _play_one(e: Dictionary) -> void:
 			await _wait(ActorView.STEP_TIME + 0.03)
 		"door":
 			view.queue_redraw()
+		"flood":
+			view.queue_redraw()
+			_shake = maxf(_shake, 2.5)
+			await _wait(0.3)
+		"gate":
+			view.queue_redraw()
+			_shake = maxf(_shake, 3.0)
+			await _wait(0.25)
 		"attack":
 			var t = e.target
 			if t != null:
@@ -667,8 +709,11 @@ func _play_one(e: Dictionary) -> void:
 			_shake = 9.0
 			await _hitstop(0.1)
 		"death":
+			if e.unit.kind == "solo":
+				tag_cell = e.unit.cell
+				overlay.queue_redraw()
 			if e.unit != hero_unit:
-				var gained := progress.add_xp(1 if e.unit.kind == "minion" else 4)
+				var gained := progress.add_xp({"minion": 1, "solo": 10}.get(e.unit.kind, 4))
 				if gained > 0:
 					hero_unit.max_stamina = progress.max_stamina()
 					hero_unit.stamina += 3 * gained
@@ -747,7 +792,9 @@ func _finish(winner: String) -> void:
 				u.telegraph.clear()
 				views[u].sync(u)
 	if winner == "hero" or winner == "escaped":
-		if winner == "hero":
+		if winner == "hero" and tag_cell.x >= 0:
+			combat_hud.show_banner("Garrick falls. Something brass glints in the water.", 3.0)
+		elif winner == "hero":
 			combat_hud.show_banner("The fight is over." if returning.is_empty() else "The fight is over. Something got away.", 2.0)
 		hero_unit.resolve = 0
 		hero_unit.prone = false
@@ -781,7 +828,7 @@ func _process(delta: float) -> void:
 	else:
 		cam.offset = Vector2.ZERO
 	_tick_hover()
-	if in_fight():
+	if in_fight() or tag_cell.x >= 0:
 		overlay.queue_redraw()
 
 
@@ -861,10 +908,10 @@ func _update_hud() -> void:
 	if e != null:
 		var words := [e.health_word()] + Array(e.condition_words())
 		hud.text = "%s:  %s" % [e.name, ", ".join(words)]
-	elif dead:
+	elif dead or won:
 		hud.text = "R to start again"
 	elif in_fight():
-		hud.text = "Click a lit square to move  ·  click an enemy beside you to strike  ·  1-5 abilities  ·  F careful step  ·  Q stand  ·  B catch breath  ·  Enter end turn  ·  R new level"
+		hud.text = "Click a lit square to move  ·  click an enemy beside you to strike  ·  1-5 abilities  ·  F careful step  ·  Q stand  ·  B catch breath  ·  %sEnter end turn  ·  R new level" % ("G shut a sluice gate  ·  " if battle.arena.has_area() else "")
 	else:
 		var spend := progress.points_for("maces") + progress.level_points + progress.stat_points
 		hud.text = "Depth %d  ·  Level %d  ·  XP %d / %d  ·  K skills%s  ·  WASD / arrows to move, click to walk, Space to wait, wheel to zoom, R new life, F9 test as a veteran" % [depth, progress.level, progress.xp, progress.xp_needed(), " (points to spend!)" if spend > 0 else "", ]

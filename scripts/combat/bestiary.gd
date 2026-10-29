@@ -48,6 +48,24 @@ static func drowned_miner() -> Combatant:
 	c.free_strike = 3
 	c.basic = Abilities.pick_swing()
 	c.big = Abilities.overhead_smash()
+	c.wades = true
+	return c
+
+
+## The Sewers boss: Mara's lost night-shift foreman, now a huge Drowned. Never runs; can't be skull-crushed.
+static func garrick() -> Combatant:
+	var c := Combatant.new()
+	c.name = "Garrick"
+	c.kind = "solo"
+	c.style = "garrick"
+	c.max_stamina = 60
+	c.stamina = 60
+	c.might = 3
+	c.speed = 4
+	c.free_strike = 4
+	c.wades = true
+	c.basic = Abilities.pick_and_chain()
+	c.big = Abilities.lift_chain_sweep()
 	return c
 
 

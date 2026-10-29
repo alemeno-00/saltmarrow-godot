@@ -44,6 +44,29 @@ func _draw() -> void:
 				Level.Tile.DOOR_OPEN:
 					draw_rect(r, Color(0.27, 0.25, 0.23))
 					draw_rect(Rect2(r.position.x + 2, r.position.y + 2, 6, TILE - 4), Color(0.3, 0.2, 0.12))
+				Level.Tile.GATE_OPEN:
+					# a sluice mouth in the wall, water pouring through
+					draw_rect(r, Color(0.16, 0.15, 0.16))
+					draw_rect(r.grow(-4), Color(0.03, 0.05, 0.07))
+					var flow := fmod(Time.get_ticks_msec() / 400.0, 1.0)
+					for i in 3:
+						var sx := r.position.x + 9 + i * 6
+						draw_line(Vector2(sx, r.position.y + 4 + flow * 8), Vector2(sx, r.end.y - 2), Color(0.45, 0.65, 0.75, 0.6), 1.0)
+					draw_rect(Rect2(r.position.x + 2, r.position.y + 2, TILE - 4, 3), Color(0.35, 0.33, 0.3))
+				Level.Tile.GATE_SHUT:
+					# an iron sluice plate, bolted
+					draw_rect(r, Color(0.16, 0.15, 0.16))
+					draw_rect(r.grow(-3), Color(0.22, 0.24, 0.25))
+					for i in 3:
+						draw_rect(Rect2(r.position.x + 5, r.position.y + 7 + i * 7, TILE - 10, 2), Color(0.12, 0.13, 0.14))
+					draw_rect(Rect2(r.position.x + 4, r.position.y + 4, 2, 2), Color(0.55, 0.45, 0.3))
+					draw_rect(Rect2(r.end.x - 6, r.position.y + 4, 2, 2), Color(0.55, 0.45, 0.3))
+
+
+func _process(_delta: float) -> void:
+	# the open sluices move
+	if level != null and level.gates.any(func(g): return level.get_tile(g) == Level.Tile.GATE_OPEN):
+		queue_redraw()
 
 
 func _touches_floor(c: Vector2i) -> bool:

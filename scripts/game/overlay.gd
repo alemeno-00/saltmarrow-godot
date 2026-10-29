@@ -14,6 +14,8 @@ func _rect(c: Vector2i) -> Rect2:
 func _draw() -> void:
 	if game.level == null:
 		return
+	if game.tag_cell.x >= 0:
+		_draw_tag(game.tag_cell)
 	if game.battle != null and not game.battle.over:
 		_draw_fight()
 		return
@@ -25,6 +27,16 @@ func _draw() -> void:
 		draw_circle(Vector2(s.x * TILE + TILE / 2.0, s.y * TILE + TILE / 2.0), 2.0, Color(1, 0.85, 0.5, 0.5))
 	var ok := not p.is_empty()
 	draw_rect(_rect(c), Color(1, 0.85, 0.5, 0.65) if ok else Color(1, 0.4, 0.3, 0.35), false, 1.5)
+
+
+## Garrick's brass tally tag, glinting beside his body. Drawn above the creatures so his body doesn't hide it.
+func _draw_tag(c: Vector2i) -> void:
+	var p := Vector2(c.x * TILE + TILE / 2.0 + 8, c.y * TILE + TILE / 2.0 + 9)
+	var glint := 0.5 + 0.5 * sin(Time.get_ticks_msec() / 250.0)
+	draw_circle(p, 7.0, Color(1.0, 0.8, 0.4, 0.12 + 0.1 * glint))
+	draw_line(p + Vector2(-7, -5), p + Vector2(-2, -1), Color(0.3, 0.22, 0.15), 1.0)
+	draw_rect(Rect2(p + Vector2(-3, -2), Vector2(7, 5)), Color(0.72, 0.55, 0.25))
+	draw_rect(Rect2(p + Vector2(-2, -1), Vector2(2, 1)), Color(1.0, 0.9, 0.6, glint))
 
 
 func _draw_fight() -> void:
