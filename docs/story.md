@@ -13,14 +13,14 @@ What has been agreed so far. Claude keeps this file in step with the shared desi
 
 - There is one cult, hidden inside the chapel. **Sister Agathe** prayed for forty years for God to show his face; the star fell and something under the sea answered. Nothing lies to her: the miracles are real. She is right about the power and wrong about what it is, and she is sincere.
 - She heals the dreaming travellers and gently teaches them the star's hymns until they want to go down.
-- Anyone near the star long enough changes, the faithful and the miners alike. The factions below are what they became: the **Hollow Faith** emptied themselves for it, the **Carrion Brood** could not and grew hungry, the **Drowned** went furthest, out under the sea where it fell.
+- Anyone near the star long enough changes, the faithful and the miners alike. The factions below are what they became: the **Faithful** are recent converts, the **Hollow Faith** emptied themselves for it, the **Carrion Brood** could not and grew hungry, the **Drowned** went furthest, out under the sea where it fell.
 - Mayor Hale takes the money and looks away. Mara notices her miners aren't coming back. Pip joins the chapel and goes down.
 
 ## Death and the warping star
 
 - The star warps reality. That is why the tunnels change, why Thomas comes back from death, and why he is a slightly different man each time.
 - On death he wakes on the chapel floor and the player chooses his war backstory for this life. Ellen's letters and the townsfolk's memories reword themselves to match. Agathe alone notices, and is delighted.
-- Death wipes the world: new layouts, landings and contracts. The story so far, the Marks of the star and the town's memory carry over.
+- Death wipes the world: new layouts, landings and contracts, and Thomas loses his level, items and progress. The story so far, the Marks of the star and the town's memory carry over.
 
 ## Gameplay
 
