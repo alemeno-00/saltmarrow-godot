@@ -14,3 +14,5 @@ Built-in imagegen prompts: cold wet gothic fantasy, complete separated right-fac
 Export uses alpha threshold128, nearest-neighbour sampling, fixed source scale per pass, shared47-colour palette and clears hidden transparent RGB. Final size/counts/alpha checked and enlarged sheets visually inspected. Engine timing remains for Claude.
 
 Art note: the tiny dark chest pin reads as a few dark pixels at native scale; the larger source renders it more like a cross in some frames. A pin-shape cleanup remains before marking job5 fully complete.
+
+A targeted imagegen pin-only edit corrected some chest symbols but left crosses in several walk/attack poses. That variant was discarded to preserve the existing reviewed animations. Job5 remains unchecked pending consistent falling-star pin cleanup across frames.
