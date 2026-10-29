@@ -1,0 +1,319 @@
+class_name SewerKit
+extends RefCounted
+## Builds a Sewers level from the room kit (design/quick-specs/sewer-room-kit-2026-10-29.md).
+##
+## The map is a grid of 4 x 4-square blocks. Rooms are 2 or 3 blocks a side; connectors are one block. Starting from
+## the entry, rooms are added as a tree: each new room hangs off a free door of an existing one, joined by a short
+## run of connectors (straight, sometimes with one bend). The exit (stairs down, or on the deepest level the Outflow)
+## goes at the end of the longest branch. Unused doors are walled off.
+##
+## Every door is in the middle block of its side (the later one when there are two), so a door is always in the
+## block one along from a room's corner, and connectors line up with it.
+
+const ROOMS_BY_KIND := {
+	"entry": ["entry"],
+	"stairs": ["stairs"],
+	"lore": ["lore_a", "lore_b"],
+	"junction": ["junction_a", "junction_b", "junction_c"],
+	"chamber": ["chamber_a", "chamber_b", "chamber_c"],
+	"flooded": ["flooded_a", "flooded_b"],
+}
+const CONNECTORS := ["ew", "ns", "ne", "nw", "es", "sw", "new", "nes", "esw", "nsw", "nesw", "n", "e", "s", "w"]
+
+# Tuning knobs (spec: Tuning Knobs)
+const ROOMS_MIN := 8                 # rooms per level, the exit included
+const ROOMS_MAX := 12
+const LORE_MAX := 1                  # lore rooms per level
+const MIRROR_CHANCE := 0.5           # chance a room is drawn mirrored left to right
+const BEND_CHANCE := 0.35            # chance a run of connectors turns once
+const KIND_WEIGHTS := {"junction": 4, "chamber": 4, "flooded": 2, "lore": 1}
+
+const DIRS := {"n": Vector2i(0, -1), "e": Vector2i(1, 0), "s": Vector2i(0, 1), "w": Vector2i(-1, 0)}
+const OPPOSITE := {"n": "s", "s": "n", "e": "w", "w": "e"}
+const OUTFLOW_BLOCKS := Vector2i(4, 4)   # the Outflow's 14 x 11 squares fit in 4 x 4 blocks, entrance in the west
+
+var level: Level
+var rng: RandomNumberGenerator
+var _occupied := {}   # block -> true
+
+
+## Every layout in the kit: rooms, then connectors.
+static func all_layouts() -> Array[String]:
+	var out: Array[String] = []
+	for kind in ROOMS_BY_KIND:
+		for id in ROOMS_BY_KIND[kind]:
+			out.append(id)
+	for c in CONNECTORS:
+		out.append("connector_" + c)
+	return out
+
+
+## Fills `l` with a level; false if this attempt couldn't fit the rooms or the exit (the caller tries another seed).
+static func build(l: Level, r: RandomNumberGenerator, bottom: bool) -> bool:
+	var kit := SewerKit.new()
+	kit.level = l
+	kit.rng = r
+	return kit._build(bottom)
+
+
+func _build(bottom: bool) -> bool:
+	var map := Vector2i(level.width / 4, level.height / 4)
+	var entry := RoomLayout.get_layout("entry")
+	var eb := entry.size / 4
+	# on the deepest level the entry starts in the west third, leaving room for the Outflow to the east
+	var max_x := map.x / 3 if bottom else map.x - eb.x
+	_add_room("entry", "entry", Vector2i(rng.randi_range(0, max_x), rng.randi_range(0, map.y - eb.y)), false, -1)
+	var target := rng.randi_range(ROOMS_MIN, ROOMS_MAX) - 1
+	var tries := 0
+	while _room_count() < target and tries < 800:
+		tries += 1
+		var pi := rng.randi_range(0, level.pieces.size() - 1)
+		var parent: Dictionary = level.pieces[pi]
+		if parent.kind == "connector":
+			continue
+		var free := _free_sides(parent)
+		if free.is_empty():
+			continue
+		var kind := _pick_kind()
+		var choices: Array = ROOMS_BY_KIND[kind].filter(func(id): return id != parent.layout)
+		var id: String = choices[rng.randi_range(0, choices.size() - 1)]
+		_try_attach(pi, free[rng.randi_range(0, free.size() - 1)], kind, id, rng.randf() < MIRROR_CHANCE)
+	if _room_count() < ROOMS_MIN - 1:
+		return false
+	# the exit hangs off a room at the far end of the longest branch
+	var deepest := 0
+	for p in level.pieces:
+		if p.kind != "connector":
+			deepest = maxi(deepest, p.depth)
+	var ends: Array = []
+	for i in level.pieces.size():
+		if level.pieces[i].kind != "connector" and level.pieces[i].depth == deepest:
+			ends.append(i)
+	# shuffled with the level's own random numbers (Array.shuffle() would use the global ones and break same seed, same level)
+	for i in range(ends.size() - 1, 0, -1):
+		var j := rng.randi_range(0, i)
+		var tmp = ends[i]
+		ends[i] = ends[j]
+		ends[j] = tmp
+	for pi in ends:
+		for side in _free_sides(level.pieces[pi]):
+			var placed := _try_attach_outflow(pi, side) if bottom else _try_attach(pi, side, "stairs", "stairs", rng.randf() < MIRROR_CHANCE)
+			if placed:
+				_stamp()
+				return true
+	return false
+
+
+func _room_count() -> int:
+	return level.pieces.filter(func(p): return p.kind != "connector").size()
+
+
+func _pick_kind() -> String:
+	var lore := level.pieces.filter(func(p): return p.kind == "lore").size()
+	var total := 0
+	for k in KIND_WEIGHTS:
+		if k != "lore" or lore < LORE_MAX:
+			total += KIND_WEIGHTS[k]
+	var roll := rng.randi_range(1, total)
+	for k in KIND_WEIGHTS:
+		if k == "lore" and lore >= LORE_MAX:
+			continue
+		roll -= KIND_WEIGHTS[k]
+		if roll <= 0:
+			return k
+	return "junction"
+
+
+func _free_sides(p: Dictionary) -> Array[String]:
+	var out: Array[String] = []
+	if p.kind == "outflow" or p.kind == "connector":
+		return out
+	for s in RoomLayout.get_layout(p.layout).sides(p.mirrored):
+		if not (p.open as Array).has(s):
+			out.append(s)
+	return out
+
+
+## Only rooms 12 squares wide can be mirrored: their north and south doors (squares 5-6) land on squares 5-6 again.
+## In an 8-wide room they would move to squares 1-2 and miss their connectors.
+static func can_mirror(lay: RoomLayout) -> bool:
+	return lay.size.x == 12
+
+
+## The block just outside a room's door on `side`: one block along from the corner.
+func _door_block(p: Dictionary, side: String) -> Vector2i:
+	var b: Vector2i = p.block
+	var s: Vector2i = p.blocks
+	match side:
+		"n":
+			return Vector2i(b.x + 1, b.y - 1)
+		"s":
+			return Vector2i(b.x + 1, b.y + s.y)
+		"w":
+			return Vector2i(b.x - 1, b.y + 1)
+	return Vector2i(b.x + s.x, b.y + 1)
+
+
+## Where a room of `bs` blocks goes so that its door on `entry_side` meets the connector block `e`.
+static func _room_pos(e: Vector2i, entry_side: String, bs: Vector2i) -> Vector2i:
+	match entry_side:
+		"w":
+			return Vector2i(e.x + 1, e.y - 1)
+		"e":
+			return Vector2i(e.x - bs.x, e.y - 1)
+		"n":
+			return Vector2i(e.x - 1, e.y + 1)
+	return Vector2i(e.x - 1, e.y - bs.y)
+
+
+## A run of connector blocks out of a door: 1-3 straight, sometimes turning once for 1-2 more.
+func _run(start: Vector2i, side: String) -> Dictionary:
+	var blocks: Array[Vector2i] = []
+	var d: Vector2i = DIRS[side]
+	var at := start
+	for _i in rng.randi_range(1, 3):
+		blocks.append(at)
+		at += d
+	var last := side
+	if rng.randf() < BEND_CHANCE:
+		var turns: Array = ["e", "w"] if side == "n" or side == "s" else ["n", "s"]
+		last = turns[rng.randi_range(0, 1)]
+		at = blocks[blocks.size() - 1] + DIRS[last]
+		for _i in rng.randi_range(1, 2):
+			blocks.append(at)
+			at += DIRS[last]
+	return {"blocks": blocks, "dir": last}
+
+
+func _free(blocks: Array) -> bool:
+	for b in blocks:
+		if b.x < 0 or b.y < 0 or b.x >= level.width / 4 or b.y >= level.height / 4 or _occupied.has(b):
+			return false
+	return true
+
+
+func _area(pos: Vector2i, bs: Vector2i) -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	for y in bs.y:
+		for x in bs.x:
+			out.append(pos + Vector2i(x, y))
+	return out
+
+
+func _try_attach(pi: int, side: String, kind: String, id: String, mirrored: bool) -> bool:
+	var lay := RoomLayout.get_layout(id)
+	var bs := lay.size / 4
+	mirrored = mirrored and can_mirror(lay)
+	var start := _door_block(level.pieces[pi], side)
+	for _attempt in 8:
+		var run := _run(start, side)
+		var entry_side: String = OPPOSITE[run.dir]
+		if not lay.sides(mirrored).has(entry_side):
+			continue
+		var pos := _room_pos(run.blocks[run.blocks.size() - 1], entry_side, bs)
+		if not _free(run.blocks) or not _free(_area(pos, bs)):
+			continue
+		_add_run(pi, side, run)
+		var ri := _add_room(kind, id, pos, mirrored, pi)
+		level.pieces[ri].open.append(entry_side)
+		return true
+	return false
+
+
+func _try_attach_outflow(pi: int, side: String) -> bool:
+	var start := _door_block(level.pieces[pi], side)
+	for _attempt in 24:
+		var run := _run(start, side)
+		if run.dir != "e":
+			continue
+		var pos := _room_pos(run.blocks[run.blocks.size() - 1], "w", OUTFLOW_BLOCKS)
+		if not _free(run.blocks) or not _free(_area(pos, OUTFLOW_BLOCKS)):
+			continue
+		_add_run(pi, side, run)
+		# the Outflow's walls start at the block's left edge; its inside starts 4 squares down, so the west
+		# entrance (inside rows 1-2) lines up with the connector's door (block rows 1-2)
+		level.outflow = Rect2i(pos * 4 + Vector2i(1, 4), Level.OUTFLOW_SIZE)
+		for b in _area(pos, OUTFLOW_BLOCKS):
+			_occupied[b] = true
+		level.pieces.append({"kind": "outflow", "layout": "outflow", "block": pos, "blocks": OUTFLOW_BLOCKS,
+			"rect": level.outflow.grow(1), "mirrored": false, "variant": 0, "depth": level.pieces[pi].depth + 1,
+			"parent": pi, "open": ["w"]})
+		return true
+	return false
+
+
+func _add_room(kind: String, id: String, pos: Vector2i, mirrored: bool, parent: int) -> int:
+	var lay := RoomLayout.get_layout(id)
+	var bs := lay.size / 4
+	for b in _area(pos, bs):
+		_occupied[b] = true
+	level.pieces.append({"kind": kind, "layout": id, "block": pos, "blocks": bs, "rect": Rect2i(pos * 4, lay.size),
+		"mirrored": mirrored and can_mirror(lay), "variant": rng.randi_range(0, 999),
+		"depth": 0 if parent < 0 else level.pieces[parent].depth + 1, "parent": parent, "open": []})
+	return level.pieces.size() - 1
+
+
+## The connectors between a room's door and the next room: each block gets doors toward its neighbours.
+func _add_run(pi: int, side: String, run: Dictionary) -> void:
+	level.pieces[pi].open.append(side)
+	var blocks: Array = run.blocks
+	for i in blocks.size():
+		var b: Vector2i = blocks[i]
+		var sides := {}
+		sides[OPPOSITE[side] if i == 0 else _side_toward(b, blocks[i - 1])] = true
+		sides[run.dir if i == blocks.size() - 1 else _side_toward(b, blocks[i + 1])] = true
+		var name := ""
+		for s in ["n", "e", "s", "w"]:
+			if sides.has(s):
+				name += s
+		_occupied[b] = true
+		level.pieces.append({"kind": "connector", "layout": "connector_" + name, "block": b, "blocks": Vector2i.ONE,
+			"rect": Rect2i(b * 4, Vector2i(4, 4)), "mirrored": false, "variant": rng.randi_range(0, 999),
+			"depth": level.pieces[pi].depth, "parent": pi, "open": sides.keys()})
+
+
+static func _side_toward(from: Vector2i, to: Vector2i) -> String:
+	var d := to - from
+	for s in DIRS:
+		if DIRS[s] == d:
+			return s
+	return "n"
+
+
+const TILE_OF := {
+	"#": Level.Tile.WALL, "F": Level.Tile.WALL, "L": Level.Tile.WALL, ".": Level.Tile.FLOOR, ",": Level.Tile.FLOOR,
+	"D": Level.Tile.FLOOR, "~": Level.Tile.WATER, "P": Level.Tile.PROP, "B": Level.Tile.PROP, "X": Level.Tile.PROP,
+	"r": Level.Tile.RAIL, "S": Level.Tile.STAIRS,
+}
+
+
+## Writes every piece into the level's squares: rooms as their blockouts say (mirrored if chosen, unused doors walled
+## off), connectors likewise, and the Outflow by its own rules.
+func _stamp() -> void:
+	for p in level.pieces:
+		if p.kind == "outflow":
+			level.stamp_outflow()
+			continue
+		var lay := RoomLayout.get_layout(p.layout)
+		var r: Rect2i = p.rect
+		for y in r.size.y:
+			for x in r.size.x:
+				var src := Vector2i(r.size.x - 1 - x if p.mirrored else x, y)
+				var code := lay.cell(src)
+				if code == "D":
+					var s := lay.door_side(src)
+					if p.mirrored:
+						s = {"w": "e", "e": "w"}.get(s, s)
+					if not (p.open as Array).has(s):
+						code = "F" if s == "n" else "#"
+				var c := r.position + Vector2i(x, y)
+				level.tiles[level.idx(c)] = TILE_OF[code]
+				if code == "L" or code == "B":
+					level.lights.append(c)
+				elif code == "S":
+					level.stairs = c
+		if p.kind == "entry":
+			level.start = r.position + lay.size / 2
+	for p in level.pieces:
+		if p.kind != "connector":
+			level.rooms.append(level.outflow if p.kind == "outflow" else p.rect)

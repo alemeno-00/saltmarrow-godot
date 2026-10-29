@@ -13,7 +13,7 @@ A level is a set of rooms joined by connecting pieces, on one grid with one door
 ## Core Rules
 
 1. **Blocks.** Room and connector sizes, walls included, are multiples of 4 squares: 8 × 8, 12 × 8, 8 × 12 and 12 × 12. Connectors are 4 squares across: wall, a 2-square walkway, wall. The Outflow is the one exception and keeps its own 14 × 11 layout (`design/quick-specs/first-shift-boss-2026-10-29.md`, `design/art-briefs/outflow/`).
-2. **The door standard.** At most one door per side. A door is 2 squares wide, centred on its side. Each layout's data lists which sides have doors. A door is valid only if it faces a matching door in the next piece. Unused doors are walled off.
+2. **The door standard.** At most one door per side. A door is 2 squares wide, in the side's middle 4-square block (the later of the two middle blocks when a side has two): squares 5-6 of every room side, squares 1-2 of a connector side. Rooms have a door on every side in their blockout; the generator walls off the unused ones. A door is valid only if it faces a matching door in the next piece. *(As built: "centred" became "middle block" so 8-square sides line up with connectors.)*
 3. **The blockout is the data.** Each layout is a small image with one flat colour per square, following `design/art-briefs/README.md` (the blockout standard, updated after the Outflow test): wall top, wall face, floor, raised walkway, shallow water, blocking prop, railing, door, special fixture, wall light, standing light. The game reads it to build the room's squares; ChatGPT paints over the same image, so rules and painting come from one file.
    - **North walls are two squares thick** so their faces paint two squares tall; sizes above include them.
    - **Two new tile types:** *prop* (blocks movement and sight) and *rail* (blocks movement, not sight). A raised walkway is walkable floor for now.
@@ -32,8 +32,8 @@ A level is a set of rooms joined by connecting pieces, on one grid with one door
    | Boss: the Outflow | 14 × 11 | 1 | 1 | Depth 3; already briefed (art job 12) |
 
    19 layouts and about 40 paintings, before mirroring.
-5. **Mirroring.** A painting marked mirrorable may be flipped left to right as a free extra variant (needs neutral light and no text). Never top to bottom: the north wall shows its face.
-6. **The generator.** Builds a tree of 8–12 rooms out from the entry, joined by connectors. The stairs (on depth 3, the Outflow) go at the end of the longest branch; at most one lore room per level; never the same layout twice in a row.
+5. **Mirroring.** A painting marked mirrorable may be flipped left to right as a free extra variant (needs neutral light and no text). Never top to bottom: the north wall shows its face. *(As built: only 12-square-wide rooms are mirrored; in an 8-wide room the north and south doors would move from squares 5-6 to 1-2 and miss their connectors.)*
+6. **The generator.** Builds a tree of 8–12 rooms out from the entry, joined by connectors. The stairs (on depth 3, the Outflow) go at the end of the longest branch; at most one lore room per level; never the same layout twice in a row. *(As built: runs of 1-3 connectors, sometimes turning once, so straight and bend pieces are used; the T, crossing and dead-end blockouts exist for later. On depth 3 the entry starts in the west third to leave room for the Outflow.)*
 7. **Enemies** go in junctions and chambers, never in the entry, never within 15 steps of the start. The stairs room has a group half the time.
 8. **A fresh world every life.** A new life picks a random seed; each depth's seed comes from that seed and the depth. A given seed always builds the same level, so tests stay exact.
 9. **Saving** a level keeps which room, layout and painting went where.

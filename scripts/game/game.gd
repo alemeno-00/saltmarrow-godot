@@ -23,8 +23,12 @@ const WALK_RATE := 0.11       # click-to-walk: time per square
 const SIGHT := Battle.SIGHT   # how far enemies see, in squares
 const RETURN_AFTER := 20      # exploring turns before a runaway comes back
 const BOTTOM_DEPTH := 3       # the Outflow and Garrick are on this level; beating him wins the run
+const START_DISTANCE := 17    # enemy groups wait at least this many steps from the start (their members 15+)
+const GROUP_CHANCE := 0.6     # chance a junction or chamber holds a group
+const STAIRS_GUARD_CHANCE := 0.5
 
-@export var level_seed: int = 1
+@export var level_seed: int = 0   # 0: a random first life; tests set a fixed seed
+var life_seed := 0                  # this life's seed; every depth's level comes from it (depth_seed)
 
 var level: Level
 var turn := 0
@@ -88,15 +92,17 @@ func _ready() -> void:
 	tree_screen = TreeScreen.new()
 	layer.add_child(tree_screen)
 	tree_screen.changed.connect(_apply_progress)
-	new_level(level_seed)
+	new_level(level_seed if level_seed != 0 else randi())
 
 
 ## A fresh level. With `keep`, Thomas goes on down with everything he has; without it, a new life.
 func new_level(seed_in: int, keep := false) -> void:
 	Engine.time_scale = 1.0
 	var next_depth := depth + 1 if keep and hero_unit != null and not dead else 1
-	level = Level.new(60, 40)
-	level.generate(seed_in, next_depth >= BOTTOM_DEPTH)
+	if next_depth == 1:
+		life_seed = seed_in
+	level = Level.new()
+	level.generate(depth_seed(life_seed, next_depth), next_depth >= BOTTOM_DEPTH)
 	tag_cell = Vector2i(-1, -1)
 	won = false
 	view.show_level(level)
@@ -143,14 +149,28 @@ func clear_enemies() -> void:
 
 ## The first fight: a Drowned Miner and three Faithful, waiting a couple of rooms from the start.
 ## Groups waiting in every third room, starting two rooms from the start. Deeper levels hold more.
+## A level's seed: depth 1 uses the life's seed, deeper levels a mix of it and the depth. A new life (a new seed)
+## gets a whole new world; the same life always gets the same levels.
+static func depth_seed(life: int, d: int) -> int:
+	return life if d <= 1 else hash([life, d])
+
+
+## Groups wait in junctions and chambers (and half the time in the stairs room), never in the entry and never near
+## the start. Garrick waits in the Outflow.
 func _spawn_enemies() -> void:
 	var group := 0
+	var pick := RandomNumberGenerator.new()
+	pick.seed = hash([level.seed_value, "enemies"])
 	if level.outflow.has_area():
 		_add_enemy(Bestiary.garrick(), level.outflow.get_center()).group = 1000
-	for i in range(2, level.rooms.size(), 3):
-		if level.rooms[i] == level.outflow:
+	for p in level.pieces:
+		if not p.kind in ["junction", "chamber", "flooded", "stairs"]:
 			continue
-		var c := level.rooms[i].get_center()
+		if pick.randf() >= (STAIRS_GUARD_CHANCE if p.kind == "stairs" else GROUP_CHANCE):
+			continue
+		var c: Vector2i = p.rect.get_center()
+		if not level.is_walkable(c) or level.find_path(level.start, c).size() < START_DISTANCE:
+			continue
 		var miner := group % 2 == 0
 		var want := 3 if miner else 3 + depth
 		if miner:
@@ -159,9 +179,9 @@ func _spawn_enemies() -> void:
 		for d in [Vector2i(-2, 1), Vector2i(2, 1), Vector2i(0, 2), Vector2i(-2, -1), Vector2i(2, -1), Vector2i(1, 2), Vector2i(-1, 2), Vector2i(0, -2), Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, 0)]:
 			if placed >= want:
 				break
-			var p: Vector2i = c + d
-			if level.get_tile(p) == Level.Tile.FLOOR and _enemy_at(p) == null:
-				_add_enemy(Bestiary.faithful(), p).group = group
+			var q: Vector2i = c + d
+			if level.get_tile(q) == Level.Tile.FLOOR and _enemy_at(q) == null:
+				_add_enemy(Bestiary.faithful(), q).group = group
 				placed += 1
 		group += 1
 
@@ -270,7 +290,7 @@ func _win() -> void:
 
 func _descend() -> void:
 	stop_walking()
-	new_level(level.seed_value + 1, true)
+	new_level(life_seed, true)
 	combat_hud.show_banner("Deeper.   Depth %d" % depth, 2.0)
 
 
@@ -417,11 +437,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	if tree_screen.visible:
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R:
-		new_level(level.seed_value + 1)
+		new_level(randi())
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F9:
 		veteran = not veteran
-		new_level(level.seed_value + 1)
+		new_level(randi())
 		combat_hud.show_banner("Test: a level 10 veteran with every mace skill." if veteran else "Back to a fresh Thomas.", 2.5)
 		return
 	if dead or won:

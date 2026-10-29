@@ -4,7 +4,7 @@ extends SceneTree
 ## or when any engine or script error is logged while it runs (setup, body or teardown).
 ## A test file that does not load counts as a failure. Any failure makes the run exit 1.
 
-const FILES := ["res://tests/test_level.gd", "res://tests/test_movement.gd", "res://tests/test_power_roll.gd", "res://tests/test_battle.gd", "res://tests/test_hunting.gd", "res://tests/test_progress.gd", "res://tests/test_first_shift.gd", "res://tests/test_outflow_game.gd"]
+const FILES := ["res://tests/test_level.gd", "res://tests/test_movement.gd", "res://tests/test_power_roll.gd", "res://tests/test_battle.gd", "res://tests/test_hunting.gd", "res://tests/test_progress.gd", "res://tests/test_first_shift.gd", "res://tests/test_outflow_game.gd", "res://tests/test_room_kit.gd", "res://tests/test_room_kit_game.gd"]
 
 ## Seconds the whole run may take before it is stopped as failed (a test that errors
 ## after an await can leave the runner waiting forever).
