@@ -2,10 +2,14 @@
 
 Two AI assistants work here, with separate jobs:
 
-- **Claude** owns the code: everything in `scripts/`, `scenes/`, `tests/`, `project.godot` and the workflows.
+- **Claude** owns the code: everything in `scripts/`, `scenes/`, `tests/`, `tools/`, `project.godot` and the workflows (`.github/`). Claude also owns the studio setup: `.claude/`, `design/`, `docs/`, `production/`, `project.yaml`, and the lists `ART_JOBS.md`, `CLAUDE.md` and this file.
 - **ChatGPT** owns the art: everything in `assets/`.
 
-Please keep to your own folders, so changes don't collide. If art needs a code change to show up, describe it in the pull request and Claude will wire it in.
+Please keep to your own folders, so changes don't collide. The one exception: tick a job's box in `ART_JOBS.md` in the pull request that delivers it. If art needs a code change to show up, describe it in the pull request and Claude will wire it in.
+
+**Don't move or rename art the game already uses.** The game loads some files by their exact path (for now, Thomas's `standing-candidate.png` and `steady-portrait-candidate.png` in `assets/characters/thomas/production/sprites/`). Put new versions beside them and say so in the pull request; Claude will switch the game over.
+
+The game runs on **Godot 4.7**.
 
 ## What to draw
 

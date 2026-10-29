@@ -88,7 +88,8 @@ These predate the studio setup and still apply.
 
 **Two assistants, separate folders.**
 - **Claude** owns the code: `scripts/`, `scenes/`, `tests/`, `tools/`,
-  `project.godot` and the workflows.
+  `project.godot` and the workflows, plus the studio setup (`.claude/`,
+  `design/`, `docs/`, `production/`, `project.yaml`).
 - **ChatGPT** owns the art: everything in `assets/`. Its instructions are in
   `AGENTS.md`; keep that file in step with the rules below.
 - Stay in your own folders. If art needs a code change to show up, it is

@@ -25,7 +25,7 @@ How to use it:
 
 These come first because the first fight is being built next. **Please do jobs 1 to 8 (Thomas, the two enemies, gore, effects and dice) before more tiles:** the fight is playable now and needs its characters.
 
-- [ ] **1. Thomas, base body sheet** — started: concept and a standing still approved. Animate from `production/sprites/standing-candidate.png`.
+- [ ] **1. Thomas, base body sheet** — started: concept and a standing still approved. Animate from `assets/characters/thomas/production/sprites/standing-candidate.png`.
    (`assets/characters/thomas/body.png`). Thomas from `docs/characters.md` in his dyed greatcoat and red scarf, no weapon in hand (weapons are separate layers, job 2). Rows:
   1. idle (4 frames, slow breathing)
   2. walk (6)
@@ -45,7 +45,7 @@ These come first because the first fight is being built next. **Please do jobs 1
   3. Shatter (9: a braced, two-handed smash into the chest)
   4. Wide Arc (10: a full spin, maul held out)
   5. Execution (12: raise high over a fallen enemy, hold, bring it down; the hold frames are for slow motion)
-- [ ] **3. Thomas portrait, health states** — `steady` approved (`production/sprites/steady-portrait-candidate.png`); hurt, badly hurt and dying still needed, drawn from the same image so the face matches.
+- [ ] **3. Thomas portrait, health states** — `steady` approved (`assets/characters/thomas/production/sprites/steady-portrait-candidate.png`); hurt, badly hurt and dying still needed, drawn from the same image so the face matches.
    (`assets/portraits/thomas/`). Four separate files: `steady.png`, `hurt.png` (cut lip, bruised), `badly_hurt.png` (bloody, pale, jaw clenched), `dying.png` (grey, eyes half shut).
 - [ ] **4. A standard enemy: the Drowned Miner** (`assets/enemies/drowned_miner/`). A miner from the new seam, changed by working too long near the star: wet, salt-crusted, pearly eyes, a pick in both hands, moving slowly and wrong. Rows: idle (4), walk (6), attack wind-up tell (3, raising the pick high), attack (3), hurt (3), pushed back (3, stumbling backwards), slammed into a wall (3), dazed (4, swaying, looped), knocked prone (4), lying prone (2, looped), getting up (4), limping walk (6, broken leg), flee (6, stumbling away), death (6), dismembered death (6, an arm goes), skull crushed (6, for Execution).
 - [ ] **5. A minion: the Faithful** (`assets/enemies/faithful/`). One of Agathe's congregation, gone down too early: a thin figure in a white chapel smock and a star-metal pin, barefoot, smiling. A smaller set: idle (4), walk (6), attack (4), singing (4, looped, mouth open, head tilted back, for the Swarming Hymn), pushed back (3), knocked prone (4), death (6), skull crushed (6).
@@ -59,7 +59,7 @@ These come first because the first fight is being built next. **Please do jobs 1
   - Wide Arc: a heavy motion smear (4 frames, 96 × 96)
 - [ ] **7c. Thomas, careful step** (`assets/characters/thomas/body.png`, add a row 8): a guarded sidestep, maul held across his body (4 frames).
 - [ ] **8. Two d10 dice** (`assets/ui/dice/`). A ten-sided die tumbling (8 frames, 48 × 48), and its ten resting faces showing 1 to 10 as pips or marks, not numerals.
-- [ ] **9. The Sewers tiles** (`assets/tiles/sewers/`). **The first level:** the old town sewers under Saltmarrow, leading down into the mines. A first version is in review (pull request #3). Needs tiles that a generated level can use: floors, walls in every direction and corner, water channels with banks, bridges, doors, stairs down, and props. Not a single painted background.
+- [ ] **9. The Sewers tiles** (`assets/tiles/sewers/`). **The first level:** the old town sewers under Saltmarrow, leading down into the mines. A first version is approved (`assets/tiles/sewers/v1_0/`, see Done) but not yet drawn by the game; this job is the full set it needs. Needs tiles that a generated level can use: floors, walls in every direction and corner, water channels with banks, bridges, doors, stairs down, and props. Not a single painted background.
 - [ ] **10. The Salt Pits tiles** (`assets/tiles/salt_pits/`). The second biome: old mine workings with timber props. Floor (4 variations), wall (top and face, 4 variations), wall corners, a closed and open door, shallow water (4), rubble, and a timber prop. 32 × 32 each.
 
 ## Later: Thomas in full
