@@ -78,6 +78,9 @@ func hover_path() -> Array[Vector2i]:
 @onready var hud: Label = $HUD/Info
 @onready var combat_hud: CombatHud = $HUD/CombatHud
 @onready var overlay: Node2D = $Overlay
+var lighting: Lighting
+var darkness: CanvasModulate
+var world_ui: CanvasLayer   # follows the camera but isn't dimmed: fight markers, hit flashes
 
 
 func _ready() -> void:
@@ -86,6 +89,20 @@ func _ready() -> void:
 	combat_hud.breath_pressed.connect(func(): _act(battle.hero_catch_breath()) if _can_act() else null)
 	combat_hud.end_turn_pressed.connect(_end_hero_turn)
 	combat_hud.step_pressed.connect(_toggle_step)
+	# the dark: the world is dimmed; lanterns, braziers and Thomas's own lantern light it
+	darkness = CanvasModulate.new()
+	darkness.color = Lighting.AMBIENT
+	add_child(darkness)
+	lighting = Lighting.new()
+	add_child(lighting)
+	var lantern := Lighting.make_light(Lighting.HERO_LIGHT, Lighting.HERO_ENERGY, Lighting.HERO_RADIUS)
+	lantern.position = Vector2(0, 4)
+	hero.add_child(lantern)
+	world_ui = CanvasLayer.new()
+	world_ui.follow_viewport_enabled = true
+	add_child(world_ui)
+	overlay.game = self
+	overlay.reparent(world_ui)
 	var layer := CanvasLayer.new()
 	layer.layer = 5
 	add_child(layer)
@@ -106,6 +123,7 @@ func new_level(seed_in: int, keep := false) -> void:
 	tag_cell = Vector2i(-1, -1)
 	won = false
 	view.show_level(level)
+	lighting.build(level)
 	hero.place(level.start)
 	if keep and hero_unit != null and not dead:
 		depth += 1
@@ -703,7 +721,7 @@ func _play_one(e: Dictionary) -> void:
 		"slam":
 			_shake = 7.0
 			views[e.unit].play_once("wall_slam")
-			OneShot.spawn(self, "res://assets/effects/mace/wall_slam.png", (ActorView.cell_to_px(e.unit.cell) + ActorView.cell_to_px(e.cell)) / 2.0, 10.0, e.cell.x < e.unit.cell.x)
+			OneShot.spawn(world_ui, "res://assets/effects/mace/wall_slam.png", (ActorView.cell_to_px(e.unit.cell) + ActorView.cell_to_px(e.cell)) / 2.0, 10.0, e.cell.x < e.unit.cell.x)
 			gore.splash(ActorView.cell_to_px(e.unit.cell), Vector2(e.cell - e.unit.cell), 2.0)
 			await _hitstop(0.08)
 		"prone", "stand", "status", "heal":
@@ -759,7 +777,7 @@ func _play_hit(e: Dictionary) -> void:
 	var u: Combatant = e.unit
 	var v: ActorView = views[u]
 	v.hit_flash()
-	OneShot.spawn(self, "res://assets/effects/hits/tier_3.png" if e.tier >= 3 else "res://assets/effects/hits/crushing.png", v.position + Vector2(0, -10), 12.0)
+	OneShot.spawn(world_ui, "res://assets/effects/hits/tier_3.png" if e.tier >= 3 else "res://assets/effects/hits/crushing.png", v.position + Vector2(0, -10), 12.0)
 	var dmg: int = e.dmg
 	var away := Vector2.ZERO
 	if battle != null and battle.active != null and battle.active != u:

@@ -6,7 +6,7 @@ extends Node2D
 const TILE := 32
 const TAG_ART := "res://assets/tiles/sewers/outflow/tally_tag_floor.png"
 var _tag_tex: Texture2D = null
-@onready var game: Game = get_parent()
+var game: Game   # set by Game: this node is moved to an undimmed layer so fight markers stay bright
 
 
 func _rect(c: Vector2i) -> Rect2:
@@ -68,7 +68,7 @@ func _draw_fight() -> void:
 			draw_rect(_rect(e.cell).grow(-1), amber, false, 2.0)
 	else:
 		for c in game.reach:
-			draw_rect(_rect(c).grow(-2), Color(0.95, 0.85, 0.6, 0.13))
+			draw_rect(_rect(c).grow(-2), Color(0.95, 0.85, 0.6, 0.06))
 		for e in b.valid_targets(game.hero_unit, game.hero_unit.basic):
 			draw_rect(_rect(e.cell).grow(-1), Color(amber, 0.5), false, 1.0)
 	var h := game.hover_cell()

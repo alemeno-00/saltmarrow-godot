@@ -1,0 +1,5 @@
+Reviewed-Content-Hash: scripts/game/lighting.gd d69aa0de74c0ecb9553e180a053ee67f8f4f70dc
+Reviewed-Content-Hash: scripts/game/level_view.gd 940a3e647eb11af1b1d81a15661d01d7689e54ee
+Reviewed-Content-Hash: scripts/game/gore.gd 91e44463f1583b471b9d6064039987d7774c2ff5
+Reviewed-Content-Hash: scripts/game/game.gd 990338acf8931b2d83571e05a20850113fdea3bd
+Reviewed-Content-Hash: scripts/game/overlay.gd 9ba04c3c60bd9a6c38cf4d073afc1c88cc6c6a69

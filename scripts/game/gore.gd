@@ -2,12 +2,16 @@ class_name Gore
 extends Node2D
 ## Blood and remains on the floor. They stay for the rest of the level.
 ## Uses ChatGPT's gore set (assets/effects/gore/, 32 x 32 decals) where it has a piece, small drawn drops otherwise.
+## Drawn in chunks, like the level, so the lanterns near each mark light it (Lighting.MAX_LIGHTS_PER_ITEM).
 
 const DIR := "res://assets/effects/gore/"
 
 var marks: Array = []   # [kind, ...]: "drop" [pos, size, colour] · "sprite" [pos, texture, rotation, flip] · "line" [from, to, colour]
 var rng := RandomNumberGenerator.new()
 var _tex := {}          # name -> Texture2D, for the pieces that exist
+var _chunks := {}       # chunk key -> GoreChunk
+
+const CHUNK_PX := LevelView.CHUNK * LevelView.TILE
 
 
 func _ready() -> void:
@@ -20,6 +24,9 @@ func _ready() -> void:
 
 func clear_all() -> void:
 	marks.clear()
+	for k in _chunks:
+		_chunks[k].queue_free()
+	_chunks.clear()
 	queue_redraw()
 
 
@@ -73,19 +80,46 @@ func smear(from: Vector2, to: Vector2) -> void:
 	queue_redraw()
 
 
+## Redrawing the gore redraws the chunks that hold marks (callers keep using queue_redraw()).
 func _draw() -> void:
 	for m in marks:
-		match m[0]:
-			"drop":
-				var s: float = m[2]
-				draw_rect(Rect2(m[1] - Vector2(s, s) * 0.5, Vector2(s, s)), m[3])
-			"oval":
-				draw_set_transform(m[1], 0, Vector2(1.0, 0.5))
-				draw_circle(Vector2.ZERO, m[2], m[3])
-				draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-			"line":
-				draw_line(m[1], m[2], m[3], 3.0)
-			"sprite":
-				draw_set_transform(m[1], m[3], Vector2(-1 if m[4] else 1, 1))
-				draw_texture(m[2], Vector2(-16, -16))
-				draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+		var k: Vector2i = chunk_key(m[1])
+		if not _chunks.has(k):
+			var ch := GoreChunk.new()
+			ch.gore = self
+			ch.key = k
+			add_child(ch)
+			_chunks[k] = ch
+	for k in _chunks:
+		_chunks[k].queue_redraw()
+
+
+func chunk_key(at: Vector2) -> Vector2i:
+	return Vector2i(floori(at.x / CHUNK_PX), floori(at.y / CHUNK_PX))
+
+
+func _draw_mark(canvas: CanvasItem, m: Array) -> void:
+	match m[0]:
+		"drop":
+			var s: float = m[2]
+			canvas.draw_rect(Rect2(m[1] - Vector2(s, s) * 0.5, Vector2(s, s)), m[3])
+		"oval":
+			canvas.draw_set_transform(m[1], 0, Vector2(1.0, 0.5))
+			canvas.draw_circle(Vector2.ZERO, m[2], m[3])
+			canvas.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+		"line":
+			canvas.draw_line(m[1], m[2], m[3], 3.0)
+		"sprite":
+			canvas.draw_set_transform(m[1], m[3], Vector2(-1 if m[4] else 1, 1))
+			canvas.draw_texture(m[2], Vector2(-16, -16))
+			canvas.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+
+
+## One chunk of the floor's blood, drawn as its own item so only nearby lights reach it.
+class GoreChunk extends Node2D:
+	var gore: Gore
+	var key: Vector2i
+	func _draw() -> void:
+		for m in gore.marks:
+			if gore.chunk_key(m[1]) == key:
+				gore._draw_mark(self, m)
