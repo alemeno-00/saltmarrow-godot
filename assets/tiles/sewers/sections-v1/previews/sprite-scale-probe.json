@@ -1,0 +1,36 @@
+{
+  "source_workstream": "Create Thomas Wren art workstream",
+  "source_relative_path": "assets/characters/thomas/production/sprites/standing-candidate.png",
+  "source_sha256": "a8c245477babc6c9afb201e546ef9896fe0196f22e81695e846de9c1dc0f1bea",
+  "source_frame": [
+    64,
+    64
+  ],
+  "source_root": [
+    32,
+    56
+  ],
+  "source_visible_body_height": 46,
+  "display_scales": [
+    1,
+    1.25
+  ],
+  "camera_zoom": 1.25,
+  "actor_cell": [
+    44,
+    11
+  ],
+  "actor_ground_offset": [
+    0,
+    12
+  ],
+  "same_camera_difference_region": [
+    626,
+    363,
+    654,
+    435
+  ],
+  "engine": "Godot 4.7.2 Compatibility",
+  "status": "comparison only; final visual scale and directional frames pending",
+  "source_asset_copied": false
+}
