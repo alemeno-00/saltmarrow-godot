@@ -2,13 +2,13 @@
 
 A gothic, Lovecraftian roguelike. A soldier home from a long war goes looking for his sister in Saltmarrow, a cliff town whose mines run out under the sea, where a star fell and a kind nun is leading the town down to it.
 
-This is the rebuild of [the original web game](https://github.com/alemeno-00/Saltmarrow) in Godot 4.6.
+This is the rebuild of [the original web game](https://github.com/alemeno-00/Saltmarrow) in Godot 4.7.
 
 **Play in the browser:** https://alemeno-00.github.io/saltmarrow-godot/ (updated on every change to `main`)
 
 ## Running it
 
-1. Install **Godot 4.6** (the standard build, not .NET).
+1. Install **Godot 4.7** (the standard build, not .NET).
 2. Clone this repository and open `project.godot` in Godot.
 3. Press **Play** (F5).
 
