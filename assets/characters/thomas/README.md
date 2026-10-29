@@ -2,6 +2,7 @@
 
 | File | Frame / canvas size | Rows and frame counts | Facing |
 | --- | --- | --- | --- |
+| mace_abilities.png | 64×64 / 768×320 | Skull Crack 8; Knee Breaker 8; Shatter 9; Wide Arc 10; Execution 12 | Right, with full rotation during Wide Arc |
 | attack_mace.png | 64×64 / 512×256 | wind-up 3; strike 3; recovery 3; critical strike 8 | Right |
 | body.png | 64×64 / 384×448 | 1 idle 4; 2 walk 6; 3 sneak 6; 4 hurt 3; 5 wounded walk 6; 6 dying crawl 6; 7 death 6 | Right |
 
@@ -10,3 +11,5 @@ Root is (32,56) in every frame; ground contact is the pixel row y55. Frames run 
 `production/body-v2/` contains generated masters, export source, validation and nearest-neighbour animation previews. `production/animation-review/` is the rejected first study, retained for provenance; use body-v2 instead. Other production folders contain prior approved references and planning documents.
 
 Claude integration: select only each row's populated count, do not include empty trailing cells. Row 8 careful-step is added by job 7c later. Weapon attack sheets remain separate. Use nearest texture filtering, no mipmaps, no smoothing. No code changes are included here.
+
+Ability source grids, previews, phase splits and validation: `production/abilities-v2/`. Use `mace_abilities.png` for job2b; the earlier mace-v1 ability candidate is superseded. Both weapon sheets contain Thomas and his maul together; replace the body during an attack.

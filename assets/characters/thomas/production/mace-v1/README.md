@@ -22,3 +22,5 @@ Prompt set: attack wind-up3, strike3, recovery3, heavier overhead critical8; the
 ## Follow-up refinement audit
 
 A second attempt generated each ability independently (Skull Crack8,Knee Breaker8,Shatter9,Wide Arc10,Execution12) using the same attack source. Those strips still touched adjacent silhouettes,clipped maul heads at canvas edges,and in Execution omitted the final maul head. These variants were discarded rather than promoted. Job2b is too large for reliable strip generation here; split into individual keyed poses with explicit weapon registration before assembling the47-frame runtime sheet. The runtime mace_abilities.png remains absent.
+
+Superseded: job2b is now delivered at ../../mace_abilities.png using the clean grids and silhouette export in ../abilities-v2/. The failures above describe this older study only.

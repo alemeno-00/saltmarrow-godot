@@ -39,7 +39,7 @@ These come first because the first fight is being built next. **Please do jobs 1
   2. strike (3)
   3. recovery (3)
   4. crit strike (8, a bigger, slower overhead blow for slow motion)
-- [ ] **2b. Thomas, mace abilities** (`assets/characters/thomas/mace_abilities.png`). Same maul as job 2; see `docs/trees.md`, Maces. Each ability has wind-up, strike and recovery. Rows:
+- [x] **2b. Thomas, mace abilities** (`assets/characters/thomas/mace_abilities.png`). Same maul as job 2; see `docs/trees.md`, Maces. Each ability has wind-up, strike and recovery. Rows:
   1. Skull Crack (8 frames: a short, fast overhead to the head)
   2. Knee Breaker (8: a low sideways swing at the legs)
   3. Shatter (9: a braced, two-handed smash into the chest)
