@@ -30,6 +30,20 @@ static func fury() -> Progress:
 	return p
 
 
+## For testing: a Fury who has already lived through a lot. Every working mace skill, and the levels and stats to match.
+static func veteran(to_level := 10) -> Progress:
+	var p := fury()
+	while p.level < to_level:
+		p.add_xp(p.xp_needed() - p.xp)
+	for n in SkillTrees.maces():
+		if n.ready and not p.owns("maces", n.id):
+			p.owned.append("maces/" + n.id)
+	while p.stat_points > 0:
+		p.raise_stat("might")
+	p.hits["maces"] = 80
+	return p
+
+
 ## Experience needed to reach the next level.
 func xp_needed() -> int:
 	return 5 * level * (level + 1) / 2

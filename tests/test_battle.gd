@@ -332,3 +332,14 @@ func test_careful_step_draws_no_free_strike() -> void:
 	eq(b.hero.stamina, 24, "with no free strike")
 	eq(b.budget.maneuver, 0, "it used the maneuver")
 	eq(b.budget.move, 5, "and none of his movement")
+
+
+func test_bystanders_join_when_they_see_him() -> void:
+	var m := _at(Bestiary.drowned_miner(), Vector2i(5, 3))
+	var far := _at(Bestiary.faithful(), Vector2i(8, 6))
+	var b := _battle([m])
+	b.bystanders = [far] as Array[Combatant]
+	b.start(true)
+	b.forced_rolls = [[1, 1], [1, 1]]
+	b.hero_end_turn()
+	check(b.units.has(far), "the Faithful across the room sees the fight and joins")

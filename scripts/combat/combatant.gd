@@ -37,6 +37,7 @@ var big_cooldown := 0
 var fleeing := false     # broke and is running
 var fled := false        # got away; gone from the fight, may come back
 var fled_once := false   # only runs once
+var group := -1         # which band it belongs to; a band fights together
 var state := "idle"      # outside a fight: idle, hunting (coming for Thomas) or searching (going to where he was seen)
 var target := Vector2i.ZERO
 

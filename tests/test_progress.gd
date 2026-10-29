@@ -113,3 +113,13 @@ func test_stairs_exist_and_can_be_walked_on() -> void:
 	check(l.stairs.x >= 0, "the level has stairs down")
 	check(l.is_walkable(l.stairs), "you can walk onto them")
 	check(l.reachable_from(l.start).has(l.stairs), "and reach them from the start")
+
+
+func test_veteran_for_testing() -> void:
+	var p := Progress.veteran(10)
+	eq(p.level, 10, "level 10")
+	eq(int(p.stats.might), 5, "three stat points went into Might")
+	var t := Bestiary.thomas(p)
+	eq(t.abilities.size(), 5, "all five working mace abilities")
+	eq(t.perks.size(), 4, "and all four working passives")
+	eq(t.max_stamina, 51, "24 + 27 Stamina")

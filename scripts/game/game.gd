@@ -40,6 +40,7 @@ var reach := {}          # squares Thomas can move to this turn
 var dead := false
 var progress: Progress
 var depth := 1
+var veteran := false     # F9: test as a high-level Thomas
 var tree_screen: TreeScreen
 var returning: Array = []   # [Combatant, turns left] for enemies that ran and will come back
 
@@ -103,7 +104,7 @@ func new_level(seed_in: int, keep := false) -> void:
 		hero_unit.telegraph.clear()
 	else:
 		depth = 1
-		progress = Progress.fury()
+		progress = Progress.veteran(10) if veteran else Progress.fury()
 		hero_unit = Bestiary.thomas(progress)
 	hero_unit.cell = level.start
 	hero.sync(hero_unit)
@@ -143,14 +144,14 @@ func _spawn_enemies() -> void:
 		var miner := group % 2 == 0
 		var want := 3 if miner else 3 + depth
 		if miner:
-			_add_enemy(Bestiary.drowned_miner(), c)
+			_add_enemy(Bestiary.drowned_miner(), c).group = group
 		var placed := 0
 		for d in [Vector2i(-2, 1), Vector2i(2, 1), Vector2i(0, 2), Vector2i(-2, -1), Vector2i(2, -1), Vector2i(1, 2), Vector2i(-1, 2), Vector2i(0, -2), Vector2i(-1, 0), Vector2i(1, 0), Vector2i(0, 0)]:
 			if placed >= want:
 				break
 			var p: Vector2i = c + d
 			if level.get_tile(p) == Level.Tile.FLOOR and _enemy_at(p) == null:
-				_add_enemy(Bestiary.faithful(), p)
+				_add_enemy(Bestiary.faithful(), p).group = group
 				placed += 1
 		group += 1
 
@@ -167,7 +168,7 @@ func _apply_progress() -> void:
 	_refresh()
 
 
-func _add_enemy(u: Combatant, c: Vector2i) -> void:
+func _add_enemy(u: Combatant, c: Vector2i) -> Combatant:
 	u.cell = c
 	var v := EnemyView.new()
 	v.style = u.style
@@ -176,6 +177,7 @@ func _add_enemy(u: Combatant, c: Vector2i) -> void:
 	v.facing = -1
 	enemies.append(u)
 	views[u] = v
+	return u
 
 
 func _enemy_at(c: Vector2i) -> Combatant:
@@ -335,6 +337,7 @@ func _bring_back(u: Combatant) -> void:
 		if level.get_tile(p) == Level.Tile.FLOOR and _enemy_at(p) == null:
 			var f := Bestiary.faithful()
 			f.state = "hunting"
+			f.group = u.group
 			_add_enemy(f, p)
 			added += 1
 	combat_hud.show_banner("Somewhere behind you, bare feet on stone.", 2.2)
@@ -353,12 +356,23 @@ func _check_spotted() -> void:
 func _start_battle() -> void:
 	stop_walking()
 	hero_unit.cell = hero.grid_pos
-	var alive: Array = []
+	# whoever saw him, their band, and anything already hunting him, fight; the rest may join if they see him
+	var bands := {}
 	for e in enemies:
-		if e.alive():
-			alive.append(e)
+		if e.alive() and (e.state != "idle" or (Battle.dist(e.cell, hero.grid_pos) <= SIGHT and level.line_of_sight(e.cell, hero.grid_pos))):
+			bands[e.group] = true
+	var fighting: Array = []
+	var others: Array[Combatant] = []
+	for e in enemies:
+		if not e.alive():
+			continue
+		if bands.has(e.group) or e.state != "idle":
+			fighting.append(e)
+		else:
+			others.append(e)
 	battle = Battle.new()
-	battle.setup(level, hero_unit, alive, level.seed_value * 7919 + turn)
+	battle.setup(level, hero_unit, fighting, level.seed_value * 7919 + turn)
+	battle.bystanders = others
 	combat_hud.clear_log()
 	combat_hud.show_fight(true)
 	_act(battle.start(battle.roll_initiative()))
@@ -380,6 +394,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R:
 		new_level(level.seed_value + 1)
+		return
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F9:
+		veteran = not veteran
+		new_level(level.seed_value + 1)
+		combat_hud.show_banner("Test: a level 10 veteran with every mace skill." if veteran else "Back to a fresh Thomas.", 2.5)
 		return
 	if dead:
 		return
@@ -571,6 +590,10 @@ func _play_one(e: Dictionary) -> void:
 			combat_hud.show_banner("Malice: " + e.name, 1.2)
 			_shake = 2.0
 			await _wait(0.45)
+		"join":
+			views[e.unit].sync(e.unit)
+			_shake = 2.0
+			await _wait(0.25)
 		"flee":
 			views[e.unit].sync(e.unit)
 			await _wait(0.2)
@@ -717,8 +740,8 @@ func _finish(winner: String) -> void:
 			returning.append([u, RETURN_AFTER])
 	if winner == "escaped":
 		combat_hud.show_banner("You've lost them, for now.", 2.0)
-		for u in enemies:
-			if u.alive():
+		for u in battle.units:
+			if u.alive() and u != hero_unit:
 				u.state = "searching"
 				u.target = battle.last_seen
 				u.telegraph.clear()
@@ -844,4 +867,4 @@ func _update_hud() -> void:
 		hud.text = "Click a lit square to move  ·  click an enemy beside you to strike  ·  1-5 abilities  ·  F careful step  ·  Q stand  ·  B catch breath  ·  Enter end turn  ·  R new level"
 	else:
 		var spend := progress.points_for("maces") + progress.level_points + progress.stat_points
-		hud.text = "Depth %d  ·  Level %d  ·  XP %d / %d  ·  K skills%s  ·  WASD / arrows to move, click to walk, Space to wait, wheel to zoom, R new life" % [depth, progress.level, progress.xp, progress.xp_needed(), " (points to spend!)" if spend > 0 else "", ]
+		hud.text = "Depth %d  ·  Level %d  ·  XP %d / %d  ·  K skills%s  ·  WASD / arrows to move, click to walk, Space to wait, wheel to zoom, R new life, F9 test as a veteran" % [depth, progress.level, progress.xp, progress.xp_needed(), " (points to spend!)" if spend > 0 else "", ]

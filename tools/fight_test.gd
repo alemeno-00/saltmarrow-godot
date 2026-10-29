@@ -15,6 +15,8 @@ func _initialize() -> void:
 	game = load("res://scenes/main.tscn").instantiate()
 	root.add_child(game)
 	await _frames(5)
+	if args.size() > 2 and args[2] == "veteran":
+		game.veteran = true
 	if args.size() > 1:
 		game.new_level(int(args[1]))
 		await _frames(2)

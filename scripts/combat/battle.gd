@@ -31,6 +31,7 @@ var forced_rolls: Array = []   # queued [d1, d2] pairs, used by tests
 var injuries_on := true
 var malice := 0
 var last_seen := Vector2i.ZERO
+var bystanders: Array[Combatant] = []   # enemies on the level not in the fight; they join if they see Thomas
 var hidden_rounds := 0   # enemy turns in a row that ended with no one seeing Thomas
 
 var _ev: Array = []
@@ -313,6 +314,12 @@ func _spend(kind: String) -> void:
 func _enemy_phase() -> void:
 	malice += 1 + floori(round / 2.0)
 	_emit({"t": "malice", "value": malice})
+	for o in bystanders.duplicate():
+		if o.alive() and (sees_hero(o) or dist(o.cell, hero.cell) <= 3):
+			bystanders.erase(o)
+			units.append(o)
+			_emit({"t": "join", "unit": o})
+			_log("A %s hears the fight and comes." % o.name)
 	_swarming_hymn()
 	for e in units.duplicate():
 		if over:
