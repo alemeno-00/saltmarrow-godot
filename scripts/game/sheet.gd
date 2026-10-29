@@ -7,7 +7,7 @@ const FRAME := Vector2(64, 64)
 const ROOT := Vector2(32, 56)   # where the feet are in every frame
 
 var texture: Texture2D
-var anims := {}   # name -> {row, frames, fps, loop}
+var anims := {}   # name -> {row, frames, fps, loop, tex (optional: a second sheet, e.g. Thomas's attacks)}
 
 
 func has(name: String) -> bool:
@@ -28,8 +28,15 @@ func frame_rect(name: String, t: float) -> Rect2:
 	return Rect2(Vector2(i * FRAME.x, (int(a.row) - 1) * FRAME.y), FRAME)
 
 
-func _add(name: String, row: int, frames: int, fps: float, loop := true) -> void:
+## The image an animation's frames come from.
+func texture_of(name: String) -> Texture2D:
+	return anims[name].get("tex", texture)
+
+
+func _add(name: String, row: int, frames: int, fps: float, loop := true, tex: Texture2D = null) -> void:
 	anims[name] = {"row": row, "frames": frames, "fps": fps, "loop": loop}
+	if tex != null:
+		anims[name].tex = tex
 
 
 static func _load(path: String) -> Sheet:
@@ -54,6 +61,22 @@ static func thomas() -> Sheet:
 	s._add("death", 7, 6, 7, false)
 	s._add("careful_step", 8, 4, 8, false)
 	s._add("prone", 6, 1, 1, false)   # no lying-down row yet: the first frame of the crawl has him on the ground
+	# the mace sheets hold the whole of Thomas with the maul: they replace the body during a blow
+	var attack := "res://assets/characters/thomas/attack_mace.png"
+	if ResourceLoader.exists(attack):
+		var t: Texture2D = load(attack)
+		s._add("mace_windup", 1, 3, 6, false, t)
+		s._add("mace_strike", 2, 3, 12, false, t)
+		s._add("mace_recovery", 3, 3, 7, false, t)
+		s._add("mace_crit", 4, 8, 6, false, t)
+	var abilities := "res://assets/characters/thomas/mace_abilities.png"
+	if ResourceLoader.exists(abilities):
+		var t: Texture2D = load(abilities)
+		s._add("skull_crack", 1, 8, 12, false, t)
+		s._add("knee_breaker", 2, 8, 12, false, t)
+		s._add("shatter", 3, 9, 12, false, t)
+		s._add("wide_arc", 4, 10, 12, false, t)
+		s._add("execution", 5, 12, 10, false, t)
 	return s
 
 

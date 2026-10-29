@@ -12,6 +12,18 @@ func _draw_body() -> void:
 	_draw_placeholder()
 
 
+## Swing the maul: the basic blow as wind-up, strike and recovery; a critical one as the big overhead;
+## a mace ability as its own row.
+func play_attack(ability_id: String, crit: bool) -> void:
+	if ability_id == "heavy_blow":
+		if crit:
+			play_sequence(["mace_crit"] as Array[String])
+		else:
+			play_sequence(["mace_windup", "mace_strike", "mace_recovery"] as Array[String])
+	else:
+		play_sequence([ability_id] as Array[String])
+
+
 func _sheet_tint() -> Color:
 	return _tint()
 

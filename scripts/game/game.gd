@@ -665,6 +665,8 @@ func _play_one(e: Dictionary) -> void:
 				views[e.unit].lunge_at(t.cell, 9.0)
 				await _wait(0.07)
 		"roll":
+			if e.unit == hero_unit:
+				hero.play_attack(e.ability.id, e.roll.crit)
 			combat_hud.dice.show_roll(e.roll, e.unit.name, e.ability.name)
 			await _wait(0.75 if e.roll.crit else 0.5)
 		"hit":
