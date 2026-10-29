@@ -1,0 +1,18 @@
+{
+  "total_frames": 4,
+  "rows": [
+    2,
+    2
+  ],
+  "source_grid": [
+    2,
+    2
+  ],
+  "states": [
+    "shut 1",
+    "shut 2",
+    "open 1",
+    "open 2"
+  ],
+  "confirmation": "Julian explicitly requested four total per sheet: two shut, two open."
+}

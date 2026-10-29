@@ -1,0 +1,368 @@
+{
+  "runtime_pngs": 18,
+  "frames_total": 30,
+  "assets": [
+    {
+      "file": "salve.png",
+      "size": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        1
+      ],
+      "opaque_colours": 32,
+      "distinct_frames": 1,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "bandage.png",
+      "size": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        1
+      ],
+      "opaque_colours": 31,
+      "distinct_frames": 1,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "grate_key.png",
+      "size": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        1
+      ],
+      "opaque_colours": 18,
+      "distinct_frames": 1,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "crate.png",
+      "size": [
+        64,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        2
+      ],
+      "opaque_colours": 31,
+      "distinct_frames": 2,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "barrel.png",
+      "size": [
+        64,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        2
+      ],
+      "opaque_colours": 32,
+      "distinct_frames": 2,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "satchel_body.png",
+      "size": [
+        128,
+        32
+      ],
+      "frame_size": [
+        64,
+        32
+      ],
+      "row_counts": [
+        2
+      ],
+      "opaque_colours": 32,
+      "distinct_frames": 2,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "letter.png",
+      "size": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        1
+      ],
+      "opaque_colours": 30,
+      "distinct_frames": 1,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "hymn_sheet.png",
+      "size": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        1
+      ],
+      "opaque_colours": 30,
+      "distinct_frames": 1,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "miner_tag_body.png",
+      "size": [
+        64,
+        32
+      ],
+      "frame_size": [
+        64,
+        32
+      ],
+      "row_counts": [
+        1
+      ],
+      "opaque_colours": 32,
+      "distinct_frames": 1,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "valve.png",
+      "size": [
+        128,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        4
+      ],
+      "opaque_colours": 31,
+      "distinct_frames": 4,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "bones_1.png",
+      "size": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        1
+      ],
+      "opaque_colours": 31,
+      "distinct_frames": 1,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "bones_2.png",
+      "size": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        1
+      ],
+      "opaque_colours": 29,
+      "distinct_frames": 1,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "bones_3.png",
+      "size": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        1
+      ],
+      "opaque_colours": 31,
+      "distinct_frames": 1,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "debris_1.png",
+      "size": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        1
+      ],
+      "opaque_colours": 30,
+      "distinct_frames": 1,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "debris_2.png",
+      "size": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        1
+      ],
+      "opaque_colours": 28,
+      "distinct_frames": 1,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "debris_3.png",
+      "size": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "row_counts": [
+        1
+      ],
+      "opaque_colours": 31,
+      "distinct_frames": 1,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "grate_ns.png",
+      "size": [
+        128,
+        64
+      ],
+      "frame_size": [
+        64,
+        32
+      ],
+      "row_counts": [
+        2,
+        2
+      ],
+      "opaque_colours": 32,
+      "distinct_frames": 4,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    },
+    {
+      "file": "grate_ew.png",
+      "size": [
+        64,
+        128
+      ],
+      "frame_size": [
+        32,
+        64
+      ],
+      "row_counts": [
+        2,
+        2
+      ],
+      "opaque_colours": 32,
+      "distinct_frames": 4,
+      "binary_alpha": true,
+      "cleared_transparent_rgb": true
+    }
+  ],
+  "grate_clearance": {
+    "grate_ns": {
+      "interior_opaque_fraction": [
+        0.5247395833333334,
+        0.5325520833333334,
+        0.13932291666666666,
+        0.13541666666666666
+      ],
+      "centreline_clear_run_px": [
+        2,
+        2,
+        48,
+        48
+      ],
+      "rows": "two shut, then two open, confirmed by Julian"
+    },
+    "grate_ew": {
+      "interior_opaque_fraction": [
+        0.7864583333333334,
+        0.7838541666666666,
+        0.08333333333333333,
+        0.18880208333333334
+      ],
+      "centreline_clear_run_px": [
+        5,
+        5,
+        52,
+        52
+      ],
+      "rows": "two shut, then two open, confirmed by Julian"
+    }
+  },
+  "three_distinct_bone_variants": true,
+  "three_distinct_debris_variants": true,
+  "native_visual_review": "Icons, paired caches, valve and both grate rows reviewed at nearest enlargement. Placement preview uses actual exported sprites.",
+  "limit": "Art checks only. Collision, interaction states, actual game lighting and animation timing require Claude integration."
+}
