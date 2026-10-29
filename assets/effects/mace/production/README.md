@@ -3,7 +3,7 @@
 | File | Layout |
 | --- | --- |
 | effects-master.png |1536×1024 source; dazed6,fracture4,wall slam5,Wide Arc4 |
-| armour-master.png |1838×840 source; helm,pauldron,breastplate rows,each6 clatter frames plus1 resting |
+| armour-master.png |1855×848 source; helm,pauldron,breastplate rows,each6 clatter frames plus1 resting |
 | dazed-3x.png |96×96 preview frames,6 |
 | fracture-3x.png |96×96 preview frames,4 |
 | wall_slam-3x.png |192×192 preview frames,5 |
