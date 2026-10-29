@@ -38,6 +38,8 @@ func test_every_water_square_shimmers() -> void:
 
 
 func test_wading_makes_ripples() -> void:
+	for e in game.enemies:
+		e.dead = true   # only Thomas's steps (the patrol wades too)
 	var c: Vector2i = game.level.start
 	var to := c + Vector2i(1, 0)
 	game.level.set_tile(to, Level.Tile.WATER)

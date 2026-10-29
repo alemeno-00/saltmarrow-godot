@@ -1,0 +1,2 @@
+Reviewed-Content-Hash: scripts/game/game.gd 3bcb09efb73a1913a9583d0b2fa4d454a0e4beb8
+Reviewed-Content-Hash: scripts/combat/combatant.gd f4cebbf7d0b4617f186e8532f3993c3541c661cd

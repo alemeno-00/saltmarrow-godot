@@ -24,7 +24,10 @@ const SIGHT := Battle.SIGHT   # how far enemies see, in squares
 const RETURN_AFTER := 20      # exploring turns before a runaway comes back
 const BOTTOM_DEPTH := 3       # the Outflow and Garrick are on this level; beating him wins the run
 const START_DISTANCE := 17    # enemy groups wait at least this many steps from the start (their members 15+)
-const GROUP_CHANCE := 0.6     # chance a junction or chamber holds a group
+const GROUP_CHANCE := 0.75    # chance a junction or chamber holds a group (room-contents spec, part 1)
+const PATROLS := 1            # patrols per level
+const PATROL_ROOMS := Vector2i(2, 4)   # a patrol walks between this many rooms
+const PATROL_GROUP := 1000 + 1         # group id of the patrol (Garrick's band is 1000)
 const STAIRS_GUARD_CHANCE := 0.5
 
 @export var level_seed: int = 0   # 0: a random first life; tests set a fixed seed
@@ -169,6 +172,97 @@ func clear_enemies() -> void:
 
 ## The first fight: a Drowned Miner and three Faithful, waiting a couple of rooms from the start.
 ## Groups waiting in every third room, starting two rooms from the start. Deeper levels hold more.
+## One patrol per level: a Drowned Miner leading two Faithful between 2-4 connected rooms, back and forth, a
+## square for each turn Thomas takes outside a fight. It spots him like anyone else.
+func _spawn_patrol(pick: RandomNumberGenerator) -> void:
+	var near := {}
+	for i in level.pieces.size():
+		var p: Dictionary = level.pieces[i]
+		if p.kind == "connector" or p.parent < 0:
+			continue
+		near.get_or_add(i, []).append(p.parent)
+		near.get_or_add(p.parent, []).append(i)
+	var starts: Array = []
+	for i in level.pieces.size():
+		if _patrol_room(i) and level.find_path(level.start, level.pieces[i].rect.get_center()).size() >= START_DISTANCE:
+			starts.append(i)
+	for _try in 12:
+		if starts.is_empty():
+			return
+		var rooms: Array = [starts[pick.randi_range(0, starts.size() - 1)]]
+		var want := pick.randi_range(PATROL_ROOMS.x, PATROL_ROOMS.y)
+		while rooms.size() < want:
+			var nexts: Array = near.get(rooms[-1], []).filter(func(j): return _patrol_room(j) and not rooms.has(j))
+			if nexts.is_empty():
+				break
+			rooms.append(nexts[pick.randi_range(0, nexts.size() - 1)])
+		if rooms.size() < PATROL_ROOMS.x:
+			continue
+		var route: Array[Vector2i] = []
+		for j in rooms:
+			route.append(level.pieces[j].rect.get_center())
+		var spots := _free_floor_near(route[0], 3)
+		if spots.size() < 3:
+			continue
+		var leader := _add_enemy(Bestiary.drowned_miner(), spots[0])
+		leader.group = PATROL_GROUP
+		leader.state = "patrolling"
+		leader.route = route
+		leader.route_i = 1
+		for k in [1, 2]:
+			var f := _add_enemy(Bestiary.faithful(), spots[k])
+			f.group = PATROL_GROUP
+			f.state = "patrolling"
+		return
+
+
+func _patrol_room(i: int) -> bool:
+	var p: Dictionary = level.pieces[i]
+	return p.kind in ["junction", "chamber", "flooded", "lore", "stairs"] and level.is_walkable(p.rect.get_center())
+
+
+## Free floor squares around `c`, nearest first.
+func _free_floor_near(c: Vector2i, count: int) -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	for r in 3:
+		for y in range(-r, r + 1):
+			for x in range(-r, r + 1):
+				var q := c + Vector2i(x, y)
+				if out.size() < count and maxi(absi(x), absi(y)) == r and level.get_tile(q) == Level.Tile.FLOOR and _enemy_at(q) == null and q != hero.grid_pos and not out.has(q):
+					out.append(q)
+	return out
+
+
+## The patrol's leader, or null.
+func patrol_leader() -> Combatant:
+	for e in enemies:
+		if e.alive() and e.state == "patrolling" and not e.route.is_empty():
+			return e
+	return null
+
+
+## One step of every patrol: the leader toward its waypoint (turning back at the ends), the others after it.
+func patrol_step() -> void:
+	for leader in enemies:
+		if not leader.alive() or leader.state != "patrolling" or leader.route.is_empty():
+			continue
+		if Battle.dist(leader.cell, leader.route[leader.route_i]) <= 1:
+			if leader.route_i + leader.route_dir < 0 or leader.route_i + leader.route_dir >= leader.route.size():
+				leader.route_dir = -leader.route_dir
+			leader.route_i += leader.route_dir
+		_step_toward(leader, leader.route[leader.route_i])
+		for f in enemies:
+			if f != leader and f.alive() and f.state == "patrolling" and f.group == leader.group and Battle.dist(f.cell, leader.cell) > 1:
+				_step_toward(f, leader.cell)
+
+
+func _step_toward(e: Combatant, goal: Vector2i) -> void:
+	var p := level.find_path(e.cell, goal)
+	if not p.is_empty() and p[0] != hero.grid_pos and _enemy_at(p[0]) == null:
+		e.cell = p[0]
+		views[e].move_to(p[0])
+
+
 ## Anyone stepping into water sends a ripple out across it.
 func _on_stepped(_from: Vector2i, to: Vector2i) -> void:
 	if level != null and level.get_tile(to) == Level.Tile.WATER:
@@ -211,10 +305,14 @@ func _spawn_enemies() -> void:
 			if placed >= want:
 				break
 			var q: Vector2i = c + d
-			if level.get_tile(q) == Level.Tile.FLOOR and _enemy_at(q) == null:
+			# floor or shallow water: in a flooded room the Faithful stand in the water
+			var t := level.get_tile(q)
+			if (t == Level.Tile.FLOOR or t == Level.Tile.WATER) and _enemy_at(q) == null:
 				_add_enemy(Bestiary.faithful(), q).group = group
 				placed += 1
 		group += 1
+	for _n in PATROLS:
+		_spawn_patrol(pick)
 
 
 ## After learning something: rebuild Thomas's abilities, passives and stats.
@@ -361,7 +459,7 @@ func _enemies_explore() -> void:
 	if in_fight() or dead:
 		return
 	for e in enemies:
-		if not e.alive() or e.state == "idle":
+		if not e.alive() or e.state == "idle" or e.state == "patrolling":
 			continue
 		var goal := hero.grid_pos if e.state == "hunting" else e.target
 		var p := level.find_path(e.cell, goal)
@@ -370,6 +468,7 @@ func _enemies_explore() -> void:
 			views[e].move_to(p[0])
 		if e.state == "searching" and e.cell == e.target:
 			e.state = "idle"
+	patrol_step()
 	for r in returning.duplicate():
 		r[1] -= 1
 		if r[1] <= 0:
