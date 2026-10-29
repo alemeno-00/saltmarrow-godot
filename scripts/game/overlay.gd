@@ -4,6 +4,8 @@ extends Node2D
 ## Fighting: where Thomas can move, who he can hit, and the squares a big blow is about to land on.
 
 const TILE := 32
+const TAG_ART := "res://assets/tiles/sewers/outflow/tally_tag_floor.png"
+var _tag_tex: Texture2D = null
 @onready var game: Game = get_parent()
 
 
@@ -31,6 +33,12 @@ func _draw() -> void:
 
 ## Garrick's brass tally tag, glinting beside his body. Drawn above the creatures so his body doesn't hide it.
 func _draw_tag(c: Vector2i) -> void:
+	if _tag_tex == null and ResourceLoader.exists(TAG_ART):
+		_tag_tex = load(TAG_ART)
+	if _tag_tex != null:
+		# ChatGPT's tag, centred on the square, beside Garrick's body
+		draw_texture(_tag_tex, Vector2(c.x * TILE, c.y * TILE) + Vector2(8, 6))
+		return
 	var p := Vector2(c.x * TILE + TILE / 2.0 + 8, c.y * TILE + TILE / 2.0 + 9)
 	var glint := 0.5 + 0.5 * sin(Time.get_ticks_msec() / 250.0)
 	draw_circle(p, 7.0, Color(1.0, 0.8, 0.4, 0.12 + 0.1 * glint))
