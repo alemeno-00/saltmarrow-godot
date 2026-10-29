@@ -1,0 +1,434 @@
+{
+  "canvas": [
+    384,
+    448
+  ],
+  "frame": [
+    64,
+    64
+  ],
+  "rows": [
+    4,
+    6,
+    6,
+    3,
+    6,
+    6,
+    6
+  ],
+  "populated_frames": 37,
+  "alpha": [
+    0,
+    255
+  ],
+  "status": "review-only; locomotion not approved",
+  "frames": [
+    {
+      "row": 1,
+      "animation": "idle",
+      "frame": 1,
+      "bbox": [
+        21,
+        10,
+        43,
+        56
+      ]
+    },
+    {
+      "row": 1,
+      "animation": "idle",
+      "frame": 2,
+      "bbox": [
+        21,
+        10,
+        43,
+        56
+      ]
+    },
+    {
+      "row": 1,
+      "animation": "idle",
+      "frame": 3,
+      "bbox": [
+        20,
+        10,
+        44,
+        56
+      ]
+    },
+    {
+      "row": 1,
+      "animation": "idle",
+      "frame": 4,
+      "bbox": [
+        21,
+        10,
+        43,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "animation": "walk",
+      "frame": 1,
+      "bbox": [
+        18,
+        10,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "animation": "walk",
+      "frame": 2,
+      "bbox": [
+        17,
+        10,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "animation": "walk",
+      "frame": 3,
+      "bbox": [
+        17,
+        10,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "animation": "walk",
+      "frame": 4,
+      "bbox": [
+        17,
+        10,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "animation": "walk",
+      "frame": 5,
+      "bbox": [
+        17,
+        10,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "animation": "walk",
+      "frame": 6,
+      "bbox": [
+        18,
+        10,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "animation": "sneak",
+      "frame": 1,
+      "bbox": [
+        9,
+        10,
+        55,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "animation": "sneak",
+      "frame": 2,
+      "bbox": [
+        9,
+        10,
+        56,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "animation": "sneak",
+      "frame": 3,
+      "bbox": [
+        9,
+        10,
+        55,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "animation": "sneak",
+      "frame": 4,
+      "bbox": [
+        10,
+        10,
+        54,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "animation": "sneak",
+      "frame": 5,
+      "bbox": [
+        13,
+        10,
+        52,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "animation": "sneak",
+      "frame": 6,
+      "bbox": [
+        10,
+        10,
+        54,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "animation": "hurt",
+      "frame": 1,
+      "bbox": [
+        15,
+        10,
+        49,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "animation": "hurt",
+      "frame": 2,
+      "bbox": [
+        17,
+        10,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "animation": "hurt",
+      "frame": 3,
+      "bbox": [
+        15,
+        10,
+        49,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "animation": "wounded_walk",
+      "frame": 1,
+      "bbox": [
+        18,
+        10,
+        46,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "animation": "wounded_walk",
+      "frame": 2,
+      "bbox": [
+        21,
+        10,
+        44,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "animation": "wounded_walk",
+      "frame": 3,
+      "bbox": [
+        21,
+        10,
+        43,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "animation": "wounded_walk",
+      "frame": 4,
+      "bbox": [
+        17,
+        10,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "animation": "wounded_walk",
+      "frame": 5,
+      "bbox": [
+        19,
+        10,
+        46,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "animation": "wounded_walk",
+      "frame": 6,
+      "bbox": [
+        18,
+        10,
+        46,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "animation": "dying_crawl",
+      "frame": 1,
+      "bbox": [
+        10,
+        10,
+        55,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "animation": "dying_crawl",
+      "frame": 2,
+      "bbox": [
+        7,
+        10,
+        58,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "animation": "dying_crawl",
+      "frame": 3,
+      "bbox": [
+        6,
+        10,
+        59,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "animation": "dying_crawl",
+      "frame": 4,
+      "bbox": [
+        7,
+        10,
+        57,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "animation": "dying_crawl",
+      "frame": 5,
+      "bbox": [
+        5,
+        10,
+        59,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "animation": "dying_crawl",
+      "frame": 6,
+      "bbox": [
+        7,
+        10,
+        58,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "animation": "death",
+      "frame": 1,
+      "bbox": [
+        10,
+        10,
+        55,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "animation": "death",
+      "frame": 2,
+      "bbox": [
+        2,
+        25,
+        62,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "animation": "death",
+      "frame": 3,
+      "bbox": [
+        2,
+        33,
+        62,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "animation": "death",
+      "frame": 4,
+      "bbox": [
+        2,
+        33,
+        62,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "animation": "death",
+      "frame": 5,
+      "bbox": [
+        2,
+        37,
+        62,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "animation": "death",
+      "frame": 6,
+      "bbox": [
+        2,
+        37,
+        62,
+        56
+      ]
+    }
+  ]
+}

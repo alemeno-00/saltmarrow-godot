@@ -38,9 +38,9 @@ Each `bank_XX` is a **water cell** surrounded by dry neighbours as indicated by 
 
 Do not randomly choose shoreline tiles, rotate lighting, or interpret these custom mask values as Godot terrain IDs. Configure terrain peering bits manually or have Claude map this documented mask contract. The JSON plans beside the previews show actual tile IDs and sprite top-left positions, independent of any runtime API.
 
-## Godot 4.6 handoff
+## Godot 4.7 handoff
 
-The repository declares Godot 4.6 and already uses nearest filtering and transform pixel snapping. Import production PNGs as Texture2D, Lossless, without mipmaps or size reduction. Use nearest filtering and integer positions/scales. For the terrain TileSet: square shape, tile size 32 × 32, texture region 32 × 32, margin 0, separation 0; retain atlas texture padding. Keep source art and previews out of gameplay atlases. Their folders include `.gdignore` markers.
+The repository declares Godot 4.7 and already uses nearest filtering and transform pixel snapping. Import production PNGs as Texture2D, Lossless, without mipmaps or size reduction. Use nearest filtering and integer positions/scales. For the terrain TileSet: square shape, tile size 32 × 32, texture region 32 × 32, margin 0, separation 0; retain atlas texture padding. Keep source art and previews out of gameplay atlases. Their folders include `.gdignore` markers.
 
 Create separate floor/water and foreground wall/prop layers. Do not rotate a wall face into a side wall. Use the supplied side sprite and review its end joins. Larger sprites can be Sprite2D/AtlasTexture regions with the manifest origin, or explicitly sized atlas tiles; automatic 32px slicing is only appropriate for the terrain sheet. Configure physics/navigation layers and peering rules deliberately. Do not derive collision from painted shadows or alpha outlines. Check doorway clearance with ART_JOBS' 64 × 64 character frame and feet at (32,56); the concept's approximate 48px visible character height does not override that standard.
 
