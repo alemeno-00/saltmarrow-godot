@@ -1,20 +1,36 @@
 class_name LevelView
 extends Node2D
-## Draws a Level. Placeholder stone, water and doors until the biome art is in.
-## The Outflow uses ChatGPT's painted room when it exists (design/art-briefs/outflow/BRIEF.md).
+## Draws a Level: ChatGPT's painted rooms where they exist (the Outflow; room-kit layouts in assets/tiles/sewers/rooms/),
+## stand-in stone, water and props everywhere else.
+##
+## The level is drawn in chunks of CHUNK x CHUNK squares, each its own canvas item: the web renderer lights one item
+## with at most 15 lights (Lighting.MAX_LIGHTS_PER_ITEM), and a whole level has many more lanterns than that.
 
 const TILE := 32
+const CHUNK := 8
 const OUTFLOW_ART := "res://assets/tiles/sewers/outflow/outflow_room.png"
 const OUTFLOW_DIR := "res://assets/tiles/sewers/outflow/"
 const SLUICE_FRAME := 0.18   # seconds per frame of the open sluice (README: 180 ms)
 const FLOOD_FRAME := 0.22    # seconds per frame of a square flooding (README: 220 ms)
+const ROOMS_ART := "res://assets/tiles/sewers/rooms/"   # <layout>/1.png, 2.png ... (design/art-briefs/README.md)
+const SEALED_ART := "res://assets/tiles/sewers/rooms/sealed/"   # north/south/west/east.png (sewer-rooms/BRIEF.md)
+
 var level: Level
 var outflow_art: Texture2D = null   # the painted Outflow, walls included (14 x 11 squares)
 var _pieces := {}                   # the Outflow's moving pieces, by file name
 var _flooded_at := {}               # square -> when it flooded, to play the flooding frames once
-const ROOMS_ART := "res://assets/tiles/sewers/rooms/"   # <layout>/1.png, 2.png ... (design/art-briefs/README.md)
-var _painted: Array = []            # [Rect2i, Texture2D, mirrored] for room-kit pieces that have a painting
+var _painted: Array = []            # [piece, Texture2D] for room-kit pieces that have a painting
+var _sealed := {}                   # side -> sealed-doorway piece
+var _chunks: Array[Chunk] = []
 static var _room_art := {}          # layout -> Array of its paintings
+
+
+## One CHUNK x CHUNK patch of the level, drawn as its own item so only nearby lights reach it.
+class Chunk extends Node2D:
+	var view: LevelView
+	var region: Rect2i
+	func _draw() -> void:
+		view._draw_region(self, region)
 
 
 func show_level(l: Level) -> void:
@@ -25,6 +41,10 @@ func show_level(l: Level) -> void:
 		for n in ["sluice_open", "sluice_shut", "floor_flooding"]:
 			if ResourceLoader.exists(OUTFLOW_DIR + n + ".png"):
 				_pieces[n] = load(OUTFLOW_DIR + n + ".png")
+	if _sealed.is_empty():
+		for side in ["north", "south", "west", "east"]:
+			if ResourceLoader.exists(SEALED_ART + side + ".png"):
+				_sealed[side.left(1)] = load(SEALED_ART + side + ".png")
 	_flooded_at.clear()
 	_painted.clear()
 	for p in level.pieces:
@@ -32,8 +52,44 @@ func show_level(l: Level) -> void:
 			continue
 		var art := _paintings(p.layout)
 		if not art.is_empty():
-			_painted.append([p.rect, art[int(p.variant) % art.size()], p.mirrored])
+			_painted.append([p, art[int(p.variant) % art.size()]])
+	_make_chunks()
 	queue_redraw()
+
+
+func _make_chunks() -> void:
+	for ch in _chunks:
+		ch.queue_free()
+	_chunks.clear()
+	for cy in range(0, level.height, CHUNK):
+		for cx in range(0, level.width, CHUNK):
+			var ch := Chunk.new()
+			ch.view = self
+			ch.region = Rect2i(cx, cy, CHUNK, CHUNK).intersection(Rect2i(0, 0, level.width, level.height))
+			add_child(ch)
+			_chunks.append(ch)
+
+
+## Redrawing the view redraws its chunks (callers keep using queue_redraw()).
+func _draw() -> void:
+	for ch in _chunks:
+		ch.queue_redraw()
+
+
+## How many lights reach each chunk, for a level's light points ([pixel position, ...]) and light radius in pixels.
+static func chunk_light_counts(l: Level, points: Array, radius: float) -> Array[int]:
+	var out: Array[int] = []
+	for cy in range(0, l.height, CHUNK):
+		for cx in range(0, l.width, CHUNK):
+			var r := Rect2(Vector2(cx, cy) * TILE, Vector2(CHUNK, CHUNK) * TILE)
+			var n := 0
+			for p in points:
+				var at: Vector2 = p[0]
+				var nearest := Vector2(clampf(at.x, r.position.x, r.end.x), clampf(at.y, r.position.y, r.end.y))
+				if nearest.distance_to(at) < radius:
+					n += 1
+			out.append(n)
+	return out
 
 
 ## A layout's paintings, if ChatGPT has delivered any: rooms/<layout>/1.png, 2.png and so on.
@@ -49,9 +105,30 @@ static func _paintings(layout: String) -> Array:
 	return _room_art[layout]
 
 
+## The squares of a room's unused doorways, as [side, Rect2i]: painted rooms are painted with every doorway open,
+## and these get a sealed piece laid over them.
+static func sealed_doorways(p: Dictionary) -> Array:
+	var out: Array = []
+	var lay := RoomLayout.get_layout(p.layout)
+	var r: Rect2i = p.rect
+	for side in lay.sides(p.mirrored):
+		if (p.open as Array).has(side):
+			continue
+		match side:
+			"n":
+				out.append(["n", Rect2i(r.position + Vector2i(5, 0), Vector2i(2, 2))])
+			"s":
+				out.append(["s", Rect2i(r.position + Vector2i(5, r.size.y - 1), Vector2i(2, 1))])
+			"w":
+				out.append(["w", Rect2i(r.position + Vector2i(0, 5), Vector2i(1, 2))])
+			"e":
+				out.append(["e", Rect2i(r.position + Vector2i(r.size.x - 1, 5), Vector2i(1, 2))])
+	return out
+
+
 func _in_painted_room(c: Vector2i) -> bool:
 	for pr in _painted:
-		if (pr[0] as Rect2i).has_point(c):
+		if (pr[0].rect as Rect2i).has_point(c):
 			return true
 	return false
 
@@ -63,100 +140,104 @@ func painted_area() -> Rect2i:
 	return level.outflow.grow(1)
 
 
-func _draw() -> void:
+## Draw the part of a painting (covering `area` squares) that falls inside `region`, mirrored if asked.
+static func _draw_clipped(canvas: CanvasItem, tex: Texture2D, area: Rect2i, region: Rect2i, mirrored: bool) -> void:
+	var part := area.intersection(region)
+	if not part.has_area():
+		return
+	var src_x := part.position.x - area.position.x
+	if mirrored:
+		src_x = area.size.x - src_x - part.size.x
+	var src := Rect2(Vector2(src_x, part.position.y - area.position.y) * TILE, Vector2(part.size) * TILE)
+	var dest := Rect2(Vector2(part.position) * TILE, Vector2(part.size) * TILE)
+	if mirrored:
+		canvas.draw_set_transform(Vector2(dest.position.x + dest.size.x, 0), 0, Vector2(-1, 1))
+		canvas.draw_texture_rect_region(tex, Rect2(Vector2(0, dest.position.y), dest.size), src)
+		canvas.draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+	else:
+		canvas.draw_texture_rect_region(tex, dest, src)
+
+
+func _draw_region(canvas: CanvasItem, region: Rect2i) -> void:
 	if level == null:
 		return
 	var painted := painted_area()
 	if painted.has_area():
-		draw_texture_rect(outflow_art, Rect2(Vector2(painted.position) * TILE, Vector2(painted.size) * TILE), false)
+		_draw_clipped(canvas, outflow_art, painted, region, false)
 	for pr in _painted:
-		var r: Rect2i = pr[0]
-		var at := Vector2(r.position) * TILE
-		var sz := Vector2(r.size) * TILE
-		if pr[2]:
-			draw_set_transform(at + Vector2(sz.x, 0), 0, Vector2(-1, 1))
-			draw_texture_rect(pr[1], Rect2(Vector2.ZERO, sz), false)
-			draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
-		else:
-			draw_texture_rect(pr[1], Rect2(at, sz), false)
-	for y in level.height:
-		for x in level.width:
+		var p: Dictionary = pr[0]
+		_draw_clipped(canvas, pr[1], p.rect, region, p.mirrored)
+		for sd in sealed_doorways(p):
+			var spot: Rect2i = sd[1]
+			if not spot.intersects(region):
+				continue
+			if _sealed.has(sd[0]):
+				_draw_clipped(canvas, _sealed[sd[0]], spot, region, false)
+			else:
+				var r := Rect2(Vector2(spot.position) * TILE, Vector2(spot.size) * TILE)
+				canvas.draw_rect(r, Color(0.16, 0.15, 0.16))
+	for y in range(region.position.y, region.end.y):
+		for x in range(region.position.x, region.end.x):
 			var c := Vector2i(x, y)
 			var t := level.get_tile(c)
 			var r := Rect2(x * TILE, y * TILE, TILE, TILE)
 			var n := _noise(x, y)
 			if painted.has_point(c):
 				if _over_painting(c, t):
-					_draw_painted_piece(c, t, r)
+					_draw_painted_piece(canvas, c, t, r)
 				continue
 			if not _painted.is_empty() and _in_painted_room(c):
 				continue
 			match t:
 				Level.Tile.PROP:
 					# stand-in: a solid block (machinery, a pillar, crates)
-					draw_rect(r, Color(0.27, 0.25, 0.23))
-					draw_rect(r.grow(-3), Color(0.24, 0.17, 0.11))
-					draw_rect(Rect2(r.position + Vector2(3, 3), Vector2(TILE - 6, 4)), Color(0.33, 0.24, 0.15))
+					canvas.draw_rect(r, Color(0.27, 0.25, 0.23))
+					canvas.draw_rect(r.grow(-3), Color(0.24, 0.17, 0.11))
+					canvas.draw_rect(Rect2(r.position + Vector2(3, 3), Vector2(TILE - 6, 4)), Color(0.33, 0.24, 0.15))
 				Level.Tile.RAIL:
 					# stand-in: floor with a low iron railing across it
-					draw_rect(r, Color(0.27, 0.25, 0.23).lerp(Color(0.31, 0.29, 0.26), n))
-					draw_rect(Rect2(r.position + Vector2(0, 13), Vector2(TILE, 3)), Color(0.18, 0.18, 0.2))
+					canvas.draw_rect(r, Color(0.27, 0.25, 0.23).lerp(Color(0.31, 0.29, 0.26), n))
+					canvas.draw_rect(Rect2(r.position + Vector2(0, 13), Vector2(TILE, 3)), Color(0.18, 0.18, 0.2))
 					for px in [4, 15, 26]:
-						draw_rect(Rect2(r.position + Vector2(px, 10), Vector2(2, 12)), Color(0.15, 0.15, 0.17))
+						canvas.draw_rect(Rect2(r.position + Vector2(px, 10), Vector2(2, 12)), Color(0.15, 0.15, 0.17))
 				Level.Tile.WALL:
 					if _touches_floor(c):
-						draw_rect(r, Color(0.16, 0.15, 0.16).lerp(Color(0.2, 0.19, 0.2), n))
-						draw_rect(Rect2(r.position.x, r.position.y + TILE - 6, TILE, 6), Color(0.1, 0.09, 0.1))
+						canvas.draw_rect(r, Color(0.16, 0.15, 0.16).lerp(Color(0.2, 0.19, 0.2), n))
+						canvas.draw_rect(Rect2(r.position.x, r.position.y + TILE - 6, TILE, 6), Color(0.1, 0.09, 0.1))
 					else:
-						draw_rect(r, Color(0.04, 0.04, 0.05))
+						canvas.draw_rect(r, Color(0.04, 0.04, 0.05))
 				Level.Tile.FLOOR:
-					draw_rect(r, Color(0.27, 0.25, 0.23).lerp(Color(0.31, 0.29, 0.26), n))
-					draw_rect(r, Color(0, 0, 0, 0.18), false, 1.0)
+					canvas.draw_rect(r, Color(0.27, 0.25, 0.23).lerp(Color(0.31, 0.29, 0.26), n))
+					canvas.draw_rect(r, Color(0, 0, 0, 0.18), false, 1.0)
 				Level.Tile.WATER:
-					draw_rect(r, Color(0.08, 0.16, 0.2).lerp(Color(0.1, 0.2, 0.25), n))
-					draw_line(r.position + Vector2(6, 12 + n * 6), r.position + Vector2(18, 12 + n * 6), Color(0.4, 0.6, 0.7, 0.4), 1.0)
+					canvas.draw_rect(r, Color(0.08, 0.16, 0.2).lerp(Color(0.1, 0.2, 0.25), n))
+					canvas.draw_line(r.position + Vector2(6, 12 + n * 6), r.position + Vector2(18, 12 + n * 6), Color(0.4, 0.6, 0.7, 0.4), 1.0)
 				Level.Tile.DOOR_CLOSED:
-					draw_rect(r, Color(0.27, 0.25, 0.23))
-					draw_rect(r.grow(-4), Color(0.36, 0.24, 0.14))
-					draw_rect(Rect2(r.position.x + 20, r.position.y + 15, 3, 3), Color(0.8, 0.7, 0.4))
+					canvas.draw_rect(r, Color(0.27, 0.25, 0.23))
+					canvas.draw_rect(r.grow(-4), Color(0.36, 0.24, 0.14))
+					canvas.draw_rect(Rect2(r.position.x + 20, r.position.y + 15, 3, 3), Color(0.8, 0.7, 0.4))
 				Level.Tile.STAIRS:
-					draw_rect(r, Color(0.27, 0.25, 0.23))
+					canvas.draw_rect(r, Color(0.27, 0.25, 0.23))
 					for i in 4:
-						draw_rect(Rect2(r.position.x + 3, r.position.y + 4 + i * 6, TILE - 6 - i * 4, 4), Color(0.12, 0.11, 0.1).lerp(Color(0.02, 0.02, 0.03), i / 3.0))
+						canvas.draw_rect(Rect2(r.position.x + 3, r.position.y + 4 + i * 6, TILE - 6 - i * 4, 4), Color(0.12, 0.11, 0.1).lerp(Color(0.02, 0.02, 0.03), i / 3.0))
 				Level.Tile.DOOR_OPEN:
-					draw_rect(r, Color(0.27, 0.25, 0.23))
-					draw_rect(Rect2(r.position.x + 2, r.position.y + 2, 6, TILE - 4), Color(0.3, 0.2, 0.12))
-				Level.Tile.GATE_OPEN:
-					# a sluice mouth in the wall, water pouring through
-					draw_rect(r, Color(0.16, 0.15, 0.16))
-					draw_rect(r.grow(-4), Color(0.03, 0.05, 0.07))
-					var flow := fmod(Time.get_ticks_msec() / 400.0, 1.0)
-					for i in 3:
-						var sx := r.position.x + 9 + i * 6
-						draw_line(Vector2(sx, r.position.y + 4 + flow * 8), Vector2(sx, r.end.y - 2), Color(0.45, 0.65, 0.75, 0.6), 1.0)
-					draw_rect(Rect2(r.position.x + 2, r.position.y + 2, TILE - 4, 3), Color(0.35, 0.33, 0.3))
-				Level.Tile.GATE_SHUT:
-					# an iron sluice plate, bolted
-					draw_rect(r, Color(0.16, 0.15, 0.16))
-					draw_rect(r.grow(-3), Color(0.22, 0.24, 0.25))
-					for i in 3:
-						draw_rect(Rect2(r.position.x + 5, r.position.y + 7 + i * 7, TILE - 10, 2), Color(0.12, 0.13, 0.14))
-					draw_rect(Rect2(r.position.x + 4, r.position.y + 4, 2, 2), Color(0.55, 0.45, 0.3))
-					draw_rect(Rect2(r.end.x - 6, r.position.y + 4, 2, 2), Color(0.55, 0.45, 0.3))
-
+					canvas.draw_rect(r, Color(0.27, 0.25, 0.23))
+					canvas.draw_rect(Rect2(r.position.x + 2, r.position.y + 2, 6, TILE - 4), Color(0.3, 0.2, 0.12))
+				Level.Tile.GATE_OPEN, Level.Tile.GATE_SHUT:
+					_draw_stand_in(canvas, t, r)
 	for c in level.lights:
-		if _in_painted_room(c):
+		if not region.has_point(c) or _in_painted_room(c):
 			continue
 		var r := Rect2(c.x * TILE, c.y * TILE, TILE, TILE)
 		if level.get_tile(c) == Level.Tile.PROP:
 			# stand-in brazier on its stand
-			draw_rect(Rect2(r.position + Vector2(13, 14), Vector2(6, 12)), Color(0.15, 0.13, 0.12))
-			draw_rect(Rect2(r.position + Vector2(9, 9), Vector2(14, 6)), Color(0.2, 0.17, 0.14))
-			draw_rect(Rect2(r.position + Vector2(11, 5), Vector2(10, 5)), Color(1.0, 0.62, 0.25))
+			canvas.draw_rect(Rect2(r.position + Vector2(13, 14), Vector2(6, 12)), Color(0.15, 0.13, 0.12))
+			canvas.draw_rect(Rect2(r.position + Vector2(9, 9), Vector2(14, 6)), Color(0.2, 0.17, 0.14))
+			canvas.draw_rect(Rect2(r.position + Vector2(11, 5), Vector2(10, 5)), Color(1.0, 0.62, 0.25))
 		else:
 			# stand-in wall lantern
-			draw_rect(Rect2(r.position + Vector2(12, 8), Vector2(8, 10)), Color(0.16, 0.14, 0.13))
-			draw_rect(Rect2(r.position + Vector2(13, 9), Vector2(6, 7)), Color(1.0, 0.72, 0.3))
+			canvas.draw_rect(Rect2(r.position + Vector2(12, 8), Vector2(8, 10)), Color(0.16, 0.14, 0.13))
+			canvas.draw_rect(Rect2(r.position + Vector2(13, 9), Vector2(6, 7)), Color(1.0, 0.72, 0.3))
 
 
 func _process(_delta: float) -> void:
@@ -165,12 +246,15 @@ func _process(_delta: float) -> void:
 		return
 	var now := Time.get_ticks_msec() / 1000.0
 	if level.gates.any(func(g): return level.get_tile(g) == Level.Tile.GATE_OPEN) or _flooded_at.values().any(func(t): return now - t < FLOOD_FRAME * 4.0):
-		queue_redraw()
+		var area := level.outflow.grow(1)
+		for ch in _chunks:
+			if ch.region.intersects(area):
+				ch.queue_redraw()
 
 
 ## ChatGPT's Outflow pieces, drawn over the painting: the sluice gates (open, looped; shut) and floor that has
 ## flooded (four frames once, then the last held). Falls back to the drawn stand-ins without them.
-func _draw_painted_piece(c: Vector2i, t: int, r: Rect2) -> void:
+func _draw_painted_piece(canvas: CanvasItem, c: Vector2i, t: int, r: Rect2) -> void:
 	var now := Time.get_ticks_msec() / 1000.0
 	var piece := ""
 	var frame := 0
@@ -186,18 +270,20 @@ func _draw_painted_piece(c: Vector2i, t: int, r: Rect2) -> void:
 				_flooded_at[c] = now
 			frame = mini(3, int((now - _flooded_at[c]) / FLOOD_FRAME))
 	if not _pieces.has(piece):
-		_draw_stand_in(t, r)
+		_draw_stand_in(canvas, t, r)
 		return
-	draw_texture_rect_region(_pieces[piece], r, Rect2(frame * TILE, 0, TILE, TILE))
+	canvas.draw_texture_rect_region(_pieces[piece], r, Rect2(frame * TILE, 0, TILE, TILE))
 
 
-func _draw_stand_in(t: int, r: Rect2) -> void:
+func _draw_stand_in(canvas: CanvasItem, t: int, r: Rect2) -> void:
 	if t == Level.Tile.WATER:
-		draw_rect(r, Color(0.08, 0.16, 0.2))
+		canvas.draw_rect(r, Color(0.08, 0.16, 0.2))
 	elif t == Level.Tile.GATE_SHUT:
-		draw_rect(r.grow(-3), Color(0.22, 0.24, 0.25))
+		canvas.draw_rect(r, Color(0.16, 0.15, 0.16))
+		canvas.draw_rect(r.grow(-3), Color(0.22, 0.24, 0.25))
 	else:
-		draw_rect(r.grow(-4), Color(0.03, 0.05, 0.07))
+		canvas.draw_rect(r, Color(0.16, 0.15, 0.16))
+		canvas.draw_rect(r.grow(-4), Color(0.03, 0.05, 0.07))
 
 
 ## Inside the painted room, only what changes during the fight is drawn on top: the gates, and floor that has flooded.
