@@ -18,3 +18,7 @@ Runtime delivery: ../../attack_mace.png, 64×64, rows3/3/3/8, canvas512×256. Em
 Job2b remains unchecked: the 47-cell study overlaps neighbouring figures/mauls, so some crops contain fragments or clipped extremities. One deliberate anticipation hold repeats the opening Knee Breaker pose to supply its eighth timing cell, but this does not fix the overlap. Do not load this candidate or rename it to the runtime filename. The abilities need isolated per-ability passes before assembly; no code integration is requested for them.
 
 Prompt set: attack wind-up3, strike3, recovery3, heavier overhead critical8; then Skull Crack8 short overhead, Knee Breaker8 low sweep, Shatter9 chest smash, Wide Arc10 full spin, Execution12 high held overhead into ground strike. Preserve canonical greatcoat, red scarf, satchel, amber lamp and fixed two-handed iron maul. Hard pixel art, no scenery/text, transparent cutouts.
+
+## Follow-up refinement audit
+
+A second attempt generated each ability independently (Skull Crack8,Knee Breaker8,Shatter9,Wide Arc10,Execution12) using the same attack source. Those strips still touched adjacent silhouettes,clipped maul heads at canvas edges,and in Execution omitted the final maul head. These variants were discarded rather than promoted. Job2b is too large for reliable strip generation here; split into individual keyed poses with explicit weapon registration before assembling the47-frame runtime sheet. The runtime mace_abilities.png remains absent.
