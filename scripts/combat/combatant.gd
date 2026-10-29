@@ -39,7 +39,10 @@ var fleeing := false     # broke and is running
 var fled := false        # got away; gone from the fight, may come back
 var fled_once := false   # only runs once
 var group := -1         # which band it belongs to; a band fights together
-var state := "idle"      # outside a fight: idle, hunting (coming for Thomas) or searching (going to where he was seen)
+var state := "idle"      # outside a fight: idle, hunting (coming for Thomas), searching (going to where he was seen) or patrolling
+var route: Array[Vector2i] = []   # a patrol leader's waypoints (room centres), walked back and forth
+var route_i := 0                  # the waypoint it is heading for
+var route_dir := 1                # +1 along the route, -1 back
 var target := Vector2i.ZERO
 
 
