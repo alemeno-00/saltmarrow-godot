@@ -3,7 +3,8 @@ extends RefCounted
 ## One level's tiles and the rules for walking them.
 ## Pure data with no drawing, so it can be tested headless and saved as it is.
 
-enum Tile { WALL, FLOOR, DOOR_CLOSED, DOOR_OPEN, WATER, STAIRS, GATE_OPEN, GATE_SHUT }
+enum Tile { WALL, FLOOR, DOOR_CLOSED, DOOR_OPEN, WATER, STAIRS, GATE_OPEN, GATE_SHUT, PROP, RAIL }
+## PROP: machinery, pillars, crates: blocks movement and sight. RAIL: a railing: blocks movement, not sight.
 
 const DIRS_8: Array[Vector2i] = [
 	Vector2i(0, -1), Vector2i(1, -1), Vector2i(1, 0), Vector2i(1, 1),
@@ -15,6 +16,10 @@ var height: int
 var tiles: PackedByteArray
 var seed_value: int = 0
 var rooms: Array[Rect2i] = []
+## The room kit's pieces as placed: kind, layout, block, blocks, rect, mirrored, variant, depth, parent, open (door sides).
+var pieces: Array = []
+## Squares with a light: wall lanterns and standing braziers, from the blockouts.
+var lights: Array[Vector2i] = []
 var start: Vector2i = Vector2i.ZERO
 var stairs: Vector2i = Vector2i(-1, -1)
 ## The boss room on the deepest level (empty elsewhere), and the sluice gates in its walls.
@@ -27,12 +32,11 @@ const OUTFLOW_CHANNEL_ROW := 4
 const OUTFLOW_GATE_COLUMNS := [2, 9]
 const OUTFLOW_LANTERN_COLUMNS := [0, 6, 11]
 const OUTFLOW_ENTRANCE_ROWS := [1, 2]
-const OUTFLOW_GAP := 4   # squares of solid rock kept between the Outflow and every other room
 
 var _astar := AStarGrid2D.new()
 
 
-func _init(w: int = 60, h: int = 40) -> void:
+func _init(w: int = 80, h: int = 48) -> void:
 	width = w
 	height = h
 	tiles = PackedByteArray()
@@ -85,7 +89,7 @@ func can_step(from: Vector2i, dir: Vector2i) -> bool:
 ## Walls and closed doors block sight.
 func blocks_sight(c: Vector2i) -> bool:
 	var t := get_tile(c)
-	return t == Tile.WALL or t == Tile.DOOR_CLOSED or t == Tile.GATE_OPEN or t == Tile.GATE_SHUT
+	return t == Tile.WALL or t == Tile.DOOR_CLOSED or t == Tile.GATE_OPEN or t == Tile.GATE_SHUT or t == Tile.PROP
 
 
 ## Can something at `a` see `b`? A straight line between the two squares, blocked by walls and closed doors.
@@ -123,72 +127,36 @@ func rebuild_paths() -> void:
 			_astar.set_point_solid(c, not is_walkable(c))
 
 
-## Rooms joined by corridors, with doors where corridors meet rooms. Same seed, same level.
-## `bottom`: the deepest level, where the last room is the Outflow and there are no stairs down.
+## A Sewers level from the room kit (scripts/levels/sewer_kit.gd). Same seed, same level.
+## `bottom`: the deepest level, where the exit is the Outflow instead of stairs down.
 func generate(seed_in: int, bottom := false) -> void:
 	seed_value = seed_in
 	var rng := RandomNumberGenerator.new()
-	rng.seed = seed_in
+	for attempt in 20:
+		rng.seed = seed_in if attempt == 0 else hash([seed_in, attempt])
+		_clear()
+		if SewerKit.build(self, rng, bottom):
+			break
+	rebuild_paths()
+
+
+func _clear() -> void:
 	tiles.fill(Tile.WALL)
 	rooms.clear()
+	pieces.clear()
+	lights.clear()
 	outflow = Rect2i()
 	gates.clear()
 	stairs = Vector2i(-1, -1)
-	if bottom:
-		# The Outflow is placed first so it is always big enough. Its walls must stay whole for the painted room
-		# (design/art-briefs/outflow/), so every other room stays clear to its left and no corridor crosses it.
-		outflow = Rect2i(width - OUTFLOW_SIZE.x - 3, rng.randi_range(2, height - OUTFLOW_SIZE.y - 3), OUTFLOW_SIZE.x, OUTFLOW_SIZE.y)
-		_carve(outflow)
-	var tries := 0
-	while rooms.size() < 12 and tries < 400:
-		tries += 1
-		var w := rng.randi_range(5, 11)
-		var h := rng.randi_range(4, 8)
-		var r := Rect2i(rng.randi_range(1, width - w - 2), rng.randi_range(1, height - h - 2), w, h)
-		if bottom and r.end.x > outflow.position.x - OUTFLOW_GAP:
-			continue
-		var clash := false
-		for o in rooms:
-			if r.grow(2).intersects(o):
-				clash = true
-				break
-		if clash:
-			continue
-		rooms.append(r)
-		_carve(r)
-	# join each room to the next, in order of position, so everything connects
-	rooms.sort_custom(func(a: Rect2i, b: Rect2i) -> bool: return a.get_center().x + a.get_center().y * 0.3 < b.get_center().x + b.get_center().y * 0.3)
-	for i in range(1, rooms.size()):
-		_corridor(rooms[i - 1].get_center(), rooms[i].get_center(), rng)
-	# a few extra loops so it isn't a straight line of rooms
-	for _n in 3:
-		if rooms.size() > 3:
-			var a := rooms[rng.randi_range(0, rooms.size() - 1)]
-			var b := rooms[rng.randi_range(0, rooms.size() - 1)]
-			if a != b:
-				_corridor(a.get_center(), b.get_center(), rng)
-	if bottom:
-		_join_outflow(rng)
-	_place_doors(rng)
-	# a pool of water in one room
-	if rooms.size() > 2:
-		var pr := rooms[rng.randi_range(1, rooms.size() - 1 if not bottom else rooms.size() - 2)]
-		var pc := pr.get_center()
-		for y in range(pc.y - 1, pc.y + 2):
-			for x in range(pc.x - 2, pc.x + 2):
-				if get_tile(Vector2i(x, y)) == Tile.FLOOR and rng.randf() < 0.8:
-					tiles[idx(Vector2i(x, y))] = Tile.WATER
-	start = rooms[0].get_center() if rooms.size() > 0 else Vector2i(1, 1)
-	tiles[idx(start)] = Tile.FLOOR
-	if bottom:
-		rooms.append(outflow)
-		_make_outflow()
-	# stairs down in the far corner of the last room
-	elif rooms.size() > 1:
-		var last := rooms[rooms.size() - 1]
-		stairs = last.end - Vector2i(2, 2)
-		tiles[idx(stairs)] = Tile.STAIRS
-	rebuild_paths()
+	start = Vector2i.ZERO
+
+
+## Writes the Outflow (placed by the room kit) into the squares: its inside, its fixed layout, its west entrance.
+func stamp_outflow() -> void:
+	_carve(outflow)
+	_make_outflow()
+	for row in OUTFLOW_ENTRANCE_ROWS:
+		tiles[idx(Vector2i(outflow.position.x - 1, outflow.position.y + row))] = Tile.FLOOR
 
 
 func _carve(r: Rect2i) -> void:
@@ -208,20 +176,6 @@ func _make_outflow() -> void:
 		var g := Vector2i(o.x + gx, o.y - 1)
 		gates.append(g)
 		tiles[idx(g)] = Tile.GATE_OPEN
-
-
-## The corridor to the Outflow: from the nearest room to just outside its entrance, then through it.
-func _join_outflow(rng: RandomNumberGenerator) -> void:
-	var o := outflow.position
-	var outside := Vector2i(o.x - 2, o.y + OUTFLOW_ENTRANCE_ROWS[0])
-	var nearest := rooms[0]
-	for r in rooms:
-		if (r.get_center() - outside).length_squared() < (nearest.get_center() - outside).length_squared():
-			nearest = r
-	_corridor(nearest.get_center(), outside, rng)
-	for row in OUTFLOW_ENTRANCE_ROWS:
-		tiles[idx(Vector2i(o.x - 2, o.y + row))] = Tile.FLOOR
-		tiles[idx(Vector2i(o.x - 1, o.y + row))] = Tile.FLOOR
 
 
 ## The wall squares where the painted room has its lanterns (the blockout's yellow marks).
@@ -259,38 +213,6 @@ func flood_step(area: Rect2i, cap: float) -> Array[Vector2i]:
 	return fresh
 
 
-func _corridor(a: Vector2i, b: Vector2i, rng: RandomNumberGenerator) -> void:
-	var horizontal_first := rng.randf() < 0.5
-	var c := a
-	var steps: Array[Vector2i] = []
-	if horizontal_first:
-		steps.append(Vector2i(b.x, a.y))
-		steps.append(b)
-	else:
-		steps.append(Vector2i(a.x, b.y))
-		steps.append(b)
-	for target in steps:
-		while c != target:
-			c += Vector2i(signi(target.x - c.x), signi(target.y - c.y))
-			if get_tile(c) == Tile.WALL:
-				tiles[idx(c)] = Tile.FLOOR
-
-
-## A door goes where a corridor passes through a room's wall line: floor on both sides along one axis, wall on the other.
-func _place_doors(rng: RandomNumberGenerator) -> void:
-	for r in rooms:
-		var ring := r.grow(1)
-		for y in range(ring.position.y, ring.end.y):
-			for x in range(ring.position.x, ring.end.x):
-				var c := Vector2i(x, y)
-				if r.has_point(c) or get_tile(c) != Tile.FLOOR:
-					continue
-				var ns := get_tile(c + Vector2i.UP) == Tile.WALL and get_tile(c + Vector2i.DOWN) == Tile.WALL
-				var we := get_tile(c + Vector2i.LEFT) == Tile.WALL and get_tile(c + Vector2i.RIGHT) == Tile.WALL
-				if (ns or we) and rng.randf() < 0.6:
-					tiles[idx(c)] = Tile.DOOR_CLOSED
-
-
 ## Every walkable square reachable from `from` (used by tests and later by level checks).
 func reachable_from(from: Vector2i) -> Dictionary:
 	var seen := {from: true}
@@ -306,13 +228,42 @@ func reachable_from(from: Vector2i) -> Dictionary:
 
 
 func to_dict() -> Dictionary:
-	return {"w": width, "h": height, "seed": seed_value, "tiles": Marshalls.raw_to_base64(tiles), "start": [start.x, start.y]}
+	var ps: Array = []
+	for p in pieces:
+		var r: Rect2i = p.rect
+		ps.append({"kind": p.kind, "layout": p.layout, "block": [p.block.x, p.block.y], "blocks": [p.blocks.x, p.blocks.y],
+			"rect": [r.position.x, r.position.y, r.size.x, r.size.y], "mirrored": p.mirrored, "variant": p.variant,
+			"depth": p.depth, "parent": p.parent, "open": p.open})
+	return {"w": width, "h": height, "seed": seed_value, "tiles": Marshalls.raw_to_base64(tiles), "start": [start.x, start.y],
+		"stairs": [stairs.x, stairs.y], "outflow": [outflow.position.x, outflow.position.y, outflow.size.x, outflow.size.y],
+		"gates": gates.map(func(g): return [g.x, g.y]), "lights": lights.map(func(c): return [c.x, c.y]), "pieces": ps}
+
+
+static func _v(a) -> Vector2i:
+	return Vector2i(int(a[0]), int(a[1]))
 
 
 static func from_dict(d: Dictionary) -> Level:
 	var l := Level.new(int(d.w), int(d.h))
 	l.seed_value = int(d.seed)
 	l.tiles = Marshalls.base64_to_raw(d.tiles)
-	l.start = Vector2i(int(d.start[0]), int(d.start[1]))
+	l.start = _v(d.start)
+	if d.has("stairs"):
+		l.stairs = _v(d.stairs)
+		l.outflow = Rect2i(int(d.outflow[0]), int(d.outflow[1]), int(d.outflow[2]), int(d.outflow[3]))
+		for g in d.gates:
+			l.gates.append(_v(g))
+		for c in d.lights:
+			l.lights.append(_v(c))
+		for p in d.pieces:
+			var r: Array = p.rect
+			var open: Array[String] = []
+			for o in p.open:
+				open.append(String(o))
+			l.pieces.append({"kind": String(p.kind), "layout": String(p.layout), "block": _v(p.block), "blocks": _v(p.blocks),
+				"rect": Rect2i(int(r[0]), int(r[1]), int(r[2]), int(r[3])), "mirrored": bool(p.mirrored),
+				"variant": int(p.variant), "depth": int(p.depth), "parent": int(p.parent), "open": open})
+			if p.kind != "connector":
+				l.rooms.append(l.outflow if p.kind == "outflow" else l.pieces[-1].rect)
 	l.rebuild_paths()
 	return l

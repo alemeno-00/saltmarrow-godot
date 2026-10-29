@@ -30,6 +30,8 @@ func add_game(tree: SceneTree) -> Node:
 		if node != null:
 			node.free()
 		return null
+	if "level_seed" in node:
+		node.level_seed = 7   # a fixed first level, so game tests repeat exactly
 	tree.root.add_child(node)
 	await tree.process_frame
 	return node

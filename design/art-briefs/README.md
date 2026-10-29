@@ -27,11 +27,12 @@ The rules below fix those.
 | Brown | `#7a4f2a` | Blocking prop | Blocks movement and sight | Machinery, a pillar, a pump, stacked crates: something solid and tall |
 | Violet | `#8e5aa8` | Railing | Blocks movement, **not** sight | A low railing or chain line along an edge |
 | Green | `#3fae5a` | Door / entrance | Walkable; where a connector joins | Open floor through an arch |
-| Red | `#c0392b` | Sluice or special fixture | Set by the room's own rules | The frame only; the game draws the moving part |
+| Red | `#c0392b` | Sluice or special fixture | Blocks movement (e.g. the entry's ladder up to town) | A fixture; for sluices, the frame only, as the game draws the moving part |
+| Dark violet | `#4b3f6b` | Stairs down | Walkable; leads to the next depth | Stone steps going down into the dark |
 | Yellow mark | `#f1c40f` | Light on a wall | (on a wall-face square) | An iron wall lantern |
 | Orange mark | `#e67e22` | Standing light | (on a prop square) | A brazier or lantern post |
 
-Brown and violet need two new tile types in the game. Claude adds them with the room kit.
+Brown and violet are the game's *prop* and *rail* tiles. The room kit's blockouts are drawn by `tools/blockouts/sewer_layouts.gd` into `scripts/levels/sewers/layouts/`; to change a room, edit its text there and run the tool again.
 
 ## Rules for every blockout (Claude)
 
@@ -39,7 +40,7 @@ Brown and violet need two new tile types in the game. Claude adds them with the 
 2. **Light reaches the whole room:** a wall lantern or standing light within about 6 squares of every floor square. Standing lights go on prop squares, so they're never in the way.
 3. **Give every room a shape.** Junctions and chambers get at least one of: a raised walkway, a railing line, an alcove, a blocking prop (machinery, pillars). Plain rectangles are for connectors only.
 4. **Doors follow the door standard:** 2 squares wide, centred on their side, green.
-5. Doors and their landing squares stay clear: no props or railings within 2 squares of a door.
+5. Doors and their landing squares stay clear: the 2 squares straight in front of each door are walkable (no props or railings).
 
 ## Rules for every painting (ChatGPT)
 

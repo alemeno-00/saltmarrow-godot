@@ -12,6 +12,9 @@ var level: Level
 var outflow_art: Texture2D = null   # the painted Outflow, walls included (14 x 11 squares)
 var _pieces := {}                   # the Outflow's moving pieces, by file name
 var _flooded_at := {}               # square -> when it flooded, to play the flooding frames once
+const ROOMS_ART := "res://assets/tiles/sewers/rooms/"   # <layout>/1.png, 2.png ... (design/art-briefs/README.md)
+var _painted: Array = []            # [Rect2i, Texture2D, mirrored] for room-kit pieces that have a painting
+static var _room_art := {}          # layout -> Array of its paintings
 
 
 func show_level(l: Level) -> void:
@@ -23,7 +26,34 @@ func show_level(l: Level) -> void:
 			if ResourceLoader.exists(OUTFLOW_DIR + n + ".png"):
 				_pieces[n] = load(OUTFLOW_DIR + n + ".png")
 	_flooded_at.clear()
+	_painted.clear()
+	for p in level.pieces:
+		if p.kind == "outflow":
+			continue
+		var art := _paintings(p.layout)
+		if not art.is_empty():
+			_painted.append([p.rect, art[int(p.variant) % art.size()], p.mirrored])
 	queue_redraw()
+
+
+## A layout's paintings, if ChatGPT has delivered any: rooms/<layout>/1.png, 2.png and so on.
+static func _paintings(layout: String) -> Array:
+	if not _room_art.has(layout):
+		var found: Array = []
+		for i in range(1, 10):
+			var path := "%s%s/%d.png" % [ROOMS_ART, layout, i]
+			if not ResourceLoader.exists(path):
+				break
+			found.append(load(path))
+		_room_art[layout] = found
+	return _room_art[layout]
+
+
+func _in_painted_room(c: Vector2i) -> bool:
+	for pr in _painted:
+		if (pr[0] as Rect2i).has_point(c):
+			return true
+	return false
 
 
 ## The squares the painted Outflow covers: the room and its walls.
@@ -39,6 +69,16 @@ func _draw() -> void:
 	var painted := painted_area()
 	if painted.has_area():
 		draw_texture_rect(outflow_art, Rect2(Vector2(painted.position) * TILE, Vector2(painted.size) * TILE), false)
+	for pr in _painted:
+		var r: Rect2i = pr[0]
+		var at := Vector2(r.position) * TILE
+		var sz := Vector2(r.size) * TILE
+		if pr[2]:
+			draw_set_transform(at + Vector2(sz.x, 0), 0, Vector2(-1, 1))
+			draw_texture_rect(pr[1], Rect2(Vector2.ZERO, sz), false)
+			draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+		else:
+			draw_texture_rect(pr[1], Rect2(at, sz), false)
 	for y in level.height:
 		for x in level.width:
 			var c := Vector2i(x, y)
@@ -49,7 +89,20 @@ func _draw() -> void:
 				if _over_painting(c, t):
 					_draw_painted_piece(c, t, r)
 				continue
+			if not _painted.is_empty() and _in_painted_room(c):
+				continue
 			match t:
+				Level.Tile.PROP:
+					# stand-in: a solid block (machinery, a pillar, crates)
+					draw_rect(r, Color(0.27, 0.25, 0.23))
+					draw_rect(r.grow(-3), Color(0.24, 0.17, 0.11))
+					draw_rect(Rect2(r.position + Vector2(3, 3), Vector2(TILE - 6, 4)), Color(0.33, 0.24, 0.15))
+				Level.Tile.RAIL:
+					# stand-in: floor with a low iron railing across it
+					draw_rect(r, Color(0.27, 0.25, 0.23).lerp(Color(0.31, 0.29, 0.26), n))
+					draw_rect(Rect2(r.position + Vector2(0, 13), Vector2(TILE, 3)), Color(0.18, 0.18, 0.2))
+					for px in [4, 15, 26]:
+						draw_rect(Rect2(r.position + Vector2(px, 10), Vector2(2, 12)), Color(0.15, 0.15, 0.17))
 				Level.Tile.WALL:
 					if _touches_floor(c):
 						draw_rect(r, Color(0.16, 0.15, 0.16).lerp(Color(0.2, 0.19, 0.2), n))
@@ -90,6 +143,20 @@ func _draw() -> void:
 						draw_rect(Rect2(r.position.x + 5, r.position.y + 7 + i * 7, TILE - 10, 2), Color(0.12, 0.13, 0.14))
 					draw_rect(Rect2(r.position.x + 4, r.position.y + 4, 2, 2), Color(0.55, 0.45, 0.3))
 					draw_rect(Rect2(r.end.x - 6, r.position.y + 4, 2, 2), Color(0.55, 0.45, 0.3))
+
+	for c in level.lights:
+		if _in_painted_room(c):
+			continue
+		var r := Rect2(c.x * TILE, c.y * TILE, TILE, TILE)
+		if level.get_tile(c) == Level.Tile.PROP:
+			# stand-in brazier on its stand
+			draw_rect(Rect2(r.position + Vector2(13, 14), Vector2(6, 12)), Color(0.15, 0.13, 0.12))
+			draw_rect(Rect2(r.position + Vector2(9, 9), Vector2(14, 6)), Color(0.2, 0.17, 0.14))
+			draw_rect(Rect2(r.position + Vector2(11, 5), Vector2(10, 5)), Color(1.0, 0.62, 0.25))
+		else:
+			# stand-in wall lantern
+			draw_rect(Rect2(r.position + Vector2(12, 8), Vector2(8, 10)), Color(0.16, 0.14, 0.13))
+			draw_rect(Rect2(r.position + Vector2(13, 9), Vector2(6, 7)), Color(1.0, 0.72, 0.3))
 
 
 func _process(_delta: float) -> void:
@@ -144,7 +211,8 @@ func _touches_floor(c: Vector2i) -> bool:
 	for d in Level.DIRS_8:
 		if level.is_walkable(c + d):
 			return true
-	return false
+	# the upper half of a two-square-thick north wall: floor two squares below
+	return level.is_walkable(c + Vector2i(0, 2)) or level.get_tile(c + Vector2i(0, 2)) == Level.Tile.PROP
 
 
 static func _noise(x: int, y: int) -> float:
