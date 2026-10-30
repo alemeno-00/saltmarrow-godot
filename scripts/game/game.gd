@@ -101,6 +101,7 @@ func _ready() -> void:
 	hero_lantern.position = Vector2(0, 4)
 	hero.add_child(hero_lantern)
 	hero.stepped.connect(_on_stepped)
+	actors.y_sort_enabled = true   # creatures and crates drawn in order of their feet, so behind means behind
 	world_ui = CanvasLayer.new()
 	world_ui.follow_viewport_enabled = true
 	add_child(world_ui)
@@ -142,6 +143,7 @@ func new_level(seed_in: int, keep := false) -> void:
 	hero_unit.cell = level.start
 	hero.sync(hero_unit)
 	gore.clear_all()
+	_place_cover_props()
 	clear_enemies()
 	_spawn_enemies()
 	battle = null
@@ -168,7 +170,7 @@ func new_level(seed_in: int, keep := false) -> void:
 
 func clear_enemies() -> void:
 	for c in actors.get_children():
-		if c != hero:
+		if c != hero and not c is CoverProp:
 			c.queue_free()
 	enemies.clear()
 	views = {hero_unit: hero}
@@ -273,7 +275,8 @@ func _roam(e: Combatant, goal: Vector2i, speed: float, delta: float) -> void:
 	if (r.goal != goal and r.age >= MovementRules.REPATH_EVERY) or ((r.path as Array).is_empty() and e.cell != goal):
 		r.goal = goal
 		r.age = 0.0
-		r.path = Array(MovementRules.route(level, v.position, MovementRules.centre(goal), radius))
+		# round the creatures standing near it (those further off will have moved by the time it gets there)
+		r.path = Array(MovementRules.route(level, v.position, MovementRules.centre(goal), radius, _bodies_near(e, v.position, 3)))
 	var p: Array = r.path
 	if p.is_empty():
 		return
@@ -283,6 +286,8 @@ func _roam(e: Combatant, goal: Vector2i, speed: float, delta: float) -> void:
 	var target: Vector2 = p[0]
 	var to := v.position.move_toward(target, step)
 	if MovementRules.overlaps(to, radius, _bodies_near(e, to)):
+		r.age = MovementRules.REPATH_EVERY   # someone is in the way: find a way round them next time
+		r.goal = Vector2i(-9999, -9999)
 		return
 	if to.distance_to(target) < 0.5:
 		p.pop_front()
@@ -310,13 +315,13 @@ func open_spot_near(p: Vector2, r: float) -> Vector2:
 
 
 ## Thomas and the other creatures near a point, as [centre, radius], for a roaming creature not to walk into.
-func _bodies_near(me: Combatant, at: Vector2) -> Array:
+func _bodies_near(me: Combatant, at: Vector2, squares := 2) -> Array:
 	var out: Array = []
 	var radius := MovementRules.px(MovementRules.ENEMY_RADIUS)
-	if hero.position.distance_to(at) < TILE * 2:
+	if hero.position.distance_to(at) < TILE * squares:
 		out.append([hero.position, MovementRules.px(MovementRules.HERO_RADIUS)])
 	for e in enemies:
-		if e != me and e.alive() and not e.fled and views[e].position.distance_to(at) < TILE * 2:
+		if e != me and e.alive() and not e.fled and views[e].position.distance_to(at) < TILE * squares:
 			out.append([views[e].position, radius])
 	return out
 
@@ -655,13 +660,26 @@ func _bring_back(u: Combatant) -> void:
 	combat_hud.show_banner("Somewhere behind you, bare feet on stone.", 2.2)
 
 
+## The level's crates and barrels, drawn among the creatures.
+func _place_cover_props() -> void:
+	for c in actors.get_children():
+		if c is CoverProp:
+			c.queue_free()
+	for c in level.cover:
+		CoverProp.spawn(actors, c, level.cover[c])
+
+
 ## Can this creature see Thomas right now: close enough (MovementRules.SIGHT metres), in its view (a cone the way
 ## it faces; all round when it is close or already after him), with a clear line of sight?
 func sees_thomas(e: Combatant) -> bool:
 	if not e.alive() or e.fled or not views[e].visible:
 		return false
 	var v: ActorView = views[e]
-	if v.position.distance_to(hero.position) > MovementRules.px(MovementRules.SIGHT):
+	var d := v.position.distance_to(hero.position)
+	if d > MovementRules.px(MovementRules.SIGHT):
+		return false
+	# crouched right behind a crate or barrel, he is hidden (unless it is close enough to notice anything)
+	if sneaking and d > MovementRules.px(StealthRules.AROUND) and StealthRules.behind_cover(level, v.position, hero.position):
 		return false
 	return StealthRules.in_view(v.position, v.look, hero.position, _after_him(e)) and level.line_of_sight(e.cell, hero.grid_pos)
 
@@ -684,6 +702,8 @@ func _check_spotted(delta := INF) -> void:
 		if sees_thomas(e):
 			var d := MovementRules.metres(views[e].position.distance_to(hero.position))
 			var t := StealthRules.FILL_FAST if _after_him(e) else StealthRules.fill_time(d, light, sneaking)
+			if sneaking and level.get_tile(hero.grid_pos) == Level.Tile.WATER:
+				t *= StealthRules.WATER_HIDE   # crouched in water, half of him is under it
 			e.alert = minf(1.0, e.alert + delta / t)
 			e.target = hero.grid_pos
 			if e.alert >= 1.0:

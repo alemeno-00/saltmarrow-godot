@@ -88,7 +88,10 @@ func _piece_matches(l: Level, p: Dictionary) -> int:
 					side = {"w": "e", "e": "w"}.get(side, side)
 				if not (p.open as Array).has(side):
 					code = "F" if side == "n" else "#"
-			if l.get_tile(r.position + Vector2i(x, y)) != TILE_OF[code]:
+			var t := l.get_tile(r.position + Vector2i(x, y))
+			if t == Level.Tile.COVER and TILE_OF[code] == Level.Tile.FLOOR:
+				continue   # a crate or barrel stands on the blockout's floor
+			if t != TILE_OF[code]:
 				bad += 1
 	return bad
 

@@ -27,6 +27,11 @@ const LORE_MAX := 1                  # lore rooms per level
 const MIRROR_CHANCE := 0.5           # chance a room is drawn mirrored left to right
 const BEND_CHANCE := 0.35            # chance a run of connectors turns once
 const KIND_WEIGHTS := {"junction": 4, "chamber": 4, "flooded": 2, "lore": 1}
+# Made for sneaking (design/quick-specs/sneaking-2026-10-30.md, "Cover, and levels built for sneaking")
+const LOOPS_MAX := 3                 # extra connections where doorways line up, so a guarded room has another way round
+const COVER_PER_ROOM := Vector2i(2, 4)   # crates and barrels in a room
+const COVER_ROOMS := ["junction", "chamber", "flooded", "lore", "stairs"]
+const APPROACH := Vector2i(2, 4)     # squares from an open doorway where a crate gives a covered way in
 
 const DIRS := {"n": Vector2i(0, -1), "e": Vector2i(1, 0), "s": Vector2i(0, 1), "w": Vector2i(-1, 0)}
 const OPPOSITE := {"n": "s", "s": "n", "e": "w", "w": "e"}
@@ -99,9 +104,170 @@ func _build(bottom: bool) -> bool:
 		for side in _free_sides(level.pieces[pi]):
 			var placed := _try_attach_outflow(pi, side) if bottom else _try_attach(pi, side, "stairs", "stairs", rng.randf() < MIRROR_CHANCE)
 			if placed:
+				_add_loops()
 				_stamp()
+				_place_cover()
 				return true
 	return false
+
+
+## Join a room's free doorway, by a straight run of 1-5 connectors across empty blocks, to another room's doorway
+## facing it or to a tunnel already there (which becomes a T or a crossroads), up to LOOPS_MAX times, so the level
+## isn't a tree: a guarded room can be got round.
+func _add_loops() -> void:
+	var tries: Array = []
+	for i in level.pieces.size():
+		var p: Dictionary = level.pieces[i]
+		if p.kind == "connector" or p.kind == "outflow":
+			continue
+		for s in _free_sides(p):
+			tries.append([i, s])
+	for i in range(tries.size() - 1, 0, -1):
+		var j := rng.randi_range(0, i)
+		var tmp = tries[i]
+		tries[i] = tries[j]
+		tries[j] = tmp
+	var made := 0
+	for t in tries:
+		if made >= LOOPS_MAX:
+			return
+		var pi: int = t[0]
+		var side: String = t[1]
+		if not _free_sides(level.pieces[pi]).has(side):
+			continue
+		var start := _door_block(level.pieces[pi], side)
+		var d: Vector2i = DIRS[side]
+		for length in range(1, 6):
+			var blocks: Array[Vector2i] = []
+			for k in length:
+				blocks.append(start + d * k)
+			if not _free(blocks):
+				break
+			var qi := _room_with_door_at(blocks[-1], OPPOSITE[side], pi)
+			if qi >= 0:
+				_add_run(pi, side, {"blocks": blocks, "dir": side})
+				level.pieces[qi].open.append(OPPOSITE[side])
+				made += 1
+				level.loops += 1
+				break
+			var ci := _connector_at(blocks[-1] + d)
+			if ci >= 0 and level.pieces[ci].parent != pi and not (level.pieces[ci].open as Array).has(OPPOSITE[side]):
+				_add_run(pi, side, {"blocks": blocks, "dir": side})
+				var c: Dictionary = level.pieces[ci]
+				c.open.append(OPPOSITE[side])
+				var name := ""
+				for o in ["n", "e", "s", "w"]:
+					if (c.open as Array).has(o):
+						name += o
+				c.layout = "connector_" + name
+				made += 1
+				level.loops += 1
+				break
+
+
+## The connector piece on block `b`, or -1.
+func _connector_at(b: Vector2i) -> int:
+	for i in level.pieces.size():
+		if level.pieces[i].kind == "connector" and level.pieces[i].block == b:
+			return i
+	return -1
+
+
+## The room (other than `not_this`) whose free doorway on `side` opens onto block `b`, or -1.
+func _room_with_door_at(b: Vector2i, side: String, not_this: int) -> int:
+	for i in level.pieces.size():
+		var q: Dictionary = level.pieces[i]
+		if i == not_this or q.kind == "connector" or q.kind == "outflow":
+			continue
+		if _free_sides(q).has(side) and _door_block(q, side) == b:
+			return i
+	return -1
+
+
+## Crates and barrels in the rooms, for hiding behind: one a few squares in from each open doorway where it can go
+## (a covered way in), the rest against the walls. Doorways stay clear, and every walkable square stays reachable.
+func _place_cover() -> void:
+	var walkable := 0
+	for i in level.tiles.size():
+		if Level._passable(level.tiles[i]):
+			walkable += 1
+	for p in level.pieces:
+		if not p.kind in COVER_ROOMS:
+			continue
+		var r: Rect2i = p.rect
+		var doors: Array[Vector2i] = []
+		var floor: Array[Vector2i] = []
+		for y in range(r.position.y, r.end.y):
+			for x in range(r.position.x, r.end.x):
+				var c := Vector2i(x, y)
+				if level.get_tile(c) != Level.Tile.FLOOR:
+					continue
+				if not r.grow(-1).has_point(c) or (y == r.position.y + 1 and level.get_tile(Vector2i(x, r.position.y)) == Level.Tile.FLOOR):
+					doors.append(c)   # floor on a room's edge is an open doorway (a north one runs two squares deep)
+				else:
+					floor.append(c)
+		var spots: Array[Vector2i] = []
+		var middle: Vector2i = r.get_center()
+		for c in floor:
+			# doorways stay clear, and so does the middle of the room, where a band waits and a patrol aims
+			if _dist_to(c, doors) >= 2 and maxi(absi(c.x - middle.x), absi(c.y - middle.y)) > 2:
+				spots.append(c)
+		var want := rng.randi_range(COVER_PER_ROOM.x, COVER_PER_ROOM.y)
+		var placed := 0
+		# first a covered way in for each doorway, then against the walls
+		var near_doors := spots.filter(func(c): var d := _dist_to(c, doors); return d >= APPROACH.x and d <= APPROACH.y)
+		var by_walls := spots.filter(func(c): return _beside_wall(c))
+		for pool in [near_doors, by_walls]:
+			while placed < want and not pool.is_empty():
+				var c: Vector2i = pool.pop_at(rng.randi_range(0, pool.size() - 1))
+				if level.get_tile(c) != Level.Tile.FLOOR or _next_to_cover(c):
+					continue
+				level.tiles[level.idx(c)] = Level.Tile.COVER
+				if _count_reachable() < walkable - 1:
+					level.tiles[level.idx(c)] = Level.Tile.FLOOR   # it would cut the level in two
+					continue
+				walkable -= 1
+				level.cover[c] = "crate" if rng.randf() < 0.5 else "barrel"
+				placed += 1
+				if pool == near_doors and placed >= doors.size() / 2:
+					break
+
+
+static func _dist_to(c: Vector2i, cells: Array[Vector2i]) -> int:
+	var best := 999
+	for d in cells:
+		best = mini(best, maxi(absi(c.x - d.x), absi(c.y - d.y)))
+	return best
+
+
+func _beside_wall(c: Vector2i) -> bool:
+	for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		var t := level.get_tile(c + d)
+		if t == Level.Tile.WALL or t == Level.Tile.PROP:
+			return true
+	return false
+
+
+func _next_to_cover(c: Vector2i) -> bool:
+	for y in range(-1, 2):
+		for x in range(-1, 2):
+			if level.get_tile(c + Vector2i(x, y)) == Level.Tile.COVER:
+				return true
+	return false
+
+
+## Walkable squares reachable from the start (a flood fill over the squares; the paths aren't built yet).
+func _count_reachable() -> int:
+	var seen := {level.start: true}
+	var stack: Array[Vector2i] = [level.start]
+	while not stack.is_empty():
+		var c: Vector2i = stack.pop_back()
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var n: Vector2i = c + d
+			if not seen.has(n) and level.in_bounds(n) and Level._passable(level.get_tile(n)):
+				seen[n] = true
+				stack.append(n)
+	return seen.size()
 
 
 func _room_count() -> int:

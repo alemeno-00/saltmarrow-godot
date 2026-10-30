@@ -68,10 +68,10 @@ func test_the_patrol_walks_its_route() -> void:
 	var leader := game.patrol_leader()
 	var first: Vector2i = leader.route[leader.route_i]
 	var d0 := game.level.find_path(leader.cell, first).size()
-	for i in 10:
+	for i in 30:
 		game.patrol_tick(0.1)
 	var d1 := game.level.find_path(leader.cell, first).size()
-	check(d1 < d0 or d0 <= 1, "in a second the leader walks toward its waypoint (%d to %d squares)" % [d0, d1])
+	check(d1 < d0 or d0 <= 1, "in three seconds the leader walks toward its waypoint, round anyone in the way (%d to %d squares)" % [d0, d1])
 	var reached := {}
 	for i in 2000:
 		game.patrol_tick(0.1)

@@ -258,7 +258,7 @@ func _draw_region(canvas: CanvasItem, region: Rect2i) -> void:
 						canvas.draw_rect(Rect2(r.position.x, r.position.y + TILE - 6, TILE, 6), Color(0.1, 0.09, 0.1))
 					else:
 						canvas.draw_rect(r, Color(0.04, 0.04, 0.05))
-				Level.Tile.FLOOR:
+				Level.Tile.FLOOR, Level.Tile.COVER:
 					canvas.draw_rect(r, Color(0.27, 0.25, 0.23).lerp(Color(0.31, 0.29, 0.26), n))
 					canvas.draw_rect(r, Color(0, 0, 0, 0.18), false, 1.0)
 				Level.Tile.WATER:
