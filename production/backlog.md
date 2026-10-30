@@ -36,6 +36,24 @@ starts with a quick spec or a GDD section for Julian to approve.
    tune the spotting meter, noise and cones from playtests; part 3 (hiding mid-fight, the dagger preparations);
    steering patrol routes past cover for ambushes; the lantern and the dark (oil, what darkness does to Thomas,
    still to spec); the deep sewage tunnels' lurkers.
+7b. **Rethink the Shadow as a skirmisher, not a hider** (Julian, 2026-10-30: "sneaking shouldn't just be hiding;
+   hard to balance bosses based on this. Instead they should be good at kiting, escaping, hit and run tactics.
+   Maybe reflavour the backstory to commando or guerrilla or something like that, and also have traps.") *Now:*
+   the Shadow's Backstab and extra Resolve need an enemy that can't see him, which a boss fight takes away. *Ideas
+   discussed (none decided):*
+   - "Can't see you" becomes positional: enemies face the way they last moved or attacked, and behind their
+     shoulders counts as out of sight, even for a boss, so the build circles rather than hides.
+   - Hit and run built in: speed 6, a free 1.5 m step after a dagger attack that draws no free strikes, a 3 m
+     careful step.
+   - Kiting tools: Throw with daggers to pick up again, bleeding, a new Hamstring (slows) and Tumble (move through
+     enemies' spaces without free strikes).
+   - Escaping well: losing pursuers after one round out of sight instead of two.
+   - **Traps** as a core part of the kit, not an extra: tripwires, snares and caltrops laid before or during a
+     fight, so the build wins by choosing the ground.
+   - **A new name and story** for the backstory: a commando or guerrilla fighter from the war rather than an
+     assassin; the Daggers tree and Ellen's letters reflavoured to match.
+   *Job:* decide the shape with Julian, rewrite the Daggers section of `docs/trees.md` and the sneaking spec, then
+   rebuild what part 2 built.
 8. **Refine items.** *Now:* the belt items, caches and puzzles are designed (`design/quick-specs/room-contents-2026-10-30.md`)
    and the art is delivered, but none are built. *Job:* build them, then lantern oil, armour (which Shatter, Sunder and
    Cut the Straps wait for), what is worth carrying, and whether the bag grid comes in.
