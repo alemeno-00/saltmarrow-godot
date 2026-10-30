@@ -1,0 +1,16 @@
+{
+  "changed_runtime_pngs": [
+    "miner_tag_body.png",
+    "satchel_body.png"
+  ],
+  "unchanged_runtime_pngs": 16,
+  "same_room_and_placement": true,
+  "preview_columns": [
+    "before",
+    "after"
+  ],
+  "preview_rows": [
+    "satchel body",
+    "miner tally body"
+  ]
+}
