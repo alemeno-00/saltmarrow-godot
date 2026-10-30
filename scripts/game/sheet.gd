@@ -5,8 +5,15 @@ extends RefCounted
 
 const FRAME := Vector2(64, 64)
 const ROOT := Vector2(32, 56)   # where the feet are in every frame
+## Directional sheets (art job 15 on): 80 x 80 frames, feet at (40, 72), one sheet per drawn direction. The game
+## mirrors SE, E and NE to get SW, W and NW.
+const DIR_FRAME := Vector2(80, 80)
+const DIR_ROOT := Vector2(40, 72)
+const DIRECTIONS := ["s", "se", "e", "ne", "n"]
 
 var texture: Texture2D
+var frame := FRAME   # this sheet's frame size
+var root := ROOT     # where the feet are in this sheet's frames
 var anims := {}   # name -> {row, frames, fps, loop, tex (optional: a second sheet, e.g. Thomas's attacks)}
 
 
@@ -25,7 +32,7 @@ func frame_rect(name: String, t: float) -> Rect2:
 	var a: Dictionary = anims[name]
 	var i := int(floor(t * float(a.fps)))
 	i = posmod(i, int(a.frames)) if a.loop else mini(i, int(a.frames) - 1)
-	return Rect2(Vector2(i * FRAME.x, (int(a.row) - 1) * FRAME.y), FRAME)
+	return Rect2(Vector2(i * frame.x, (int(a.row) - 1) * frame.y), frame)
 
 
 ## The image an animation's frames come from.
@@ -78,6 +85,31 @@ static func thomas() -> Sheet:
 		s._add("wide_arc", 4, 10, 12, false, t)
 		s._add("execution", 5, 12, 10, false, t)
 	return s
+
+
+## A character's directional sheets in `folder` (`s.png`, `se.png`, `e.png`, `ne.png`, `n.png`), as direction ->
+## Sheet, for the directions delivered so far. Rows in every sheet (`design/art-briefs/animation/BRIEF.md`): idle 6,
+## walk 8, wounded walk 8, sneak 8, careful step 4.
+static func directions(folder: String) -> Dictionary:
+	var out := {}
+	for d in DIRECTIONS:
+		var s := _load(folder + d + ".png")
+		if s == null:
+			continue
+		s.frame = DIR_FRAME
+		s.root = DIR_ROOT
+		s._add("idle", 1, 6, 6)
+		s._add("walk", 2, 8, 10)
+		s._add("wounded_walk", 3, 8, 8)
+		s._add("sneak", 4, 8, 7)
+		s._add("careful_step", 5, 4, 8, false)
+		out[d] = s
+	return out
+
+
+## Thomas in five directions: assets/characters/thomas/dir/ (art job 15). Empty until it arrives.
+static func thomas_dirs() -> Dictionary:
+	return directions("res://assets/characters/thomas/dir/")
 
 
 ## The Drowned Miner: assets/enemies/drowned_miner/body.png (16 rows).
