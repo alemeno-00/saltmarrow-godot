@@ -1,7 +1,8 @@
 # Quick Design Spec: Deep Sewage Tunnels
 
 **Type**: Addition (to the Sewers room kit and room contents)
-**Status**: PROPOSAL — ideas for Julian to pick from. Nothing here is approved or built yet.
+**Status**: APPROVED by Julian, 2026-10-30: the recommended first set (lurkers with their tell, drag under, the
+ledge). The other ideas stay here for later.
 **System**: Sewers levels, movement, stealth, enemies
 **GDD Reference**: `design/game-brief.md`; `design/quick-specs/sewer-room-kit-2026-10-29.md`; `design/quick-specs/free-movement-2026-10-30.md`
 **Date**: 2026-10-30

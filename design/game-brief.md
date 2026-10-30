@@ -40,17 +40,19 @@ The MVP keeps the dive at the heart of it:
 8. Rooms with things in them (added after the first playtest, 2026-10-30): more enemies and patrols, lore drops kept in a journal across lives, a small set of items on a 4-slot belt, one puzzle per level (sluice valve or locked grate), events, and clutter. Spec: `design/quick-specs/room-contents-2026-10-30.md`.
 9. Characters drawn in 8 directions (added after the first playtest). Art from ChatGPT's proposal (#5), staged: idle and walk first.
 10. Free movement in metres (added after the first playtest): Thomas moves freely while exploring, the world runs in real time until he is seen, fights stay turn-based but measure movement, reach and areas in metres, and hits land with weight. Spec: `design/quick-specs/free-movement-2026-10-30.md`.
+11. Sneaking, the Daggers tree and the Shadow backstory, with a backstory chosen at the start of each life (decided by Julian, 2026-10-30). Spec: `design/quick-specs/sneaking-2026-10-30.md`.
+12. Deep sewage tunnels: lurkers that rise from the sewage to ambush, being dragged under, and narrow ledges (decided 2026-10-30). Spec: `design/quick-specs/deep-sewage-tunnels-2026-10-30.md`.
+13. Thomas's lantern as a light he can shutter or put out, with oil as a resource and the dark wearing on him over time (asked for 2026-10-30; still to be designed).
 
 ## Out of scope — not building this
 `INTENT UNKNOWN` — proposed, not confirmed.
 - The town, contracts, shops and shaft landings.
 - Armour, the bag grid, shops, crafting, and weapon swapping. (A small set of items on a belt is now in: MVP item 8.)
-- Hunger, thirst, fatigue, sickness and Dread.
+- Hunger, thirst, fatigue and sickness. (What the dark does to Thomas over time is now in: MVP item 13.)
 - Spell schools and the Star, including phenomena and Marks.
-- Weapon trees and backstories other than Fury and Maces.
+- Weapon trees and backstories other than Fury (Maces) and Shadow (Daggers).
 - Levels below the Sewers, and finding Ellen.
 - Secret rooms, traps, and puzzles beyond the sluice valve and the locked grate.
-- Thomas's lantern as a resource that burns oil.
 
 ## Build order
 1. Put the fight art in the game, to prove the fights feel heavy and costly.
@@ -61,8 +63,11 @@ The MVP keeps the dive at the heart of it:
 6. 8-direction characters: the game picks a direction's frames; ChatGPT draws idle and walk in 8 directions first, then attacks and hit reactions.
 7. Free movement, phase B: fights in metres, like Baldur's Gate 3. *Built*, with sprites grounded in the rooms (shadows from the lights, wading, normal-mapped lighting).
 8. Fill the rooms: enemies and patrols (*done*), then lore drops and the journal, then items and caches, then the puzzles, then events (room-contents spec).
-9. Tune how much each fight costs and how fast Thomas grows.
-10. The UI, later.
+9. Directional sprites in code (5 drawn directions, the west side mirrored, 80 × 80 frames), ready for art job 15.
+10. Sneaking, with the Daggers tree, the Shadow backstory and choosing a backstory; then the lantern and its oil, and the dark.
+11. Deep sewage tunnels: blockouts for art job 18, then the lurkers, dragging under and ledges.
+12. Tune how much each fight costs and how fast Thomas grows.
+13. The UI, later.
 
 ---
 **Who it's for / what they feel:** Players of tactical games and roguelikes who want every fight to feel heavy and dangerous, and to get stronger the deeper they go.
@@ -74,9 +79,7 @@ The MVP keeps the dive at the heart of it:
 **Reference game:** Stoneshard — skill trees that grow by use, and costly, grounded fights on a dungeon dive. The first version keeps one weapon tree and the dive, and drops survival and the overworld. The fight rules come from the Draw Steel tabletop RPG.
 
 ## Open questions
-- Sneaking and the dagger build (`design/quick-specs/sneaking-2026-10-30.md`, a proposal): bring Daggers and the Shadow backstory into the first version?
-- Deep sewage tunnels (`design/quick-specs/deep-sewage-tunnels-2026-10-30.md`, a proposal): which of the ideas to build?
 - Is a Sewers boss the right ending for the first version, with Ellen saved for the full game?
-- Should choosing a backstory for each new life be in the first version? Only Fury and Maces exist so far.
+- What the dark does to Thomas over time, and how scarce lantern oil is (the lantern spec, still to write).
 
 The full design (story, cast, trees) stays in `docs/story.md`, `docs/characters.md` and `docs/trees.md`.
