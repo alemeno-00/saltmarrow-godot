@@ -40,6 +40,10 @@ const SEARCH_LOOK := 2.5         # s it looks about at the spot before going bac
 const LOOK_ABOUT := Vector2(3.0, 6.0)   # s between an idle enemy's turns of the head
 const TURN_SPEED := 2.5          # rad/s an enemy turns its head
 
+# ---- a thrown dagger (Daggers: Throw), outside a fight
+const CLATTER := 8.0             # m: how far a dagger clattering off the stone is heard
+const DOUSE_REACH := 1           # squares: a dagger landing this close to a lamp puts it out
+
 # ---- the lantern
 const LANTERN_LIGHT := {"lit": 1.0, "shuttered": 0.45, "out": 0.0}   # how much his own lantern lights him
 const SHUTTERED_RADIUS := 1.5    # squares of light when shuttered

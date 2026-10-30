@@ -218,7 +218,19 @@ func meets_needs(t: Combatant, ab: Dictionary) -> bool:
 	var needs: Array = ab.needs
 	if needs.is_empty():
 		return true
+	if needs.has("unaware"):
+		return t.surprised or _flanked_by_hero(t)
 	return (needs.has("dazed") and t.dazed > 0) or (needs.has("prone") and t.prone) or (needs.has("dying") and t.dying)
+
+
+## Is an enemy flanked by Thomas's side? (He fights alone so far, so only once he has allies.)
+func _flanked_by_hero(t: Combatant) -> bool:
+	for o in units:
+		if o != hero and o.alive() and o.team == hero.team and in_reach(o, t):
+			var a := (hero.pos - t.pos).angle_to(o.pos - t.pos)
+			if absf(rad_to_deg(a)) >= MovementRules.FLANK_ANGLE - 0.01:
+				return true
+	return false
 
 
 ## Enemies this ability could hit right now.
@@ -226,6 +238,9 @@ func valid_targets(u: Combatant, ab: Dictionary) -> Array[Combatant]:
 	var out: Array[Combatant] = []
 	for e in enemies_of(u):
 		if in_reach(u, e, reach_of(ab)) and (ab.target == "adjacent_all" or meets_needs(e, ab)):
+			# a thrown blade needs a clear line
+			if reach_of(ab) > 1.0 and not level.line_of_sight(u.cell, e.cell):
+				continue
 			out.append(e)
 	return out
 
@@ -350,8 +365,10 @@ func hero_ability_on(idx: int, t: Combatant) -> Array:
 			_log("Choose an enemy.")
 		elif not in_reach(hero, t, reach_of(ab)):
 			_log("Out of reach.")
+		elif reach_of(ab) > 1.0 and not level.line_of_sight(hero.cell, t.cell):
+			_log("No clear line to throw.")
 		elif not meets_needs(t, ab):
-			_log("Only against a dazed, prone or dying enemy.")
+			_log("Only against an enemy caught unaware, or flanked." if (ab.needs as Array).has("unaware") else "Only against a dazed, prone or dying enemy.")
 		else:
 			targets = [t]
 	if targets.is_empty():
@@ -472,7 +489,7 @@ func _begin_turn(u: Combatant) -> void:
 	u.big_cooldown = maxi(0, u.big_cooldown - 1)
 	if u.bleeding or (u.dying and u == hero):
 		_log("%s bleeds." % u.name)
-		_damage(u, 2, false, 1)
+		_damage(u, maxi(2, u.bleed), false, 1)
 	if u.prone and not u.dead and level.get_tile(u.cell) == Level.Tile.WATER:
 		_log("%s is under the water, drowning." % u.name)
 		_damage(u, DROWN_DAMAGE, false, 1)
@@ -530,6 +547,7 @@ func _enemy_phase() -> void:
 	round += 1
 	for u in units:
 		u.hurt_this_round = false
+		u.gained_this_round = false
 		u.free_strike_ready = true
 		u.surprised = false   # surprise lasts only the first round
 	_begin_turn(hero)
@@ -908,7 +926,7 @@ func _closed_door_ahead(p: Vector2, dir: Vector2, r: float) -> bool:
 
 # ---------------------------------------------------------------- attacks and damage
 
-func _roll(bonus: int, edges: int) -> Dictionary:
+func _roll(bonus: int, edges: int, crit_at := 19) -> Dictionary:
 	var d1: int
 	var d2: int
 	if not forced_rolls.is_empty():
@@ -918,7 +936,7 @@ func _roll(bonus: int, edges: int) -> Dictionary:
 	else:
 		d1 = rng.randi_range(1, 10)
 		d2 = rng.randi_range(1, 10)
-	return PowerRoll.resolve(d1, d2, bonus, edges)
+	return PowerRoll.resolve(d1, d2, bonus, edges, crit_at)
 
 
 ## One power roll applied to every target. Returns true on a crit.
@@ -936,7 +954,17 @@ func _attack(u: Combatant, ab: Dictionary, targets: Array) -> bool:
 		edges += 1
 	if targets.size() == 1 and u.team != hero.team and _flanks(u, u.pos) and targets[0] == hero:
 		edges += 1
-	var r := _roll(u.might, edges)
+	var dagger: bool = ab.get("weapon", "") == "dagger"
+	var r := _roll(u.agility if ab.get("stat", "might") == "agility" else u.might, edges, 17 if dagger and u.perks.has("killers_eye") else 19)
+	if u == hero and u.resource == "shadow" and targets.any(func(x): return x.surprised) and not u.gained_this_round:
+		# Shadow (docs/story.md): Resolve when he strikes an enemy that can't see him, once a round
+		u.gained_this_round = true
+		u.resolve += 1
+		_emit({"t": "resolve", "value": u.resolve})
+	if u == hero and r.crit and u.perks.has("shadows_due"):
+		u.resolve += 1
+		_emit({"t": "resolve", "value": u.resolve})
+		_log("The Shadow's Due: +1 Resolve.")
 	_emit({"t": "roll", "unit": u, "ability": ab, "roll": r, "at": (targets[0] as Combatant).pos if not targets.is_empty() else u.pos})
 	var mod := ""
 	if r.edges > 0:
@@ -969,8 +997,15 @@ func _hit(u: Combatant, t: Combatant, ab: Dictionary, r: Dictionary) -> void:
 		_kill(t)
 		return
 	_damage(t, int(eff.get("dmg", 0)), r.crit, r.tier)
+	if ab.id == "stab" and u.perks.has("twin_fangs") and not t.dead and not over:
+		_log("The off-hand blade follows.")
+		_damage(t, maxi(1, int(eff.get("dmg", 0)) / 2), false, r.tier)
 	if t.dead:
 		return
+	if eff.has("bleed"):
+		t.bleeding = true
+		t.bleed = maxi(t.bleed, int(eff.bleed))
+		_log("%s is bleeding badly." % t.title())
 	if eff.has("dazed"):
 		t.dazed = maxi(t.dazed, int(eff.dazed))
 		_log("%s reels, dazed." % t.title())
@@ -1012,7 +1047,7 @@ func _damage(t: Combatant, dmg: int, crit: bool, tier: int) -> void:
 	t.stamina -= dmg
 	_emit({"t": "hit", "unit": t, "dmg": dmg, "crit": crit, "tier": tier})
 	if t == hero:
-		if not t.hurt_this_round:
+		if not t.hurt_this_round and t.resource == "fury":
 			t.hurt_this_round = true
 			t.resolve += 1
 			_emit({"t": "resolve", "value": t.resolve})

@@ -64,7 +64,7 @@ The MVP keeps the dive at the heart of it:
 7. Free movement, phase B: fights in metres, like Baldur's Gate 3. *Built*, with sprites grounded in the rooms (shadows from the lights, wading, normal-mapped lighting).
 8. Fill the rooms: enemies and patrols (*done*), then lore drops and the journal, then items and caches, then the puzzles, then events (room-contents spec).
 9. Directional sprites in code (5 drawn directions, the west side mirrored, 80 × 80 frames), ready for art job 15.
-10. Sneaking, with the Daggers tree, the Shadow backstory and choosing a backstory; then the lantern and its oil, and the dark.
+10. Sneaking, with the Daggers tree, the Shadow backstory and choosing a backstory (*parts 1, 2 and cover built; part 3 to come*); then the lantern and its oil, and the dark.
 11. Deep sewage tunnels: blockouts for art job 18, then the lurkers, dragging under and ledges.
 12. Tune how much each fight costs and how fast Thomas grows.
 13. The UI, later.

@@ -50,6 +50,8 @@ func add_game(tree: SceneTree) -> Node:
 		return null
 	if "level_seed" in node:
 		node.level_seed = 7   # a fixed first level, so game tests repeat exactly
+	if "ask_backstory" in node:
+		node.ask_backstory = false   # tests start as Fury unless they choose
 	tree.root.add_child(node)
 	await tree.process_frame
 	return node

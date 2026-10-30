@@ -119,11 +119,27 @@ These come first because the first fight is being built next. **Please do jobs 1
 - [ ] **15. Thomas moving, in five directions** (`assets/characters/thomas/dir/s.png`, `se.png`, `e.png`, `ne.png`, `n.png`). **After 15a; it comes before jobs 13b and 14.** Brief: `design/art-briefs/animation/BRIEF.md` (read the "What makes it fluid" and "Fitting into the rooms" parts). **80 × 80 frames, feet at x 40, y 72, about 1.5 squares tall (48–52 px), drawn from the rooms' camera** (house style rule 9). **Start with a camera test** (job 15-0 below) and wait for Julian's approval before drawing the rest. Rows in every sheet: idle (6, looped), walk (8, looped, 10 fps, every frame a different pose), wounded walk (8, looped), sneak (8, crouched, looped), careful step (4). **Send the S, E and N walks first** as a small pull request, so they can be checked in the game.
 - [ ] **16. Thomas fighting, in five directions** (`assets/characters/thomas/dir/<dir>_mace.png`). After 15. Rows: maul wind-up (4), strike (3, one smear frame), recovery (4), critical overhead (10), hurt (4), pushed back (4), knocked prone (5), lying prone (2, looped), getting up (5). Brief as job 15.
 - [ ] **17. Normal maps** for the sheets in jobs 15 and 16: the same names with `_n` (`s_n.png`, `s_mace_n.png`), same frames, OpenGL normal colours (green up), rounded volumes. Then the Drowned Miner, the Faithful and Garrick get idle, walk, attack and hurt in five directions, with normal maps.
+- [ ] **19. Thomas with daggers, in five directions** (`assets/characters/thomas/dir/<dir>_daggers.png`). **The Shadow backstory is in the game now** (sneaking part 2): a Shadow Thomas fights with a dagger in each hand, but until this arrives he lunges with no blade shown. After job 16, from the rooms' camera (house style rule 9), 80 × 80 frames, feet at x 40, y 72. See `docs/trees.md`, Daggers. Rows in every direction's sheet:
+  1. Stab, twin (6 frames: the main hand, then the off-hand)
+  2. Backstab (7)
+  3. Open the Vein (6, a quick slash at the wrist or thigh)
+  4. Throw (5)
+  5. Study the Mark (4, crouched and still, eyes on the target; looped)
+  6. Cut the Straps (6, crouched behind someone, sawing)
+  7. Tripwire (8, kneeling and tying off a wire)
+  8. Whisper (8, from behind: hand over the mouth, a pommel blow to the temple)
+  Rows 1–4 are in the game now; 5–8 come with sneaking part 3. Plus a normal map for each sheet (`_n.png`).
+- [ ] **19b. Dagger props and effects** (`assets/effects/dagger/`), each 32 × 32, drawn from the rooms' camera. The first two and the last two are used now:
+  - a thrown dagger spinning (4 frames)
+  - a dagger lying on the floor
+  - a tripwire strung across a square, seen from above, plus a snapped one
+  - a lantern or brazier going out (6 frames)
+  - a clatter: a small spark and dust where a dagger hits stone (4 frames)
 
 ## Later: Thomas in full
 
 - [ ] **13c. Room kit variants** (`assets/tiles/sewers/rooms/<layout>/2.png`, `3.png`). After 14. More paintings of the same layouts, so rooms don't repeat: junctions to 3 each, chambers, flooded rooms, entry, stairs and tunnels to 2 each (counts from `design/quick-specs/sewer-room-kit-2026-10-29.md`). Same blockouts and rules; change materials, wear, damp, salt and what stands on the prop squares. Add each new painting's glass positions to `manifest.json`.
-- [ ] Thomas attacks for longswords, daggers, flails, spears and staves, each with wind-up, strike, recovery and crit rows as in job 2.
+- [ ] Thomas attacks for longswords, flails, spears and staves, each with wind-up, strike, recovery and crit rows as in job 2 (daggers: job 19).
 - [ ] **Thomas, longsword abilities** (`assets/characters/thomas/sword_abilities.png`). A plain longsword, held in two hands; see `docs/trees.md`, Swords. Rows:
   1. Parry (4 frames: blade up, catching the blow)
   2. Riposte (5)
@@ -143,21 +159,6 @@ These come first because the first fight is being built next. **Please do jobs 1
 - [ ] Armour and clothing as layers over every frame of the base body (head, body, hands, legs, feet, cloak). **This is the biggest job on the list;** we'll decide how far to take it after the first fight.
 - [ ] Portraits: in pain, Dread rising, bandaged head, swollen eye, arm in a sling, each Mark of the star, and one for each of the five backstories (Fury, Shadow, Elementalist, Censor, Talent).
 
-- [ ] **Thomas, dagger abilities** (`assets/characters/thomas/dagger_abilities.png`). A dagger in each hand; see `docs/trees.md`, Daggers. Rows:
-  1. twin stab (6 frames)
-  2. Backstab (7)
-  3. Open the Vein (6, a quick slash at the wrist or thigh)
-  4. Throw (5)
-  5. Study the Mark (4, crouched and still, eyes on the target; looped)
-  6. Cut the Straps (6, crouched behind someone, sawing)
-  7. Tripwire (8, kneeling and tying off a wire)
-  8. Whisper (8, from behind: hand over the mouth, a pommel blow to the temple)
-- [ ] Dagger props and effects (`assets/effects/dagger/`), each 32 × 32:
-  - a thrown dagger spinning (4 frames)
-  - a dagger lying on the floor
-  - a tripwire strung across a square, seen from above, plus a snapped one
-  - a lantern or brazier going out (6 frames)
-  - a clatter: a small spark and dust where a dagger hits stone (4 frames)
 - [ ] **Thomas, staff abilities** (`assets/characters/thomas/staff_abilities.png`). A plain wooden quarterstaff held in two hands; see `docs/trees.md`, Staves. Rows:
   1. Block (4 frames)
   2. Sweep (6, a low swing at the legs)
