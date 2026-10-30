@@ -13,6 +13,8 @@ extends RefCounted
 ## The enemy side has Malice (Draw Steel's villain resource): it grows every round, and is spent on
 ## Swarming Hymn (the Faithful surge forward together) and Press the Attack (a standard enemy strikes twice).
 ## Enemies flank: an enemy on the far side of Thomas from an ally attacks with an edge.
+## Attacked from hiding, the enemies who hadn't spotted Thomas are surprised for the first round: no free strikes,
+## and attacks against them have an edge.
 ## A badly hurt standard enemy breaks and runs; if it gets out of sight it escapes, and will come back.
 ## If no enemy can see Thomas at the end of their turns, twice in a row, he has lost them and the fight ends.
 
@@ -209,7 +211,7 @@ static func _samples(from: Vector2, points: Array[Vector2]) -> Array[Vector2]:
 
 
 func _may_strike(e: Combatant) -> bool:
-	return e.free_strike_ready and not e.prone and e.dazed == 0
+	return e.free_strike_ready and not e.prone and e.dazed == 0 and not e.surprised
 
 
 func meets_needs(t: Combatant, ab: Dictionary) -> bool:
@@ -529,6 +531,7 @@ func _enemy_phase() -> void:
 	for u in units:
 		u.hurt_this_round = false
 		u.free_strike_ready = true
+		u.surprised = false   # surprise lasts only the first round
 	_begin_turn(hero)
 
 
@@ -927,6 +930,8 @@ func _attack(u: Combatant, ab: Dictionary, targets: Array) -> bool:
 		edges -= 1
 	if targets.size() == 1 and targets[0].prone:
 		edges += 1
+	if targets.size() == 1 and targets[0].surprised:
+		edges += 1   # caught unaware (sneaking spec): an edge until the first round ends
 	if targets.size() == 1 and targets[0].dazed > 0 and u.perks.has("ringing_blows") and ab.get("weapon", "") == "mace":
 		edges += 1
 	if targets.size() == 1 and u.team != hero.team and _flanks(u, u.pos) and targets[0] == hero:

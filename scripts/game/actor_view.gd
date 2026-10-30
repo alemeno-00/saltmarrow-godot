@@ -21,9 +21,12 @@ var dazed := false
 var raised := false     # winding up a big blow
 var bleeding := false
 var hurt := 0.0         # 0 unhurt .. 1 nearly dead
-var sheet: Sheet = null # the art, when there is some
+var sheet: Sheet = null # the art, when there is some (drawn facing right, mirrored to face left)
+var dir_sheets := {}    # direction -> Sheet: art drawn in five directions, used for the rows it has
+var look := Vector2.RIGHT  # the way it faces, any direction
 var is_hero := false    # Thomas: his own lantern throws no shadow of him
 var wading := false     # standing in water: drawn sunk to the shins
+var sneaking := false   # crouched: the sneak row, held still when not moving
 
 const DAZED_STRIP := "res://assets/effects/mace/dazed.png"
 static var _dazed_tex: Texture2D = null
@@ -64,6 +67,8 @@ func move_to(c: Vector2i, time := STEP_TIME) -> void:
 	var from := grid_pos
 	if c.x != from.x:
 		facing = 1 if c.x > from.x else -1
+	if c != from:
+		look = Vector2(c - from).normalized()
 	_from_px = position
 	_to_px = cell_to_px(c)
 	_t = 0.0
@@ -82,6 +87,8 @@ func glide_free(p: Vector2, speed_ratio: float) -> void:
 	var d := p - position
 	if absf(d.x) > 0.05:
 		facing = 1 if d.x > 0.0 else -1
+	if d.length() > 0.05:
+		look = d.normalized()
 	position = p
 	_from_px = p
 	_to_px = p
@@ -119,7 +126,40 @@ func is_gliding() -> bool:
 func face_point(p: Vector2) -> void:
 	if absf(p.x - position.x) > 0.5:
 		facing = 1 if p.x > position.x else -1
-		queue_redraw()
+	if p.distance_to(position) > 0.5:
+		look = (p - position).normalized()
+	queue_redraw()
+
+
+## The drawn direction for a way of facing, and whether to mirror it: the eight ways round, SW, W and NW being SE,
+## E and NE mirrored.
+static func octant(v: Vector2) -> Array:
+	var i := posmod(roundi(rad_to_deg(v.angle()) / 45.0), 8)
+	return [["e", false], ["se", false], ["s", false], ["se", true], ["e", true], ["ne", true], ["n", false], ["ne", false]][i]
+
+
+## The art to draw an animation with, facing `look`: [Sheet, mirrored]. A directional sheet with that row if one has
+## been delivered (the nearest drawn direction when its own isn't yet), otherwise the right-facing sheet.
+func art_for(anim: String) -> Array:
+	var best: Sheet = null
+	var mirror := false
+	var best_d := INF
+	var want := rad_to_deg(look.angle())
+	for d in dir_sheets:
+		var s: Sheet = dir_sheets[d]
+		if not s.has(anim):
+			continue
+		var a: float = {"e": 0.0, "se": 45.0, "s": 90.0, "ne": -45.0, "n": -90.0}[d]
+		for m in ([false, true] if d != "s" and d != "n" else [false]):
+			var ang := 180.0 - a if m else a
+			var diff := absf(wrapf(want - ang, -180.0, 180.0))
+			if diff < best_d - 0.01:
+				best_d = diff
+				best = s
+				mirror = m
+	if best != null:
+		return [best, mirror]
+	return [sheet, facing < 0]
 
 
 func face_toward(c: Vector2i) -> void:
@@ -190,8 +230,10 @@ func _process(delta: float) -> void:
 	_time += delta
 	var redraw := false
 	if sheet != null:
-		var walking := _once == "" and (_anim == "walk" or _anim == "wounded_walk")
-		_anim_t += delta * (walk_rate if walking else 1.0)
+		var walking := _once == "" and (_anim == "walk" or _anim == "wounded_walk" or _anim == "sneak")
+		var moving := is_gliding() or _walk_linger > 0.0
+		# a crouch held still doesn't step on the spot
+		_anim_t += delta * ((walk_rate if moving else 0.0) if _anim == "sneak" else (walk_rate if walking else 1.0))
 		_walk_linger = maxf(0.0, _walk_linger - delta)
 		if _once != "" and _anim_t >= sheet.duration(_once):
 			_once = _queue.pop_front() if not _queue.is_empty() else ""
@@ -300,6 +342,8 @@ func _pick_anim() -> String:
 		return "windup"
 	if dazed and sheet.has("dazed"):
 		return "dazed"
+	if sneaking and sheet.has("sneak"):
+		return "sneak"
 	if is_gliding() or _walk_linger > 0.0:
 		return "wounded_walk" if hurt >= 0.5 and sheet.has("wounded_walk") else "walk"
 	return "idle"
@@ -314,21 +358,23 @@ func _draw_sheet() -> void:
 		Grounding.draw_shadows(self, position, Vector2(0, 12), is_hero, wading)
 	var off := _lunge + Vector2(0, -_bob * 2.0)
 	# the art faces right; a mirrored transform turns it to face left
-	var mirror := Vector2(1 if facing >= 0 else -1, 1)
+	var pick := art_for(_anim)
+	var s: Sheet = pick[0]
+	var mirror := Vector2(-1 if pick[1] else 1, 1)
 	if prone and not dead and name == "idle":
 		# no lying-down row in this sheet: tip the standing frame over
 		draw_set_transform(off + Vector2(0, 7), PI / 2.0 * facing, mirror)
 	else:
 		draw_set_transform(off, 0, mirror)
-	var src := sheet.frame_rect(_anim, _anim_t)
-	var at := Vector2(-Sheet.ROOT.x, 12 - Sheet.ROOT.y)
-	var size := Sheet.FRAME
+	var src := s.frame_rect(_anim, _anim_t)
+	var at := Vector2(-s.root.x, 12 - s.root.y)
+	var size := s.frame
 	if wading:
 		# sunk into the water: the shins and feet are under it
-		var keep := Sheet.ROOT.y - Grounding.WADE_DEPTH
+		var keep := s.root.y - Grounding.WADE_DEPTH
 		src.size.y = keep
 		size.y = keep
-	draw_texture_rect_region(Grounding.lit(sheet.texture_of(_anim)), Rect2(at, size), src, _sheet_tint())
+	draw_texture_rect_region(Grounding.lit(s.texture_of(_anim)), Rect2(at, size), src, _sheet_tint())
 	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 	if wading:
 		Grounding.draw_waterline(self, Vector2(0, 12), _time)

@@ -68,10 +68,10 @@ func test_the_patrol_walks_its_route() -> void:
 	var leader := game.patrol_leader()
 	var first: Vector2i = leader.route[leader.route_i]
 	var d0 := game.level.find_path(leader.cell, first).size()
-	for i in 10:
+	for i in 30:
 		game.patrol_tick(0.1)
 	var d1 := game.level.find_path(leader.cell, first).size()
-	check(d1 < d0 or d0 <= 1, "in a second the leader walks toward its waypoint (%d to %d squares)" % [d0, d1])
+	check(d1 < d0 or d0 <= 1, "in three seconds the leader walks toward its waypoint, round anyone in the way (%d to %d squares)" % [d0, d1])
 	var reached := {}
 	for i in 2000:
 		game.patrol_tick(0.1)
@@ -98,6 +98,7 @@ func test_the_patrol_spots_thomas() -> void:
 			game.hero.place(c)
 			game.hero_unit.cell = c
 			break
+	game.views[leader].face_point(game.hero.position)   # looking his way
 	game._check_spotted()
 	check(game.in_fight(), "seeing Thomas starts a fight")
 	check(game.battle.units.has(leader), "and the patrol is in it")
@@ -115,6 +116,7 @@ func test_a_far_off_patrol_stays_out_of_someone_elses_fight() -> void:
 			if far and game.level.get_tile(c) == Level.Tile.FLOOR and game._enemy_at(c) == null and game.level.line_of_sight(c, e.cell):
 				game.hero.place(c)
 				game.hero_unit.cell = c
+				game.views[e].face_point(game.hero.position)
 				game._check_spotted()
 				check(game.in_fight(), "the group starts a fight")
 				check(not game.battle.units.has(leader), "the patrol, out of sight across the level, is not in it")
