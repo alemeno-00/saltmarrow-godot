@@ -1,0 +1,31 @@
+{
+  "brief_ref": "5d836a0286fe245fdb607abc9a0d453d976393e0",
+  "template_path": "design/art-briefs/animation/rig/template_s.png",
+  "template_sha256": "7c4dedcba8676e4e0fe3b3ffc409359d0f5833c519a929aec89d07cc24b74958",
+  "sheet_size": [
+    264,
+    24
+  ],
+  "cell_size": [
+    24,
+    24
+  ],
+  "direction": "south",
+  "part_count": 11,
+  "pivots_occupied": true,
+  "alpha": "binary, exact diffuse-normal match",
+  "palette": "shared room palette plus four approved muted-red colours",
+  "assembled_standing_bounds": [
+    30,
+    21,
+    50,
+    73
+  ],
+  "assembled_height": 52,
+  "preview": "mechanical reproduction of pinned Rig/RigPose equations, not an in-game test",
+  "approval": "pending in-game camera/lighting review; no other directions started",
+  "art_revision": "polish-v2",
+  "source_revision": "1f99f7656d91342bbfca05002340425659e0d7ab",
+  "diffuse_sha256": "5859897ca986806701d05a4f0c39d6e8a006ed05c89834f8d111a4df8b2966a1",
+  "normal_sha256": "79781a68c12e56b377a25de0976ecdf8f2e7fd8816f2c852e1ab49a75d778345"
+}

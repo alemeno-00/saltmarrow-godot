@@ -9,3 +9,6 @@
 - `.gdignore`: excludes review media from runtime imports.
 
 Mechanical placement previews only. Actual Godot rendering, joint seams during continuous rotation, moving foot contact and lighting still require in-game review.
+
+- polish-before-after-8x.png: before left, current revision right; identical 80×80 registration enlarged8×.
+- polish-room-before-after-3x.png: both versions on the same native-density room crop, before left/current right, enlarged3×.

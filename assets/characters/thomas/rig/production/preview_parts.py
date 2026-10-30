@@ -59,5 +59,11 @@ def main():
         bg=Image.new('RGBA',(80,80),(96,97,92,255));bg.alpha_composite(f);loop.append(bg.convert('RGB').resize((320,320),N))
     loop[0].save(pre/'south-walk-parts.gif',save_all=True,append_images=loop[1:],duration=100,loop=0)
     room=Image.open(P.parents[4]/'assets/tiles/sewers/rooms/junction_a/1.png').convert('RGBA');room.alpha_composite(standing,(112,152));room.crop((64,96,256,288)).resize((768,768),N).save(pre/'south-room-4x.png')
+    old_path=P/'polish-v2/before-assembled-s.png'
+    if old_path.exists():
+        old=Image.open(old_path).convert('RGBA');comparison=Image.new('RGBA',(160,80),(85,88,88,255));comparison.alpha_composite(old,(0,0));comparison.alpha_composite(standing,(80,0))
+        comparison.resize((1280,640),N).save(pre/'polish-before-after-8x.png')
+        floor=Image.open(P.parents[4]/'assets/tiles/sewers/rooms/junction_a/1.png').convert('RGBA');old_floor=floor.copy();old_floor.alpha_composite(old,(112,152))
+        both=Image.new('RGBA',(384,192));both.paste(old_floor.crop((64,96,256,288)),(0,0));both.paste(room.crop((64,96,256,288)),(192,0));both.resize((1152,576),N).save(pre/'polish-room-before-after-3x.png')
     print('Mechanical rig preview:',standing.getbbox())
 if __name__=='__main__':main()
