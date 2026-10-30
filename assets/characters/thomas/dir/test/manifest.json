@@ -1,0 +1,44 @@
+{
+  "canvas": [
+    640,
+    240
+  ],
+  "frame_size": [
+    80,
+    80
+  ],
+  "root": [
+    40,
+    72
+  ],
+  "rows": [
+    {
+      "name": "idle_s",
+      "count": 6,
+      "fps": 7
+    },
+    {
+      "name": "walk_s",
+      "count": 8,
+      "fps": 10
+    },
+    {
+      "name": "walk_e",
+      "count": 8,
+      "fps": 10
+    }
+  ],
+  "generated_frames": 22,
+  "unique_frames": 22,
+  "alpha": "binary; diffuse and normal match exactly",
+  "palette": "room palette plus approved four muted reds",
+  "target_body_height_range": [
+    48,
+    52
+  ],
+  "status": "camera-test candidate; awaiting in-game review and Julian approval",
+  "limitations": [
+    "Registration and format checks do not certify anatomical continuity or camera approval.",
+    "In-game lighting and moving foot contact must be checked by Claude; no game code changed."
+  ]
+}

@@ -1,0 +1,542 @@
+{
+  "complete": true,
+  "frame_count": 22,
+  "root": [
+    40,
+    72
+  ],
+  "frame_size": [
+    80,
+    80
+  ],
+  "records": [
+    {
+      "animation": "idle_s",
+      "frame": 1,
+      "source": "idle_s-01-paint.png",
+      "alpha_bounds": [
+        30,
+        25,
+        50,
+        76
+      ],
+      "registration": {
+        "source_crown": 21,
+        "source_heel": 72,
+        "target_crown": 26,
+        "target_heel": 76,
+        "height": 50,
+        "uniform_scale": 0.9803921568627451,
+        "translation": [
+          0.7843137254902004,
+          5.411764705882362
+        ]
+      },
+      "sha256": "0f4f78cf6e19d6e67e05f734619ebb40c1acd78ab49666082fb787a36a77c6fa"
+    },
+    {
+      "animation": "idle_s",
+      "frame": 2,
+      "source": "idle_s-02-paint.png",
+      "alpha_bounds": [
+        30,
+        25,
+        50,
+        76
+      ],
+      "registration": {
+        "source_crown": 19,
+        "source_heel": 72,
+        "target_crown": 25,
+        "target_heel": 76,
+        "height": 51,
+        "uniform_scale": 0.9622641509433962,
+        "translation": [
+          1.5094339622641542,
+          6.716981132075475
+        ]
+      },
+      "sha256": "7ead859bd311d01a1669143a1433267a2df4941b4fc2c8ba49484f8fb611986d"
+    },
+    {
+      "animation": "idle_s",
+      "frame": 3,
+      "source": "idle_s-03-paint.png",
+      "alpha_bounds": [
+        31,
+        24,
+        49,
+        76
+      ],
+      "registration": {
+        "source_crown": 16,
+        "source_heel": 72,
+        "target_crown": 25,
+        "target_heel": 76,
+        "height": 51,
+        "uniform_scale": 0.9107142857142857,
+        "translation": [
+          3.5714285714285694,
+          10.42857142857143
+        ]
+      },
+      "sha256": "3073d7a95a82827f5df664186bd50e19377325abfc255c900557d7c43128d592"
+    },
+    {
+      "animation": "idle_s",
+      "frame": 4,
+      "source": "idle_s-04-paint.png",
+      "alpha_bounds": [
+        30,
+        25,
+        50,
+        76
+      ],
+      "registration": {
+        "source_crown": 21,
+        "source_heel": 72,
+        "target_crown": 26,
+        "target_heel": 76,
+        "height": 50,
+        "uniform_scale": 0.9803921568627451,
+        "translation": [
+          0.7843137254902004,
+          5.411764705882362
+        ]
+      },
+      "sha256": "3ca41e2cab6d2f2c74b79088790bb9eadba251f61967938c24f8e79bb436db82"
+    },
+    {
+      "animation": "idle_s",
+      "frame": 5,
+      "source": "idle_s-05-paint.png",
+      "alpha_bounds": [
+        30,
+        25,
+        50,
+        76
+      ],
+      "registration": {
+        "source_crown": 21,
+        "source_heel": 72,
+        "target_crown": 26,
+        "target_heel": 76,
+        "height": 50,
+        "uniform_scale": 0.9803921568627451,
+        "translation": [
+          0.7843137254902004,
+          5.411764705882362
+        ]
+      },
+      "sha256": "c598ea1d43d99cdf88406784634560f0d27de8d191d7475afe4a54caaa42621a"
+    },
+    {
+      "animation": "idle_s",
+      "frame": 6,
+      "source": "idle_s-06-paint.png",
+      "alpha_bounds": [
+        31,
+        25,
+        49,
+        76
+      ],
+      "registration": {
+        "source_crown": 16,
+        "source_heel": 71,
+        "target_crown": 26,
+        "target_heel": 76,
+        "height": 50,
+        "uniform_scale": 0.9090909090909091,
+        "translation": [
+          3.6363636363636402,
+          11.454545454545453
+        ]
+      },
+      "sha256": "09de4b0e05bde1fcb77226e19a093841287b7c1e336f2fa73eb53ad90abc32f1"
+    },
+    {
+      "animation": "walk_s",
+      "frame": 1,
+      "source": "walk_s-01-paint.png",
+      "alpha_bounds": [
+        31,
+        27,
+        49,
+        79
+      ],
+      "registration": {
+        "source_crown": 19,
+        "source_heel": 75,
+        "target_crown": 27,
+        "target_heel": 79,
+        "height": 52,
+        "uniform_scale": 0.9285714285714286,
+        "translation": [
+          2.857142857142854,
+          9.357142857142861
+        ]
+      },
+      "sha256": "8466eb4b510b962888bc90457a5a645641875b9c359e7d775b1bc6e3383f2ad3"
+    },
+    {
+      "animation": "walk_s",
+      "frame": 2,
+      "source": "walk_s-02-paint.png",
+      "alpha_bounds": [
+        30,
+        26,
+        50,
+        77
+      ],
+      "registration": {
+        "source_crown": 22,
+        "source_heel": 74,
+        "target_crown": 27,
+        "target_heel": 77,
+        "height": 50,
+        "uniform_scale": 0.9615384615384616,
+        "translation": [
+          1.53846153846154,
+          5.84615384615384
+        ]
+      },
+      "sha256": "2bc620ede1034737603b65586428300e315c137fd1032fbafcf64f5b64f813b0"
+    },
+    {
+      "animation": "walk_s",
+      "frame": 3,
+      "source": "walk_s-03-paint.png",
+      "alpha_bounds": [
+        30,
+        23,
+        51,
+        76
+      ],
+      "registration": {
+        "source_crown": 18,
+        "source_heel": 71,
+        "target_crown": 25,
+        "target_heel": 76,
+        "height": 51,
+        "uniform_scale": 0.9622641509433962,
+        "translation": [
+          1.5094339622641542,
+          7.679245283018872
+        ]
+      },
+      "sha256": "94e83c4987a3b6273fa344056338ce88fa78114161f6febd798c5f6c5852e89c"
+    },
+    {
+      "animation": "walk_s",
+      "frame": 4,
+      "source": "walk_s-04-paint.png",
+      "alpha_bounds": [
+        30,
+        24,
+        51,
+        76
+      ],
+      "registration": {
+        "source_crown": 16,
+        "source_heel": 71,
+        "target_crown": 24,
+        "target_heel": 76,
+        "height": 52,
+        "uniform_scale": 0.9454545454545454,
+        "translation": [
+          2.18181818181818,
+          8.872727272727275
+        ]
+      },
+      "sha256": "2690a1dff34750ac9cacfe6a075cedd0aefd9c1b275966c86fd5839cd7bc31d8"
+    },
+    {
+      "animation": "walk_s",
+      "frame": 5,
+      "source": "walk_s-05-paint.png",
+      "alpha_bounds": [
+        31,
+        27,
+        50,
+        79
+      ],
+      "registration": {
+        "source_crown": 20,
+        "source_heel": 75,
+        "target_crown": 27,
+        "target_heel": 79,
+        "height": 52,
+        "uniform_scale": 0.9454545454545454,
+        "translation": [
+          2.18181818181818,
+          8.090909090909093
+        ]
+      },
+      "sha256": "6cb1c1cecbd3bbb88442930a6fc18c9809732f9c018afe62db411bd2be8d54fb"
+    },
+    {
+      "animation": "walk_s",
+      "frame": 6,
+      "source": "walk_s-06-paint.png",
+      "alpha_bounds": [
+        31,
+        27,
+        50,
+        77
+      ],
+      "registration": {
+        "source_crown": 21,
+        "source_heel": 74,
+        "target_crown": 27,
+        "target_heel": 77,
+        "height": 50,
+        "uniform_scale": 0.9433962264150944,
+        "translation": [
+          2.264150943396224,
+          7.188679245283012
+        ]
+      },
+      "sha256": "47377e1648cbd15ea3c647d95d1478667ca528cdd1be2b5dc760379646654b55"
+    },
+    {
+      "animation": "walk_s",
+      "frame": 7,
+      "source": "walk_s-07-paint.png",
+      "alpha_bounds": [
+        31,
+        24,
+        50,
+        76
+      ],
+      "registration": {
+        "source_crown": 17,
+        "source_heel": 72,
+        "target_crown": 25,
+        "target_heel": 76,
+        "height": 51,
+        "uniform_scale": 0.9272727272727272,
+        "translation": [
+          2.9090909090909065,
+          9.236363636363635
+        ]
+      },
+      "sha256": "f507a91348746185b8fd5169b2cb9bd9376157b4fae83dc277bd1cc564f58f83"
+    },
+    {
+      "animation": "walk_s",
+      "frame": 8,
+      "source": "walk_s-08-paint.png",
+      "alpha_bounds": [
+        31,
+        23,
+        50,
+        76
+      ],
+      "registration": {
+        "source_crown": 16,
+        "source_heel": 72,
+        "target_crown": 24,
+        "target_heel": 76,
+        "height": 52,
+        "uniform_scale": 0.9285714285714286,
+        "translation": [
+          2.857142857142854,
+          9.142857142857139
+        ]
+      },
+      "sha256": "2887acc070553414b8122f863295d64e58664c17a839ef7f3d2a8cecb864c732"
+    },
+    {
+      "animation": "walk_e",
+      "frame": 1,
+      "source": "walk_e-01-paint.png",
+      "alpha_bounds": [
+        30,
+        24,
+        54,
+        75
+      ],
+      "registration": {
+        "source_crown": 17,
+        "source_heel": 74,
+        "target_crown": 24,
+        "target_heel": 75,
+        "height": 51,
+        "uniform_scale": 0.8947368421052632,
+        "translation": [
+          4.210526315789473,
+          8.78947368421052
+        ]
+      },
+      "sha256": "d21a2f4d18301ab363764d877292c5666670d37ca12c435424b45c9ad1dc3dab"
+    },
+    {
+      "animation": "walk_e",
+      "frame": 2,
+      "source": "walk_e-02-paint.png",
+      "alpha_bounds": [
+        28,
+        22,
+        54,
+        72
+      ],
+      "registration": {
+        "source_crown": 19,
+        "source_heel": 73,
+        "target_crown": 24,
+        "target_heel": 72,
+        "height": 48,
+        "uniform_scale": 0.8888888888888888,
+        "translation": [
+          4.444444444444443,
+          7.111111111111114
+        ]
+      },
+      "sha256": "a04d8a826f4fe79cd47e2fbbce29bc83f60ed4798cfc610a2e76ace22e6127e6"
+    },
+    {
+      "animation": "walk_e",
+      "frame": 3,
+      "source": "walk_e-03-paint.png",
+      "alpha_bounds": [
+        32,
+        22,
+        50,
+        71
+      ],
+      "registration": {
+        "source_crown": 18,
+        "source_heel": 75,
+        "target_crown": 23,
+        "target_heel": 71,
+        "height": 48,
+        "uniform_scale": 0.8421052631578947,
+        "translation": [
+          6.315789473684212,
+          7.842105263157897
+        ]
+      },
+      "sha256": "d82e22f759897a4cfbab89a7ad04e106073f94f0c9574c1c94e8ca357f80516b"
+    },
+    {
+      "animation": "walk_e",
+      "frame": 4,
+      "source": "walk_e-04-paint.png",
+      "alpha_bounds": [
+        33,
+        23,
+        52,
+        72
+      ],
+      "registration": {
+        "source_crown": 18,
+        "source_heel": 71,
+        "target_crown": 23,
+        "target_heel": 72,
+        "height": 49,
+        "uniform_scale": 0.9245283018867925,
+        "translation": [
+          3.018867924528301,
+          6.35849056603773
+        ]
+      },
+      "sha256": "a169b2e270355c81aee094273ac2da03029c252f93c39c03daf5a947b8372f7a"
+    },
+    {
+      "animation": "walk_e",
+      "frame": 5,
+      "source": "walk_e-05-paint.png",
+      "alpha_bounds": [
+        30,
+        24,
+        56,
+        75
+      ],
+      "registration": {
+        "source_crown": 19,
+        "source_heel": 74,
+        "target_crown": 24,
+        "target_heel": 75,
+        "height": 51,
+        "uniform_scale": 0.9272727272727272,
+        "translation": [
+          2.9090909090909065,
+          6.38181818181819
+        ]
+      },
+      "sha256": "f79af62107d925a1ccb60aed4654b5f1b921ad3aec91e5852c95f1d360b583a8"
+    },
+    {
+      "animation": "walk_e",
+      "frame": 6,
+      "source": "walk_e-06-paint.png",
+      "alpha_bounds": [
+        34,
+        25,
+        52,
+        75
+      ],
+      "registration": {
+        "source_crown": 21,
+        "source_heel": 75,
+        "target_crown": 25,
+        "target_heel": 75,
+        "height": 50,
+        "uniform_scale": 0.9259259259259259,
+        "translation": [
+          2.962962962962962,
+          5.555555555555557
+        ]
+      },
+      "sha256": "2f3d66a977da3061e17d44624d8252643a13cbec907120996182939ffbf12c0e"
+    },
+    {
+      "animation": "walk_e",
+      "frame": 7,
+      "source": "walk_e-07-paint.png",
+      "alpha_bounds": [
+        33,
+        24,
+        51,
+        75
+      ],
+      "registration": {
+        "source_crown": 19,
+        "source_heel": 72,
+        "target_crown": 24,
+        "target_heel": 75,
+        "height": 51,
+        "uniform_scale": 0.9622641509433962,
+        "translation": [
+          1.5094339622641542,
+          5.716981132075475
+        ]
+      },
+      "sha256": "eae8f958592994725bb01f0ca4257ba2b534bbc12a4d349a5bbc8bfbf2b650b7"
+    },
+    {
+      "animation": "walk_e",
+      "frame": 8,
+      "source": "walk_e-08-paint.png",
+      "alpha_bounds": [
+        31,
+        22,
+        52,
+        75
+      ],
+      "registration": {
+        "source_crown": 15,
+        "source_heel": 72,
+        "target_crown": 23,
+        "target_heel": 75,
+        "height": 52,
+        "uniform_scale": 0.9122807017543859,
+        "translation": [
+          3.5087719298245617,
+          9.31578947368422
+        ]
+      },
+      "sha256": "d26e5d821c702d57b778ad1044221e9bc761ad47203b600f654ef383df9c0f46"
+    }
+  ]
+}

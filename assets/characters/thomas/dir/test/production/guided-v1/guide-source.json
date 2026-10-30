@@ -1,0 +1,9 @@
+{
+  "ref": "405a900ec36289e776ea305750012b1200f84375",
+  "path": "design/art-briefs/animation/guides/",
+  "counts": {
+    "idle_s": 6,
+    "walk_s": 8,
+    "walk_e": 8
+  }
+}
