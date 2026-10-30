@@ -1,0 +1,1058 @@
+{
+  "job": 14,
+  "grid_px": 32,
+  "pixel_origin": "upper left,+x right,+y down; sprite origins centre of frame",
+  "assets": [
+    {
+      "file": "salve.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "states": [
+        "static"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        [
+          231,
+          220,
+          1029,
+          1093
+        ]
+      ],
+      "shared_scale": 0.029782359679266894,
+      "source_grid": [
+        1,
+        1
+      ],
+      "resampling": "shared uniform nearest scale",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          4,
+          3,
+          28,
+          29
+        ]
+      ],
+      "sha256": "dc47630dab651d830d448b309f1c14b637ac2cbe0240afd91923635afe316a62"
+    },
+    {
+      "file": "bandage.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "states": [
+        "static"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        [
+          121,
+          278,
+          1150,
+          1055
+        ]
+      ],
+      "shared_scale": 0.025267249757045675,
+      "source_grid": [
+        1,
+        1
+      ],
+      "resampling": "shared uniform nearest scale",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          3,
+          6,
+          29,
+          26
+        ]
+      ],
+      "sha256": "d366848a79cbc96366173617f77e4980d1923da51271b5168ad37e7d3e784b93"
+    },
+    {
+      "file": "grate_key.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "states": [
+        "static"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        1536,
+        1024
+      ],
+      "source_bounds": [
+        [
+          138,
+          247,
+          1411,
+          810
+        ]
+      ],
+      "shared_scale": null,
+      "source_grid": [
+        1,
+        1
+      ],
+      "resampling": "fixed per-axis plane fit",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          3,
+          5,
+          29,
+          27
+        ]
+      ],
+      "sha256": "5ea8dc1e056901772fc32f639fce8a39a8adf2e3dcd3cf5d1a610a61ab9ce507"
+    },
+    {
+      "file": "crate.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        64,
+        32
+      ],
+      "rows": [
+        2
+      ],
+      "states": [
+        "closed",
+        "opened"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        1774,
+        887
+      ],
+      "source_bounds": [
+        [
+          157,
+          347,
+          762,
+          777
+        ],
+        [
+          1040,
+          153,
+          1652,
+          777
+        ]
+      ],
+      "shared_scale": 0.04487179487179487,
+      "source_grid": [
+        2,
+        1
+      ],
+      "resampling": "shared uniform nearest scale",
+      "alignment": "base",
+      "frame_alpha_boxes": [
+        [
+          2,
+          11,
+          29,
+          30
+        ],
+        [
+          2,
+          2,
+          29,
+          30
+        ]
+      ],
+      "sha256": "18c0e066428e0707999a09dd72791da7b97af311d8319a73a2fae022305f5947"
+    },
+    {
+      "file": "barrel.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        64,
+        32
+      ],
+      "rows": [
+        2
+      ],
+      "states": [
+        "closed",
+        "opened"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        1774,
+        887
+      ],
+      "source_bounds": [
+        [
+          194,
+          178,
+          695,
+          778
+        ],
+        [
+          1079,
+          133,
+          1587,
+          778
+        ]
+      ],
+      "shared_scale": 0.043410852713178294,
+      "source_grid": [
+        2,
+        1
+      ],
+      "resampling": "shared uniform nearest scale",
+      "alignment": "base",
+      "frame_alpha_boxes": [
+        [
+          5,
+          4,
+          27,
+          30
+        ],
+        [
+          5,
+          2,
+          27,
+          30
+        ]
+      ],
+      "sha256": "8b4a2064219cbbd2b097666d6e7ada4188ea1117471a4a4c992a897a3e7af511"
+    },
+    {
+      "file": "satchel_body.png",
+      "frame_size": [
+        64,
+        32
+      ],
+      "canvas": [
+        128,
+        32
+      ],
+      "rows": [
+        2
+      ],
+      "states": [
+        "closed satchel",
+        "searched satchel"
+      ],
+      "origin_px": [
+        32,
+        16
+      ],
+      "source_bounds": [
+        [
+          321,
+          224,
+          1497,
+          704
+        ],
+        [
+          320,
+          224,
+          1499,
+          709
+        ]
+      ],
+      "shared_scale": 0.04749787955894826,
+      "resampling": "shared uniform nearest scale",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          4,
+          4,
+          60,
+          27
+        ],
+        [
+          4,
+          4,
+          60,
+          27
+        ]
+      ],
+      "sha256": "2b428e1ad7448a1127593a99e862f8cd546e21e934ec5360ee87221c4d1eb04f",
+      "source_images": [
+        {
+          "file": "body-v2/closed-master.png",
+          "canvas": [
+            1774,
+            887
+          ]
+        },
+        {
+          "file": "body-v2/open-master.png",
+          "canvas": [
+            1774,
+            887
+          ]
+        }
+      ],
+      "art_revision": "overhead prone, material edges and local contact occlusion"
+    },
+    {
+      "file": "letter.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "states": [
+        "static"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        1774,
+        887
+      ],
+      "source_bounds": [
+        [
+          540,
+          244,
+          1244,
+          683
+        ]
+      ],
+      "shared_scale": 0.03125,
+      "source_grid": [
+        1,
+        1
+      ],
+      "resampling": "shared uniform nearest scale",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          5,
+          9,
+          27,
+          23
+        ]
+      ],
+      "sha256": "db7ca2544109f1b9ec8ab3ebd67ab858465a534a1b6ad4daea6a289ce231c15e"
+    },
+    {
+      "file": "hymn_sheet.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "states": [
+        "static"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        1312,
+        1199
+      ],
+      "source_bounds": [
+        [
+          116,
+          132,
+          1260,
+          1039
+        ]
+      ],
+      "shared_scale": 0.02097902097902098,
+      "source_grid": [
+        1,
+        1
+      ],
+      "resampling": "shared uniform nearest scale",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          4,
+          6,
+          28,
+          25
+        ]
+      ],
+      "sha256": "4fe27a6b6027050efa7d2eb6d0220128bdf758ed2b45292814294721b11f9e8c"
+    },
+    {
+      "file": "miner_tag_body.png",
+      "frame_size": [
+        64,
+        32
+      ],
+      "canvas": [
+        64,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "states": [
+        "static"
+      ],
+      "origin_px": [
+        32,
+        16
+      ],
+      "source_bounds": [
+        [
+          319,
+          224,
+          1499,
+          706
+        ]
+      ],
+      "shared_scale": 0.04745762711864407,
+      "resampling": "shared uniform nearest scale",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          4,
+          4,
+          60,
+          27
+        ]
+      ],
+      "sha256": "642a3c82ad241c851488e9ccecc8d669b094fdbe56366377167e668242d68279",
+      "source_images": [
+        {
+          "file": "body-v2/tag-master.png",
+          "canvas": [
+            1774,
+            887
+          ]
+        }
+      ],
+      "art_revision": "overhead prone, material edges and local contact occlusion"
+    },
+    {
+      "file": "valve.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        128,
+        32
+      ],
+      "rows": [
+        4
+      ],
+      "states": [
+        "turn 0",
+        "turn 1",
+        "turn 2",
+        "turn 3"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        2172,
+        724
+      ],
+      "source_bounds": [
+        [
+          112,
+          97,
+          461,
+          624
+        ],
+        [
+          660,
+          97,
+          1009,
+          624
+        ],
+        [
+          1175,
+          97,
+          1525,
+          624
+        ],
+        [
+          1709,
+          97,
+          2060,
+          624
+        ]
+      ],
+      "shared_scale": 0.05313092979127135,
+      "source_grid": [
+        4,
+        1
+      ],
+      "resampling": "shared uniform nearest scale",
+      "alignment": "base",
+      "frame_alpha_boxes": [
+        [
+          6,
+          2,
+          25,
+          30
+        ],
+        [
+          6,
+          2,
+          25,
+          30
+        ],
+        [
+          6,
+          2,
+          25,
+          30
+        ],
+        [
+          6,
+          2,
+          25,
+          30
+        ]
+      ],
+      "sha256": "16116eeecfff6b5386d6d04df4f198866a0fa7a928c48723ba1372fa604050b5"
+    },
+    {
+      "file": "bones_1.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "states": [
+        "static"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        1572,
+        1001
+      ],
+      "source_bounds": [
+        [
+          455,
+          305,
+          1131,
+          712
+        ]
+      ],
+      "shared_scale": 0.03550295857988166,
+      "source_grid": [
+        1,
+        1
+      ],
+      "resampling": "shared uniform nearest scale",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          4,
+          9,
+          28,
+          23
+        ]
+      ],
+      "sha256": "eb7ee46586f10b0ed6f2e875a0ed2d2ca8e3d8a427773a93d2cb0f3ddda95e5e"
+    },
+    {
+      "file": "bones_2.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "states": [
+        "static"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        1322,
+        1190
+      ],
+      "source_bounds": [
+        [
+          389,
+          332,
+          1060,
+          908
+        ]
+      ],
+      "shared_scale": 0.034722222222222224,
+      "source_grid": [
+        1,
+        1
+      ],
+      "resampling": "shared uniform nearest scale",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          4,
+          6,
+          27,
+          26
+        ]
+      ],
+      "sha256": "6ce3c478c57a7d78cd40f6c8a95dd511af5c87c85ae5f9ea9f05ff97151f8d25"
+    },
+    {
+      "file": "bones_3.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "states": [
+        "static"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        1385,
+        1136
+      ],
+      "source_bounds": [
+        [
+          405,
+          348,
+          1011,
+          889
+        ]
+      ],
+      "shared_scale": 0.036968576709796676,
+      "source_grid": [
+        1,
+        1
+      ],
+      "resampling": "shared uniform nearest scale",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          5,
+          6,
+          27,
+          26
+        ]
+      ],
+      "sha256": "379b0bc52c86a7de40b439cfa83d9e3271c523f526a1649acded8ebba93689f6"
+    },
+    {
+      "file": "debris_1.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "states": [
+        "static"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        1568,
+        1003
+      ],
+      "source_bounds": [
+        [
+          314,
+          302,
+          1257,
+          727
+        ]
+      ],
+      "shared_scale": 0.02545068928950159,
+      "source_grid": [
+        1,
+        1
+      ],
+      "resampling": "shared uniform nearest scale",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          4,
+          10,
+          28,
+          21
+        ]
+      ],
+      "sha256": "39a0f46f39a9ae394ec25c536b7bfcc5d36072a47bc7be9fe8cc977350dd050c"
+    },
+    {
+      "file": "debris_2.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "states": [
+        "static"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        1402,
+        1122
+      ],
+      "source_bounds": [
+        [
+          341,
+          316,
+          1092,
+          846
+        ]
+      ],
+      "shared_scale": 0.03195739014647137,
+      "source_grid": [
+        1,
+        1
+      ],
+      "resampling": "shared uniform nearest scale",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          4,
+          7,
+          28,
+          24
+        ]
+      ],
+      "sha256": "d3424d2fc4e35df460fbf06a0d56c39f70e96e4df26076f5b9dc8a5afe7fb939"
+    },
+    {
+      "file": "debris_3.png",
+      "frame_size": [
+        32,
+        32
+      ],
+      "canvas": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "states": [
+        "static"
+      ],
+      "origin_px": [
+        16,
+        16
+      ],
+      "source_canvas": [
+        1470,
+        1070
+      ],
+      "source_bounds": [
+        [
+          196,
+          310,
+          1299,
+          826
+        ]
+      ],
+      "shared_scale": 0.021758839528558477,
+      "source_grid": [
+        1,
+        1
+      ],
+      "resampling": "shared uniform nearest scale",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          4,
+          10,
+          28,
+          21
+        ]
+      ],
+      "sha256": "e42ba1dd2c144255ac2da0337202cabe9be0bfcf604da4e6bd32847fe45635ce"
+    },
+    {
+      "file": "grate_ns.png",
+      "frame_size": [
+        64,
+        32
+      ],
+      "canvas": [
+        128,
+        64
+      ],
+      "rows": [
+        2,
+        2
+      ],
+      "states": [
+        "shut 1",
+        "shut 2",
+        "open 1",
+        "open 2"
+      ],
+      "origin_px": [
+        32,
+        16
+      ],
+      "source_canvas": [
+        1774,
+        887
+      ],
+      "source_bounds": [
+        [
+          48,
+          85,
+          839,
+          372
+        ],
+        [
+          935,
+          85,
+          1726,
+          372
+        ],
+        [
+          48,
+          526,
+          839,
+          812
+        ],
+        [
+          935,
+          526,
+          1726,
+          812
+        ]
+      ],
+      "shared_scale": null,
+      "source_grid": [
+        2,
+        2
+      ],
+      "resampling": "fixed per-axis plane fit",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          1,
+          1,
+          63,
+          31
+        ],
+        [
+          1,
+          1,
+          63,
+          31
+        ],
+        [
+          1,
+          1,
+          63,
+          31
+        ],
+        [
+          1,
+          1,
+          63,
+          31
+        ]
+      ],
+      "sha256": "91471b4bd3db59f5dcb6741d26564f77091e31bd40a171e3a9a2099e1121b12a"
+    },
+    {
+      "file": "grate_ew.png",
+      "frame_size": [
+        32,
+        64
+      ],
+      "canvas": [
+        64,
+        128
+      ],
+      "rows": [
+        2,
+        2
+      ],
+      "states": [
+        "shut 1",
+        "shut 2",
+        "open 1",
+        "open 2"
+      ],
+      "origin_px": [
+        16,
+        32
+      ],
+      "source_canvas": [
+        887,
+        1774
+      ],
+      "source_bounds": [
+        [
+          92,
+          58,
+          355,
+          810
+        ],
+        [
+          535,
+          58,
+          797,
+          810
+        ],
+        [
+          92,
+          944,
+          354,
+          1697
+        ],
+        [
+          535,
+          944,
+          797,
+          1697
+        ]
+      ],
+      "shared_scale": null,
+      "source_grid": [
+        2,
+        2
+      ],
+      "resampling": "fixed per-axis plane fit",
+      "alignment": "centre",
+      "frame_alpha_boxes": [
+        [
+          1,
+          1,
+          31,
+          63
+        ],
+        [
+          1,
+          1,
+          31,
+          63
+        ],
+        [
+          1,
+          1,
+          31,
+          63
+        ],
+        [
+          1,
+          1,
+          31,
+          63
+        ]
+      ],
+      "sha256": "c614899eee0ca145c8c061091753f3191b563fb1a22ca98795074cf8e98e1449"
+    }
+  ]
+}
