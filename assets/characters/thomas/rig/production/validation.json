@@ -23,5 +23,9 @@
   ],
   "assembled_height": 52,
   "preview": "mechanical reproduction of pinned Rig/RigPose equations, not an in-game test",
-  "approval": "pending Claude in-game test and Julian approval"
+  "approval": "pending in-game camera/lighting review; no other directions started",
+  "art_revision": "polish-v2",
+  "source_revision": "1f99f7656d91342bbfca05002340425659e0d7ab",
+  "diffuse_sha256": "5859897ca986806701d05a4f0c39d6e8a006ed05c89834f8d111a4df8b2966a1",
+  "normal_sha256": "79781a68c12e56b377a25de0976ecdf8f2e7fd8816f2c852e1ab49a75d778345"
 }

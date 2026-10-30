@@ -23,7 +23,7 @@ Cells left to right, using Thomas's anatomical left/right:
 | 10 | Right thigh | (12,2) |
 | 11 | Right shin/wrap/boot | (12,2) |
 
-Head and torso extend upward from their pivots; limbs and skirt hang straight down. All11 pivots have painted material. Joint coverage is extended to overlap adjacent pieces. The torso owns the belt; the duplicate belt in the generated skirt source is cropped out during export. Each piece is registered once, rather than repositioned separately for each animation frame.
+Head and torso extend upward from their pivots; limbs and skirt hang straight down. All11 pivots have painted material. Joint coverage is extended to overlap adjacent pieces. The torso owns the belt; the current v2 skirt source is already belt-free. Each piece is registered once, rather than repositioned separately for each animation frame.
 
 House-style checks: shared room palette plus Julian's approved four muted reds; coloured material edges; hard binary transparency; worn pixel clusters; lighter face/hands and dark charcoal coat; damp boot contact pixels; neutral diffuse colouring and no added shadow. The head, shoulders and boot tops are drawn for the raised camera. Mechanical standing assembly is52px tall on an80×80 preview with root(40,72).
 
@@ -34,3 +34,9 @@ House-style checks: shared room palette plus Julian's approved four muted reds; 
 The skeleton branch's existing loader reads this folder's `s.png`; attach `s_n.png` through the intended rig lighting support. No code, scenes or existing sprite assets were edited. This sheet depends on the skeleton implementation and revised job15-0 brief, which were read from branch`skeleton` rather than the older main-branch job description.
 
 The previews mechanically reproduce that pinned rig's placements and camera; they are not screenshots of the running game. Check rotations for exposed seams, near/far limb ordering, camera fit, moving foot contact and normal orientation under actual lights. Julian's in-game approval is pending; other directions have not been started. Keep job15-0 unchecked until that review is complete.
+
+## Readability revision v2
+
+The runtime sheets now use polish-v2 sources: clearer pale facial features and hands, charcoal coat/lapels, distinct brown leather and trousers, and cleaner scarf/wrap clusters. The head was repainted separately for its 9×9 native artwork. Cell sizes, part order, rig pivots and assembled 52px height remain the same. The normal map was regenerated. The torso painting was registered one pixel sideways to cover the unchanged waist pivot.
+
+Before-and-after images are in previews/polish-before-after-8x.png and previews/polish-room-before-after-3x.png (before left, revision right). Actual game lighting and camera approval remain pending.

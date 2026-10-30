@@ -13,3 +13,5 @@
 - `.gdignore`: excludes production sources from runtime imports.
 
 Runtime outputs: `../s.png` and `../s_n.png`, one row of11 cells,24×24 each. See the parent README for cell order and pivots.
+
+Current runtime exports use the versioned polish-v2 sources, including a separate head repaint and regenerated normal source. Original masters remain as revision1 history. See polish-v2/README.md for the new inputs and archived before images.

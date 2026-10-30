@@ -4,6 +4,8 @@ from PIL import Image
 from collections import deque
 import json,math
 P=Path(__file__).resolve().parent;R=P.parent;ROOT=P.parents[4]
+MASTER=P/'polish-v2/south-parts-master-v2.png'
+NORMAL_MASTER=P/'polish-v2/south-parts-normal-master-v2.png'
 N=Image.Resampling.NEAREST
 NAMES=['head','torso','skirt','upper_arm_l','forearm_l','upper_arm_r','forearm_r','thigh_l','shin_l','thigh_r','shin_r']
 SIZES=[(9,9),(13,18),(15,17),(4,12),(4,12),(4,12),(4,12),(5,14),(5,14),(5,14),(5,14)]
@@ -43,10 +45,15 @@ def extract(im,i,trim_skirt=True):
     return f,box
 
 def export():
-    source=Image.open(P/'south-parts-master.png').convert('RGBA')
+    source=Image.open(MASTER).convert('RGBA')
     sheet=Image.new('RGBA',(264,24));packed=Image.new('RGBA',(96,72));records=[]
     for i,name in enumerate(NAMES):
-        f,box=extract(source,i);f=f.resize(SIZES[i],N)
+        head_path=P/'polish-v2/head-master-v2.png'
+        if i==0 and head_path.exists():
+            head=Image.open(head_path).convert('RGBA');head_pack=Image.new('RGBA',(head.width*4,head.height*3));head_pack.paste(head,(0,0))
+            f,box=extract(head_pack,0,False)
+        else:f,box=extract(source,i,False)
+        f=f.resize(SIZES[i],N)
         pixels=[]
         for r,g,b,a in f.get_flattened_data():
             if not a:pixels.append((0,0,0,0));continue
@@ -55,6 +62,9 @@ def export():
             pixels.append((*c,255))
         f.putdata(pixels)
         x=12-f.width//2;y=23-f.height if i<2 else 0
+        if i<2 and not f.getpixel((12-x,22-y))[3]:
+            occupied=[xx for xx in range(f.width) if f.getpixel((xx,22-y))[3]]
+            x=12-min(occupied,key=lambda xx:abs((x+xx)-12))
         if i>=3:
             # Centre actual material at the joint, not the asymmetric cuff's bounds.
             row=min(range(min(5,f.height)),key=lambda yy:abs(yy-2) if any(f.getpixel((xx,yy))[3] for xx in range(f.width)) else 100)
@@ -67,9 +77,9 @@ def export():
                 yy=y+f.height-1;c=cell.getpixel((xx,yy))
                 if c[3]:cell.putpixel((xx,yy),(*min(PALETTE,key=lambda d:sum((d[k]-max(20,c[k]-10))**2 for k in range(3))),255))
         sheet.paste(cell,(24*i,0));packed.paste(cell,(i%4*24,i//4*24))
-        records.append({'cell':i,'part':name,'pivot':PIVOTS[i],'source_box':box,'painted_size':SIZES[i],'paste':[x,y],'alpha_bounds':cell.getbbox()})
+        records.append({'cell':i,'part':name,'pivot':PIVOTS[i],'source':str(head_path.relative_to(P)) if i==0 else str(MASTER.relative_to(P)),'source_box':box,'painted_size':SIZES[i],'paste':[x,y],'alpha_bounds':cell.getbbox()})
     sheet.save(R/'s.png');packed.resize((1152,864),N).save(P/'south-parts-registered-packed.png')
-    normal_path=P/'south-parts-normal-master.png'
+    normal_path=NORMAL_MASTER
     if normal_path.exists():
         normal_source=Image.open(normal_path).convert('RGBA');normals=Image.new('RGBA',sheet.size)
         for i in range(11):
@@ -87,7 +97,7 @@ def export():
                     pixels.append(tuple(round(127.5*(z/length+1)) for z in v)+(255,))
             cell.putdata(pixels);normals.paste(cell,(i*24,0))
         normals.save(R/'s_n.png')
-    (P/'registration.json').write_text(json.dumps({'source':'south-parts-master.png','sheet_size':[264,24],'cell_size':[24,24],'parts':records},indent=2)+'\n')
+    (P/'registration.json').write_text(json.dumps({'source':str(MASTER.relative_to(P)),'sheet_size':[264,24],'cell_size':[24,24],'parts':records},indent=2)+'\n')
     preview=R/'previews';preview.mkdir(exist_ok=True);(preview/'.gdignore').touch()
     sheet.resize((2112,192),N).save(preview/'south-parts-8x.png')
     print('Exported11 parts at fixed pivots.')
