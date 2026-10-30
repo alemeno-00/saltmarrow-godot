@@ -30,6 +30,26 @@ static func fury() -> Progress:
 	return p
 
 
+## The Shadow (docs/story.md): a killer in the dark. Daggers, rolled with Agility.
+static func shadow() -> Progress:
+	var p := Progress.new()
+	p.backstory = "shadow"
+	p.stats = {"might": 1, "agility": 2, "reason": 0, "intuition": 1, "presence": 0}
+	p.open_trees = ["daggers"]
+	p.owned = ["daggers/backstab", "daggers/twin_fangs"]
+	return p
+
+
+## A fresh life with this backstory.
+static func for_backstory(b: String) -> Progress:
+	return shadow() if b == "shadow" else fury()
+
+
+## The weapon tree this life fights with.
+func weapon_tree() -> String:
+	return SkillTrees.BACKSTORY_TREE.get(backstory, "maces")
+
+
 ## For testing: a Fury who has already lived through a lot. Every working mace skill, and the levels and stats to match.
 static func veteran(to_level := 10) -> Progress:
 	var p := fury()
@@ -148,7 +168,7 @@ func perks() -> Array[String]:
 
 ## Thomas's abilities: the basic attack, then every learned ability, in tree order.
 func abilities() -> Array:
-	var out: Array = [Abilities.heavy_blow()]
+	var out: Array = [Abilities.basic_for(backstory)]
 	for t in open_trees:
 		for n in SkillTrees.tree(t):
 			if n.kind == "ability" and owns(t, n.id):

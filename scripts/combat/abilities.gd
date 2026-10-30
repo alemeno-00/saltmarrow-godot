@@ -13,6 +13,13 @@ static func _mace(ab: Dictionary) -> Dictionary:
 	return ab
 
 
+## Daggers are quick and light: rolled with Agility.
+static func _dagger(ab: Dictionary) -> Dictionary:
+	ab.weapon = "dagger"
+	ab.stat = "agility"
+	return ab
+
+
 ## Look up one of Thomas's abilities by id.
 static func by_id(id: String) -> Dictionary:
 	match id:
@@ -26,7 +33,43 @@ static func by_id(id: String) -> Dictionary:
 			return wide_arc()
 		"execution":
 			return execution()
+		"stab":
+			return stab()
+		"backstab":
+			return backstab()
+		"open_the_vein":
+			return open_the_vein()
+		"throw":
+			return throw()
 	return {}
+
+
+## The basic attack for a backstory: Fury swings a maul, Shadow stabs.
+static func basic_for(backstory: String) -> Dictionary:
+	return stab() if backstory == "shadow" else heavy_blow()
+
+
+# Thomas, daggers (docs/trees.md, Daggers)
+
+static func stab() -> Dictionary:
+	return _dagger(_ab("stab", "Stab", 0, "enemy", [{"dmg": 2}, {"dmg": 4}, {"dmg": 6}], "torso", [0, 5, 15]))
+
+
+## Only against an enemy that is unaware of him (caught by surprise) or flanked.
+static func backstab() -> Dictionary:
+	return _dagger(_ab("backstab", "Backstab", 3, "enemy", [{"dmg": 4}, {"dmg": 7}, {"dmg": 11}], "torso", [10, 30, 50], ["unaware"]))
+
+
+static func open_the_vein() -> Dictionary:
+	return _dagger(_ab("open_the_vein", "Open the Vein", 3, "enemy", [{"dmg": 2}, {"dmg": 4, "bleed": 4}, {"dmg": 6, "bleed": 4}], "leg", [10, 25, 40]))
+
+
+## Thrown up to 5 squares (7.5 m) at someone he can see. Outside a fight it is free: it puts out a lamp, or clatters
+## off the stone to draw one enemy away.
+static func throw() -> Dictionary:
+	var ab := _dagger(_ab("throw", "Throw", 2, "enemy", [{"dmg": 2}, {"dmg": 4}, {"dmg": 7}], "leg", [0, 10, 20]))
+	ab.range = 5
+	return ab
 
 
 # Thomas, maces
@@ -89,10 +132,16 @@ static func describe(ab: Dictionary) -> String:
 	var lines: Array[String] = ["%s   ·   %s   ·   main action" % [ab.name, cost]]
 	if ab.target == "adjacent_all":
 		lines.append("Every enemy next to you.")
+	elif int(ab.get("range", 1)) > 1:
+		lines.append("One enemy you can see, up to %d squares (%.1f m) away." % [int(ab.range), int(ab.range) * 1.5])
 	else:
 		lines.append("One enemy next to you.")
-	if not (ab.needs as Array).is_empty():
+	if (ab.needs as Array).has("unaware"):
+		lines.append("Only against an enemy caught unaware, or flanked.")
+	elif not (ab.needs as Array).is_empty():
 		lines.append("Only against a dazed, prone or dying enemy.")
+	if ab.get("stat", "might") == "agility":
+		lines.append("Rolled with Agility.")
 	for i in 3:
 		lines.append("%s:  %s" % [PowerRoll.BANDS[i], effect_text(ab.tiers[i])])
 	if ab.injury_part != "":
@@ -113,6 +162,8 @@ static func effect_text(t: Dictionary) -> String:
 		parts.append("slowed")
 	if t.get("prone", false):
 		parts.append("knocked prone")
+	if t.has("bleed"):
+		parts.append("heavy bleeding (%d a turn)" % int(t.bleed))
 	if t.get("crush", false):
 		parts.append("skull crushed (minions and standard enemies die)")
 	return ", ".join(parts)

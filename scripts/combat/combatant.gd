@@ -16,6 +16,10 @@ var cell: Vector2i:
 var max_stamina := 10
 var stamina := 10
 var might := 0
+var agility := 0
+var resource := "fury"   # how Thomas gains extra Resolve: fury (when hurt) or shadow (striking one that can't see him)
+var bleed := 0           # damage bleeding does each turn (2 unless a wound is worse)
+var gained_this_round := false   # Shadow: already took his extra Resolve this round
 var speed := 5
 var free_strike := 2
 var basic: Dictionary = {}

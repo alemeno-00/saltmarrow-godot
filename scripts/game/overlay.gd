@@ -31,6 +31,15 @@ func _draw() -> void:
 			if MovementRules.metres(v.position.distance_to(game.hero.position)) <= StealthRules.CONE_SHOW:
 				_draw_cone(e, v)
 				_draw_alert(e, v)
+	# getting ready to throw a dagger: how far it reaches, and where it would land
+	if game.aiming_throw:
+		var reach := Game.throw_reach()
+		_ring(game.hero.position, reach, Color(0.6, 0.85, 1.0, 0.5))
+		var m := get_global_mouse_position()
+		var ok := game.hero.position.distance_to(m) <= reach
+		var line: Array[Vector2] = [m]
+		_dotted_path(game.hero.position, line, Color(0.6, 0.85, 1.0, 0.7) if ok else Color(0.9, 0.3, 0.25, 0.7))
+		draw_circle(m, 3.0, Color(0.6, 0.85, 1.0, 0.9) if ok else Color(0.9, 0.3, 0.25, 0.9))
 	# only while he walks a clicked route, what is left of it
 	if not game.path.is_empty():
 		_dotted_path(game.hero.position, game.path, Color(1, 0.85, 0.5, 0.6))

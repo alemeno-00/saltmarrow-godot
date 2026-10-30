@@ -25,6 +25,7 @@ const PATROL_GROUP := 1000 + 1         # group id of the patrol (Garrick's band 
 const STAIRS_GUARD_CHANCE := 0.5
 
 @export var level_seed: int = 0   # 0: a random first life; tests set a fixed seed
+@export var ask_backstory := true # each new life starts by choosing who Thomas was; tests skip it (Fury)
 var life_seed := 0                  # this life's seed; every depth's level comes from it (depth_seed)
 
 var level: Level
@@ -44,6 +45,7 @@ var progress: Progress
 var depth := 1
 var veteran := false     # F9: test as a high-level Thomas
 var tree_screen: TreeScreen
+var backstory_screen: BackstoryScreen
 var returning: Array = []   # [Combatant, seconds left] for enemies that ran and will come back
 var tag_cell := Vector2i(-1, -1)   # where Garrick's tally tag lies, once he is dead
 var won := false
@@ -52,6 +54,7 @@ var lantern := "lit"     # Thomas's lantern: lit, shuttered (dimmed) or out
 var hero_lantern: PointLight2D
 var noises := 0          # times something heard him (tests read this)
 var _relight := 0.0      # seconds left striking a light
+var aiming_throw := false   # T: the next click throws a dagger (Daggers: Throw)
 var _ambush: Combatant = null   # the unaware enemy Thomas is creeping up to strike
 var _heads := {}         # Combatant -> seconds until an idle enemy next turns its head
 
@@ -113,6 +116,9 @@ func _ready() -> void:
 	tree_screen = TreeScreen.new()
 	layer.add_child(tree_screen)
 	tree_screen.changed.connect(_apply_progress)
+	backstory_screen = BackstoryScreen.new()
+	layer.add_child(backstory_screen)
+	backstory_screen.chosen.connect(choose_backstory)
 	new_level(level_seed if level_seed != 0 else randi())
 
 
@@ -140,6 +146,8 @@ func new_level(seed_in: int, keep := false) -> void:
 		depth = 1
 		progress = Progress.veteran(10) if veteran else Progress.fury()
 		hero_unit = Bestiary.thomas(progress)
+		if ask_backstory and not veteran:
+			backstory_screen.open()
 	hero_unit.cell = level.start
 	hero.sync(hero_unit)
 	gore.clear_all()
@@ -384,6 +392,8 @@ func _apply_progress() -> void:
 	hero_unit.max_stamina = progress.max_stamina()
 	hero_unit.stamina = maxi(hero_unit.stamina, roundi(ratio * hero_unit.max_stamina)) if hero_unit.stamina > 0 else hero_unit.stamina
 	hero_unit.might = int(progress.stats.might)
+	hero_unit.agility = int(progress.stats.agility)
+	hero_unit.basic = Abilities.basic_for(progress.backstory)
 	hero_unit.abilities = progress.abilities()
 	hero_unit.perks = progress.perks()
 	combat_hud.set_abilities(hero_unit.abilities)
@@ -424,7 +434,7 @@ func held_vector() -> Vector2:
 ## as in Baldur's Gate 3).
 func _tick_fight_keys(delta: float) -> void:
 	var wish := held_vector()
-	if wish == Vector2.ZERO or not _can_act() or tree_screen.visible:
+	if wish == Vector2.ZERO or not _can_act() or paused():
 		return
 	var step := wish.limit_length(1.0) * MovementRules.px(MovementRules.WALK_SPEED) * delta
 	var ev := battle.hero_nudge(hero_unit.pos + step)
@@ -445,7 +455,7 @@ func _tick_explore(delta: float) -> void:
 	if in_fight() or dead or won or busy or level == null:
 		_vel = Vector2.ZERO
 		return
-	var wish := held_vector() if not tree_screen.visible else Vector2.ZERO
+	var wish := held_vector() if not paused() else Vector2.ZERO
 	if wish != Vector2.ZERO:
 		path.clear()
 		_ambush = null
@@ -597,7 +607,7 @@ func stop_walking() -> void:
 ## to where they last saw him, and runaways come back after a while. Anyone who sees him starts a fight. The world
 ## holds still while the skill tree is open.
 func _tick_world(delta: float) -> void:
-	if in_fight() or dead or won or level == null or tree_screen.visible:
+	if in_fight() or dead or won or level == null or paused():
 		return
 	for e in enemies:
 		if not e.alive() or e.fled:
@@ -658,6 +668,26 @@ func _bring_back(u: Combatant) -> void:
 			_add_enemy(f, p)
 			added += 1
 	combat_hud.show_banner("Somewhere behind you, bare feet on stone.", 2.2)
+
+
+## The game waits while a menu is open: the skill tree, or choosing a backstory.
+func paused() -> bool:
+	return tree_screen.visible or backstory_screen.visible
+
+
+## A new life begins as the chosen backstory: Fury (maces) or Shadow (daggers).
+func choose_backstory(b: String) -> void:
+	var at := hero.position
+	views.erase(hero_unit)
+	progress = Progress.for_backstory(b)
+	hero_unit = Bestiary.thomas(progress)
+	hero_unit.pos = at
+	views[hero_unit] = hero
+	hero.sync(hero_unit)
+	combat_hud.set_abilities(hero_unit.abilities)
+	combat_hud.refresh(hero_unit, null, true)
+	combat_hud.show_banner("Thomas Wren, %s." % ("who fights angry" if b == "fury" else "who kills quietly"), 2.0)
+	_update_hud()
 
 
 ## The level's crates and barrels, drawn among the creatures.
@@ -786,6 +816,74 @@ func _make_noise(radius: float) -> void:
 			_become_suspicious(e, hero.grid_pos)
 
 
+## T: get ready to throw a dagger (needs Throw from the Daggers tree). Right-click to put it away.
+func aim_throw() -> void:
+	if not progress.owns("daggers", "throw"):
+		combat_hud.show_banner("Thomas hasn't learned to throw a blade.", 1.4)
+		return
+	aiming_throw = not aiming_throw
+	if aiming_throw:
+		stop_walking()
+		combat_hud.show_banner("Throw: click a lamp to put it out, or the stone to make a noise.", 2.0)
+
+
+## How far a dagger can be thrown, in pixels.
+static func throw_reach() -> float:
+	return MovementRules.px(Abilities.throw().range * Battle.SQ)
+
+
+## Throw a dagger outside a fight (free): landing by a lamp, it puts the lamp out and the area goes dark; anywhere
+## else it clatters off the stone and the nearest enemy who hears it wanders off alone to look. Returns what happened:
+## "doused", "clatter", "too far" or "no line".
+func throw_at(p: Vector2) -> String:
+	if hero.position.distance_to(p) > throw_reach():
+		combat_hud.show_banner("Too far to throw.", 1.2)
+		return "too far"
+	var c := MovementRules.cell_of(p)
+	var lamp_line := false
+	for l in level.lights:
+		if Battle.dist(l, c) <= StealthRules.DOUSE_REACH:
+			lamp_line = true
+			if level.line_of_sight(hero.grid_pos, l) or Battle.dist(hero.grid_pos, l) <= 1:
+				douse_lamp(l)
+				return "doused"
+	if not lamp_line and not level.line_of_sight(hero.grid_pos, c):
+		combat_hud.show_banner("No clear line to throw.", 1.2)
+		return "no line"
+	_clatter(p)
+	return "clatter"
+
+
+## A lamp or brazier goes out: its light is gone, and so is the light it threw on Thomas.
+func douse_lamp(c: Vector2i) -> void:
+	level.lights.erase(c)
+	lighting.build(level)
+	view.queue_redraw()
+	combat_hud.show_banner("The dagger strikes the lamp. The light gutters and goes out.", 1.8)
+
+
+## A dagger clatters at `p`: the nearest enemy who hears it (and isn't already after him) comes alone to look.
+func _clatter(p: Vector2) -> void:
+	var best: Combatant = null
+	var best_d := INF
+	for e in enemies:
+		if not e.alive() or e.fled or _after_him(e):
+			continue
+		var d: float = (views[e] as ActorView).position.distance_to(p)
+		if d < best_d and StealthRules.hears(level, p, views[e].position, StealthRules.CLATTER):
+			best_d = d
+			best = e
+	combat_hud.show_banner("The dagger clatters off the stone.", 1.4)
+	if best != null:
+		noises += 1
+		if best.state != "suspicious" and best.state != "investigating":
+			best.resume_state = best.state
+		best.state = "suspicious"
+		best.wait = StealthRules.SUSPICIOUS_WAIT
+		best.target = MovementRules.cell_of(p)
+		views[best].face_point(p)
+
+
 ## C: crouch and sneak, or stand up.
 func toggle_sneak() -> void:
 	sneaking = not sneaking
@@ -884,7 +982,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			_toggle_tree()
 			get_viewport().set_input_as_handled()
 			return
-	if tree_screen.visible:
+	if paused():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R:
 		new_level(randi())
@@ -910,8 +1008,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		shutter_lantern()
 	elif event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_O:
 		douse_lantern()
+	elif event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_T:
+		aim_throw()
+	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT and aiming_throw:
+		aiming_throw = false
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		creep_or_walk(get_global_mouse_position())
+		if aiming_throw:
+			aiming_throw = false
+			throw_at(get_global_mouse_position())
+		else:
+			creep_or_walk(get_global_mouse_position())
 	_zoom_input(event)
 
 
@@ -1090,10 +1196,10 @@ func _play_one(e: Dictionary) -> void:
 		"log":
 			combat_hud.add_log(e.text)
 		"landed":
-			var tree_id: String = {"mace": "maces"}.get(e.weapon, "")
+			var tree_id: String = {"mace": "maces", "dagger": "daggers"}.get(e.weapon, "")
 			var got := progress.add_hit(tree_id)
 			if got == "point":
-				combat_hud.show_banner("A mace mastery point.   K to spend it after the fight.", 1.6)
+				combat_hud.show_banner("A %s mastery point.   K to spend it after the fight." % ("dagger" if tree_id == "daggers" else "mace"), 1.6)
 				await _wait(0.3)
 		"malice":
 			combat_hud.set_malice(e.value)
@@ -1377,6 +1483,6 @@ func _update_hud() -> void:
 	elif in_fight():
 		hud.text = "Click anywhere to move  ·  click an enemy to strike (he walks up if he can)  ·  1-5 abilities  ·  F careful step  ·  Q stand  ·  B catch breath  ·  %sEnter end turn  ·  R new level" % ("G shut a sluice gate  ·  " if battle.arena.has_area() else "")
 	else:
-		var spend := progress.points_for("maces") + progress.level_points + progress.stat_points
-		var how := ("Sneaking" if sneaking else "Walking") + ", lantern " + lantern
+		var spend := progress.points_for(progress.weapon_tree()) + progress.level_points + progress.stat_points
+		var how := ("Sneaking" if sneaking else "Walking") + ", lantern " + lantern + ("  ·  T throw a dagger" if progress.owns("daggers", "throw") else "")
 		hud.text = "Depth %d  ·  Level %d  ·  XP %d / %d  ·  K skills%s  ·  %s  ·  click to walk, click an enemy to strike from the dark  ·  C sneak  ·  L shutter / light lantern  ·  O put it out  ·  R new life" % [depth, progress.level, progress.xp, progress.xp_needed(), " (points to spend!)" if spend > 0 else "", how]
