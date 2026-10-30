@@ -20,10 +20,31 @@ fights are moving the same way (`design/quick-specs/free-movement-2026-10-30.md`
   they are in the game, we draw the west side too.)
 - **One sheet per direction**, with the same rows in the same order in every sheet:
   `assets/characters/thomas/dir/s.png`, `se.png`, `e.png`, `ne.png`, `n.png`.
-- Frame **80 × 80**, feet at **x 40, y 72**, and characters drawn **1.25 × today's height** (Thomas about 55 px tall): they read better in the rooms, as your #5 scale probe found, and the bigger frame leaves room for overhead swings. Frames left to right, no gaps. A `README.md` beside the sheets
+- Frame **80 × 80**, feet at **x 40, y 72**, and characters about **1.5 squares tall (48–52 px from heel to crown)**,
+  as the approved camera concept shows; the bigger frame leaves room for overhead swings. Frames left to right, no gaps. A `README.md` beside the sheets
   lists rows, frame counts and suggested fps.
 - **S faces the camera, N faces away.** SE and NE are three-quarter views. In the N view we see his back, the scarf
   and the maul's haft over his shoulder.
+
+## The camera (the most important part)
+
+Julian, 2026-10-30: the sprites "look like they belong on a sidescroller". They do: today's Thomas is drawn from eye
+level, a flat side profile with his feet side-on on a line, while the rooms are painted from a raised, slightly
+angled top-down camera that shows the tops of walls and props. The eye reads the difference as a cut-out stuck on a
+map. Draw every character from **the rooms' camera** (`assets/docs/references/camera-perspective-concept.png`: the
+highlighted "top-down, slightly angled" panel, the in-game example and the character scale strip):
+
+- **From above:** the top of the head and shoulders show; the face is seen a little from above; the body is a little
+  shorter top to bottom than it would be side-on.
+- **Feet on the floor:** the tops of the boots show, planted on the floor plane and overlapping it a pixel or two;
+  never soles standing on a line. The game draws the shadow.
+- **South is the default:** standing still, a character faces the camera (S). E and W are three-quarter views from
+  above, not flat profiles: the far shoulder and far leg show. N shows the back and the top of the head.
+- **The walk from above:** steps move up and down the screen as well as across it; the stride is seen from above,
+  so legs foreshorten as they swing toward and away from the camera.
+
+**Start with a camera test** (art job 15-0): Thomas facing south, idle and walk, and walking east. Claude puts it in
+the game beside a painted room for Julian to approve before the rest is drawn.
 
 ## What makes it fluid (applies to every row)
 
@@ -59,6 +80,7 @@ The rooms are painted with soft light and texture. Sprites drawn as hard cut-out
 
 ## The jobs, in order
 
+0. **Job 15-0: the camera test** (above), approved by Julian before anything else.
 1. **Job 15: Thomas moving, in five directions.** In each direction sheet, rows: idle (6, breathing and a weight
    shift, looped), walk (8, looped, 10 fps), wounded walk (8, a limp, looped), sneak (8, crouched, slow, looped, for
    sneaking: see the coming sneaking spec), careful step (4). **Send the S, E and N walks first** as a small pull
