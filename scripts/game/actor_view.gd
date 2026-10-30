@@ -36,6 +36,7 @@ var _anim_t := 0.0
 var _once := ""         # a one-shot animation playing over everything else (hurt, attack, pushed back)
 var _queue: Array[String] = []   # one-shots to play after it, in order
 var _walk_linger := 0.0 # keep the walk going briefly between steps
+var fog_alpha := 1.0    # faded out of sight by the fog of war (Game sets it)
 var walk_rate := 1.0    # how fast the walk plays: 1 at full walking speed
 
 var _from_px := Vector2.ZERO
@@ -285,6 +286,7 @@ func _process(delta: float) -> void:
 		modulate = Color(0.62, 0.58, 0.58)
 	else:
 		modulate = Color.WHITE
+	modulate.a *= fog_alpha
 	if _hold_lunge > 0.0:
 		_hold_lunge = maxf(0.0, _hold_lunge - delta)
 	elif _lunge.length() > 0.05:

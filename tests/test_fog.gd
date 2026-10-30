@@ -96,7 +96,10 @@ func test_a_creature_out_of_sight_is_not_shown() -> void:
 	run(game, 0.5)
 	check(game.can_see(near), "the one in his room is shown")
 	check(not game.can_see(far), "the one behind the wall is not")
+	game.views[far]._process(1.0 / 60.0)   # its own frame too, which sets its colour
 	check(game.views[far].modulate.a < 0.05, "it is drawn faded out")
+	game.views[near]._process(1.0 / 60.0)
+	check(game.views[near].modulate.a > 0.95, "the one in sight is drawn fully")
 	check(not game.fog.knows(Vector2i(15, 5)), "and its room is black")
 
 
