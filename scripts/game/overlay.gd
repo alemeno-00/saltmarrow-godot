@@ -31,6 +31,16 @@ func _draw() -> void:
 			if MovementRules.metres(v.position.distance_to(game.hero.position)) <= StealthRules.CONE_SHOW:
 				_draw_cone(e, v)
 				_draw_alert(e, v)
+	# a lurker's tell on the sewage: slow bubbles and a still ring of scum (stronger once Thomas has spotted it)
+	var tick := Time.get_ticks_msec() / 1000.0
+	for e in game.enemies:
+		if e.alive() and e.state == "lurking" and MovementRules.metres(game.views[e].position.distance_to(game.hero.position)) <= StealthRules.CONE_SHOW:
+			var at: Vector2 = game.views[e].position + Vector2(0, 6)
+			var strong := 1.0 if e.noticed else 0.45
+			_ring(at, 9.0, Color(0.55, 0.52, 0.3, 0.35 * strong))
+			for i in 3:
+				var k := fposmod(tick * 0.6 + i / 3.0, 1.0)
+				draw_circle(at + Vector2(-5 + i * 5, -k * 6.0), 1.0 + k, Color(0.7, 0.68, 0.45, (1.0 - k) * 0.5 * strong))
 	# what the mouse is over that can be used: picked out, with its name (as in Baldur's Gate 3)
 	var thing := game.thing_at(get_global_mouse_position())
 	if not thing.is_empty():

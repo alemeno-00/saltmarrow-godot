@@ -32,6 +32,11 @@ const LOOPS_MAX := 3                 # extra connections where doorways line up,
 const COVER_PER_ROOM := Vector2i(2, 4)   # crates and barrels in a room
 const COVER_ROOMS := ["junction", "chamber", "flooded", "lore", "stairs"]
 const APPROACH := Vector2i(2, 4)     # squares from an open doorway where a crate gives a covered way in
+# Long sewage tunnels (design/quick-specs/deep-sewage-tunnels-2026-10-30.md)
+const SEWAGE_CHANCE := 0.3           # chance a new room is reached by a sewage tunnel instead of an ordinary one
+const SEWAGE_MAX := 2                # sewage tunnels per level
+const SEWAGE_BLOCKS := Vector2i(3, 5)    # a tunnel's length in blocks (12-20 squares)
+const LEDGE_CHANCE := 0.5            # chance a sewage tunnel has a narrow raised ledge along one side
 
 const DIRS := {"n": Vector2i(0, -1), "e": Vector2i(1, 0), "s": Vector2i(0, 1), "w": Vector2i(-1, 0)}
 const OPPOSITE := {"n": "s", "s": "n", "e": "w", "w": "e"}
@@ -165,10 +170,10 @@ func _add_loops() -> void:
 				break
 
 
-## The connector piece on block `b`, or -1.
+## The ordinary connector piece on block `b`, or -1 (a sewage tunnel doesn't branch).
 func _connector_at(b: Vector2i) -> int:
 	for i in level.pieces.size():
-		if level.pieces[i].kind == "connector" and level.pieces[i].block == b:
+		if level.pieces[i].kind == "connector" and level.pieces[i].block == b and not String(level.pieces[i].layout).begins_with("sewage"):
 			return i
 	return -1
 
@@ -332,8 +337,18 @@ static func _room_pos(e: Vector2i, entry_side: String, bs: Vector2i) -> Vector2i
 	return Vector2i(e.x - 1, e.y - bs.y)
 
 
-## A run of connector blocks out of a door: 1-3 straight, sometimes turning once for 1-2 more.
+## A run of connector blocks out of a door: 1-3 straight, sometimes turning once for 1-2 more. Now and then a long
+## straight sewage tunnel instead (3-5 blocks, waist-deep, sometimes with a ledge).
 func _run(start: Vector2i, side: String) -> Dictionary:
+	if level.sewage.size() < SEWAGE_MAX and rng.randf() < SEWAGE_CHANCE:
+		var blocks: Array[Vector2i] = []
+		for i in rng.randi_range(SEWAGE_BLOCKS.x, SEWAGE_BLOCKS.y):
+			blocks.append(start + DIRS[side] * i)
+		var ledge := ""
+		if rng.randf() < LEDGE_CHANCE:
+			var sides: Array = ["w", "e"] if side == "n" or side == "s" else ["n", "s"]
+			ledge = sides[rng.randi_range(0, 1)]
+		return {"blocks": blocks, "dir": side, "sewage": true, "ledge": ledge}
 	var blocks: Array[Vector2i] = []
 	var d: Vector2i = DIRS[side]
 	var at := start
@@ -348,7 +363,7 @@ func _run(start: Vector2i, side: String) -> Dictionary:
 		for _i in rng.randi_range(1, 2):
 			blocks.append(at)
 			at += DIRS[last]
-	return {"blocks": blocks, "dir": last}
+	return {"blocks": blocks, "dir": last, "sewage": false}
 
 
 func _free(blocks: Array) -> bool:
@@ -423,6 +438,19 @@ func _add_room(kind: String, id: String, pos: Vector2i, mirrored: bool, parent: 
 func _add_run(pi: int, side: String, run: Dictionary) -> void:
 	level.pieces[pi].open.append(side)
 	var blocks: Array = run.blocks
+	if run.get("sewage", false):
+		var axis := "ns" if side == "n" or side == "s" else "ew"
+		var lay := "sewage_" + axis + ("_" + String(run.ledge) if run.ledge != "" else "")
+		var area := Rect2i(blocks[0] * 4, Vector2i(4, 4))
+		for b in blocks:
+			_occupied[b] = true
+			area = area.merge(Rect2i(b * 4, Vector2i(4, 4)))
+			var sides: Array = [axis.left(1), axis.right(1)]
+			level.pieces.append({"kind": "connector", "layout": lay, "block": b, "blocks": Vector2i.ONE,
+				"rect": Rect2i(b * 4, Vector2i(4, 4)), "mirrored": false, "variant": rng.randi_range(0, 999),
+				"depth": level.pieces[pi].depth, "parent": pi, "open": sides})
+		level.sewage.append(area)
+		return
 	for i in blocks.size():
 		var b: Vector2i = blocks[i]
 		var sides := {}
@@ -449,7 +477,7 @@ static func _side_toward(from: Vector2i, to: Vector2i) -> String:
 const TILE_OF := {
 	"#": Level.Tile.WALL, "F": Level.Tile.WALL, "L": Level.Tile.WALL, ".": Level.Tile.FLOOR, ",": Level.Tile.FLOOR,
 	"D": Level.Tile.FLOOR, "~": Level.Tile.WATER, "P": Level.Tile.PROP, "B": Level.Tile.PROP, "X": Level.Tile.PROP,
-	"r": Level.Tile.RAIL, "S": Level.Tile.STAIRS,
+	"r": Level.Tile.RAIL, "S": Level.Tile.STAIRS, "w": Level.Tile.DEEP, "d": Level.Tile.DEEP,
 }
 
 
@@ -466,7 +494,7 @@ func _stamp() -> void:
 			for x in r.size.x:
 				var src := Vector2i(r.size.x - 1 - x if p.mirrored else x, y)
 				var code := lay.cell(src)
-				if code == "D":
+				if code == "D" or code == "d":
 					var s := lay.door_side(src)
 					if p.mirrored:
 						s = {"w": "e", "e": "w"}.get(s, s)

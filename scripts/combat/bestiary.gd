@@ -55,6 +55,16 @@ static func drowned_miner() -> Combatant:
 
 
 ## The Sewers boss: Mara's lost night-shift foreman, now a huge Drowned. Never runs; can't be skull-crushed.
+## A Drowned Miner lying under the sewage in a tunnel (design/quick-specs/deep-sewage-tunnels-2026-10-30.md): unseen
+## until it rises; it grabs and drags under instead of raising its pick.
+static func lurker() -> Combatant:
+	var c := drowned_miner()
+	c.basic = Abilities.drag_under()
+	c.big = {}
+	c.state = "lurking"
+	return c
+
+
 static func garrick() -> Combatant:
 	var c := Combatant.new()
 	c.name = "Garrick"

@@ -96,6 +96,12 @@ static func execution() -> Dictionary:
 
 # Enemies
 
+## A lurker's grab from the sewage: on a solid or strong hit it drags its victim down under the surface (prone: in
+## deep sewage that means drowning every turn until he gets up).
+static func drag_under() -> Dictionary:
+	return _ab("drag_under", "Drag Under", 0, "enemy", [{"dmg": 3}, {"dmg": 5, "prone": true}, {"dmg": 7, "prone": true}], "leg", [0, 10, 25])
+
+
 static func pick_swing() -> Dictionary:
 	return _ab("pick_swing", "Pick Swing", 0, "enemy", [{"dmg": 3}, {"dmg": 5}, {"dmg": 8}], "torso", [0, 10, 20])
 

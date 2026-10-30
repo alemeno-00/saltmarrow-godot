@@ -3,9 +3,11 @@ extends RefCounted
 ## One level's tiles and the rules for walking them.
 ## Pure data with no drawing, so it can be tested headless and saved as it is.
 
-enum Tile { WALL, FLOOR, DOOR_CLOSED, DOOR_OPEN, WATER, STAIRS, GATE_OPEN, GATE_SHUT, PROP, RAIL, COVER, GRATE_SHUT, GRATE_OPEN }
+enum Tile { WALL, FLOOR, DOOR_CLOSED, DOOR_OPEN, WATER, STAIRS, GATE_OPEN, GATE_SHUT, PROP, RAIL, COVER, GRATE_SHUT, GRATE_OPEN, DEEP }
 ## COVER: a crate or barrel. Blocks walking, not sight; a crouched Thomas right behind one is hidden (sneaking spec).
 ## GRATE_SHUT / GRATE_OPEN: an iron grate across a tunnel (room contents, part 4): bars you can see through.
+## DEEP: waist-deep sewage (design/quick-specs/deep-sewage-tunnels-2026-10-30.md): slow, loud, and what lies in it
+## can't be seen.
 ## PROP: machinery, pillars, crates: blocks movement and sight. RAIL: a railing: blocks movement, not sight.
 
 const DIRS_8: Array[Vector2i] = [
@@ -40,6 +42,7 @@ var grate_across := ""            # "ns" (across a north-south tunnel) or "ew"
 var valve := Vector2i(-1, -1)     # the sluice valve, if this level's puzzle is a valve
 var drain: Array[Vector2i] = []   # the water squares the valve drains
 var drained := {}                 # squares the valve has drained (drawn as wet silt over the painting)
+var sewage: Array[Rect2i] = []    # the long sewage tunnels (each a straight run of deep-sewage blocks)
 
 const OUTFLOW_SIZE := Vector2i(12, 9)
 # The Outflow's fixed layout, matching design/art-briefs/outflow/outflow-blockout.png (columns and rows inside the room).
@@ -80,7 +83,13 @@ func set_tile(c: Vector2i, t: int) -> void:
 
 
 static func _passable(t: int) -> bool:
-	return t == Tile.FLOOR or t == Tile.DOOR_CLOSED or t == Tile.DOOR_OPEN or t == Tile.WATER or t == Tile.STAIRS or t == Tile.GRATE_OPEN
+	return t == Tile.FLOOR or t == Tile.DOOR_CLOSED or t == Tile.DOOR_OPEN or t == Tile.WATER or t == Tile.STAIRS or t == Tile.GRATE_OPEN or t == Tile.DEEP
+
+
+## Shallow water or deep sewage: wading.
+func is_wet(c: Vector2i) -> bool:
+	var t := get_tile(c)
+	return t == Tile.WATER or t == Tile.DEEP
 
 
 func is_walkable(c: Vector2i) -> bool:
@@ -180,6 +189,7 @@ func _clear() -> void:
 	valve = Vector2i(-1, -1)
 	drain.clear()
 	drained.clear()
+	sewage.clear()
 	rooms.clear()
 	pieces.clear()
 	lights.clear()

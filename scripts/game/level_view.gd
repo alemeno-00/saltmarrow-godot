@@ -268,6 +268,11 @@ func _draw_region(canvas: CanvasItem, region: Rect2i) -> void:
 				Level.Tile.FLOOR, Level.Tile.COVER:
 					canvas.draw_rect(r, Color(0.27, 0.25, 0.23).lerp(Color(0.31, 0.29, 0.26), n))
 					canvas.draw_rect(r, Color(0, 0, 0, 0.18), false, 1.0)
+				Level.Tile.DEEP:
+					# stand-in until art job 18: thick brown sewage with scum lines
+					canvas.draw_rect(r, Color(0.16, 0.13, 0.07).lerp(Color(0.2, 0.17, 0.09), n))
+					canvas.draw_line(r.position + Vector2(4, 10 + n * 8), r.position + Vector2(20, 10 + n * 8), Color(0.36, 0.33, 0.18, 0.6), 1.0)
+					canvas.draw_line(r.position + Vector2(12, 22 - n * 6), r.position + Vector2(28, 22 - n * 6), Color(0.3, 0.27, 0.15, 0.5), 1.0)
 				Level.Tile.WATER:
 					canvas.draw_rect(r, Color(0.08, 0.16, 0.2).lerp(Color(0.1, 0.2, 0.25), n))
 					canvas.draw_line(r.position + Vector2(6, 12 + n * 6), r.position + Vector2(18, 12 + n * 6), Color(0.4, 0.6, 0.7, 0.4), 1.0)

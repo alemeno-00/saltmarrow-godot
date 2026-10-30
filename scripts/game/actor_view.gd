@@ -371,13 +371,13 @@ func _draw_sheet() -> void:
 	var size := s.frame
 	if wading:
 		# sunk into the water: the shins and feet are under it
-		var keep := s.root.y - Grounding.WADE_DEPTH
+		var keep := s.root.y - Grounding.wade_depth(position)
 		src.size.y = keep
 		size.y = keep
 	draw_texture_rect_region(Grounding.lit(s.texture_of(_anim)), Rect2(at, size), src, _sheet_tint())
 	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 	if wading:
-		Grounding.draw_waterline(self, Vector2(0, 12), _time)
+		Grounding.draw_waterline(self, Vector2(0, 12), _time, Grounding.wade_depth(position))
 	if dazed and not dead:
 		_draw_dazed()
 	if bleeding and not dead:

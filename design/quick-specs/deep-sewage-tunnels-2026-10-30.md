@@ -55,6 +55,21 @@ Lurkers with their tell (1), drag under (2) and the ledge (5): together they mak
 give careful players a counter, and need only one new enemy behaviour. Gas (3) and the sluice (4) come with the
 puzzles; leeches and drifting things later.
 
+## Built (2026-10-30)
+
+- **The square and the tunnels**: deep sewage (and doorways through it) in the blockouts; up to two long sewage
+  tunnels per level, straight runs of 3-5 blocks (12-20 squares), half of them with a one-body ledge along a side.
+  Loops never branch off them. Drawn as a stand-in until art job 18.
+- **Wading**: 40 % speed exploring, 3 metres of movement per metre in a fight (those who wade ignore it), twice as
+  loud, drawn to the waist; going down in it drowns, as in shallow water; knocked off a ledge into it, a creature
+  goes under. Crouched in it, the spotting meter fills twice as slowly.
+- **Lurkers** (ideas 1 and 2): a Drowned Miner under the sewage in the middle stretch of each tunnel (none within
+  15 steps of the start), unseen, with a faint tell on the surface. Crouched within 6 m with a clear view for a
+  second, Thomas spots it: it shows, and he can strike it from the dark. Within 2 m it rises; unspotted, it moves
+  first and he is caught unawares. Its grab, Drag Under, pulls him down on a solid hit: drowning until he stands.
+- **The ledge** (idea 5): pushing off it puts a creature under. The Faithful don't push yet.
+- Not yet: marsh gas, the valve and the tide, leeches, drifting things, noise carrying down a tunnel.
+
 ## Depends on
 
 - Free movement phase B (fights in metres), for surprise rounds that start mid-movement.

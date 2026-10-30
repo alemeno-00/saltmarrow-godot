@@ -25,6 +25,7 @@ const SNEAK_SHARE := 0.25        # sneaking
 # ---- cover
 const COVER_REACH := 1.5         # m: a crouched Thomas this close behind a crate or barrel is hidden by it
 const WATER_HIDE := 1.4          # crouched in water, the meter takes this many times as long to fill
+const DEEP_HIDE := 2.0           # crouched in waist-deep sewage, only his head shows
 
 # ---- sneaking and noise
 const SNEAK_SPEED := 0.5         # share of walking speed
@@ -43,6 +44,12 @@ const TURN_SPEED := 2.5          # rad/s an enemy turns its head
 # ---- a thrown dagger (Daggers: Throw), outside a fight
 const CLATTER := 8.0             # m: how far a dagger clattering off the stone is heard
 const DOUSE_REACH := 1           # squares: a dagger landing this close to a lamp puts it out
+
+# ---- lurkers in the sewage (design/quick-specs/deep-sewage-tunnels-2026-10-30.md)
+const LURKER_RISE := 2.0         # m: closer than this, a lurker rises
+const LURKER_NOTICE := 6.0       # m: within this, crouched and with a clear view, Thomas can spot its tell
+const LURKER_NOTICE_TIME := 1.0  # s of watching to spot it
+const LURKERS_PER_TUNNEL := 1
 
 # ---- the lantern
 const LANTERN_LIGHT := {"lit": 1.0, "shuttered": 0.45, "out": 0.0}   # how much his own lantern lights him
