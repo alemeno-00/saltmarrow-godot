@@ -20,7 +20,7 @@ fights are moving the same way (`design/quick-specs/free-movement-2026-10-30.md`
   they are in the game, we draw the west side too.)
 - **One sheet per direction**, with the same rows in the same order in every sheet:
   `assets/characters/thomas/dir/s.png`, `se.png`, `e.png`, `ne.png`, `n.png`.
-- Frame **64 × 64**, feet at **x 32, y 56**, as now. Frames left to right, no gaps. A `README.md` beside the sheets
+- Frame **80 × 80**, feet at **x 40, y 72**, and characters drawn **1.25 × today's height** (Thomas about 55 px tall): they read better in the rooms, as your #5 scale probe found, and the bigger frame leaves room for overhead swings. Frames left to right, no gaps. A `README.md` beside the sheets
   lists rows, frame counts and suggested fps.
 - **S faces the camera, N faces away.** SE and NE are three-quarter views. In the N view we see his back, the scarf
   and the maul's haft over his shoulder.
@@ -41,7 +41,9 @@ fights are moving the same way (`design/quick-specs/free-movement-2026-10-30.md`
 
 ## Fitting into the rooms
 
-The rooms are painted with soft light and texture. Sprites drawn as hard cut-outs on top of them look pasted on.
+The rooms are painted with soft light and texture. Sprites drawn as hard cut-outs on top of them look pasted on. These rules are now the house style for all art in rooms (`ART_JOBS.md`, "House style").
+
+- **The paintings' grain.** Break up flat areas with the same soft clusters, wear and grime the rooms use.
 
 - **No black outline.** Use a dark outline in the local colour (dark brown on the coat, dark red on the scarf), and
   drop it entirely where the light hits.
