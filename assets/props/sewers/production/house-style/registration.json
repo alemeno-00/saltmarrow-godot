@@ -1,0 +1,793 @@
+[
+  {
+    "file": "crate.png",
+    "normal": "crate_n.png",
+    "frame_size": [
+      32,
+      32
+    ],
+    "rows": [
+      2
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          887,
+          887
+        ],
+        "source_alpha_bounds": [
+          156,
+          353,
+          819,
+          843
+        ],
+        "target_alpha_bounds": [
+          4,
+          22,
+          58,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "frame": 2,
+        "source_cell": [
+          887,
+          0,
+          1774,
+          887
+        ],
+        "source_alpha_bounds": [
+          79,
+          97,
+          770,
+          843
+        ],
+        "target_alpha_bounds": [
+          4,
+          4,
+          58,
+          60
+        ]
+      }
+    ]
+  },
+  {
+    "file": "barrel.png",
+    "normal": "barrel_n.png",
+    "frame_size": [
+      32,
+      32
+    ],
+    "rows": [
+      2
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          887,
+          887
+        ],
+        "source_alpha_bounds": [
+          167,
+          90,
+          776,
+          832
+        ],
+        "target_alpha_bounds": [
+          10,
+          8,
+          54,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "frame": 2,
+        "source_cell": [
+          887,
+          0,
+          1774,
+          887
+        ],
+        "source_alpha_bounds": [
+          111,
+          57,
+          819,
+          846
+        ],
+        "target_alpha_bounds": [
+          10,
+          4,
+          54,
+          60
+        ]
+      }
+    ]
+  },
+  {
+    "file": "satchel_body.png",
+    "normal": "satchel_body_n.png",
+    "frame_size": [
+      64,
+      32
+    ],
+    "rows": [
+      2
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          887,
+          887
+        ],
+        "source_alpha_bounds": [
+          40,
+          307,
+          847,
+          619
+        ],
+        "target_alpha_bounds": [
+          4,
+          8,
+          60,
+          54
+        ]
+      },
+      {
+        "row": 1,
+        "frame": 2,
+        "source_cell": [
+          887,
+          0,
+          1774,
+          887
+        ],
+        "source_alpha_bounds": [
+          40,
+          307,
+          847,
+          619
+        ],
+        "target_alpha_bounds": [
+          4,
+          8,
+          60,
+          54
+        ]
+      }
+    ]
+  },
+  {
+    "file": "letter.png",
+    "normal": "letter_n.png",
+    "frame_size": [
+      32,
+      32
+    ],
+    "rows": [
+      1
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          2172,
+          724
+        ],
+        "source_alpha_bounds": [
+          653,
+          96,
+          1487,
+          646
+        ],
+        "target_alpha_bounds": [
+          10,
+          18,
+          54,
+          46
+        ]
+      }
+    ]
+  },
+  {
+    "file": "hymn_sheet.png",
+    "normal": "hymn_sheet_n.png",
+    "frame_size": [
+      32,
+      32
+    ],
+    "rows": [
+      1
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "source_alpha_bounds": [
+          242,
+          365,
+          1057,
+          980
+        ],
+        "target_alpha_bounds": [
+          8,
+          12,
+          56,
+          50
+        ]
+      }
+    ]
+  },
+  {
+    "file": "miner_tag_body.png",
+    "normal": "miner_tag_body_n.png",
+    "frame_size": [
+      64,
+      32
+    ],
+    "rows": [
+      1
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          1774,
+          887
+        ],
+        "source_alpha_bounds": [
+          87,
+          212,
+          1694,
+          762
+        ],
+        "target_alpha_bounds": [
+          4,
+          8,
+          60,
+          54
+        ]
+      }
+    ]
+  },
+  {
+    "file": "valve.png",
+    "normal": "valve_n.png",
+    "frame_size": [
+      32,
+      32
+    ],
+    "rows": [
+      4
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          541,
+          727
+        ],
+        "source_alpha_bounds": [
+          80,
+          89,
+          466,
+          648
+        ],
+        "target_alpha_bounds": [
+          12,
+          4,
+          50,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "frame": 2,
+        "source_cell": [
+          541,
+          0,
+          1082,
+          727
+        ],
+        "source_alpha_bounds": [
+          77,
+          89,
+          464,
+          648
+        ],
+        "target_alpha_bounds": [
+          12,
+          4,
+          50,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "frame": 3,
+        "source_cell": [
+          1082,
+          0,
+          1623,
+          727
+        ],
+        "source_alpha_bounds": [
+          74,
+          88,
+          461,
+          648
+        ],
+        "target_alpha_bounds": [
+          12,
+          4,
+          50,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "frame": 4,
+        "source_cell": [
+          1623,
+          0,
+          2164,
+          727
+        ],
+        "source_alpha_bounds": [
+          72,
+          88,
+          460,
+          648
+        ],
+        "target_alpha_bounds": [
+          12,
+          4,
+          50,
+          60
+        ]
+      }
+    ]
+  },
+  {
+    "file": "bones_1.png",
+    "normal": "bones_1_n.png",
+    "frame_size": [
+      32,
+      32
+    ],
+    "rows": [
+      1
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "source_alpha_bounds": [
+          265,
+          280,
+          1283,
+          805
+        ],
+        "target_alpha_bounds": [
+          8,
+          18,
+          56,
+          46
+        ]
+      }
+    ]
+  },
+  {
+    "file": "bones_2.png",
+    "normal": "bones_2_n.png",
+    "frame_size": [
+      32,
+      32
+    ],
+    "rows": [
+      1
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          1262,
+          1246
+        ],
+        "source_alpha_bounds": [
+          146,
+          268,
+          1100,
+          1109
+        ],
+        "target_alpha_bounds": [
+          8,
+          12,
+          54,
+          52
+        ]
+      }
+    ]
+  },
+  {
+    "file": "bones_3.png",
+    "normal": "bones_3_n.png",
+    "frame_size": [
+      32,
+      32
+    ],
+    "rows": [
+      1
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          1254,
+          1254
+        ],
+        "source_alpha_bounds": [
+          144,
+          211,
+          1110,
+          1061
+        ],
+        "target_alpha_bounds": [
+          10,
+          12,
+          54,
+          52
+        ]
+      }
+    ]
+  },
+  {
+    "file": "debris_1.png",
+    "normal": "debris_1_n.png",
+    "frame_size": [
+      32,
+      32
+    ],
+    "rows": [
+      1
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "source_alpha_bounds": [
+          357,
+          363,
+          1202,
+          717
+        ],
+        "target_alpha_bounds": [
+          8,
+          20,
+          56,
+          42
+        ]
+      }
+    ]
+  },
+  {
+    "file": "debris_2.png",
+    "normal": "debris_2_n.png",
+    "frame_size": [
+      32,
+      32
+    ],
+    "rows": [
+      1
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          1402,
+          1122
+        ],
+        "source_alpha_bounds": [
+          272,
+          220,
+          1192,
+          928
+        ],
+        "target_alpha_bounds": [
+          8,
+          14,
+          56,
+          48
+        ]
+      }
+    ]
+  },
+  {
+    "file": "debris_3.png",
+    "normal": "debris_3_n.png",
+    "frame_size": [
+      32,
+      32
+    ],
+    "rows": [
+      1
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          1774,
+          887
+        ],
+        "source_alpha_bounds": [
+          156,
+          221,
+          1619,
+          665
+        ],
+        "target_alpha_bounds": [
+          8,
+          20,
+          56,
+          42
+        ]
+      }
+    ]
+  },
+  {
+    "file": "grate_ns.png",
+    "normal": "grate_ns_n.png",
+    "frame_size": [
+      64,
+      32
+    ],
+    "rows": [
+      2,
+      2
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          887,
+          444
+        ],
+        "source_alpha_bounds": [
+          15,
+          8,
+          872,
+          430
+        ],
+        "target_alpha_bounds": [
+          1,
+          2,
+          63,
+          62
+        ]
+      },
+      {
+        "row": 1,
+        "frame": 2,
+        "source_cell": [
+          887,
+          0,
+          1774,
+          444
+        ],
+        "source_alpha_bounds": [
+          15,
+          8,
+          872,
+          430
+        ],
+        "target_alpha_bounds": [
+          1,
+          2,
+          63,
+          62
+        ]
+      },
+      {
+        "row": 2,
+        "frame": 1,
+        "source_cell": [
+          0,
+          444,
+          887,
+          887
+        ],
+        "source_alpha_bounds": [
+          15,
+          8,
+          872,
+          428
+        ],
+        "target_alpha_bounds": [
+          1,
+          2,
+          63,
+          62
+        ]
+      },
+      {
+        "row": 2,
+        "frame": 2,
+        "source_cell": [
+          887,
+          444,
+          1774,
+          887
+        ],
+        "source_alpha_bounds": [
+          15,
+          8,
+          872,
+          428
+        ],
+        "target_alpha_bounds": [
+          1,
+          2,
+          63,
+          62
+        ]
+      }
+    ]
+  },
+  {
+    "file": "grate_ew.png",
+    "normal": "grate_ew_n.png",
+    "frame_size": [
+      32,
+      64
+    ],
+    "rows": [
+      2,
+      2
+    ],
+    "registration_at_64px_cells": [
+      {
+        "row": 1,
+        "frame": 1,
+        "source_cell": [
+          0,
+          0,
+          444,
+          887
+        ],
+        "source_alpha_bounds": [
+          10,
+          12,
+          434,
+          887
+        ],
+        "target_alpha_bounds": [
+          2,
+          1,
+          62,
+          63
+        ]
+      },
+      {
+        "row": 1,
+        "frame": 2,
+        "source_cell": [
+          444,
+          0,
+          887,
+          887
+        ],
+        "source_alpha_bounds": [
+          9,
+          11,
+          434,
+          887
+        ],
+        "target_alpha_bounds": [
+          2,
+          1,
+          62,
+          63
+        ]
+      },
+      {
+        "row": 2,
+        "frame": 1,
+        "source_cell": [
+          0,
+          887,
+          444,
+          1774
+        ],
+        "source_alpha_bounds": [
+          10,
+          0,
+          434,
+          870
+        ],
+        "target_alpha_bounds": [
+          2,
+          1,
+          62,
+          63
+        ]
+      },
+      {
+        "row": 2,
+        "frame": 2,
+        "source_cell": [
+          444,
+          887,
+          887,
+          1774
+        ],
+        "source_alpha_bounds": [
+          9,
+          0,
+          434,
+          870
+        ],
+        "target_alpha_bounds": [
+          2,
+          1,
+          62,
+          63
+        ]
+      }
+    ]
+  }
+]

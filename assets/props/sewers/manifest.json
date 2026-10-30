@@ -50,7 +50,8 @@
           29
         ]
       ],
-      "sha256": "dc47630dab651d830d448b309f1c14b637ac2cbe0240afd91923635afe316a62"
+      "sha256": "c2136bcad30106b905e2b7ca2aded1c234cb65a83dad94ed806e1f68aee8b27e",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "bandage.png",
@@ -99,7 +100,8 @@
           26
         ]
       ],
-      "sha256": "d366848a79cbc96366173617f77e4980d1923da51271b5168ad37e7d3e784b93"
+      "sha256": "342477fb3d9593f6bc135074c811a28cec2a7233dc485f94252a715cef7fcc6b",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "grate_key.png",
@@ -148,7 +150,8 @@
           27
         ]
       ],
-      "sha256": "5ea8dc1e056901772fc32f639fce8a39a8adf2e3dcd3cf5d1a610a61ab9ce507"
+      "sha256": "f3cc4ed0b58021ff176b616ce9a84e6e84d0a4ac3020aa0723d82781072e329c",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "crate.png",
@@ -210,7 +213,9 @@
           30
         ]
       ],
-      "sha256": "18c0e066428e0707999a09dd72791da7b97af311d8319a73a2fae022305f5947"
+      "sha256": "012f90335eabff6ac638c033342143dc15a0037e36839f935c4de6cc48240240",
+      "normal_map": "crate_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "barrel.png",
@@ -272,7 +277,9 @@
           30
         ]
       ],
-      "sha256": "8b4a2064219cbbd2b097666d6e7ada4188ea1117471a4a4c992a897a3e7af511"
+      "sha256": "b606087ba56d6f51d5fc98bd7fd77feb5c5883b5c9caaf819dc11ef6013843f6",
+      "normal_map": "barrel_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "satchel_body.png",
@@ -326,7 +333,7 @@
           27
         ]
       ],
-      "sha256": "2b428e1ad7448a1127593a99e862f8cd546e21e934ec5360ee87221c4d1eb04f",
+      "sha256": "98ef9db2a28b8e52e7e2a0755b234703cf0d251582e73678daf89959635cabee",
       "source_images": [
         {
           "file": "body-v2/closed-master.png",
@@ -343,7 +350,9 @@
           ]
         }
       ],
-      "art_revision": "overhead prone, material edges and local contact occlusion"
+      "art_revision": "overhead prone, material edges and local contact occlusion",
+      "normal_map": "satchel_body_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "letter.png",
@@ -392,7 +401,9 @@
           23
         ]
       ],
-      "sha256": "db7ca2544109f1b9ec8ab3ebd67ab858465a534a1b6ad4daea6a289ce231c15e"
+      "sha256": "73be30c35b5efed7031637d945ceb8b5775187ded8aaec1869ceefbe75a0a2dc",
+      "normal_map": "letter_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "hymn_sheet.png",
@@ -441,7 +452,9 @@
           25
         ]
       ],
-      "sha256": "4fe27a6b6027050efa7d2eb6d0220128bdf758ed2b45292814294721b11f9e8c"
+      "sha256": "656d39c886ddf7c7c9e5d85f14d68c98ca73ebf0512d535101e4cb71487babeb",
+      "normal_map": "hymn_sheet_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "miner_tag_body.png",
@@ -482,7 +495,7 @@
           27
         ]
       ],
-      "sha256": "642a3c82ad241c851488e9ccecc8d669b094fdbe56366377167e668242d68279",
+      "sha256": "2fe201862867aeec2650c56a08e3ccc1aaa9bbecfce3d3574ca8e0bf80dc8511",
       "source_images": [
         {
           "file": "body-v2/tag-master.png",
@@ -492,7 +505,9 @@
           ]
         }
       ],
-      "art_revision": "overhead prone, material edges and local contact occlusion"
+      "art_revision": "overhead prone, material edges and local contact occlusion",
+      "normal_map": "miner_tag_body_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "valve.png",
@@ -580,7 +595,9 @@
           30
         ]
       ],
-      "sha256": "16116eeecfff6b5386d6d04df4f198866a0fa7a928c48723ba1372fa604050b5"
+      "sha256": "527d0e0cd79dc18a9839192e6f11c2d8373f90f140da4ae50609c6a82ec32419",
+      "normal_map": "valve_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "bones_1.png",
@@ -629,7 +646,9 @@
           23
         ]
       ],
-      "sha256": "eb7ee46586f10b0ed6f2e875a0ed2d2ca8e3d8a427773a93d2cb0f3ddda95e5e"
+      "sha256": "2dc74cdc0f904ae2007eaaa450c48248bfc37693806000e9c89e50604743052b",
+      "normal_map": "bones_1_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "bones_2.png",
@@ -678,7 +697,9 @@
           26
         ]
       ],
-      "sha256": "6ce3c478c57a7d78cd40f6c8a95dd511af5c87c85ae5f9ea9f05ff97151f8d25"
+      "sha256": "135bfae48f64b9b14bd2c45df4976ea7df8faf40db510533d663650feb843fc9",
+      "normal_map": "bones_2_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "bones_3.png",
@@ -727,7 +748,9 @@
           26
         ]
       ],
-      "sha256": "379b0bc52c86a7de40b439cfa83d9e3271c523f526a1649acded8ebba93689f6"
+      "sha256": "717a1fc5ea1a420cc3181b79cd82fcf0f6e1ecff968454f33e7baba5111a7d9b",
+      "normal_map": "bones_3_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "debris_1.png",
@@ -776,7 +799,9 @@
           21
         ]
       ],
-      "sha256": "39a0f46f39a9ae394ec25c536b7bfcc5d36072a47bc7be9fe8cc977350dd050c"
+      "sha256": "99de4dc8a2c1ad99926b8eac1c12c6159a0b0acb3a3fbab6d4cc5eb29328a631",
+      "normal_map": "debris_1_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "debris_2.png",
@@ -825,7 +850,9 @@
           24
         ]
       ],
-      "sha256": "d3424d2fc4e35df460fbf06a0d56c39f70e96e4df26076f5b9dc8a5afe7fb939"
+      "sha256": "a0c336481a17a46d477c91aecef2202968c9efc970b2a7f7201efe0ee4401f9d",
+      "normal_map": "debris_2_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "debris_3.png",
@@ -874,7 +901,9 @@
           21
         ]
       ],
-      "sha256": "e42ba1dd2c144255ac2da0337202cabe9be0bfcf604da4e6bd32847fe45635ce"
+      "sha256": "2f346ad8e66781b8c3d2a118411652952020938cf9fde0357228087120ae1799",
+      "normal_map": "debris_3_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "grate_ns.png",
@@ -963,7 +992,9 @@
           31
         ]
       ],
-      "sha256": "91471b4bd3db59f5dcb6741d26564f77091e31bd40a171e3a9a2099e1121b12a"
+      "sha256": "dc579a0f4bcba4b6a0ea6686f6bc1fb73f40dc2dc0a618bbe27f6c8f1c1eff9d",
+      "normal_map": "grate_ns_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     },
     {
       "file": "grate_ew.png",
@@ -1052,7 +1083,9 @@
           63
         ]
       ],
-      "sha256": "c614899eee0ca145c8c061091753f3191b563fb1a22ca98795074cf8e98e1449"
+      "sha256": "5a8229753b8a6c1b15e7f98e690ae5279e65b5e95d9f2cbf976a6a29a959b942",
+      "normal_map": "grate_ew_n.png",
+      "house_style": "room palette/grain, local contour, neutral ambient albedo, contact-dark base; original shape and states"
     }
   ]
 }

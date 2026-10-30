@@ -1,0 +1,597 @@
+{
+  "job": "15a",
+  "diffuse_sheets": 23,
+  "character_frames": 211,
+  "world_prop_normal_maps": 15,
+  "character_normal_maps": 5,
+  "normal_encoding": "OpenGL, RGB -> XYZ, +green up, +blue forward; normalized positive-Z vectors",
+  "frame_contract": "existing character sheets remain64x64 with root32,56; exact original alpha and transparent trailing cells preserved",
+  "house_style_checks": [
+    "local coloured contour; no pure black",
+    "room palette; user approved muted-red exception for scarf/blood",
+    "original native texture clusters retained; no clean replacement pose fills",
+    "readable values against approved paving",
+    "dark existing contact pixel row; no shadow geometry",
+    "neutral albedo; dynamic normal-map lighting",
+    "matching normal maps on all world sheets",
+    "legacy64px scale retained;80px begins job15"
+  ],
+  "assets": [
+    {
+      "file": "assets/characters/thomas/body.png",
+      "canvas": [
+        384,
+        512
+      ],
+      "frame_size": [
+        64,
+        64
+      ],
+      "rows": [
+        4,
+        6,
+        6,
+        3,
+        6,
+        6,
+        6,
+        4
+      ],
+      "frames": 41,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 20,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "4fee2a7a311ab35e3cd92e12ce0fecf482f74ab65b49dbb17c8ac4321b7cb0fe",
+      "normal_map": "assets/characters/thomas/body_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.006278843038372117,
+      "positive_z": true,
+      "normal_sha256": "43355ff63ec818c343eacdf78e32f549ce1436049a9ceda0b82607d41dcd6973"
+    },
+    {
+      "file": "assets/characters/thomas/attack_mace.png",
+      "canvas": [
+        512,
+        256
+      ],
+      "frame_size": [
+        64,
+        64
+      ],
+      "rows": [
+        3,
+        3,
+        3,
+        8
+      ],
+      "frames": 17,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 9,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "30a31bd797a743642f7efa26a555d7b3ba87e2477fc897e6863997e831d18e46",
+      "normal_map": "assets/characters/thomas/attack_mace_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.006086819413139599,
+      "positive_z": true,
+      "normal_sha256": "4a1981b8efddb95e94cf1eaa12ba4eee546c684af85a07e4c0dd20a3b67378be"
+    },
+    {
+      "file": "assets/characters/thomas/mace_abilities.png",
+      "canvas": [
+        768,
+        320
+      ],
+      "frame_size": [
+        64,
+        64
+      ],
+      "rows": [
+        8,
+        8,
+        9,
+        10,
+        12
+      ],
+      "frames": 47,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 13,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "c9512fd894e4278680d5b8091aeacbb12b6f02c4878b20fd407d61000b0d5d96",
+      "normal_map": "assets/characters/thomas/mace_abilities_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.006331360245143802,
+      "positive_z": true,
+      "normal_sha256": "94e2393b26cfaac42bd34a4c06d0c609a26cfb30ed524efccda2b8f98be20a13"
+    },
+    {
+      "file": "assets/enemies/drowned_miner/body.png",
+      "canvas": [
+        384,
+        1024
+      ],
+      "frame_size": [
+        64,
+        64
+      ],
+      "rows": [
+        4,
+        6,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        2,
+        4,
+        6,
+        6,
+        6,
+        6,
+        6
+      ],
+      "frames": 69,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 14,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "6ab68881d1fe1930199934bc9d2362d5f6e958d6a8d99b5d42d940245c6f5909",
+      "normal_map": "assets/enemies/drowned_miner/body_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.006588408677871249,
+      "positive_z": true,
+      "normal_sha256": "900e1f440cfe225760db90919d0ffc1f269e285351c2084049a9f5ca822a35db"
+    },
+    {
+      "file": "assets/enemies/faithful/body.png",
+      "canvas": [
+        384,
+        512
+      ],
+      "frame_size": [
+        64,
+        64
+      ],
+      "rows": [
+        4,
+        6,
+        4,
+        4,
+        3,
+        4,
+        6,
+        6
+      ],
+      "frames": 37,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 19,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "e763892fb75b066d8592a198c486a1c6c6d617fc91acb2757975e0d48ea870c1",
+      "normal_map": "assets/enemies/faithful/body_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.006650333382466123,
+      "positive_z": true,
+      "normal_sha256": "ad01cec86d28e67e7f602cb96cdbb39f4fb7e4f3c401e209b643d00540143feb"
+    },
+    {
+      "file": "assets/props/sewers/salve.png",
+      "canvas": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 16,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "c2136bcad30106b905e2b7ca2aded1c234cb65a83dad94ed806e1f68aee8b27e"
+    },
+    {
+      "file": "assets/props/sewers/bandage.png",
+      "canvas": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 11,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "342477fb3d9593f6bc135074c811a28cec2a7233dc485f94252a715cef7fcc6b"
+    },
+    {
+      "file": "assets/props/sewers/grate_key.png",
+      "canvas": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 9,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "f3cc4ed0b58021ff176b616ce9a84e6e84d0a4ac3020aa0723d82781072e329c"
+    },
+    {
+      "file": "assets/props/sewers/crate.png",
+      "canvas": [
+        64,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        2
+      ],
+      "frames": 2,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 9,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "012f90335eabff6ac638c033342143dc15a0037e36839f935c4de6cc48240240",
+      "normal_map": "assets/props/sewers/crate_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.0055981378551529515,
+      "positive_z": true,
+      "normal_sha256": "f41197bf565d055dee38b27ae9204be00a357017602ce8056af1c10f05f36dcc"
+    },
+    {
+      "file": "assets/props/sewers/barrel.png",
+      "canvas": [
+        64,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        2
+      ],
+      "frames": 2,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 10,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "b606087ba56d6f51d5fc98bd7fd77feb5c5883b5c9caaf819dc11ef6013843f6",
+      "normal_map": "assets/props/sewers/barrel_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005536385100440411,
+      "positive_z": true,
+      "normal_sha256": "dab4534201a52561f3d5b3499277d935f6a5f7472181a6416a0a25b7e8d8f3ae"
+    },
+    {
+      "file": "assets/props/sewers/satchel_body.png",
+      "canvas": [
+        128,
+        32
+      ],
+      "frame_size": [
+        64,
+        32
+      ],
+      "rows": [
+        2
+      ],
+      "frames": 2,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 11,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "98ef9db2a28b8e52e7e2a0755b234703cf0d251582e73678daf89959635cabee",
+      "normal_map": "assets/props/sewers/satchel_body_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.006025674917319757,
+      "positive_z": true,
+      "normal_sha256": "8bee1416f6d46cdb426afb32e20ebbbb9d68d094886f2bfba66274af9669df38"
+    },
+    {
+      "file": "assets/props/sewers/letter.png",
+      "canvas": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 12,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "73be30c35b5efed7031637d945ceb8b5775187ded8aaec1869ceefbe75a0a2dc",
+      "normal_map": "assets/props/sewers/letter_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005907491519452579,
+      "positive_z": true,
+      "normal_sha256": "afffcf09bb39bcba9aeee9c2d000ad15fb698f809f6b133fef6b8aa462272c0c"
+    },
+    {
+      "file": "assets/props/sewers/hymn_sheet.png",
+      "canvas": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 11,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "656d39c886ddf7c7c9e5d85f14d68c98ca73ebf0512d535101e4cb71487babeb",
+      "normal_map": "assets/props/sewers/hymn_sheet_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.0049856493129019075,
+      "positive_z": true,
+      "normal_sha256": "816dd8d09c46dd51d23884d8636be08a591e63d483340fda52ee0eaac892b07e"
+    },
+    {
+      "file": "assets/props/sewers/miner_tag_body.png",
+      "canvas": [
+        64,
+        32
+      ],
+      "frame_size": [
+        64,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 13,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "2fe201862867aeec2650c56a08e3ccc1aaa9bbecfce3d3574ca8e0bf80dc8511",
+      "normal_map": "assets/props/sewers/miner_tag_body_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005964526705017903,
+      "positive_z": true,
+      "normal_sha256": "5c04d092f76525fc5886400cb66325012ff44a9237b138a1f71de7319e6fabcc"
+    },
+    {
+      "file": "assets/props/sewers/valve.png",
+      "canvas": [
+        128,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        4
+      ],
+      "frames": 4,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 11,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "527d0e0cd79dc18a9839192e6f11c2d8373f90f140da4ae50609c6a82ec32419",
+      "normal_map": "assets/props/sewers/valve_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.00590749151945269,
+      "positive_z": true,
+      "normal_sha256": "84460289107ae39b7e0535d5e162a4320438105887853bfff47722264fbe81e2"
+    },
+    {
+      "file": "assets/props/sewers/bones_1.png",
+      "canvas": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 18,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "2dc74cdc0f904ae2007eaaa450c48248bfc37693806000e9c89e50604743052b",
+      "normal_map": "assets/props/sewers/bones_1_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005719896677428116,
+      "positive_z": true,
+      "normal_sha256": "3e17c5f002337751b2fac9f9d628a057cf4403ee8b566b502ed9a32a075ce0c2"
+    },
+    {
+      "file": "assets/props/sewers/bones_2.png",
+      "canvas": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 16,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "135bfae48f64b9b14bd2c45df4976ea7df8faf40db510533d663650feb843fc9",
+      "normal_map": "assets/props/sewers/bones_2_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005536278670188022,
+      "positive_z": true,
+      "normal_sha256": "2d1f938f7b652c78bfbe3d00d870e068f94ce56997f172f25de7c74d30ab7f51"
+    },
+    {
+      "file": "assets/props/sewers/bones_3.png",
+      "canvas": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 15,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "717a1fc5ea1a420cc3181b79cd82fcf0f6e1ecff968454f33e7baba5111a7d9b",
+      "normal_map": "assets/props/sewers/bones_3_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005350724198155521,
+      "positive_z": true,
+      "normal_sha256": "3cee6f070f9bc92c77152429268ee23a0ea87d017d6e39ddc66025feb852e4cf"
+    },
+    {
+      "file": "assets/props/sewers/debris_1.png",
+      "canvas": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 12,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "99de4dc8a2c1ad99926b8eac1c12c6159a0b0acb3a3fbab6d4cc5eb29328a631",
+      "normal_map": "assets/props/sewers/debris_1_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.0052916508878742,
+      "positive_z": true,
+      "normal_sha256": "8e784ca3c6f20a15383accbd2956c2d9275c8ff52faa889fc18cefdf7867a742"
+    },
+    {
+      "file": "assets/props/sewers/debris_2.png",
+      "canvas": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 16,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "a0c336481a17a46d477c91aecef2202968c9efc970b2a7f7201efe0ee4401f9d",
+      "normal_map": "assets/props/sewers/debris_2_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.0056587298725438995,
+      "positive_z": true,
+      "normal_sha256": "4503af5f7dad22e3a83741c92d52e71d20b9e912264cfb08f6ddd77079aac9a2"
+    },
+    {
+      "file": "assets/props/sewers/debris_3.png",
+      "canvas": [
+        32,
+        32
+      ],
+      "frame_size": [
+        32,
+        32
+      ],
+      "rows": [
+        1
+      ],
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 12,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "2f346ad8e66781b8c3d2a118411652952020938cf9fde0357228087120ae1799",
+      "normal_map": "assets/props/sewers/debris_3_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.0052916508878742,
+      "positive_z": true,
+      "normal_sha256": "ba065f386d8b014268db5814f2fc50e70c78bf5d00b63f45e1c3dddd897a0a31"
+    },
+    {
+      "file": "assets/props/sewers/grate_ns.png",
+      "canvas": [
+        128,
+        64
+      ],
+      "frame_size": [
+        64,
+        32
+      ],
+      "rows": [
+        2,
+        2
+      ],
+      "frames": 4,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 10,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "dc579a0f4bcba4b6a0ea6686f6bc1fb73f40dc2dc0a618bbe27f6c8f1c1eff9d",
+      "normal_map": "assets/props/sewers/grate_ns_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005719896677428116,
+      "positive_z": true,
+      "normal_sha256": "0922d42add87c8d3a019c3da9a08f9706a4df8c525a87f81cab4edf5b642937a"
+    },
+    {
+      "file": "assets/props/sewers/grate_ew.png",
+      "canvas": [
+        64,
+        128
+      ],
+      "frame_size": [
+        32,
+        64
+      ],
+      "rows": [
+        2,
+        2
+      ],
+      "frames": 4,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 12,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "5a8229753b8a6c1b15e7f98e690ae5279e65b5e95d9f2cbf976a6a29a959b942",
+      "normal_map": "assets/props/sewers/grate_ew_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005719896677428116,
+      "positive_z": true,
+      "normal_sha256": "a703f48e1f49dd078371471f29cf9e88e5c74d764b60545ba785c146d9cc2043"
+    }
+  ],
+  "review_limit": "Native compositing and controlled normal-lighting reviews, not engine screenshots. Actual game light strengths and mirrored normal orientation require gameplay review."
+}

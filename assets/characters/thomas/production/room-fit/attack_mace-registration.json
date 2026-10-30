@@ -1,0 +1,798 @@
+{
+  "runtime": "assets/characters/thomas/attack_mace.png",
+  "canvas": [
+    512,
+    256
+  ],
+  "frame_size": [
+    64,
+    64
+  ],
+  "row_counts": [
+    3,
+    3,
+    3,
+    8
+  ],
+  "root": [
+    32,
+    56
+  ],
+  "palette_source": "assets/tiles/sewers/rooms/production/palette.json",
+  "preserved_red_accents": [
+    [
+      41,
+      16,
+      19
+    ],
+    [
+      69,
+      27,
+      29
+    ],
+    [
+      94,
+      39,
+      37
+    ],
+    [
+      122,
+      52,
+      45
+    ]
+  ],
+  "alpha": "exact original binary mask",
+  "colour_transfer": "generated value distribution applied to original pixel clusters; all poses and alpha retained",
+  "colour_guide_registration": [
+    {
+      "row": 1,
+      "frame": 1,
+      "source_cell": [
+        0,
+        0,
+        222,
+        222
+      ],
+      "source_alpha_bounds": [
+        29,
+        63,
+        210,
+        222
+      ],
+      "target_alpha_bounds": [
+        11,
+        15,
+        54,
+        56
+      ]
+    },
+    {
+      "row": 1,
+      "frame": 2,
+      "source_cell": [
+        222,
+        0,
+        444,
+        222
+      ],
+      "source_alpha_bounds": [
+        68,
+        32,
+        222,
+        222
+      ],
+      "target_alpha_bounds": [
+        13,
+        9,
+        52,
+        56
+      ]
+    },
+    {
+      "row": 1,
+      "frame": 3,
+      "source_cell": [
+        444,
+        0,
+        665,
+        222
+      ],
+      "source_alpha_bounds": [
+        0,
+        11,
+        221,
+        222
+      ],
+      "target_alpha_bounds": [
+        15,
+        3,
+        49,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 1,
+      "source_cell": [
+        0,
+        222,
+        222,
+        444
+      ],
+      "source_alpha_bounds": [
+        42,
+        0,
+        185,
+        222
+      ],
+      "target_alpha_bounds": [
+        14,
+        1,
+        50,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 2,
+      "source_cell": [
+        222,
+        222,
+        444,
+        444
+      ],
+      "source_alpha_bounds": [
+        30,
+        0,
+        222,
+        222
+      ],
+      "target_alpha_bounds": [
+        6,
+        21,
+        58,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 3,
+      "source_cell": [
+        444,
+        222,
+        665,
+        444
+      ],
+      "source_alpha_bounds": [
+        0,
+        0,
+        221,
+        222
+      ],
+      "target_alpha_bounds": [
+        5,
+        23,
+        59,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 1,
+      "source_cell": [
+        0,
+        444,
+        222,
+        665
+      ],
+      "source_alpha_bounds": [
+        24,
+        0,
+        222,
+        221
+      ],
+      "target_alpha_bounds": [
+        5,
+        23,
+        59,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 2,
+      "source_cell": [
+        222,
+        444,
+        444,
+        665
+      ],
+      "source_alpha_bounds": [
+        30,
+        0,
+        222,
+        221
+      ],
+      "target_alpha_bounds": [
+        6,
+        17,
+        58,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 3,
+      "source_cell": [
+        444,
+        444,
+        665,
+        665
+      ],
+      "source_alpha_bounds": [
+        0,
+        0,
+        221,
+        221
+      ],
+      "target_alpha_bounds": [
+        8,
+        15,
+        57,
+        55
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 1,
+      "source_cell": [
+        0,
+        665,
+        222,
+        887
+      ],
+      "source_alpha_bounds": [
+        24,
+        0,
+        212,
+        200
+      ],
+      "target_alpha_bounds": [
+        10,
+        17,
+        54,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 2,
+      "source_cell": [
+        222,
+        665,
+        444,
+        887
+      ],
+      "source_alpha_bounds": [
+        41,
+        0,
+        198,
+        200
+      ],
+      "target_alpha_bounds": [
+        16,
+        11,
+        49,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 3,
+      "source_cell": [
+        444,
+        665,
+        665,
+        887
+      ],
+      "source_alpha_bounds": [
+        62,
+        0,
+        209,
+        200
+      ],
+      "target_alpha_bounds": [
+        17,
+        8,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 4,
+      "source_cell": [
+        665,
+        665,
+        887,
+        887
+      ],
+      "source_alpha_bounds": [
+        56,
+        0,
+        196,
+        199
+      ],
+      "target_alpha_bounds": [
+        15,
+        2,
+        50,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 5,
+      "source_cell": [
+        887,
+        665,
+        1109,
+        887
+      ],
+      "source_alpha_bounds": [
+        42,
+        0,
+        173,
+        200
+      ],
+      "target_alpha_bounds": [
+        16,
+        6,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 6,
+      "source_cell": [
+        1109,
+        665,
+        1330,
+        887
+      ],
+      "source_alpha_bounds": [
+        30,
+        0,
+        163,
+        200
+      ],
+      "target_alpha_bounds": [
+        16,
+        8,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 7,
+      "source_cell": [
+        1330,
+        665,
+        1552,
+        887
+      ],
+      "source_alpha_bounds": [
+        11,
+        62,
+        212,
+        199
+      ],
+      "target_alpha_bounds": [
+        7,
+        25,
+        58,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 8,
+      "source_cell": [
+        1552,
+        665,
+        1774,
+        887
+      ],
+      "source_alpha_bounds": [
+        13,
+        60,
+        214,
+        196
+      ],
+      "target_alpha_bounds": [
+        7,
+        25,
+        58,
+        56
+      ]
+    }
+  ],
+  "normal_registration": [
+    {
+      "row": 1,
+      "frame": 1,
+      "source_cell": [
+        0,
+        0,
+        222,
+        222
+      ],
+      "source_alpha_bounds": [
+        33,
+        59,
+        188,
+        195
+      ],
+      "target_alpha_bounds": [
+        11,
+        15,
+        54,
+        56
+      ]
+    },
+    {
+      "row": 1,
+      "frame": 2,
+      "source_cell": [
+        222,
+        0,
+        444,
+        222
+      ],
+      "source_alpha_bounds": [
+        45,
+        31,
+        180,
+        195
+      ],
+      "target_alpha_bounds": [
+        13,
+        9,
+        52,
+        56
+      ]
+    },
+    {
+      "row": 1,
+      "frame": 3,
+      "source_cell": [
+        444,
+        0,
+        665,
+        222
+      ],
+      "source_alpha_bounds": [
+        54,
+        9,
+        172,
+        195
+      ],
+      "target_alpha_bounds": [
+        15,
+        3,
+        49,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 1,
+      "source_cell": [
+        0,
+        222,
+        222,
+        444
+      ],
+      "source_alpha_bounds": [
+        52,
+        2,
+        171,
+        193
+      ],
+      "target_alpha_bounds": [
+        14,
+        1,
+        50,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 2,
+      "source_cell": [
+        222,
+        222,
+        444,
+        444
+      ],
+      "source_alpha_bounds": [
+        19,
+        71,
+        203,
+        195
+      ],
+      "target_alpha_bounds": [
+        6,
+        21,
+        58,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 3,
+      "source_cell": [
+        444,
+        222,
+        665,
+        444
+      ],
+      "source_alpha_bounds": [
+        20,
+        76,
+        209,
+        196
+      ],
+      "target_alpha_bounds": [
+        5,
+        23,
+        59,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 1,
+      "source_cell": [
+        0,
+        444,
+        222,
+        665
+      ],
+      "source_alpha_bounds": [
+        16,
+        76,
+        209,
+        197
+      ],
+      "target_alpha_bounds": [
+        5,
+        23,
+        59,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 2,
+      "source_cell": [
+        222,
+        444,
+        444,
+        665
+      ],
+      "source_alpha_bounds": [
+        19,
+        58,
+        204,
+        194
+      ],
+      "target_alpha_bounds": [
+        6,
+        17,
+        58,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 3,
+      "source_cell": [
+        444,
+        444,
+        665,
+        665
+      ],
+      "source_alpha_bounds": [
+        25,
+        48,
+        203,
+        194
+      ],
+      "target_alpha_bounds": [
+        8,
+        15,
+        57,
+        55
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 1,
+      "source_cell": [
+        0,
+        665,
+        222,
+        887
+      ],
+      "source_alpha_bounds": [
+        33,
+        59,
+        188,
+        194
+      ],
+      "target_alpha_bounds": [
+        10,
+        17,
+        54,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 2,
+      "source_cell": [
+        222,
+        665,
+        444,
+        887
+      ],
+      "source_alpha_bounds": [
+        51,
+        33,
+        174,
+        194
+      ],
+      "target_alpha_bounds": [
+        16,
+        11,
+        49,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 3,
+      "source_cell": [
+        444,
+        665,
+        665,
+        887
+      ],
+      "source_alpha_bounds": [
+        55,
+        26,
+        172,
+        194
+      ],
+      "target_alpha_bounds": [
+        17,
+        8,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 4,
+      "source_cell": [
+        665,
+        665,
+        887,
+        887
+      ],
+      "source_alpha_bounds": [
+        48,
+        0,
+        175,
+        194
+      ],
+      "target_alpha_bounds": [
+        15,
+        2,
+        50,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 5,
+      "source_cell": [
+        887,
+        665,
+        1109,
+        887
+      ],
+      "source_alpha_bounds": [
+        51,
+        18,
+        167,
+        194
+      ],
+      "target_alpha_bounds": [
+        16,
+        6,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 6,
+      "source_cell": [
+        1109,
+        665,
+        1330,
+        887
+      ],
+      "source_alpha_bounds": [
+        49,
+        23,
+        165,
+        195
+      ],
+      "target_alpha_bounds": [
+        16,
+        8,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 7,
+      "source_cell": [
+        1330,
+        665,
+        1552,
+        887
+      ],
+      "source_alpha_bounds": [
+        26,
+        84,
+        204,
+        198
+      ],
+      "target_alpha_bounds": [
+        7,
+        25,
+        58,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 8,
+      "source_cell": [
+        1552,
+        665,
+        1774,
+        887
+      ],
+      "source_alpha_bounds": [
+        21,
+        80,
+        205,
+        198
+      ],
+      "target_alpha_bounds": [
+        7,
+        25,
+        58,
+        56
+      ]
+    }
+  ]
+}
