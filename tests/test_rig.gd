@@ -123,3 +123,90 @@ func test_the_view_falls_back_to_the_painted_sheet_for_other_directions() -> voi
 	v.look = Vector2.RIGHT
 	check(not v._draw_rig(Vector2.ZERO), "walking east, the rig steps aside for the old art")
 	v.free()
+
+
+# ---------------------------------------------------------------- moving like a body (RigMotion)
+
+const DT := 1.0 / 60.0
+const SPEED := 74.7   # px/s: his walking speed (MovementRules.WALK_SPEED)
+
+
+## Walk a motion east at `speed` for `frames` frames; returns the last pose.
+func _walk(m: RigMotion, frames: int, speed := SPEED, kind := "walk") -> Dictionary:
+	var p := {}
+	for i in frames:
+		p = m.step(DT, Vector2(speed, 0), Vector2.RIGHT, kind)
+	return p
+
+
+func test_a_planted_foot_stays_put_on_the_floor() -> void:
+	for kind in ["walk", "sneak"]:
+		var speed := SPEED if kind == "walk" else SPEED * 0.5
+		var m := RigMotion.new()
+		_walk(m, 60, speed, kind)        # well under way
+		var x := 0.0                      # how far he has come since
+		var worst := 0.0
+		var prev := INF
+		for i in 90:
+			var p := m.step(DT, Vector2(speed, 0), Vector2.RIGHT, kind)
+			x += speed * DT
+			var on_floor: float = RigPose.project(p.l_ankle, F_EAST).x + x
+			if p.l_ankle.y == RigPose.ANKLE_Y and prev != INF:
+				worst = maxf(worst, absf(on_floor - prev))
+			prev = on_floor if p.l_ankle.y == RigPose.ANKLE_Y else INF
+		check(worst < 0.05, "%s: the left foot, while down, doesn't slide over the floor (%.2f px a frame)" % [kind, worst])
+
+
+func test_he_carries_his_weight_over_the_standing_leg() -> void:
+	check(RigPose.walk(0.25).hip.x < -0.5, "the hips over the left foot as it takes his weight")
+	check(RigPose.walk(0.75).hip.x > 0.5, "and over the right")
+	var p := RigPose.walk(0.0)
+	check(p.l_hip.z > p.r_hip.z, "the left hip comes forward with the left leg")
+	check(p.l_shoulder.z < p.r_shoulder.z, "and the shoulders turn against it")
+
+
+func test_standing_and_walking_ease_into_each_other() -> void:
+	var m := RigMotion.new()
+	_walk(m, 60)
+	var walking := m.step(DT, Vector2.ZERO, Vector2.RIGHT)
+	check(m.walking > 0.5, "a frame after stopping he is still mostly in his stride")
+	for i in 30:
+		m.step(DT, Vector2.ZERO, Vector2.RIGHT)
+	eq(m.walking, 0.0, "half a second later he stands")
+	check(walking.hip.y < RigPose.HIP_Y - 0.5, "walking, his knees stay bent")
+
+
+func test_he_leans_into_setting_off_and_back_when_he_stops() -> void:
+	var m := RigMotion.new()
+	m.step(DT, Vector2.ZERO, Vector2.RIGHT)
+	_walk(m, 6)
+	check(m.lean > 0.5, "setting off, he leans forward (%.2f)" % m.lean)
+	_walk(m, 90)
+	check(absf(m.lean) < 0.2, "at a steady walk he straightens (%.2f)" % m.lean)
+	for i in 6:
+		m.step(DT, Vector2.ZERO, Vector2.RIGHT)
+	check(m.lean < -0.5, "stopping, he rocks back (%.2f)" % m.lean)
+
+
+func test_the_coat_and_hands_trail_then_settle() -> void:
+	var m := RigMotion.new()
+	m.step(DT, Vector2.ZERO, Vector2.RIGHT)
+	_walk(m, 5)
+	check(m._off["hem"].z < -0.5, "setting off, the coat swings back behind him (%.2f)" % m._off["hem"].z)
+	check(m._off["hem"].length() > m._off["l_elbow"].length(), "more than his elbows do")
+	_walk(m, 120)
+	check(m._off["hem"].length() < 0.2, "and at a steady walk it hangs again")
+	for i in 5:
+		m.step(DT, Vector2.ZERO, Vector2.RIGHT)
+	check(m._off["hem"].z > 0.5, "stopping, it swings on ahead (%.2f)" % m._off["hem"].z)
+
+
+func test_the_parts_wait_for_approval_but_f8_shows_them() -> void:
+	var game: Game = await add_game(Engine.get_main_loop() as SceneTree)
+	check(Hero.RIG_APPROVED or game.hero.rig == null, "until approved, Thomas keeps his painted art")
+	if game.hero.rig_parts != null:
+		game.hero.show_rig(true)
+		check(game.hero.rig == game.hero.rig_parts, "F8 puts him on the skeleton to try it")
+		game.hero.show_rig(false)
+		check(game.hero.rig == null, "and back")
+	game.queue_free()

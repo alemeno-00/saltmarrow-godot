@@ -4,11 +4,25 @@ extends ActorView
 ## mirrored to face left. Falls back to a drawn placeholder if the sheet is missing.
 
 
+## The skeleton's parts sheets are drawn only once Julian approves them (ART_JOBS 15-R): the first south sheet no
+## longer looked like Thomas. Until then he keeps his painted sheets; F8 shows the skeleton to try it.
+const RIG_APPROVED := false
+
+var rig_parts: Rig = null   # the parts sheets, loaded whether or not they are shown
+
+
 func _ready() -> void:
 	sheet = Sheet.thomas()
 	dir_sheets = Sheet.thomas_dirs()
-	rig = Rig.load_from("res://assets/characters/thomas/rig/")
+	rig_parts = Rig.load_from("res://assets/characters/thomas/rig/")
+	rig = rig_parts if RIG_APPROVED else null
 	is_hero = true
+
+
+## Draw him with the skeleton (or not), for trying it before it is approved.
+func show_rig(on: bool) -> void:
+	rig = rig_parts if on else null
+	queue_redraw()
 
 
 func _draw_body() -> void:

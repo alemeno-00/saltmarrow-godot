@@ -23,6 +23,7 @@ The story is in `docs/story.md` and the cast in `docs/characters.md`.
 - PNG with transparency. Pixel art with hard edges; no smoothing or anti-aliasing.
 - Sizes, facing and sheet layout are in the table at the top of `ART_JOBS.md`.
 - **Everything that stands in a room follows the house style** in `ART_JOBS.md` ("House style: everything drawn over the rooms"): no black outline, the rooms' palette and grain, readable values, grounded feet, neutral light, a `_n.png` normal map with every sheet, **everything drawn from the rooms' raised, slightly angled top-down camera** (never eye level: top of the head and shoulders visible, feet planted on the floor plane), and characters about 1.5 squares tall on 80 × 80 frames from job 15 on. It applies to every job, including ones that don't repeat it, so that all the art stays consistent.
+- **Characters for the skeleton: the whole figure first.** Paint each character as one whole standing figure per direction, matching its concept, and get Julian's approval before cutting it into the parts sheet's cells; cut the approved pixels rather than repainting them. Readability comes before texture: wear and grime are small clusters, never single-pixel speckle or dithering.
 - Add a short `README.md` in each folder: what each file is, its frame size, frame counts per row, and the facing directions.
 - Open a pull request; don't push to `main` directly.
 

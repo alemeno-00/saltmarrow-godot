@@ -55,6 +55,9 @@ stuck onto the background (Julian, after the first playtest). Details and reason
    - **facing south (toward the camera) is the default** standing pose; even facing east or west the figure is a
      three-quarter view from above, not a flat profile;
    - **props** show their top face, like the room's own props.
+10. **The whole figure first.** Any character drawn for the skeleton is painted and approved as one whole standing
+   figure per direction, checked against its concept, before it is cut into parts. Never paint parts directly: the
+   first parts sheet painted that way stopped looking like Thomas (job 15-R).
 
 A pull request that delivers art for a room says in its README which of these it was checked against.
 
@@ -116,8 +119,36 @@ These come first because the first fight is being built next. **Please do jobs 1
   - floor clutter, 32 × 32, three variants each: `bones_1-3.png`, `debris_1-3.png`
 
 - [x] **15a. Make today's sprites sit in the rooms** (`assets/characters/thomas/`, `assets/enemies/drowned_miner/`, `assets/enemies/faithful/`). **Do this first: it is quick and the game uses these sheets now.** Julian, after playtesting: "the sprites don't feel like part of the environment, just sprites stuck onto a background". **Keep this to the quick fixes; don't redraw poses or the camera angle**: job 15 redraws Thomas from the rooms' camera (house style rule 9), so poses redrawn here would be thrown away. Rework the existing sheets in place (same files, sizes, rows and frames, feet still at x 32, y 56). That means: replace the black outline with a dark outline in each area's own colour, dropped on the lit side; take the colours from the rooms' shared palette; separate the values so the figure reads against the paving (lighter face and hands, darker coat, a gap between the legs); a damp darker bottom row on the boots and feet; the rooms' grain on the coat and smocks instead of flat fills. No baked light direction. Also check the room-contents props from job 14 against the house style and fix any that miss it. Then a normal map for each sheet, the same name with `_n` (`body_n.png`, `attack_mace_n.png`, `mace_abilities_n.png`, and the two enemies' `body_n.png`): same frames, OpenGL normal colours (green up), rounded volumes. The game picks up `_n.png` files on its own and lights the sprites with them.
-- [ ] **15-0. Skeleton test: Thomas's south parts sheet** (`assets/characters/thomas/rig/s.png` and `s_n.png`). **Do this first; it replaces the frame-by-frame camera test (#47).** Painting every frame made Thomas flicker; now you paint him **once per direction as eleven separate parts** and the game moves them (`design/art-briefs/animation/BRIEF.md`, "The skeleton"). One row of eleven 24 × 24 cells (264 × 24), in the order and with the pivots in the brief, painted over `design/art-briefs/animation/rig/template_s.png`, from the rooms' camera, house style, about 1.5 squares tall when put together. Claude puts it in the game walking beside a painted room and sends Julian a screenshot; once he approves it, the other four directions are drawn the same way.
-- [ ] **15. Thomas's parts sheets, all five directions** (`assets/characters/thomas/rig/se.png`, `e.png`, `ne.png`, `n.png`, with `_n` normal maps). After 15-0 is approved. Templates: `design/art-briefs/animation/rig/template_<dir>.png`. The game then walks, stands, sneaks and limps him in every direction from these alone.
+- [ ] ~~**15-0. Skeleton test: Thomas's south parts sheet**~~ **Delivered (#50), rejected 2026-10-31: replaced by 15-R.** The skeleton works, but the painted parts no longer look like Thomas. Original job, kept for the record: (`assets/characters/thomas/rig/s.png` and `s_n.png`). **Do this first; it replaces the frame-by-frame camera test (#47).** Painting every frame made Thomas flicker; now you paint him **once per direction as eleven separate parts** and the game moves them (`design/art-briefs/animation/BRIEF.md`, "The skeleton"). One row of eleven 24 × 24 cells (264 × 24), in the order and with the pivots in the brief, painted over `design/art-briefs/animation/rig/template_s.png`, from the rooms' camera, house style, about 1.5 squares tall when put together. Claude puts it in the game walking beside a painted room and sends Julian a screenshot; once he approves it, the other four directions are drawn the same way.
+- [ ] **15-R. Repaint Thomas's south sprite from the concept, then cut it into parts.** Julian, 2026-10-31: the
+  south parts sheet "looks really weird and not like the concepts anymore". In game the face reads as a skull (a pale
+  block with dark holes), the greatcoat as a short jacket over shorts, the satchel and lantern are lost, and speckled
+  noise muddies the whole figure. The parts were painted one by one and never as a whole man. The game keeps his old
+  painted sheets until this is approved (F8 shows the skeleton to try it). Two steps; **don't start step 2 until Julian
+  approves step 1.**
+  - **Step 1: a model sprite, the whole figure, south.** `assets/characters/thomas/rig/production/model-s.png`: one
+    standing Thomas facing the camera on an 80 × 80 frame, feet at (40, 72), about 52 px tall, from the rooms' camera
+    (rule 9). Match `assets/characters/thomas/production/concepts/canonical-reference-v1.png` and
+    `docs/characters.md`:
+    - **Face:** long, hollow-cheeked, stubbled, dark brown hair short but growing out unevenly; a warm mid-tone skin
+      with readable eyes, never a pale mask with dark sockets. The left-cheek scar may be one pixel, or left out.
+    - **Coat:** the long dark army greatcoat, open at the front, hem at mid-calf: the biggest shape on him, with a
+      clear outline and a ragged lower edge.
+    - **Red scarf:** faded red and knitted, wound at the throat, one end hanging down the front.
+    - **Carried:** a strap from his right shoulder to the canvas satchel on his left hip; the small campaign lantern
+      at his belt. Both readable at game size.
+    - **Legs:** dark wool trousers, wrapped pale shins, dark boots, a clear gap between the legs.
+    - **Readable before textured** (rule 3): large clear areas, 3–4 values per material, wear as clusters of 2–3
+      pixels, no single-pixel speckle, no dithering. At 1× he must read as clearly as the Faithful and the Drowned
+      Miner.
+    - Every other house style rule, and a matching `model-s_n.png` normal map.
+    - Deliver an 8× preview beside the concept sheet and a 1× preview on a room floor, then stop for approval.
+  - **Step 2: cut the approved model into the parts.** The 11 cells of
+    `design/art-briefs/animation/rig/template_s.png`, as `s.png` and `s_n.png`. Cut the approved pixels; don't
+    repaint them. Add only the few pixels each joint needs where a part tucks under the next (the thighs under the
+    coat, the arms at the shoulders) so nothing gaps when it turns. The coat below the waist goes in the skirt cell
+    and reaches mid-calf. Put back together standing, the parts must match the model sprite pixel for pixel.
+- [ ] **15. Thomas's parts sheets, all five directions** (`assets/characters/thomas/rig/se.png`, `e.png`, `ne.png`, `n.png`, with `_n` normal maps). After 15-R is approved, by the same two steps: a whole model sprite per direction, approved, then cut into parts. Templates: `design/art-briefs/animation/rig/template_<dir>.png`. The game then walks, stands, sneaks and limps him in every direction from these alone.
 - [ ] **16. Thomas fighting, in five directions** (`assets/characters/thomas/dir/<dir>_mace.png`). After 15. *May move to the skeleton (a maul part held in the hand) once 15 is in; Claude will say before you start.* Rows: maul wind-up (4), strike (3, one smear frame), recovery (4), critical overhead (10), hurt (4), pushed back (4), knocked prone (5), lying prone (2, looped), getting up (5). Brief as job 15.
 - [ ] **17. Normal maps** for the sheets in jobs 15 and 16: the same names with `_n` (`s_n.png`, `s_mace_n.png`), same frames, OpenGL normal colours (green up), rounded volumes. Then the Drowned Miner, the Faithful and Garrick get idle, walk, attack and hurt in five directions, with normal maps.
 - [ ] **19. Thomas with daggers, in five directions** (`assets/characters/thomas/dir/<dir>_daggers.png`). **The Shadow backstory is in the game now** (sneaking part 2): a Shadow Thomas fights with a dagger in each hand, but until this arrives he lunges with no blade shown. After job 16, from the rooms' camera (house style rule 9), 80 × 80 frames, feet at x 40, y 72. See `docs/trees.md`, Daggers. Rows in every direction's sheet:

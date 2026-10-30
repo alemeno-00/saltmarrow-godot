@@ -37,6 +37,10 @@ var _once := ""         # a one-shot animation playing over everything else (hur
 var _queue: Array[String] = []   # one-shots to play after it, in order
 var _walk_linger := 0.0 # keep the walk going briefly between steps
 var walk_rate := 1.0    # how fast the walk plays: 1 at full walking speed
+var motion := RigMotion.new()   # the rig's walk by distance, easing, lean and trailing parts
+var _rig_pose := {}
+var _last_px := Vector2.INF
+const TELEPORT := 48.0  # px in one frame: placed, not walked
 
 var _from_px := Vector2.ZERO
 var _to_px := Vector2.ZERO
@@ -292,8 +296,20 @@ func _process(delta: float) -> void:
 		redraw = true
 	if dazed or raised or dying:
 		redraw = true
+	if rig != null:
+		_step_rig(delta)
 	if redraw:
 		queue_redraw()
+
+
+## Move the skeleton on a frame: how fast he really went (not counting being placed somewhere), and which walk.
+func _step_rig(delta: float) -> void:
+	var vel := Vector2.ZERO
+	if _last_px != Vector2.INF and delta > 0.0 and position.distance_to(_last_px) < TELEPORT:
+		vel = (position - _last_px) / delta
+	_last_px = position
+	var kind := "sneak" if sneaking else ("limp" if hurt >= 0.5 else "walk")
+	_rig_pose = motion.step(delta, vel, look, kind, sneaking)
 
 
 func _draw() -> void:
@@ -395,6 +411,8 @@ func _draw_rig(off: Vector2) -> bool:
 	var pose := Rig.pose_for(_anim, _anim_t, moving)
 	if pose.is_empty() or not rig.covers(look):
 		return false
+	if not _rig_pose.is_empty():
+		pose = _rig_pose
 	var pick := rig.pick(look)
 	var tex: Texture2D = rig.sheets[pick[0]]
 	var mirror := -1.0 if pick[1] else 1.0

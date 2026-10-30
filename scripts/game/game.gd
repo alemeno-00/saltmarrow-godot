@@ -1222,6 +1222,10 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R:
 		new_level(randi())
 		return
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F8:
+		hero.show_rig(hero.rig == null)
+		combat_hud.show_banner("Test: Thomas on the skeleton (not yet approved art)." if hero.rig != null else "Back to Thomas's painted art.", 2.0)
+		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F9:
 		veteran = not veteran
 		new_level(randi())

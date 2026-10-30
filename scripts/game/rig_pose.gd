@@ -19,11 +19,17 @@ const ANKLE_Y := 2.0
 const FOOT := 6.0
 const UPPER_ARM := 9.0
 const FOREARM := 8.5
-const STRIDE := 9.0        # how far a foot reaches ahead of the hip and behind it
+const STRIDE := 12.0       # how far a foot reaches ahead of the hip and behind it
 const LIFT := 5.0          # how high a swinging foot lifts
 const BOB := 1.5           # how far the body dips at each step and rises between
 const ARM_SWING := 0.6     # how far an arm swings, as a share of the opposite leg's
 const LEAN := 2.0          # the body leans this far forward walking
+const WALK_DROP := 2.0     # walking, the knees stay a little bent: the hips ride this much lower than standing
+# weight (The Animator's Survival Kit; Overgrowth's procedural walk): the body is carried over the standing leg
+const SWAY := 1.2          # px the hips shift sideways over the standing foot
+const HIP_TWIST := 1.2     # px a hip swings forward with its leg
+const SHOULDER_TWIST := 1.5 # px the shoulders turn the other way, against the hips
+const HIP_TILT := 0.8      # px the hip over the swinging leg drops
 
 const WALK_TIME := 0.8     # s for a whole walk cycle (two steps) at full walking speed
 const IDLE_TIME := 2.4     # s for one breath
@@ -51,12 +57,12 @@ static func walk(t: float, kind := "walk") -> Dictionary:
 	var lift := LIFT * (0.6 if kind == "sneak" else 1.0)
 	var left := foot(t, stride * (0.55 if kind == "limp" else 1.0), lift)
 	var right := foot(t + 0.5, stride, lift)
-	var hip_y := HIP_Y - BOB * cos(4.0 * PI * (t - 0.125))
+	var hip_y := HIP_Y - WALK_DROP - BOB * cos(4.0 * PI * (t - 0.125))
 	if kind == "sneak":
 		hip_y -= SNEAK_DROP
 	if kind == "limp" and fposmod(t, 1.0) < 0.5:
 		hip_y -= 1.5 * sin(TAU * t)   # sags onto the bad leg
-	return body(hip_y, left, right, SNEAK_LEAN if kind == "sneak" else LEAN)
+	return body(hip_y, left, right, SNEAK_LEAN if kind == "sneak" else LEAN, t)
 
 
 ## Standing still, `t` (0-1) through a breath.
@@ -69,12 +75,20 @@ static func idle(t: float, crouched := false) -> Dictionary:
 	return p
 
 
-## A whole body from where its hips are and where each foot is (forward, up).
-static func body(hip_y: float, left: Vector2, right: Vector2, lean := LEAN) -> Dictionary:
+## A whole body from where its hips are and where each foot is (forward, up). `t`, for a walk, is how far through
+## its cycle: the weight shifts over the standing leg, the hips turn with the legs and the shoulders against them.
+static func body(hip_y: float, left: Vector2, right: Vector2, lean := LEAN, t := -1.0) -> Dictionary:
+	var sway := 0.0
+	var twist := 0.0
+	var tilt := 0.0
+	if t >= 0.0:
+		sway = -SWAY * sin(TAU * t)        # over the left foot as it takes the weight (t 0.25), the right at 0.75
+		twist = cos(TAU * t)               # the left hip forward with the left leg (t 0), back at 0.5
+		tilt = HIP_TILT * sin(TAU * t)     # the swinging leg's hip drops
 	var p := {}
-	p.hip = Vector3(0, hip_y, 0)
-	p.l_hip = Vector3(-HIP_W, hip_y, 0)
-	p.r_hip = Vector3(HIP_W, hip_y, 0)
+	p.hip = Vector3(sway, hip_y, 0)
+	p.l_hip = Vector3(-HIP_W + sway, hip_y + tilt, HIP_TWIST * twist)
+	p.r_hip = Vector3(HIP_W + sway, hip_y - tilt, -HIP_TWIST * twist)
 	p.l_ankle = Vector3(-HIP_W + 1, ANKLE_Y + left.y, left.x)
 	p.r_ankle = Vector3(HIP_W - 1, ANKLE_Y + right.y, right.x)
 	p.l_knee = knee(p.l_hip, p.l_ankle)
@@ -82,10 +96,11 @@ static func body(hip_y: float, left: Vector2, right: Vector2, lean := LEAN) -> D
 	p.l_toe = p.l_ankle + Vector3(0, -1, FOOT)
 	p.r_toe = p.r_ankle + Vector3(0, -1, FOOT)
 	var dy := hip_y - HIP_Y
-	p.neck = Vector3(0, SHOULDER_Y + 3 + dy, lean)
-	p.head = Vector3(0, HEAD_Y + dy, lean + 0.5)
-	p.l_shoulder = Vector3(-SHOULDER_W, SHOULDER_Y + dy, lean)
-	p.r_shoulder = Vector3(SHOULDER_W, SHOULDER_Y + dy, lean)
+	# the upper body follows the hips' sway a little less, the head less again: he keeps his eyes level
+	p.neck = Vector3(sway * 0.6, SHOULDER_Y + 3 + dy, lean)
+	p.head = Vector3(sway * 0.4, HEAD_Y + dy, lean + 0.5)
+	p.l_shoulder = Vector3(-SHOULDER_W + sway * 0.6, SHOULDER_Y + dy, lean - SHOULDER_TWIST * twist)
+	p.r_shoulder = Vector3(SHOULDER_W + sway * 0.6, SHOULDER_Y + dy, lean + SHOULDER_TWIST * twist)
 	# each arm swings with the opposite leg
 	var l_swing := ARM_SWING * right.x
 	var r_swing := ARM_SWING * left.x
@@ -100,6 +115,26 @@ static func body(hip_y: float, left: Vector2, right: Vector2, lean := LEAN) -> D
 		p.planted.append(p.l_ankle)
 	if right.y == 0.0:
 		p.planted.append(p.r_ankle)
+	return p
+
+
+## How far he travels (px on the floor) in one whole walk cycle, two steps, so a planted foot stays where it was
+## put: it moves back under him exactly as fast as he moves forward.
+static func cycle_length(kind := "walk") -> float:
+	return 4.0 * STRIDE * (SNEAK_STRIDE if kind == "sneak" else 1.0)
+
+
+## Two poses mixed, `w` (0-1) of the way from `a` to `b`.
+static func mix(a: Dictionary, b: Dictionary, w: float) -> Dictionary:
+	if w <= 0.0:
+		return a
+	if w >= 1.0:
+		return b
+	var p := {}
+	for k in a:
+		if a[k] is Vector3 and b.has(k):
+			p[k] = (a[k] as Vector3).lerp(b[k], w)
+	p.planted = a.planted if w < 0.5 else b.planted
 	return p
 
 
