@@ -1,5 +1,6 @@
 extends TestBase
-## The fight rules, with fixed dice so every result is known.
+## The fight rules, with fixed dice so every result is known. Distances are in metres (one square is 1.5 m);
+## creatures are placed in the middle of squares so the old square-by-square cases still hold.
 
 var level: Level
 
@@ -104,7 +105,7 @@ func test_knee_breaker_puts_down_and_breaks_the_wind_up() -> void:
 	var m := _at(Bestiary.drowned_miner(), Vector2i(5, 3))
 	var b := _battle([m])
 	b.start(true)
-	m.telegraph = [Vector2i(4, 3)] as Array[Vector2i]
+	m.telegraph = b.band(m)
 	b.hero.resolve = 3
 	b.forced_rolls = [[9, 8]]   # 19 is natural 17 + 2: tier 3, prone
 	b.hero_ability(2, m.cell)
@@ -119,7 +120,7 @@ func test_free_strike_when_walking_away() -> void:
 	b.hero_move_to(Vector2i(2, 3))
 	eq(b.hero.stamina, 24 - 3, "the miner's free strike lands as he leaves")
 	eq(b.hero.cell, Vector2i(2, 3), "and he still gets away")
-	eq(b.budget.move, 3, "two squares of movement used")
+	check(absf(b.budget.move - 4.5) < 0.01, "3 m of his 7.5 m used (%.2f left)" % b.budget.move)
 
 
 func test_moving_around_an_enemy_is_free() -> void:
@@ -137,7 +138,7 @@ func test_telegraphed_smash_hits_only_marked_squares() -> void:
 	b.forced_rolls = [[1, 1]]
 	b.hero_end_turn()   # the miner, next to him, raises its pick
 	check(not m.telegraph.is_empty(), "the miner winds up")
-	check(m.telegraph.has(b.hero.cell), "aimed where Thomas stands")
+	check(Battle.in_band(m.telegraph, b.hero.pos), "aimed where Thomas stands")
 	b.hero_move_to(Vector2i(4, 5))   # step out of the marked squares (taking a free strike)
 	var before := b.hero.stamina
 	b.forced_rolls = [[9, 9]]
@@ -331,7 +332,7 @@ func test_careful_step_draws_no_free_strike() -> void:
 	eq(b.hero.cell, Vector2i(3, 3), "stepped away")
 	eq(b.hero.stamina, 24, "with no free strike")
 	eq(b.budget.maneuver, 0, "it used the maneuver")
-	eq(b.budget.move, 5, "and none of his movement")
+	eq(b.budget.move, 7.5, "and none of his movement")
 
 
 func test_bystanders_join_when_they_see_him() -> void:
@@ -343,3 +344,66 @@ func test_bystanders_join_when_they_see_him() -> void:
 	b.forced_rolls = [[1, 1], [1, 1]]
 	b.hero_end_turn()
 	check(b.units.has(far), "the Faithful across the room sees the fight and joins")
+
+
+func test_he_can_stop_anywhere_not_just_on_squares() -> void:
+	var m := _at(Bestiary.drowned_miner(), Vector2i(8, 6))
+	var b := _battle([m])
+	b.start(true)
+	var spot := Vector2(150.0, 120.0)   # part-way across a square
+	b.hero_move_to_point(spot)
+	check(b.hero.pos.distance_to(spot) < 0.5, "he stands exactly where he was sent (%s)" % b.hero.pos)
+	check(absf(b.budget.move - (7.5 - MovementRules.metres(Vector2(144, 112).distance_to(spot)))) < 0.05, "and paid for exactly that distance")
+
+
+func test_movement_runs_out_part_way() -> void:
+	var m := _at(Bestiary.drowned_miner(), Vector2i(8, 6))
+	var b := _battle([m], Vector2i(1, 1))
+	b.start(true)
+	b.hero_move_to(Vector2i(8, 1))   # 10.5 m away, he has 7.5 m
+	check(absf(MovementRules.metres(b.hero.pos.x - 48.0) - 7.5) < 0.1, "he walks his 7.5 m and stops (%.2f m)" % MovementRules.metres(b.hero.pos.x - 48.0))
+	check(b.budget.move < 0.05, "with nothing left")
+
+
+func test_routes_go_round_bodies() -> void:
+	var m := _at(Bestiary.drowned_miner(), Vector2i(5, 3))
+	m.dazed = 1   # no free strike, so only the route is tested
+	var b := _battle([m], Vector2i(3, 3))
+	b.start(true)
+	var pv := b.move_preview(MovementRules.centre(Vector2i(7, 3)))
+	check(pv.points.size() >= 2, "the straight way is blocked by the miner, so the route bends")
+	check(pv.cost > 6.0 and pv.cost < 7.5, "a little longer than the 6 m straight line (%.2f m)" % pv.cost)
+	b.hero_move_to(Vector2i(7, 3))
+	eq(b.hero.cell, Vector2i(7, 3), "and he gets round")
+
+
+func test_reach_is_measured_between_bodies() -> void:
+	var m := _at(Bestiary.drowned_miner(), Vector2i(6, 3))
+	var b := _battle([m], Vector2i(4, 3))
+	b.start(true)
+	check(not Battle.in_reach(b.hero, m), "two squares apart is out of reach")
+	m.pos.x -= 20.0
+	check(Battle.in_reach(b.hero, m), "close the gap to under 1.5 m between their bodies and it is in reach")
+
+
+func test_clicking_a_far_enemy_walks_up_and_strikes() -> void:
+	var m := _at(Bestiary.drowned_miner(), Vector2i(7, 3))
+	var b := _battle([m], Vector2i(3, 3))
+	b.start(true)
+	b.forced_rolls = [[3, 3]]
+	var ev := b.hero_close_and_strike(0, m)
+	check(_has(ev, "move") and _has(ev, "roll"), "he walks up and swings")
+	check(Battle.in_reach(b.hero, m), "ending in reach")
+	eq(m.stamina, 18, "and the blow lands")
+
+
+func test_keys_move_him_smoothly_in_a_fight() -> void:
+	var m := _at(Bestiary.drowned_miner(), Vector2i(8, 6))
+	var b := _battle([m])
+	b.start(true)
+	var from := b.hero.pos
+	for i in 30:   # half a second of holding a key at 60 frames a second
+		b.hero_nudge(b.hero.pos + Vector2(1.0, 0.0) * MovementRules.px(MovementRules.WALK_SPEED) / 60.0)
+	var moved := b.hero.pos.x - from.x
+	check(absf(MovementRules.metres(moved) - MovementRules.WALK_SPEED * 0.5) < 0.05, "he glides 1.75 m, not a square at a time (%.2f m)" % MovementRules.metres(moved))
+	check(absf(b.budget.move - (7.5 - MovementRules.metres(moved))) < 0.02, "and pays for exactly that")

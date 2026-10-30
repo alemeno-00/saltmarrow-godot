@@ -2,26 +2,20 @@ class_name Game
 extends Node2D
 ## Exploring a level with Thomas, and fighting when something sees him.
 ##
-## Exploring: keys or arrows step one square; holding repeats; two keys together step diagonally.
-## Clicking a square walks him there along the shortest safe route; any key stops him.
+## Exploring (free movement, design/quick-specs/free-movement-2026-10-30.md): keys, arrows or a stick move Thomas
+## freely in any direction; he slides along walls and opens doors he walks into. Clicking a square walks him there
+## along a smoothed route; any key stops him. Distances and speeds are in metres (MovementRules).
 ##
 ## Fighting (Draw Steel turns): click a lit square to move, click an enemy next to you to strike,
 ## 1-5 for abilities, F (or Shift-click) for a careful step that draws no free strikes, Q to stand, B to catch your breath, Enter to end the turn. R starts a new level.
 ##
 ## K opens the skill tree. Stairs lead deeper; Thomas keeps everything he has learned. R starts a new life.
 ##
-## Outside a fight, enemies that are hunting or searching move one square each time Thomas takes a turn.
-## An enemy that ran away comes back after a while, with friends.
-
-signal turn_passed(turn: int)
+## Outside a fight the world runs in real time: the patrol walks, hunters and searchers move, and an enemy that ran
+## away comes back after a while, with friends. Fights are still on squares: when one starts, everyone slides onto
+## the nearest free square (until fights move to metres).
 
 const TILE := 32
-const COMBO_WINDOW := 0.035   # how long to wait for a second key so two keys make a diagonal
-const REPEAT_DELAY := 0.17    # holding a key: first repeat
-const REPEAT_RATE := 0.12     # holding a key: following repeats
-const WALK_RATE := 0.11       # click-to-walk: time per square
-const SIGHT := Battle.SIGHT   # how far enemies see, in squares
-const RETURN_AFTER := 20      # exploring turns before a runaway comes back
 const BOTTOM_DEPTH := 3       # the Outflow and Garrick are on this level; beating him wins the run
 const START_DISTANCE := 17    # enemy groups wait at least this many steps from the start (their members 15+)
 const GROUP_CHANCE := 0.75    # chance a junction or chamber holds a group (room-contents spec, part 1)
@@ -34,8 +28,9 @@ const STAIRS_GUARD_CHANCE := 0.5
 var life_seed := 0                  # this life's seed; every depth's level comes from it (depth_seed)
 
 var level: Level
-var turn := 0
-var path: Array[Vector2i] = []
+var path: Array[Vector2] = []    # a clicked route: the points still to walk through
+var fights := 0                  # fights so far this level (each fight's dice seed)
+var dust_made := 0               # dust kicked up by sharp turns (tests read this)
 
 var hero_unit: Combatant
 var enemies: Array[Combatant] = []
@@ -44,23 +39,22 @@ var battle: Battle = null
 var busy := false        # events are playing; input waits
 var selected := -1       # the ability chosen, waiting for a target
 var stepping := false    # F pressed: the next click is a careful step
-var reach := {}          # squares Thomas can move to this turn
 var dead := false
 var progress: Progress
 var depth := 1
 var veteran := false     # F9: test as a high-level Thomas
 var tree_screen: TreeScreen
-var returning: Array = []   # [Combatant, turns left] for enemies that ran and will come back
+var returning: Array = []   # [Combatant, seconds left] for enemies that ran and will come back
 var tag_cell := Vector2i(-1, -1)   # where Garrick's tally tag lies, once he is dead
 var won := false
 
-var _hold_dir := Vector2i.ZERO
-var _hold_timer := 0.0
-var _hold_started := false
-var _pending_timer := -1.0
-var _walk_timer := 0.0
 var _hover := Vector2i(-1, -1)
-var _hover_path: Array[Vector2i] = []
+var _hover_px := Vector2.INF
+var _hover_from := Vector2.INF
+var _vel := Vector2.ZERO     # Thomas's velocity while exploring, px/s
+var _stuck := 0.0
+var _dust_cool := 0.0
+var _routes := {}            # Combatant -> {goal, path, age}: where a roaming creature is heading
 var _shake := 0.0
 var _focus = null        # where the camera looks during a crit, or null for Thomas
 var _rng := RandomNumberGenerator.new()
@@ -69,9 +63,6 @@ var _rng := RandomNumberGenerator.new()
 func hover_cell() -> Vector2i:
 	return _hover
 
-
-func hover_path() -> Array[Vector2i]:
-	return _hover_path
 
 @onready var view: LevelView = $LevelView
 @onready var gore: Gore = $Gore
@@ -150,7 +141,6 @@ func new_level(seed_in: int, keep := false) -> void:
 	busy = false
 	dead = false
 	selected = -1
-	reach = {}
 	returning.clear()
 	combat_hud.set_abilities(hero_unit.abilities)
 	combat_hud.show_fight(false)
@@ -158,7 +148,9 @@ func new_level(seed_in: int, keep := false) -> void:
 	combat_hud.refresh(hero_unit, null, true)
 	cam.position = hero.position
 	path.clear()
-	turn = 0
+	fights = 0
+	_vel = Vector2.ZERO
+	_routes.clear()
 	_update_hud()
 
 
@@ -172,8 +164,8 @@ func clear_enemies() -> void:
 
 ## The first fight: a Drowned Miner and three Faithful, waiting a couple of rooms from the start.
 ## Groups waiting in every third room, starting two rooms from the start. Deeper levels hold more.
-## One patrol per level: a Drowned Miner leading two Faithful between 2-4 connected rooms, back and forth, a
-## square for each turn Thomas takes outside a fight. It spots him like anyone else.
+## One patrol per level: a Drowned Miner leading two Faithful between 2-4 connected rooms, back and forth, walking
+## in real time while Thomas explores. It spots him like anyone else.
 func _spawn_patrol(pick: RandomNumberGenerator) -> void:
 	var near := {}
 	for i in level.pieces.size():
@@ -241,8 +233,9 @@ func patrol_leader() -> Combatant:
 	return null
 
 
-## One step of every patrol: the leader toward its waypoint (turning back at the ends), the others after it.
-func patrol_step() -> void:
+## The patrol walking for `delta` seconds: the leader toward its waypoint (turning back at the ends), the others
+## after it, stopping a little short of it.
+func patrol_tick(delta: float) -> void:
 	for leader in enemies:
 		if not leader.alive() or leader.state != "patrolling" or leader.route.is_empty():
 			continue
@@ -250,17 +243,70 @@ func patrol_step() -> void:
 			if leader.route_i + leader.route_dir < 0 or leader.route_i + leader.route_dir >= leader.route.size():
 				leader.route_dir = -leader.route_dir
 			leader.route_i += leader.route_dir
-		_step_toward(leader, leader.route[leader.route_i])
+		_roam(leader, leader.route[leader.route_i], MovementRules.PATROL_SPEED, delta)
 		for f in enemies:
-			if f != leader and f.alive() and f.state == "patrolling" and f.group == leader.group and Battle.dist(f.cell, leader.cell) > 1:
-				_step_toward(f, leader.cell)
+			if f != leader and f.alive() and f.state == "patrolling" and f.group == leader.group:
+				if views[f].position.distance_to(views[leader].position) > MovementRules.FOLLOW_GAP * TILE:
+					_roam(f, leader.cell, MovementRules.PATROL_SPEED * 1.15, delta)
 
 
-func _step_toward(e: Combatant, goal: Vector2i) -> void:
-	var p := level.find_path(e.cell, goal)
-	if not p.is_empty() and p[0] != hero.grid_pos and _enemy_at(p[0]) == null:
-		e.cell = p[0]
-		views[e].move_to(p[0])
+## Move a creature toward a square for `delta` seconds at `speed` m/s, along a route that goes round walls and cuts
+## corners. It waits rather than walk into Thomas or another creature. Its route is worked out again when its goal
+## moves.
+func _roam(e: Combatant, goal: Vector2i, speed: float, delta: float) -> void:
+	var v: ActorView = views[e]
+	var radius := MovementRules.px(MovementRules.ENEMY_RADIUS)
+	var r: Dictionary = _routes.get_or_add(e, {"goal": Vector2i(-9999, -9999), "path": [], "age": INF})
+	r.age += delta
+	if (r.goal != goal and r.age >= MovementRules.REPATH_EVERY) or ((r.path as Array).is_empty() and e.cell != goal):
+		r.goal = goal
+		r.age = 0.0
+		r.path = Array(MovementRules.route(level, v.position, MovementRules.centre(goal), radius))
+	var p: Array = r.path
+	if p.is_empty():
+		return
+	var step := MovementRules.px(speed) * delta
+	if level.get_tile(e.cell) == Level.Tile.WATER and not e.wades:
+		step *= MovementRules.WATER_SLOW
+	var target: Vector2 = p[0]
+	var to := v.position.move_toward(target, step)
+	if MovementRules.overlaps(to, radius, _bodies_near(e, to)):
+		return
+	if to.distance_to(target) < 0.5:
+		p.pop_front()
+	v.glide_free(to, speed / MovementRules.WALK_SPEED)
+	e.pos = to
+
+
+## The nearest point to `p` where a body of radius `r` can stand: `p` itself on open floor, or the closest spot in
+## an open square within two squares (a click on a wall walks up to it). INF if there is none.
+func open_spot_near(p: Vector2, r: float) -> Vector2:
+	var c := MovementRules.cell_of(p)
+	if level.is_walkable(c):
+		return MovementRules.push_out(level, p, r)
+	var best := Vector2.INF
+	for y in range(-2, 3):
+		for x in range(-2, 3):
+			var q := c + Vector2i(x, y)
+			if not level.is_walkable(q):
+				continue
+			var box := Rect2(Vector2(q * TILE), Vector2(TILE, TILE)).grow(-r)
+			var spot := MovementRules.push_out(level, p.clamp(box.position, box.end), r)
+			if spot.distance_to(p) < best.distance_to(p):
+				best = spot
+	return best
+
+
+## Thomas and the other creatures near a point, as [centre, radius], for a roaming creature not to walk into.
+func _bodies_near(me: Combatant, at: Vector2) -> Array:
+	var out: Array = []
+	var radius := MovementRules.px(MovementRules.ENEMY_RADIUS)
+	if hero.position.distance_to(at) < TILE * 2:
+		out.append([hero.position, MovementRules.px(MovementRules.HERO_RADIUS)])
+	for e in enemies:
+		if e != me and e.alive() and not e.fled and views[e].position.distance_to(at) < TILE * 2:
+			out.append([views[e].position, radius])
+	return out
 
 
 ## Anyone stepping into water sends a ripple out across it.
@@ -351,61 +397,124 @@ func in_fight() -> bool:
 	return battle != null and not battle.over
 
 
-## The direction the held movement keys point in right now.
-func held_direction() -> Vector2i:
-	var d := Vector2i.ZERO
-	if Input.is_action_pressed("move_left"):
-		d.x -= 1
-	if Input.is_action_pressed("move_right"):
-		d.x += 1
-	if Input.is_action_pressed("move_up"):
-		d.y -= 1
-	if Input.is_action_pressed("move_down"):
-		d.y += 1
-	return d
+## Where the movement keys or stick point right now, length 0..1 (keys give a full-length 8-way direction).
+func held_vector() -> Vector2:
+	return Input.get_vector("move_left", "move_right", "move_up", "move_down")
 
 
-## Try to move one square. Returns true if Thomas moved.
-## If a diagonal is blocked, he slides along whichever straight direction is open.
-## In a fight, a step spends a square of movement.
-func try_step(dir: Vector2i) -> bool:
-	if dir == Vector2i.ZERO or dead:
-		return false
-	if in_fight():
-		if not _can_act():
-			return false
-		var ev := battle.hero_step(dir)
-		if ev.is_empty() and dir.x != 0 and dir.y != 0:
-			ev = battle.hero_step(Vector2i(dir.x, 0))
-			if ev.is_empty():
-				ev = battle.hero_step(Vector2i(0, dir.y))
-		if ev.is_empty():
-			return false
-		_act(ev)
-		return true
-	var from := hero.grid_pos
-	var chosen := Vector2i.ZERO
-	if _open(from, dir):
-		chosen = dir
-	elif dir.x != 0 and dir.y != 0:
-		if _open(from, Vector2i(dir.x, 0)):
-			chosen = Vector2i(dir.x, 0)
-		elif _open(from, Vector2i(0, dir.y)):
-			chosen = Vector2i(0, dir.y)
-	if chosen == Vector2i.ZERO:
-		return false
-	var to := from + chosen
-	if level.get_tile(to) == Level.Tile.DOOR_CLOSED:
-		level.set_tile(to, Level.Tile.DOOR_OPEN)
-		view.queue_redraw()
-	hero.move_to(to)
-	hero_unit.cell = to
-	_end_turn()
-	if level.get_tile(to) == Level.Tile.STAIRS and not in_fight():
+## In a fight, the keys walk Thomas smoothly, spending his metres as he goes (the mouse is the main way to move,
+## as in Baldur's Gate 3).
+func _tick_fight_keys(delta: float) -> void:
+	var wish := held_vector()
+	if wish == Vector2.ZERO or not _can_act() or tree_screen.visible:
+		return
+	var step := wish.limit_length(1.0) * MovementRules.px(MovementRules.WALK_SPEED) * delta
+	var ev := battle.hero_nudge(hero_unit.pos + step)
+	if ev.is_empty():
+		return
+	if ev.all(func(x): return x.t == "move" or x.t == "door"):
+		if ev.any(func(x): return x.t == "door"):
+			view.queue_redraw()
+		hero.glide_free(hero_unit.pos, wish.length())
+		_refresh()
+	else:
+		_act(ev)   # a free strike as he pulls away: play it out
+
+
+## Thomas moving freely for `delta` seconds: the keys (or a stick) steer him, or he follows a clicked route. He
+## speeds up and stops quickly, slides along walls, opens doors he walks into, and is slower in water.
+func _tick_explore(delta: float) -> void:
+	if in_fight() or dead or won or busy or level == null:
+		_vel = Vector2.ZERO
+		return
+	var wish := held_vector() if not tree_screen.visible else Vector2.ZERO
+	if wish != Vector2.ZERO:
+		path.clear()
+	elif not path.is_empty():
+		wish = _path_wish()
+	var top := MovementRules.px(MovementRules.WALK_SPEED)
+	if level.get_tile(hero.grid_pos) == Level.Tile.WATER and not hero_unit.wades:
+		top *= MovementRules.WATER_SLOW
+	var before := _vel
+	_vel = MovementRules.steer(_vel, wish, top, delta)
+	_turn_dust(before, wish, top, delta)
+	if _vel.length_squared() < 0.01 or delta <= 0.0:
+		_vel = Vector2.ZERO
+		return
+	var r := MovementRules.px(MovementRules.HERO_RADIUS)
+	var from := hero.position
+	var to := MovementRules.slide(level, from, _vel * delta, r, _bodies())
+	# a wall or a body took some of the motion: keep only what was used, so he doesn't keep pushing into it
+	_vel = (to - from) / delta
+	if not path.is_empty() and from.distance_to(to) < 0.2:
+		_stuck += delta
+		if _stuck > MovementRules.STUCK_AFTER:
+			path.clear()
+	else:
+		_stuck = 0.0
+	_open_doors(to, r)
+	hero.glide_free(to, _vel.length() / MovementRules.px(MovementRules.WALK_SPEED))
+	hero_unit.pos = to
+	if level.get_tile(hero.grid_pos) == Level.Tile.STAIRS:
 		_descend()
-	elif to == tag_cell and not in_fight():
+	elif hero.grid_pos == tag_cell:
 		_win()
-	return true
+
+
+## Which way the clicked route leads from here, easing off into the last point so he stops on it.
+func _path_wish() -> Vector2:
+	var p := hero.position
+	var d := path[0] - p
+	while d.length() <= MovementRules.ARRIVE:
+		path.remove_at(0)
+		if path.is_empty():
+			return Vector2.ZERO
+		d = path[0] - p
+	if path.size() > 1:
+		return d.normalized()
+	var braking := MovementRules.px(MovementRules.WALK_SPEED) * MovementRules.STOP_TIME
+	return d.normalized() * clampf(d.length() / maxf(braking, 1.0), 0.2, 1.0)
+
+
+## The creatures Thomas can bump into, as [centre, radius].
+func _bodies() -> Array:
+	var out: Array = []
+	for e in enemies:
+		if e.alive() and not e.fled and views[e].visible and views[e].position.distance_to(hero.position) < TILE * 2:
+			out.append([views[e].position, MovementRules.px(MovementRules.ENEMY_RADIUS)])
+	return out
+
+
+func _open_doors(p: Vector2, r: float) -> void:
+	for c in MovementRules.cells_touched(p, r + 1.0):
+		if level.get_tile(c) == Level.Tile.DOOR_CLOSED:
+			level.set_tile(c, Level.Tile.DOOR_OPEN)
+			view.queue_redraw()
+
+
+## A sharp turn at speed kicks up a little grit behind him.
+func _turn_dust(before: Vector2, wish: Vector2, top: float, delta: float) -> void:
+	_dust_cool -= delta
+	if _dust_cool > 0.0 or wish == Vector2.ZERO or before.length() < MovementRules.TURN_DUST_SPEED * top:
+		return
+	if absf(rad_to_deg(before.angle_to(wish))) >= MovementRules.TURN_DUST_ANGLE:
+		_dust_cool = MovementRules.TURN_DUST_COOLDOWN
+		dust_made += 1
+		Dust.spawn(gore, hero.position + Vector2(0, 10), -before)
+
+
+func _after_him(e: Combatant) -> bool:
+	return e.state == "hunting" or e.state == "searching"
+
+
+## A fight starts where everyone stands: their fight positions are where their bodies are now.
+func _take_positions() -> void:
+	hero_unit.pos = hero.position
+	for e in enemies:
+		if e.alive() and not e.fled:
+			e.pos = views[e].position
+	_routes.clear()
+	_vel = Vector2.ZERO
 
 
 ## Garrick's tally tag is in Thomas's hand: the run is won.
@@ -424,56 +533,51 @@ func _descend() -> void:
 	combat_hud.show_banner("Deeper.   Depth %d" % depth, 2.0)
 
 
-func _open(from: Vector2i, dir: Vector2i) -> bool:
-	return level.can_step(from, dir) and _enemy_at(from + dir) == null
-
-
-func wait_turn() -> void:
-	_end_turn()
-
-
-## Start walking to a square along the shortest route. Returns false if it can't be reached.
+## Start walking to the middle of a square. Returns false if it can't be reached.
 func walk_to(target: Vector2i) -> bool:
-	var p := level.find_path(hero.grid_pos, target)
-	if p.is_empty():
+	return walk_to_point(MovementRules.centre(target))
+
+
+## Start walking to exactly this point, along a route that goes round walls and cuts corners. Returns false if it
+## can't be reached.
+func walk_to_point(target: Vector2) -> bool:
+	var r := MovementRules.px(MovementRules.HERO_RADIUS)
+	var dest := open_spot_near(target, r)
+	if dest == Vector2.INF:
 		return false
-	path = p
-	_walk_timer = 0.0
+	var route := MovementRules.route(level, hero.position, dest, r)
+	if route.is_empty():
+		return false
+	path = route
+	_stuck = 0.0
 	return true
 
 
 func stop_walking() -> void:
 	path.clear()
+	overlay.queue_redraw()
 
 
-func _end_turn() -> void:
-	turn += 1
-	turn_passed.emit(turn)
-	_enemies_explore()
-	_update_hud()
-	_check_spotted()
-
-
-## Outside a fight: hunters close in on Thomas, searchers go to where they last saw him, runaways come back.
-func _enemies_explore() -> void:
-	if in_fight() or dead:
+## Outside a fight the world runs in real time: the patrol walks its route, hunters close in on Thomas, searchers go
+## to where they last saw him, and runaways come back after a while. Anyone who sees him starts a fight. The world
+## holds still while the skill tree is open.
+func _tick_world(delta: float) -> void:
+	if in_fight() or dead or won or level == null or tree_screen.visible:
 		return
 	for e in enemies:
-		if not e.alive() or e.state == "idle" or e.state == "patrolling":
+		if not e.alive() or e.fled or not _after_him(e):
 			continue
 		var goal := hero.grid_pos if e.state == "hunting" else e.target
-		var p := level.find_path(e.cell, goal)
-		if not p.is_empty() and p[0] != hero.grid_pos and _enemy_at(p[0]) == null:
-			e.cell = p[0]
-			views[e].move_to(p[0])
+		_roam(e, goal, MovementRules.HUNT_SPEED, delta)
 		if e.state == "searching" and e.cell == e.target:
 			e.state = "idle"
-	patrol_step()
+	patrol_tick(delta)
 	for r in returning.duplicate():
-		r[1] -= 1
-		if r[1] <= 0:
+		r[1] -= delta
+		if r[1] <= 0.0:
 			returning.erase(r)
 			_bring_back(r[0])
+	_check_spotted()
 
 
 ## A runaway returns from somewhere Thomas can't see, partly healed, with two more Faithful.
@@ -516,36 +620,48 @@ func _bring_back(u: Combatant) -> void:
 	combat_hud.show_banner("Somewhere behind you, bare feet on stone.", 2.2)
 
 
-## Something with a line of sight to Thomas, close enough, starts a fight.
+## Can this creature see Thomas: close enough (MovementRules.SIGHT metres) with a clear line of sight?
+func sees_thomas(e: Combatant) -> bool:
+	return e.alive() and not e.fled and views[e].position.distance_to(hero.position) <= MovementRules.px(MovementRules.SIGHT) \
+		and level.line_of_sight(e.cell, hero.grid_pos)
+
+
+## Something that can see Thomas starts a fight.
 func _check_spotted() -> void:
 	if in_fight() or dead:
 		return
 	for e in enemies:
-		if e.alive() and Battle.dist(e.cell, hero.grid_pos) <= SIGHT and level.line_of_sight(e.cell, hero.grid_pos):
+		if sees_thomas(e):
 			_start_battle()
 			return
 
 
 func _start_battle() -> void:
 	stop_walking()
-	hero_unit.cell = hero.grid_pos
-	# whoever saw him, their band, and anything already hunting him, fight; the rest may join if they see him
+	_take_positions()
+	# whoever saw him, their band, and anything already hunting or searching for him, fight; the rest may join if
+	# they see him
 	var bands := {}
 	for e in enemies:
-		if e.alive() and (e.state != "idle" or (Battle.dist(e.cell, hero.grid_pos) <= SIGHT and level.line_of_sight(e.cell, hero.grid_pos))):
+		if e.alive() and not e.fled and (_after_him(e) or sees_thomas(e)):
 			bands[e.group] = true
 	var fighting: Array = []
 	var others: Array[Combatant] = []
 	for e in enemies:
-		if not e.alive():
+		if not e.alive() or e.fled:
 			continue
-		if bands.has(e.group) or e.state != "idle":
+		if bands.has(e.group) or _after_him(e):
 			fighting.append(e)
 		else:
 			others.append(e)
+	fights += 1
 	battle = Battle.new()
-	battle.setup(level, hero_unit, fighting, level.seed_value * 7919 + turn)
+	battle.setup(level, hero_unit, fighting, level.seed_value * 7919 + fights)
 	battle.bystanders = others
+	for u in battle.units:
+		# bodies the fight nudged apart
+		if views[u].position.distance_to(u.pos) > 0.5:
+			views[u].glide_along([u.pos], MovementRules.px(MovementRules.FIGHT_WALK_SPEED))
 	if level.outflow.has_area() and fighting.any(func(u): return u.kind == "solo"):
 		battle.arena = level.outflow
 	combat_hud.clear_log()
@@ -582,21 +698,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed("move_up") or event.is_action_pressed("move_down") or event.is_action_pressed("move_left") or event.is_action_pressed("move_right"):
 		stop_walking()
-		# wait a moment for a second key, so pressing two together moves diagonally
-		if _pending_timer < 0.0 and not _hold_started:
-			_pending_timer = COMBO_WINDOW
 		get_viewport().set_input_as_handled()
 	elif in_fight():
 		pass
-	elif event.is_action_pressed("wait"):
-		stop_walking()
-		wait_turn()
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var c := mouse_cell()
-		if c == hero.grid_pos:
-			wait_turn()
-		else:
-			walk_to(c)
+		walk_to_point(get_global_mouse_position())
 	_zoom_input(event)
 
 
@@ -647,31 +753,34 @@ func _combat_input(event: InputEvent) -> bool:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.shift_pressed:
 				stepping = true
-			_combat_click(mouse_cell())
+			_combat_click(get_global_mouse_position())
 			return true
 	return false
 
 
-func _combat_click(c: Vector2i) -> void:
+## A click in a fight, anywhere: a careful step, the chosen ability on whoever is there, a gate to shut, an enemy
+## to strike (walking up to it first if it is out of reach), or a spot to walk to.
+func _combat_click(p: Vector2) -> void:
 	if not _can_act():
 		return
 	if stepping:
 		stepping = false
 		combat_hud.set_stepping(false)
-		_act(battle.hero_shift(c))
+		_act(battle.hero_shift_to(p))
 		return
+	var t := battle.unit_at(p)
 	if selected >= 0:
 		var i := selected
 		_select(-1)
-		_act(battle.hero_ability(i, c))
+		_act(battle.hero_close_and_strike(i, t) if t != null and t.team != hero_unit.team else battle.hero_ability_on(i, t))
 		return
-	var e := _enemy_at(c)
+	var c := MovementRules.cell_of(p)
 	if level.gates.has(c):
 		_act(battle.hero_shut_gate(c))
-	elif e != null and Battle.adjacent(e.cell, hero_unit.cell):
-		_act(battle.hero_ability(0, c))   # clicking an enemy next to you is a basic attack
-	elif reach.has(c):
-		_act(battle.hero_move_to(c))
+	elif t != null and t.team != hero_unit.team:
+		_act(battle.hero_close_and_strike(0, t))   # clicking an enemy strikes it, walking up first if needed
+	else:
+		_act(battle.hero_move_to_point(p))
 
 
 ## A number key or button: abilities that hit everyone, or have only one target, go at once.
@@ -686,7 +795,7 @@ func _on_ability_key(i: int) -> void:
 	var targets := battle.valid_targets(hero_unit, ab)
 	if ab.target == "adjacent_all" or targets.size() == 1:
 		_select(-1)
-		_act(battle.hero_ability(i, targets[0].cell if targets.size() > 0 else hero_unit.cell))
+		_act(battle.hero_ability_on(i, targets[0] if targets.size() > 0 else null))
 	elif targets.is_empty():
 		combat_hud.add_log("No one in reach for %s." % ab.name if (ab.needs as Array).is_empty() else "No dazed, prone or dying enemy in reach.")
 	else:
@@ -704,8 +813,8 @@ func _toggle_tree() -> void:
 func _toggle_step() -> void:
 	if not _can_act():
 		return
-	if not stepping and battle.shift_cells().is_empty():
-		combat_hud.add_log("No maneuver left for a careful step." if battle.budget.maneuver <= 0 else "Nowhere to step.")
+	if not stepping and not battle.can_shift():
+		combat_hud.add_log("No maneuver left for a careful step." if battle.budget.maneuver <= 0 else "Thomas can't step while he is down.")
 		return
 	_select(-1)
 	stepping = not stepping
@@ -743,13 +852,10 @@ func _act(events: Array) -> void:
 
 func _play(events: Array) -> void:
 	busy = true
-	reach = {}
 	_refresh()
 	for e in events:
 		await _play_one(e)
 	busy = false
-	if in_fight() and battle.is_hero_turn():
-		reach = battle.reachable(hero_unit, battle.budget.move)
 	_refresh()
 	overlay.queue_redraw()
 
@@ -798,8 +904,7 @@ func _play_one(e: Dictionary) -> void:
 			_refresh()
 		"move":
 			var v: ActorView = views[e.unit]
-			v.move_to(e.to)
-			await _wait(ActorView.STEP_TIME + 0.03)
+			await _wait(v.glide_along(e.points, MovementRules.px(MovementRules.FIGHT_WALK_SPEED)) + 0.02)
 		"door":
 			view.queue_redraw()
 		"flood":
@@ -811,31 +916,44 @@ func _play_one(e: Dictionary) -> void:
 			_shake = maxf(_shake, 3.0)
 			await _wait(0.25)
 		"attack":
+			# the blow lands: drive forward, straight into the hit that follows
 			var t = e.target
 			if t != null:
-				views[e.unit].lunge_at(t.cell, 9.0)
-				await _wait(0.07)
+				views[e.unit].lunge_at(t.pos, MovementRules.STRIKE_LUNGE, e.unit != hero_unit)
+				await _wait(0.05)
 		"roll":
+			# draw back while the dice roll; a heavy blow holds the wind-up a moment longer
+			var striker: ActorView = views[e.unit]
+			striker.wind_up(e.get("at", e.unit.pos), MovementRules.WINDUP_PULL)
 			if e.unit == hero_unit:
 				hero.play_attack(e.ability.id, e.roll.crit)
 			combat_hud.dice.show_roll(e.roll, e.unit.name, e.ability.name)
 			await _wait(0.75 if e.roll.crit else 0.5)
+			if heavy_blow(e.unit, e.ability):
+				await _wait(MovementRules.WINDUP_PAUSE)
 		"hit":
 			await _play_hit(e)
 		"push":
+			# one smooth slide the whole way, fast at first and easing to a stop
 			var v: ActorView = views[e.unit]
-			v.play_once("pushed_back")
-			for c in e.path:
+			var pts: Array = e.points
+			if not pts.is_empty():
+				v.play_once("pushed_back")
 				var from := v.position
-				v.move_to(c, 0.07)
+				var squares := from.distance_to(pts[-1]) / TILE
+				var time := MovementRules.PUSH_TIME_PER_SQUARE * maxf(squares, 1.0) + 0.04
+				v.glide_along(pts, from.distance_to(pts[-1]) / time)
 				if e.unit.stamina < e.unit.max_stamina * 0.6:
-					gore.smear(from, ActorView.cell_to_px(c))
-				await _wait(0.08)
+					gore.smear(from, pts[-1])
+				await _wait(time)
 		"slam":
 			_shake = 7.0
 			views[e.unit].play_once("wall_slam")
-			OneShot.spawn(world_ui, "res://assets/effects/mace/wall_slam.png", (ActorView.cell_to_px(e.unit.cell) + ActorView.cell_to_px(e.cell)) / 2.0, 10.0, e.cell.x < e.unit.cell.x)
-			gore.splash(ActorView.cell_to_px(e.unit.cell), Vector2(e.cell - e.unit.cell), 2.0)
+			var wall: Vector2 = e.at
+			var body: Vector2 = e.unit.pos
+			OneShot.spawn(world_ui, "res://assets/effects/mace/wall_slam.png", wall, 10.0, wall.x < body.x)
+			Dust.spawn(gore, wall + Vector2(0, 6), body - wall, true)
+			gore.splash(body, wall - body, 2.0)
 			await _hitstop(0.08)
 		"prone", "stand", "status", "heal":
 			if e.t == "prone" and level.get_tile(e.unit.cell) == Level.Tile.WATER:
@@ -863,7 +981,7 @@ func _play_one(e: Dictionary) -> void:
 			views[e.unit].sync(e.unit)
 			overlay.queue_redraw()
 		"smash":
-			views[e.unit].lunge_at(e.cells[0], 12.0)
+			views[e.unit].lunge_at(e.band.centre, 12.0)
 			_shake = 9.0
 			await _hitstop(0.1)
 		"death":
@@ -901,10 +1019,25 @@ func _play_hit(e: Dictionary) -> void:
 	if e.crit:
 		await _crit_moment(v, dmg)
 	else:
-		_shake = maxf(_shake, 2.0 + dmg * 0.5)
-		await _hitstop(0.04 + dmg * 0.006)
+		_shake = maxf(_shake, MovementRules.SHAKE_BASE + dmg * MovementRules.SHAKE_PER_DAMAGE)
+		await _hitstop(hitstop_for(e.tier))
 	v.sync(u)
 	_refresh()
+
+
+## How long a hit freezes the world: longer for a stronger tier.
+static func hitstop_for(tier: int) -> float:
+	return MovementRules.HITSTOP[clampi(tier, 1, 3) - 1]
+
+
+## A heavy blow gets a longer wind-up: one that costs Resolve, knocks down, or comes from a boss.
+static func heavy_blow(u: Combatant, ab: Dictionary) -> bool:
+	if int(ab.get("cost", 0)) > 0 or u.kind == "solo":
+		return true
+	for t in ab.get("tiers", []):
+		if (t as Dictionary).get("prone", false):
+			return true
+	return false
 
 
 ## Crits: push in, slow everything down, hold, then let it land.
@@ -941,13 +1074,13 @@ func _finish(winner: String) -> void:
 	combat_hud.show_fight(false)
 	for u in enemies:
 		if u.fled and not returning.any(func(r): return r[0] == u):
-			returning.append([u, RETURN_AFTER])
+			returning.append([u, MovementRules.RETURN_AFTER])
 	if winner == "escaped":
 		combat_hud.show_banner("You've lost them, for now.", 2.0)
 		for u in battle.units:
 			if u.alive() and u != hero_unit:
 				u.state = "searching"
-				u.target = battle.last_seen
+				u.target = MovementRules.cell_of(battle.last_seen)
 				u.telegraph.clear()
 				views[u].sync(u)
 	if winner == "hero" or winner == "escaped":
@@ -964,7 +1097,9 @@ func _finish(winner: String) -> void:
 			hero_unit.stamina = 1
 			hero_unit.dying = false
 		hero.sync(hero_unit)
-		hero.place(hero_unit.cell)
+		hero.glide_free(hero_unit.pos, 0.0)
+		_vel = Vector2.ZERO
+		_routes.clear()
 		battle = null
 		overlay.queue_redraw()
 	else:
@@ -976,9 +1111,11 @@ func _finish(winner: String) -> void:
 # ---------------------------------------------------------------- every frame
 
 func _process(delta: float) -> void:
-	if not tree_screen.visible:
-		_tick_input(delta)
-	_tick_walk(delta)
+	if in_fight():
+		_tick_fight_keys(delta)
+	_tick_explore(delta)
+	_tick_world(delta)
+	Grounding.hero_light = hero.position
 	var target: Vector2 = _focus if _focus != null else hero.position
 	cam.position = cam.position.lerp(target, 1.0 - exp(-delta * 12.0))
 	if _shake > 0.05:
@@ -987,70 +1124,18 @@ func _process(delta: float) -> void:
 	else:
 		cam.offset = Vector2.ZERO
 	_tick_hover()
-	if in_fight() or tag_cell.x >= 0:
+	if in_fight() or tag_cell.x >= 0 or not path.is_empty():
 		overlay.queue_redraw()
 
 
-## Keyboard movement: a short wait for diagonals, one step, then repeats while held.
-func _tick_input(delta: float) -> void:
-	var d := held_direction()
-	if d == Vector2i.ZERO:
-		_hold_dir = Vector2i.ZERO
-		_hold_started = false
-		_pending_timer = -1.0
-		return
-	if _pending_timer >= 0.0:
-		_pending_timer -= delta
-		if _pending_timer < 0.0:
-			try_step(d)
-			_hold_dir = d
-			_hold_started = true
-			_hold_timer = REPEAT_DELAY
-		return
-	if not _hold_started:
-		return
-	if d != _hold_dir:
-		# changed direction while holding: step now in the new direction
-		_hold_dir = d
-		try_step(d)
-		_hold_timer = REPEAT_DELAY
-		return
-	_hold_timer -= delta
-	if _hold_timer <= 0.0:
-		try_step(d)
-		_hold_timer += REPEAT_RATE
-
-
-func _tick_walk(delta: float) -> void:
-	if path.is_empty() or in_fight():
-		return
-	_walk_timer -= delta
-	if _walk_timer > 0.0:
-		return
-	var next: Vector2i = path[0]
-	var dir := next - hero.grid_pos
-	if not _open(hero.grid_pos, dir):
-		# something is in the way now; try to route again once
-		var target: Vector2i = path[path.size() - 1]
-		if not walk_to(target):
-			path.clear()
-		elif not path.is_empty() and not _open(hero.grid_pos, path[0] - hero.grid_pos):
-			path.clear()
-		return
-	path.remove_at(0)
-	try_step(dir)
-	_walk_timer = WALK_RATE
-
-
+## What is under the mouse (for the HUD's line about an enemy), updated when the mouse or Thomas moves.
 func _tick_hover() -> void:
-	var c := mouse_cell()
-	if c == _hover:
+	var m := get_global_mouse_position()
+	if m.distance_to(_hover_px) < 1.5 and hero.position.distance_to(_hover_from) < 3.0:
 		return
-	_hover = c
-	if in_fight():
-		_hover_path = []
-	else:
-		_hover_path = level.find_path(hero.grid_pos, c) if level.in_bounds(c) else ([] as Array[Vector2i])
+	_hover = MovementRules.cell_of(m)
+	_hover_px = m
+	_hover_from = hero.position
 	overlay.queue_redraw()
 	_update_hud()
 
@@ -1070,7 +1155,7 @@ func _update_hud() -> void:
 	elif dead or won:
 		hud.text = "R to start again"
 	elif in_fight():
-		hud.text = "Click a lit square to move  ·  click an enemy beside you to strike  ·  1-5 abilities  ·  F careful step  ·  Q stand  ·  B catch breath  ·  %sEnter end turn  ·  R new level" % ("G shut a sluice gate  ·  " if battle.arena.has_area() else "")
+		hud.text = "Click anywhere to move  ·  click an enemy to strike (he walks up if he can)  ·  1-5 abilities  ·  F careful step  ·  Q stand  ·  B catch breath  ·  %sEnter end turn  ·  R new level" % ("G shut a sluice gate  ·  " if battle.arena.has_area() else "")
 	else:
 		var spend := progress.points_for("maces") + progress.level_points + progress.stat_points
-		hud.text = "Depth %d  ·  Level %d  ·  XP %d / %d  ·  K skills%s  ·  WASD / arrows to move, click to walk, Space to wait, wheel to zoom, R new life, F9 test as a veteran" % [depth, progress.level, progress.xp, progress.xp_needed(), " (points to spend!)" if spend > 0 else "", ]
+		hud.text = "Depth %d  ·  Level %d  ·  XP %d / %d  ·  K skills%s  ·  WASD / arrows to move, click to walk, wheel to zoom, R new life, F9 test as a veteran" % [depth, progress.level, progress.xp, progress.xp_needed(), " (points to spend!)" if spend > 0 else "", ]

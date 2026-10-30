@@ -39,6 +39,7 @@ The MVP keeps the dive at the heart of it:
 7. A win screen, a death screen, and a fresh start for the next life.
 8. Rooms with things in them (added after the first playtest, 2026-10-30): more enemies and patrols, lore drops kept in a journal across lives, a small set of items on a 4-slot belt, one puzzle per level (sluice valve or locked grate), events, and clutter. Spec: `design/quick-specs/room-contents-2026-10-30.md`.
 9. Characters drawn in 8 directions (added after the first playtest). Art from ChatGPT's proposal (#5), staged: idle and walk first.
+10. Free movement in metres (added after the first playtest): Thomas moves freely while exploring, the world runs in real time until he is seen, fights stay turn-based but measure movement, reach and areas in metres, and hits land with weight. Spec: `design/quick-specs/free-movement-2026-10-30.md`.
 
 ## Out of scope — not building this
 `INTENT UNKNOWN` — proposed, not confirmed.
@@ -56,10 +57,12 @@ The MVP keeps the dive at the heart of it:
 2. Build the Sewers room kit: the door standard, the generator that places painted rooms, then the paintings (once the painted Outflow proves the method).
 3. Design and build the Sewers boss and its fight. *Done.*
 4. Add the win and death screens and the restart.
-5. Fill the rooms: enemies and patrols, then lore drops and the journal, then items and caches, then the puzzles, then events (room-contents spec).
-6. 8-direction characters: the game picks a direction's frames; ChatGPT draws idle and walk in 8 directions first.
-7. Tune how much each fight costs and how fast Thomas grows.
-8. The UI, later.
+5. Free movement, phase A: moving freely while exploring, and the hit feel (free-movement spec). *Built.*
+6. 8-direction characters: the game picks a direction's frames; ChatGPT draws idle and walk in 8 directions first, then attacks and hit reactions.
+7. Free movement, phase B: fights in metres, like Baldur's Gate 3. *Built*, with sprites grounded in the rooms (shadows from the lights, wading, normal-mapped lighting).
+8. Fill the rooms: enemies and patrols (*done*), then lore drops and the journal, then items and caches, then the puzzles, then events (room-contents spec).
+9. Tune how much each fight costs and how fast Thomas grows.
+10. The UI, later.
 
 ---
 **Who it's for / what they feel:** Players of tactical games and roguelikes who want every fight to feel heavy and dangerous, and to get stronger the deeper they go.
@@ -71,6 +74,8 @@ The MVP keeps the dive at the heart of it:
 **Reference game:** Stoneshard — skill trees that grow by use, and costly, grounded fights on a dungeon dive. The first version keeps one weapon tree and the dive, and drops survival and the overworld. The fight rules come from the Draw Steel tabletop RPG.
 
 ## Open questions
+- Sneaking and the dagger build (`design/quick-specs/sneaking-2026-10-30.md`, a proposal): bring Daggers and the Shadow backstory into the first version?
+- Deep sewage tunnels (`design/quick-specs/deep-sewage-tunnels-2026-10-30.md`, a proposal): which of the ideas to build?
 - Is a Sewers boss the right ending for the first version, with Ellen saved for the full game?
 - Should choosing a backstory for each new life be in the first version? Only Fury and Maces exist so far.
 

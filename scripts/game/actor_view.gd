@@ -1,6 +1,7 @@
 class_name ActorView
 extends Node2D
-## A creature on the map: lives on a grid square, glides between squares, flinches, falls and dies.
+## A creature on the map. While exploring it moves freely (glide_free); in a fight it lives on a square and glides
+## between squares. It flinches, falls and dies.
 ## With a sprite sheet (`sheet`), it plays the row that fits what the creature is doing.
 ## Without one, subclasses draw a placeholder body in _draw_body().
 
@@ -21,6 +22,8 @@ var raised := false     # winding up a big blow
 var bleeding := false
 var hurt := 0.0         # 0 unhurt .. 1 nearly dead
 var sheet: Sheet = null # the art, when there is some
+var is_hero := false    # Thomas: his own lantern throws no shadow of him
+var wading := false     # standing in water: drawn sunk to the shins
 
 const DAZED_STRIP := "res://assets/effects/mace/dazed.png"
 static var _dazed_tex: Texture2D = null
@@ -29,6 +32,7 @@ var _anim_t := 0.0
 var _once := ""         # a one-shot animation playing over everything else (hurt, attack, pushed back)
 var _queue: Array[String] = []   # one-shots to play after it, in order
 var _walk_linger := 0.0 # keep the walk going briefly between steps
+var walk_rate := 1.0    # how fast the walk plays: 1 at full walking speed
 
 var _from_px := Vector2.ZERO
 var _to_px := Vector2.ZERO
@@ -36,10 +40,14 @@ var _t := 1.0
 var _bob := 0.0
 var _step_time := STEP_TIME
 var _lunge := Vector2.ZERO
+var _hold_lunge := 0.0  # a wind-up holds its pull-back this long
 var _time := 0.0
+var _route: Array[Vector2] = []   # points still to walk through (a fight move)
+var _route_speed := 0.0          # px/s
 
 
 func place(c: Vector2i) -> void:
+	_route.clear()
 	grid_pos = c
 	_to_px = cell_to_px(c)
 	_from_px = _to_px
@@ -61,26 +69,78 @@ func move_to(c: Vector2i, time := STEP_TIME) -> void:
 	_t = 0.0
 	_step_time = time
 	_walk_linger = 0.3
+	walk_rate = 1.0
 	grid_pos = c
 	stepped.emit(from, c)
 	queue_redraw()
 
 
+## Stand at a point in the world (moving freely while exploring). `speed_ratio` is how fast it is going, as a share of
+## full walking speed: the walk plays at that pace. Entering a new square emits `stepped`.
+func glide_free(p: Vector2, speed_ratio: float) -> void:
+	_route.clear()
+	var d := p - position
+	if absf(d.x) > 0.05:
+		facing = 1 if d.x > 0.0 else -1
+	position = p
+	_from_px = p
+	_to_px = p
+	_t = 1.0
+	if speed_ratio > 0.05:
+		_walk_linger = 0.08
+		walk_rate = clampf(speed_ratio, 0.4, 1.5)
+	var c := MovementRules.cell_of(p)
+	if c != grid_pos:
+		var from := grid_pos
+		grid_pos = c
+		stepped.emit(from, c)
+	queue_redraw()
+
+
+## Walk through a list of points at `speed` px/s (a move in a fight). Returns how long it will take.
+func glide_along(points: Array, speed: float) -> float:
+	_route.clear()
+	var length := 0.0
+	var at := position
+	for p in points:
+		_route.append(p)
+		length += at.distance_to(p)
+		at = p
+	_route_speed = speed
+	_t = 1.0
+	return length / maxf(speed, 1.0)
+
+
 func is_gliding() -> bool:
-	return _t < 1.0
+	return _t < 1.0 or not _route.is_empty()
 
 
-func face_toward(c: Vector2i) -> void:
-	if c.x != grid_pos.x:
-		facing = 1 if c.x > grid_pos.x else -1
+## Turn to face a point in the world.
+func face_point(p: Vector2) -> void:
+	if absf(p.x - position.x) > 0.5:
+		facing = 1 if p.x > position.x else -1
 		queue_redraw()
 
 
-## A short jab of the whole body toward a square, for attacks.
-func lunge_at(c: Vector2i, strength := 8.0) -> void:
-	face_toward(c)
-	_lunge = (cell_to_px(c) - cell_to_px(grid_pos)).normalized() * strength
-	play_once("attack")
+func face_toward(c: Vector2i) -> void:
+	face_point(cell_to_px(c))
+
+
+## A short jab of the whole body toward a point, for attacks. `anim`: also play the sheet's attack row.
+func lunge_at(p: Vector2, strength := 8.0, anim := true) -> void:
+	face_point(p)
+	_lunge = (p - position).normalized() * strength
+	_hold_lunge = 0.0
+	if anim:
+		play_once("attack")
+	queue_redraw()
+
+
+## Draw back from a point before striking it.
+func wind_up(p: Vector2, strength := 4.0) -> void:
+	face_point(p)
+	_lunge = -(p - position).normalized() * strength
+	_hold_lunge = 1.2
 	queue_redraw()
 
 
@@ -130,7 +190,8 @@ func _process(delta: float) -> void:
 	_time += delta
 	var redraw := false
 	if sheet != null:
-		_anim_t += delta
+		var walking := _once == "" and (_anim == "walk" or _anim == "wounded_walk")
+		_anim_t += delta * (walk_rate if walking else 1.0)
 		_walk_linger = maxf(0.0, _walk_linger - delta)
 		if _once != "" and _anim_t >= sheet.duration(_once):
 			_once = _queue.pop_front() if not _queue.is_empty() else ""
@@ -138,7 +199,28 @@ func _process(delta: float) -> void:
 				_anim = _once
 				_anim_t = 0.0
 		redraw = true
-	if _t < 1.0:
+	if not _route.is_empty():
+		var step := _route_speed * delta
+		while step > 0.0 and not _route.is_empty():
+			var to: Vector2 = _route[0]
+			var d := position.distance_to(to)
+			face_point(to)
+			if d <= step:
+				position = to
+				step -= d
+				_route.pop_front()
+			else:
+				position = position.move_toward(to, step)
+				step = 0.0
+		_walk_linger = 0.12
+		walk_rate = 1.0
+		var c := MovementRules.cell_of(position)
+		if c != grid_pos:
+			var from := grid_pos
+			grid_pos = c
+			stepped.emit(from, c)
+		redraw = true
+	elif _t < 1.0:
 		_t = minf(1.0, _t + delta / _step_time)
 		var e := 1.0 - pow(1.0 - _t, 2.0)
 		position = _from_px.lerp(_to_px, e)
@@ -147,6 +229,12 @@ func _process(delta: float) -> void:
 	elif _bob != 0.0:
 		_bob = 0.0
 		redraw = true
+	var wet := Grounding.wading(position) and not prone and not dead
+	if wet != wading:
+		wading = wet
+		redraw = true
+	if not dead:
+		redraw = true   # the shadow follows the lights as it moves
 	if flash > 0.0:
 		flash = maxf(0.0, flash - delta * 7.0)
 		modulate = Color(1, 1, 1).lerp(Color(3.0, 2.6, 2.4), flash)
@@ -154,7 +242,9 @@ func _process(delta: float) -> void:
 		modulate = Color(0.62, 0.58, 0.58)
 	else:
 		modulate = Color.WHITE
-	if _lunge.length() > 0.05:
+	if _hold_lunge > 0.0:
+		_hold_lunge = maxf(0.0, _hold_lunge - delta)
+	elif _lunge.length() > 0.05:
 		_lunge = _lunge.lerp(Vector2.ZERO, 1.0 - exp(-delta * 12.0))
 		redraw = true
 	if dazed or raised or dying:
@@ -173,7 +263,7 @@ func _draw() -> void:
 		_draw_wounds()
 		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 		return
-	draw_circle(Vector2(0, 12), 7.0, Color(0, 0, 0, 0.35))
+	Grounding.draw_shadows(self, position, Vector2(0, 12), is_hero, wading)
 	var off := _lunge + Vector2(0, -_bob * 2.0)
 	if prone:
 		draw_set_transform(off + Vector2(0, 7), PI / 2.0 * facing, Vector2.ONE)
@@ -221,7 +311,7 @@ func _draw_sheet() -> void:
 		_anim = name
 		_anim_t = 0.0
 	if not dead:
-		draw_circle(Vector2(0, 12), 7.0, Color(0, 0, 0, 0.35))
+		Grounding.draw_shadows(self, position, Vector2(0, 12), is_hero, wading)
 	var off := _lunge + Vector2(0, -_bob * 2.0)
 	# the art faces right; a mirrored transform turns it to face left
 	var mirror := Vector2(1 if facing >= 0 else -1, 1)
@@ -232,8 +322,16 @@ func _draw_sheet() -> void:
 		draw_set_transform(off, 0, mirror)
 	var src := sheet.frame_rect(_anim, _anim_t)
 	var at := Vector2(-Sheet.ROOT.x, 12 - Sheet.ROOT.y)
-	draw_texture_rect_region(sheet.texture_of(_anim), Rect2(at, Sheet.FRAME), src, _sheet_tint())
+	var size := Sheet.FRAME
+	if wading:
+		# sunk into the water: the shins and feet are under it
+		var keep := Sheet.ROOT.y - Grounding.WADE_DEPTH
+		src.size.y = keep
+		size.y = keep
+	draw_texture_rect_region(Grounding.lit(sheet.texture_of(_anim)), Rect2(at, size), src, _sheet_tint())
 	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+	if wading:
+		Grounding.draw_waterline(self, Vector2(0, 12), _time)
 	if dazed and not dead:
 		_draw_dazed()
 	if bleeding and not dead:

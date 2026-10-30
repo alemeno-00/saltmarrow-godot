@@ -53,6 +53,7 @@ func test_picking_up_the_tag_wins_the_run() -> void:
 	if not game.level.is_walkable(next):
 		next = c + Vector2i(0, 1)
 	game.tag_cell = next
-	game.try_step(next - c)
+	var key: String = {Vector2i(1, 0): "move_right", Vector2i(0, 1): "move_down"}[next - c]
+	hold(game, [key], 0.6)
 	check(game.won, "the run is won")
 	eq(game.tag_cell, Vector2i(-1, -1), "the tag is picked up")

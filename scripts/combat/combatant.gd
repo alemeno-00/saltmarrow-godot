@@ -6,7 +6,13 @@ var name := ""
 var team := "enemy"
 var kind := "standard"   # hero, standard, minion
 var style := ""          # which drawing to use
-var cell := Vector2i.ZERO
+var pos := Vector2(16, 16)   # where it stands, in pixels (the middle of its feet); fights are measured from here
+## The square it stands in. Setting it puts the creature in the middle of that square.
+var cell: Vector2i:
+	get:
+		return MovementRules.cell_of(pos)
+	set(value):
+		pos = MovementRules.centre(value)
 var max_stamina := 10
 var stamina := 10
 var might := 0
@@ -32,7 +38,7 @@ var recoveries := 0
 var recovery_value := 0
 var hurt_this_round := false
 var free_strike_ready := true
-var telegraph: Array[Vector2i] = []
+var telegraph: Dictionary = {}   # a big blow being raised: the band on the floor it will land on (Battle.band)
 var big_cooldown := 0
 
 var fleeing := false     # broke and is running
@@ -59,6 +65,11 @@ func the() -> String:
 ## Still in the fight: not dead and hasn't run off.
 func alive() -> bool:
 	return not dead and not fled
+
+
+## Its body's radius in pixels: big creatures take up more room.
+func radius() -> float:
+	return MovementRules.px(MovementRules.LARGE_RADIUS if kind == "solo" else MovementRules.BODY_RADIUS)
 
 
 func move_speed() -> int:

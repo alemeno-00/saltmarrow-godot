@@ -140,9 +140,11 @@ func test_sweep_is_telegraphed_across_five_squares() -> void:
 	var g := _garrick(b)
 	b.forced_rolls = [[5, 5]]   # his basic attack is not used: he winds up instead
 	b.start(false)
-	eq(g.telegraph.size(), 5, "five squares darken")
+	check(not g.telegraph.is_empty(), "a band darkens across Thomas")
 	for x in range(3, 8):
-		check(g.telegraph.has(Vector2i(x, 2)), "square %d across Thomas is marked" % x)
+		check(Battle.in_band(g.telegraph, MovementRules.centre(Vector2i(x, 2))), "square %d across Thomas is under it" % x)
+	check(not Battle.in_band(g.telegraph, MovementRules.centre(Vector2i(2, 2)), 8.0), "a body two squares past the end is clear")
+	check(not Battle.in_band(g.telegraph, MovementRules.centre(Vector2i(5, 1)), 8.0), "and so is one a square behind Thomas")
 
 
 func test_sweep_lands_on_everyone_still_there() -> void:
@@ -257,17 +259,18 @@ func test_garrick_reopens_a_gate_with_malice() -> void:
 func test_water_costs_thomas_two_squares() -> void:
 	var b := _battle(Vector2i(10, 8), Vector2i(5, 4))
 	b.start(true)
-	var before: int = b.budget.move
+	var before: float = b.budget.move
 	b.hero_step(Vector2i(0, 1))
 	eq(b.hero.cell, Vector2i(5, 5), "he wades in")
-	eq(b.budget.move, before - 2, "at the cost of two squares")
+	# half the step (0.75 m) on the floor, half in the water at double cost (1.5 m)
+	check(absf(b.budget.move - (before - 2.25)) < 0.02, "every metre waded costs two (%.2f m left of %.2f)" % [b.budget.move, before])
 
 
 func test_garrick_ignores_water() -> void:
 	var b := _battle(Vector2i(5, 7), Vector2i(5, 1))
 	var g := _garrick(b)
-	var prev := b.reachable(g, 4)
-	check(prev.has(Vector2i(5, 3)), "four squares straight through the water")
+	var pts := b.plan(g, MovementRules.centre(Vector2i(5, 3)))
+	check(absf(b.cost(g, pts) - 6.0) < 0.05, "four squares straight through the water cost him just 6 m (%.2f)" % b.cost(g, pts))
 
 
 func test_lying_in_water_drowns() -> void:

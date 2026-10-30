@@ -1,25 +1,29 @@
 class_name Battle
 extends RefCounted
-## One fight under Draw Steel rules, on the level's grid.
+## One fight under Draw Steel rules, measured in metres (design/quick-specs/free-movement-2026-10-30.md, phase B).
 ## Pure logic with no drawing: every action returns a list of events for the view to play back.
+##
+## Everyone stands where they are (Combatant.pos, in pixels; one 32 px square is 1.5 m). Movement is a budget in
+## metres along routes that go round walls and bodies; water costs double. Reach is measured edge to edge between
+## bodies. Big blows land on a band drawn on the floor. Pushes slide along the line of the blow.
 ##
 ## A round: Thomas takes his turn (move, maneuver, main action), then every enemy takes theirs.
 ## Thomas gains 2 Resolve at the start of each of his turns, and 1 more the first time he is hurt each round (Fury).
 ##
 ## The enemy side has Malice (Draw Steel's villain resource): it grows every round, and is spent on
 ## Swarming Hymn (the Faithful surge forward together) and Press the Attack (a standard enemy strikes twice).
-## Enemies flank: an enemy directly opposite an ally across Thomas attacks with an edge.
+## Enemies flank: an enemy on the far side of Thomas from an ally attacks with an edge.
 ## A badly hurt standard enemy breaks and runs; if it gets out of sight it escapes, and will come back.
 ## If no enemy can see Thomas at the end of their turns, twice in a row, he has lost them and the fight ends.
 
 const TIER_WORDS := ["weak", "solid", "strong"]
-const SIGHT := 7
 const HYMN_COST := 4
 const PRESS_COST := 5
 const FLEE_AT := 0.3
+const SQ := MovementRules.METRES_PER_SQUARE   # one square of Draw Steel distance, in metres
+const HYMN_SURGE := 2                          # squares the Faithful surge with the Swarming Hymn
 # The First Shift (design/quick-specs/first-shift-boss-2026-10-29.md)
 const SLUICE_COST := 4      # Malice to reopen a sluice gate
-const WATER_STEP := 2       # squares of movement to enter water, unless the creature wades
 const DROWN_DAMAGE := 2     # starting a turn prone in water
 const WATER_CAP := 0.6      # water stops rising once it covers this much of the arena
 
@@ -28,14 +32,14 @@ var units: Array[Combatant] = []
 var hero: Combatant
 var round := 0
 var active: Combatant
-var budget := {"move": 0, "maneuver": 0, "main": 0}
+var budget := {"move": 0.0, "maneuver": 0, "main": 0}   # move in metres
 var over := false
 var winner := ""
 var rng := RandomNumberGenerator.new()
 var forced_rolls: Array = []   # queued [d1, d2] pairs, used by tests
 var injuries_on := true
 var malice := 0
-var last_seen := Vector2i.ZERO
+var last_seen := Vector2.ZERO  # where the enemies last saw Thomas, in pixels
 var bystanders: Array[Combatant] = []   # enemies on the level not in the fight; they join if they see Thomas
 var hidden_rounds := 0   # enemy turns in a row that ended with no one seeing Thomas
 var arena := Rect2i()    # the Outflow, when this is the boss fight: water rises here while a gate is open
@@ -50,6 +54,15 @@ func setup(l: Level, h: Combatant, enemies: Array, seed_value: int) -> void:
 	for e in enemies:
 		units.append(e)
 	rng.seed = seed_value
+	_settle()
+
+
+## Bodies that overlap where the fight started are nudged apart (and out of walls); Thomas stays put.
+func _settle() -> void:
+	for u in units:
+		if u == hero:
+			continue
+		u.pos = MovementRules.push_out(level, u.pos, u.radius(), bodies_except(u))
 
 
 ## Draw Steel: roll a d10, 6 or more and the heroes go first.
@@ -61,7 +74,7 @@ func start(hero_first: bool) -> Array:
 	_ev = []
 	round = 1
 	malice = 1
-	last_seen = hero.cell
+	last_seen = hero.pos
 	for u in units:
 		u.hurt_this_round = false
 		u.free_strike_ready = true
@@ -78,13 +91,55 @@ func is_hero_turn() -> bool:
 	return not over and active == hero
 
 
-# ---------------------------------------------------------------- queries
+# ---------------------------------------------------------------- distances and bodies
 
+## Squares apart, counting diagonals as one (for the level's squares, not for fight rules).
+static func dist(a: Vector2i, b: Vector2i) -> int:
+	var d := (a - b).abs()
+	return maxi(d.x, d.y)
+
+
+static func adjacent(a: Vector2i, b: Vector2i) -> bool:
+	return dist(a, b) == 1
+
+
+## Metres between two creatures' bodies, edge to edge.
+static func gap(a: Combatant, b: Combatant) -> float:
+	return MovementRules.metres(a.pos.distance_to(b.pos) - a.radius() - b.radius())
+
+
+## Is `b` within `a`'s reach (in squares of Draw Steel distance: reach 1 is 1.5 m, edge to edge)?
+static func in_reach(a: Combatant, b: Combatant, reach := 1.0) -> bool:
+	return gap(a, b) <= reach * SQ + 0.001
+
+
+## The same, as if `a` stood at `at`.
+static func in_reach_from(a: Combatant, at: Vector2, b: Combatant, reach := 1.0) -> bool:
+	return MovementRules.metres(at.distance_to(b.pos) - a.radius() - b.radius()) <= reach * SQ + 0.001
+
+
+static func reach_of(ab: Dictionary) -> float:
+	return float(ab.get("reach", ab.get("range", 1)))
+
+
+## The creature standing in square `c`, if any.
 func occupant(c: Vector2i) -> Combatant:
 	for u in units:
 		if u.alive() and u.cell == c:
 			return u
 	return null
+
+
+## The creature whose body is under point `p` (a click), if any.
+func unit_at(p: Vector2) -> Combatant:
+	var best: Combatant = null
+	var best_d := INF
+	for u in units:
+		var d := u.pos.distance_to(p)
+		if u.alive() and d <= u.radius() + 8.0 and d < best_d:
+			best = u
+			best_d = d
+	return best
 
 
 func enemies_of(u: Combatant) -> Array[Combatant]:
@@ -95,52 +150,66 @@ func enemies_of(u: Combatant) -> Array[Combatant]:
 	return out
 
 
-static func adjacent(a: Vector2i, b: Vector2i) -> bool:
-	var d := (a - b).abs()
-	return maxi(d.x, d.y) == 1
-
-
-static func dist(a: Vector2i, b: Vector2i) -> int:
-	var d := (a - b).abs()
-	return maxi(d.x, d.y)
-
-
-## Squares a creature can walk to with `limit` squares of movement. Returns cell -> previous cell.
-func reachable(u: Combatant, limit: int) -> Dictionary:
-	var prev := {}
-	if u.prone or limit <= 0:
-		return prev
-	var steps := {u.cell: 0}
-	var queue: Array[Vector2i] = [u.cell]
-	while not queue.is_empty():
-		var c: Vector2i = queue.pop_front()
-		if steps[c] >= limit:
-			continue
-		for d in Level.DIRS_8:
-			var n: Vector2i = c + d
-			if n == u.cell or not level.can_step(c, d) or occupant(n) != null:
-				continue
-			var cost: int = steps[c] + step_cost(u, n)
-			if cost > limit or (steps.has(n) and steps[n] <= cost):
-				continue
-			steps[n] = cost
-			prev[n] = c
-			queue.append(n)
-	return prev
-
-
-## Squares of movement it takes `u` to enter `c`: water slows anything that doesn't wade.
-func step_cost(u: Combatant, c: Vector2i) -> int:
-	return WATER_STEP if level.get_tile(c) == Level.Tile.WATER and not u.wades else 1
-
-
-static func path_to(prev: Dictionary, from: Vector2i, goal: Vector2i) -> Array[Vector2i]:
-	var out: Array[Vector2i] = []
-	var c := goal
-	while c != from:
-		out.push_front(c)
-		c = prev[c]
+## Every other living body in the fight, as [centre, radius] (what a route must go round).
+func bodies_except(u: Combatant) -> Array:
+	var out: Array = []
+	for o in units:
+		if o != u and o.alive():
+			out.append([o.pos, o.radius()])
 	return out
+
+
+## The route `u` would walk to `to`, round walls and bodies; empty if there is none.
+func plan(u: Combatant, to: Vector2) -> Array[Vector2]:
+	return MovementRules.route(level, u.pos, to, u.radius(), bodies_except(u))
+
+
+## Metres of movement a route costs `u`.
+func cost(u: Combatant, points: Array[Vector2]) -> float:
+	return MovementRules.route_cost(level, u.pos, points, u.wades)
+
+
+## What moving Thomas toward `to` would do, for the route preview: the whole route, the part his movement pays for,
+## its cost, and the enemies who would get a free strike as he leaves their reach.
+func move_preview(to: Vector2) -> Dictionary:
+	var out := {"points": [] as Array[Vector2], "reach": [] as Array[Vector2], "cost": 0.0, "strikes": [] as Array[Combatant]}
+	if not is_hero_turn() or hero.prone:
+		return out
+	var dest := MovementRules.push_out(level, to, hero.radius(), bodies_except(hero))
+	var pts := plan(hero, dest)
+	out.points = pts
+	out.cost = cost(hero, pts)
+	out.reach = MovementRules.trim(level, hero.pos, pts, hero.wades, budget.move)
+	out.strikes = _free_strikers(hero, out.reach)
+	return out
+
+
+## The enemies who would strike `u` as it walks `points` and leaves their reach.
+func _free_strikers(u: Combatant, points: Array[Vector2]) -> Array[Combatant]:
+	var out: Array[Combatant] = []
+	var at := u.pos
+	for p in _samples(u.pos, points):
+		for e in enemies_of(u):
+			if not out.has(e) and _may_strike(e) and in_reach_from(u, at, e) and not in_reach_from(u, p, e):
+				out.append(e)
+		at = p
+	return out
+
+
+## A route broken into small steps (about 4 px), for free strikes, doors and costs along the way.
+static func _samples(from: Vector2, points: Array[Vector2]) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	var at := from
+	for p in points:
+		var n := maxi(1, ceili(at.distance_to(p) / 4.0))
+		for i in n:
+			out.append(at.lerp(p, float(i + 1) / n))
+		at = p
+	return out
+
+
+func _may_strike(e: Combatant) -> bool:
+	return e.free_strike_ready and not e.prone and e.dazed == 0
 
 
 func meets_needs(t: Combatant, ab: Dictionary) -> bool:
@@ -154,7 +223,7 @@ func meets_needs(t: Combatant, ab: Dictionary) -> bool:
 func valid_targets(u: Combatant, ab: Dictionary) -> Array[Combatant]:
 	var out: Array[Combatant] = []
 	for e in enemies_of(u):
-		if adjacent(u.cell, e.cell) and (ab.target == "adjacent_all" or meets_needs(e, ab)):
+		if in_reach(u, e, reach_of(ab)) and (ab.target == "adjacent_all" or meets_needs(e, ab)):
 			out.append(e)
 	return out
 
@@ -168,29 +237,100 @@ func cannot_use(u: Combatant, ab: Dictionary) -> String:
 	return ""
 
 
+# ---------------------------------------------------------------- big blows: a band on the floor
+
+## The band a big blow will land on: across where Thomas stands, 1.5 m deep and as wide as `width` squares either
+## side of him (1 unless the blow says), facing the way the blow comes from.
+func band(e: Combatant) -> Dictionary:
+	var dir := hero.pos - e.pos
+	dir = dir.normalized() if dir.length() > 0.01 else Vector2.RIGHT
+	var w := int(e.big.get("width", 1))
+	return {"centre": hero.pos, "dir": dir, "half_w": MovementRules.px((2 * w + 1) * SQ / 2.0), "half_d": MovementRules.px(SQ / 2.0)}
+
+
+## Does a body of radius `r` at `p` touch the band?
+static func in_band(b: Dictionary, p: Vector2, r := 0.0) -> bool:
+	var local := p - (b.centre as Vector2)
+	var dir: Vector2 = b.dir
+	var q := Vector2(local.dot(dir), local.dot(dir.orthogonal()))
+	var near := Vector2(clampf(q.x, -b.half_d, b.half_d), clampf(q.y, -b.half_w, b.half_w))
+	return q.distance_to(near) <= r + 0.001
+
+
+## Metres from a body to the nearest edge of a band (0 if it touches).
+static func band_gap(b: Dictionary, u: Combatant) -> float:
+	var local := u.pos - (b.centre as Vector2)
+	var dir: Vector2 = b.dir
+	var q := Vector2(local.dot(dir), local.dot(dir.orthogonal()))
+	var near := Vector2(clampf(q.x, -b.half_d, b.half_d), clampf(q.y, -b.half_w, b.half_w))
+	return maxf(0.0, MovementRules.metres(q.distance_to(near) - u.radius()))
+
+
 # ---------------------------------------------------------------- Thomas's actions
 
+## Step one square's length in a direction (the keys, in a fight).
 func hero_step(dir: Vector2i) -> Array:
-	if not is_hero_turn() or budget.move <= 0 or hero.prone:
+	if not is_hero_turn() or budget.move <= 0.0 or hero.prone:
 		return []
-	var to := hero.cell + dir
-	if not level.can_step(hero.cell, dir) or occupant(to) != null or step_cost(hero, to) > budget.move:
+	var to := hero.pos + Vector2(dir) * MovementRules.TILE
+	if not level.is_walkable(MovementRules.cell_of(to)):
 		return []
-	_walk(hero, [to])
+	return hero_move_to_point(to)
+
+
+## The keys in a fight: a short straight step toward a point, sliding along walls, as far as his movement pays for.
+func hero_nudge(to: Vector2) -> Array:
+	if not is_hero_turn() or hero.prone or budget.move <= 0.0:
+		return []
+	var dest := MovementRules.slide(level, hero.pos, to - hero.pos, hero.radius(), bodies_except(hero))
+	if dest.distance_to(hero.pos) < 0.05:
+		return []
+	var pts := MovementRules.trim(level, hero.pos, [dest] as Array[Vector2], hero.wades, budget.move)
+	if pts.is_empty():
+		return []
+	_walk(hero, pts)
 	return _flush()
 
 
 func hero_move_to(c: Vector2i) -> Array:
-	if not is_hero_turn():
+	return hero_move_to_point(MovementRules.centre(c))
+
+
+## Walk toward a point, as far as his movement reaches.
+func hero_move_to_point(to: Vector2) -> Array:
+	if not is_hero_turn() or hero.prone or budget.move <= 0.0:
 		return []
-	var prev := reachable(hero, budget.move)
-	if not prev.has(c):
+	var dest := MovementRules.push_out(level, to, hero.radius(), bodies_except(hero))
+	var pts := MovementRules.trim(level, hero.pos, plan(hero, dest), hero.wades, budget.move)
+	if pts.is_empty():
 		return []
-	_walk(hero, path_to(prev, hero.cell, c))
+	_walk(hero, pts)
 	return _flush()
 
 
-func hero_ability(idx: int, target_cell: Vector2i) -> Array:
+## Click an enemy out of reach: walk up to it (if his movement gets him there), then strike with the ability.
+func hero_close_and_strike(idx: int, t: Combatant) -> Array:
+	if not is_hero_turn() or t == null or t.team == hero.team:
+		return []
+	if not in_reach(hero, t, reach_of(hero.abilities[idx])):
+		var spot := _spot_beside(hero, t, budget.move)
+		if spot.is_empty():
+			_log("Too far to reach this turn.")
+			return _flush()
+		_walk(hero, spot)
+		if over or hero.dead:
+			return _flush()
+	var ev := _flush()
+	ev.append_array(hero_ability_on(idx, t))
+	return ev
+
+
+## Use an ability on the creature in square `c` (or on everyone in reach, for those that hit all).
+func hero_ability(idx: int, c: Vector2i) -> Array:
+	return hero_ability_on(idx, occupant(c))
+
+
+func hero_ability_on(idx: int, t: Combatant) -> Array:
 	if not is_hero_turn() or idx < 0 or idx >= hero.abilities.size():
 		return []
 	var ab: Dictionary = hero.abilities[idx]
@@ -204,10 +344,9 @@ func hero_ability(idx: int, target_cell: Vector2i) -> Array:
 		if targets.is_empty():
 			_log("No one is in reach.")
 	else:
-		var t := occupant(target_cell)
-		if t == null or t.team == hero.team:
+		if t == null or t.team == hero.team or not t.alive():
 			_log("Choose an enemy.")
-		elif not adjacent(hero.cell, t.cell):
+		elif not in_reach(hero, t, reach_of(ab)):
 			_log("Out of reach.")
 		elif not meets_needs(t, ab):
 			_log("Only against a dazed, prone or dying enemy.")
@@ -226,30 +365,28 @@ func hero_ability(idx: int, target_cell: Vector2i) -> Array:
 	return _flush()
 
 
-## Careful step (a maneuver): one square, without giving anyone a free strike.
+## Careful step (a maneuver): up to 1.5 m in a straight line, without giving anyone a free strike.
 func hero_shift(c: Vector2i) -> Array:
-	if not is_hero_turn() or hero.prone or budget.maneuver <= 0:
+	return hero_shift_to(MovementRules.centre(c))
+
+
+func hero_shift_to(to: Vector2) -> Array:
+	if not can_shift():
 		return []
-	var d := c - hero.cell
-	if not adjacent(c, hero.cell) or not level.can_step(hero.cell, d) or occupant(c) != null:
+	var dest := MovementRules.push_out(level, to, hero.radius(), bodies_except(hero))
+	if dest.distance_to(hero.pos) > MovementRules.px(MovementRules.SHIFT) + 0.5:
+		dest = hero.pos + (dest - hero.pos).normalized() * MovementRules.px(MovementRules.SHIFT)
+	if dest.distance_to(hero.pos) < 1.0 or not MovementRules.clear_walk(level, hero.pos, dest, hero.radius(), bodies_except(hero)):
 		return []
-	if level.get_tile(c) == Level.Tile.DOOR_CLOSED:
-		level.set_tile(c, Level.Tile.DOOR_OPEN)
-		_emit({"t": "door", "cell": c})
-	hero.cell = c
-	_emit({"t": "move", "unit": hero, "to": c})
+	_open_doors_on(hero, [dest] as Array[Vector2])
+	hero.pos = dest
+	_emit({"t": "move", "unit": hero, "points": [dest] as Array[Vector2], "to": hero.cell})
 	_spend("maneuver")
 	return _flush()
 
 
-func shift_cells() -> Array[Vector2i]:
-	var out: Array[Vector2i] = []
-	if not is_hero_turn() or hero.prone or budget.maneuver <= 0:
-		return out
-	for d in Level.DIRS_8:
-		if level.can_step(hero.cell, d) and occupant(hero.cell + d) == null:
-			out.append(hero.cell + d)
-	return out
+func can_shift() -> bool:
+	return is_hero_turn() and not hero.prone and budget.maneuver > 0
 
 
 func hero_stand() -> Array:
@@ -282,11 +419,17 @@ func hero_catch_breath() -> Array:
 	return _flush()
 
 
-## Shut a sluice gate next to Thomas. Uses the main action.
+## Is Thomas within reach of square `c` (a gate in the wall)?
+func _reaches_square(u: Combatant, c: Vector2i) -> bool:
+	var box := Rect2(Vector2(c * MovementRules.TILE), Vector2(MovementRules.TILE, MovementRules.TILE))
+	return MovementRules.metres(u.pos.distance_to(u.pos.clamp(box.position, box.end)) - u.radius()) <= SQ + 0.001
+
+
+## Shut a sluice gate within reach. Uses the main action.
 func hero_shut_gate(c: Vector2i) -> Array:
 	if not is_hero_turn() or not level.gates.has(c) or level.get_tile(c) != Level.Tile.GATE_OPEN:
 		return []
-	if not adjacent(hero.cell, c):
+	if not _reaches_square(hero, c):
 		_log("Too far from the gate.")
 		return _flush()
 	if budget.main <= 0:
@@ -299,10 +442,10 @@ func hero_shut_gate(c: Vector2i) -> Array:
 	return _flush()
 
 
-## The nearest open sluice gate next to Thomas, or (-1, -1).
+## The nearest open sluice gate within Thomas's reach, or (-1, -1).
 func gate_in_reach() -> Vector2i:
 	for g in level.gates:
-		if level.get_tile(g) == Level.Tile.GATE_OPEN and adjacent(hero.cell, g):
+		if level.get_tile(g) == Level.Tile.GATE_OPEN and _reaches_square(hero, g):
 			return g
 	return Vector2i(-1, -1)
 
@@ -319,7 +462,7 @@ func hero_end_turn() -> Array:
 
 func _begin_turn(u: Combatant) -> void:
 	active = u
-	budget = {"move": u.move_speed(), "maneuver": 1, "main": 1}
+	budget = {"move": u.move_speed() * SQ, "maneuver": 1, "main": 1}
 	_emit({"t": "turn", "unit": u})
 	if u == hero:
 		u.resolve += 2
@@ -348,9 +491,9 @@ func _spend(kind: String) -> void:
 	if active != null and active.dazed > 0:
 		for k in budget:
 			if k != kind:
-				budget[k] = 0
+				budget[k] = 0.0 if k == "move" else 0
 		if kind != "move":
-			budget.move = 0
+			budget.move = 0.0
 
 
 func _enemy_phase() -> void:
@@ -358,7 +501,7 @@ func _enemy_phase() -> void:
 	_emit({"t": "malice", "value": malice})
 	_rise_water()
 	for o in bystanders.duplicate():
-		if o.alive() and (sees_hero(o) or dist(o.cell, hero.cell) <= 3):
+		if o.alive() and (sees_hero(o) or MovementRules.metres(o.pos.distance_to(hero.pos)) <= MovementRules.JOIN_WITHIN):
 			bystanders.erase(o)
 			units.append(o)
 			_emit({"t": "join", "unit": o})
@@ -412,24 +555,28 @@ func _enemy_act(e: Combatant) -> void:
 		_spend("maneuver")
 	if hero.dead or over:
 		return
-	if sees_hero(e):
-		last_seen = hero.cell
-	var goal := hero.cell if sees_hero(e) or dist(e.cell, hero.cell) <= 2 else last_seen
-	if not adjacent(e.cell, hero.cell) and budget.move > 0:
-		_approach(e, budget.move, goal)
+	var sees := sees_hero(e)
+	if sees:
+		last_seen = hero.pos
+	var knows := sees or MovementRules.metres(e.pos.distance_to(hero.pos)) <= MovementRules.LOSE_WITHIN
+	if not in_reach(e, hero, reach_of(e.basic)) and budget.move > 0.0:
+		if knows:
+			_approach(e, budget.move)
+		else:
+			_go_toward(e, budget.move, last_seen)
 		if not e.alive() or over:
 			return
-	if adjacent(e.cell, hero.cell) and budget.main > 0:
+	if in_reach(e, hero, reach_of(e.basic)) and budget.main > 0:
 		if not e.big.is_empty() and e.big_cooldown <= 0:
-			e.telegraph = _big_cells(e)
+			e.telegraph = band(e)
 			e.big_cooldown = int(e.big.get("cooldown", 3))
 			if e.health_ratio() <= 0.5:
 				e.big_cooldown = int(e.big.get("cooldown_hurt", e.big_cooldown))
-			_emit({"t": "telegraph", "unit": e, "cells": e.telegraph.duplicate()})
+			_emit({"t": "telegraph", "unit": e, "band": e.telegraph.duplicate()})
 			_log(String(e.big.get("tell", "%s raises its pick high...")) % e.title())
 		else:
 			_attack(e, e.basic, [hero])
-			if e.kind == "standard" and malice >= PRESS_COST and not over and not hero.dead and adjacent(e.cell, hero.cell):
+			if e.kind == "standard" and malice >= PRESS_COST and not over and not hero.dead and in_reach(e, hero, reach_of(e.basic)):
 				malice -= PRESS_COST
 				_emit({"t": "malice_spend", "name": "Press the Attack", "value": malice})
 				_log("Malice: the %s presses the attack." % e.name)
@@ -438,39 +585,100 @@ func _enemy_act(e: Combatant) -> void:
 
 
 func sees_hero(e: Combatant) -> bool:
-	return dist(e.cell, hero.cell) <= SIGHT and level.line_of_sight(e.cell, hero.cell)
+	return MovementRules.metres(e.pos.distance_to(hero.pos)) <= MovementRules.SIGHT and level.line_of_sight(e.cell, hero.cell)
 
 
 func _hero_hidden() -> bool:
 	for e in enemies_of(hero):
-		if sees_hero(e) or dist(e.cell, hero.cell) <= 2:
+		if sees_hero(e) or MovementRules.metres(e.pos.distance_to(hero.pos)) <= MovementRules.LOSE_WITHIN:
 			return false
 	return true
 
 
-## Is `c` directly opposite one of e's allies, across Thomas? Standing there flanks him.
-func _flanks(e: Combatant, c: Vector2i) -> bool:
-	if not adjacent(c, hero.cell):
+## Would `e`, standing at `at`, flank Thomas: in reach of him, with an ally also in reach more than FLANK_ANGLE
+## round him?
+func _flanks(e: Combatant, at: Vector2) -> bool:
+	if not in_reach_from(e, at, hero):
 		return false
-	var opposite := hero.cell * 2 - c
-	var o := occupant(opposite)
-	return o != null and o != e and o.team == e.team
+	var mine := at - hero.pos
+	for o in units:
+		if o != e and o.alive() and o.team == e.team and in_reach(o, hero):
+			if absf(rad_to_deg(mine.angle_to(o.pos - hero.pos))) >= MovementRules.FLANK_ANGLE - 0.01:
+				return true
+	return false
 
 
-## Walk up to `limit` squares toward `goal`, preferring squares beside Thomas that flank him.
-func _approach(e: Combatant, limit: int, goal: Vector2i) -> void:
-	var prev := reachable(e, limit)
-	var best := e.cell
-	var best_score := dist(e.cell, goal) * 100
-	for c in prev:
-		var score := dist(c, goal) * 100 + path_to(prev, e.cell, c).size()
-		if goal == hero.cell and _flanks(e, c):
-			score -= 60
+## Spots beside `t` that `u` could walk to with `limit` metres: the route to the best one (shortest, flanking
+## preferred when `u` is an enemy going for Thomas), or empty.
+func _spot_beside(u: Combatant, t: Combatant, limit: float) -> Array[Vector2]:
+	var bodies := bodies_except(u)
+	var ring := u.radius() + t.radius() + MovementRules.px(MovementRules.STAND_OFF)
+	var best: Array[Vector2] = []
+	var best_score := INF
+	for i in 16:
+		var p := t.pos + Vector2.RIGHT.rotated(TAU * i / 16.0) * ring
+		if MovementRules.touches_wall(level, p, u.radius()) or MovementRules.overlaps(p, u.radius(), bodies):
+			continue
+		var pts := MovementRules.route(level, u.pos, p, u.radius(), bodies)
+		if pts.is_empty():
+			continue
+		var c := cost(u, pts)
+		if c > limit + 0.001:
+			continue
+		var score := c - (100.0 if u != hero and t == hero and _flanks(u, p) else 0.0)
 		if score < best_score:
 			best_score = score
-			best = c
-	if best != e.cell:
-		_walk(e, path_to(prev, e.cell, best))
+			best = pts
+	return best
+
+
+## Walk up to Thomas: to a spot beside him it can reach (flanking if it can), or as far toward him as `limit` allows.
+func _approach(e: Combatant, limit: float) -> void:
+	var spot := _spot_beside(e, hero, limit)
+	if not spot.is_empty():
+		_walk(e, spot)
+	else:
+		_go_toward(e, limit, hero.pos)
+
+
+## Walk as far toward a point as `limit` metres allow, stopping before bumping into anyone.
+func _go_toward(e: Combatant, limit: float, goal: Vector2) -> void:
+	var others := bodies_except(e).filter(func(b): return (b[0] as Vector2).distance_to(goal) > 1.0)
+	var pts := MovementRules.route(level, e.pos, goal, e.radius(), others)
+	pts = MovementRules.trim(level, e.pos, pts, e.wades, limit)
+	pts = _stop_short(e, pts)
+	if not pts.is_empty():
+		_walk(e, pts)
+
+
+## The part of a route before `u` would bump into another body.
+func _stop_short(u: Combatant, points: Array[Vector2]) -> Array[Vector2]:
+	var out: Array[Vector2] = []
+	var bodies := bodies_except(u)
+	var last := u.pos
+	for p in _samples(u.pos, points):
+		if MovementRules.overlaps(p, u.radius(), bodies):
+			break
+		last = p
+	if last.distance_to(u.pos) < 1.0:
+		return out
+	# keep the route's own corners up to where it stops
+	var at := u.pos
+	for p in points:
+		if _on_segment(last, at, p):
+			out.append(last)
+			return out
+		out.append(p)
+		at = p
+	return out
+
+
+static func _on_segment(q: Vector2, a: Vector2, b: Vector2) -> bool:
+	var ab := b - a
+	if ab.length() < 0.001:
+		return q.distance_to(a) < 0.5
+	var t := clampf((q - a).dot(ab) / ab.length_squared(), 0.0, 1.0)
+	return q.distance_to(a + ab * t) < 0.5
 
 
 ## Malice: when there are at least two Faithful and some aren't yet beside Thomas, they all surge up to 2 squares.
@@ -480,7 +688,7 @@ func _swarming_hymn() -> void:
 	for u in enemies_of(hero):
 		if u.style == "faithful":
 			flock.append(u)
-			if not adjacent(u.cell, hero.cell):
+			if not in_reach(u, hero):
 				far = true
 	if flock.size() < 2 or not far or malice < HYMN_COST:
 		return
@@ -490,8 +698,8 @@ func _swarming_hymn() -> void:
 	for f in flock:
 		if over:
 			return
-		if f.alive() and not f.prone and not adjacent(f.cell, hero.cell):
-			_approach(f, 2, hero.cell)
+		if f.alive() and not f.prone and not in_reach(f, hero):
+			_approach(f, HYMN_SURGE * SQ)
 
 
 ## Run: as far from Thomas as it can get, out of his sight if possible. Out of sight and far enough, it escapes.
@@ -500,21 +708,28 @@ func _flee(e: Combatant) -> void:
 		e.prone = false
 		_emit({"t": "stand", "unit": e})
 		_spend("maneuver")
-	if budget.move > 0:
-		var prev := reachable(e, budget.move)
-		var best := e.cell
-		var best_score := _flee_score(e.cell)
-		for c in prev:
-			var score := _flee_score(c)
-			if score > best_score:
-				best_score = score
-				best = c
-		if best != e.cell:
-			_walk(e, path_to(prev, e.cell, best))
+	if budget.move > 0.0:
+		var bodies := bodies_except(e)
+		var best: Array[Vector2] = []
+		var best_score := _flee_score(e.pos)
+		for i in 16:
+			for k in [1.0, 0.66, 0.33]:
+				var p: Vector2 = e.pos + Vector2.RIGHT.rotated(TAU * i / 16.0) * MovementRules.px(budget.move * k)
+				if not level.is_walkable(MovementRules.cell_of(p)) or MovementRules.touches_wall(level, p, e.radius()) or MovementRules.overlaps(p, e.radius(), bodies):
+					continue
+				var pts := MovementRules.route(level, e.pos, p, e.radius(), bodies)
+				if pts.is_empty() or cost(e, pts) > budget.move + 0.001:
+					continue
+				var score := _flee_score(p)
+				if score > best_score:
+					best_score = score
+					best = pts
+		if not best.is_empty():
+			_walk(e, best)
 	if not e.alive() or over:
 		return
-	var d := dist(e.cell, hero.cell)
-	if d > SIGHT or (d >= 4 and not level.line_of_sight(e.cell, hero.cell)):
+	var d := MovementRules.metres(e.pos.distance_to(hero.pos))
+	if d > MovementRules.SIGHT or (d >= MovementRules.ESCAPE_UNSEEN and not level.line_of_sight(e.cell, hero.cell)):
 		e.fled = true
 		e.fleeing = false
 		_emit({"t": "escape", "unit": e})
@@ -522,39 +737,21 @@ func _flee(e: Combatant) -> void:
 		_check_over()
 
 
-func _flee_score(c: Vector2i) -> int:
-	return dist(c, hero.cell) * 10 + (15 if not level.line_of_sight(c, hero.cell) else 0)
-
-
-## The squares a telegraphed blow will land on: where Thomas stands and `width` squares either side of him (1 unless the blow says).
-func _big_cells(e: Combatant) -> Array[Vector2i]:
-	var dir := hero.cell - e.cell
-	var side := Vector2i(-dir.y, dir.x)
-	var w := int(e.big.get("width", 1))
-	var out: Array[Vector2i] = []
-	for i in range(-w, w + 1):
-		var c := hero.cell + side * i
-		if level.is_walkable(c) and c != e.cell:
-			out.append(c)
-	return out
+func _flee_score(p: Vector2) -> float:
+	return MovementRules.metres(p.distance_to(hero.pos)) * 10.0 + (15.0 if not level.line_of_sight(MovementRules.cell_of(p), hero.cell) else 0.0)
 
 
 func _big_attack(e: Combatant) -> void:
-	var cells := e.telegraph.duplicate()
-	e.telegraph.clear()
+	var b := e.telegraph.duplicate()
+	e.telegraph = {}
 	_emit({"t": "telegraph_end", "unit": e})
-	var reach := false
-	for c in cells:
-		if dist(e.cell, c) <= int(e.big.get("reach", 1)):
-			reach = true
-	if not reach:
+	if band_gap(b, e) > reach_of(e.big) * SQ + 0.001:
 		_log("%s's blow comes down on empty stone." % e.title())
 		return
-	_emit({"t": "smash", "unit": e, "cells": cells})
+	_emit({"t": "smash", "unit": e, "band": b})
 	var targets: Array[Combatant] = []
-	for c in cells:
-		var o := occupant(c)
-		if o != null and o != e:
+	for o in units:
+		if o != e and o.alive() and in_band(b, o.pos, o.radius()):
 			targets.append(o)
 	if targets.is_empty():
 		_log("The pick bites into the floor where Thomas stood.")
@@ -565,7 +762,7 @@ func _big_attack(e: Combatant) -> void:
 func _cancel_telegraph(t: Combatant, why: String) -> void:
 	if t.telegraph.is_empty():
 		return
-	t.telegraph.clear()
+	t.telegraph = {}
 	_emit({"t": "telegraph_end", "unit": t})
 	_log("%s is %s; the swing is broken." % [t.title(), why])
 
@@ -603,57 +800,80 @@ func _open_sluice() -> void:
 
 # ---------------------------------------------------------------- movement
 
-func _walk(u: Combatant, path: Array) -> void:
-	var first := true
-	for nxt in path:
+## Walk a route. Leaving an enemy's reach gives it a free strike; doors on the way open; the walker's movement pays
+## for every metre. Plays as "move" events, broken where a free strike lands.
+func _walk(u: Combatant, points: Array[Vector2]) -> void:
+	if u == active:
+		_spend("move")
+	var walked: Array[Vector2] = []
+	for p in _samples(u.pos, points):
 		if u.dead or over:
-			return
-		if first and u == active:
-			_spend("move")
-			first = false
-		var from := u.cell
+			break
 		for e in enemies_of(u):
-			if e.free_strike_ready and not e.prone and e.dazed == 0 and adjacent(e.cell, from) and not adjacent(e.cell, nxt):
+			if _may_strike(e) and in_reach(u, e) and not in_reach_from(u, p, e):
+				_emit_walk(u, walked)
+				walked = []
 				e.free_strike_ready = false
 				_emit({"t": "attack", "unit": e, "target": u})
 				_log("%s strikes as %s pulls away." % [e.name, u.name])
 				_damage(u, e.free_strike, false, 1)
 				if u.dead or over:
 					return
-		if level.get_tile(nxt) == Level.Tile.DOOR_CLOSED:
-			level.set_tile(nxt, Level.Tile.DOOR_OPEN)
-			_emit({"t": "door", "cell": nxt})
-		u.cell = nxt
+		_open_doors_on(u, [p] as Array[Vector2])
 		if u == active:
-			budget.move -= step_cost(u, nxt)
-		_emit({"t": "move", "unit": u, "to": nxt})
+			budget.move = maxf(0.0, budget.move - MovementRules.route_cost(level, u.pos, [p] as Array[Vector2], u.wades))
+		u.pos = p
+		walked.append(p)
+	_emit_walk(u, walked)
 
 
-## Forced movement straight away from `from`. Hitting a wall or a creature hurts: 1 damage per square left.
-func _push(t: Combatant, from: Vector2i, n: int, pusher: Combatant = null) -> void:
-	var dir := Vector2i(signi(t.cell.x - from.x), signi(t.cell.y - from.y))
-	if dir == Vector2i.ZERO or n <= 0:
+func _emit_walk(u: Combatant, walked: Array[Vector2]) -> void:
+	if not walked.is_empty():
+		_emit({"t": "move", "unit": u, "points": walked.duplicate(), "to": u.cell})
+
+
+func _open_doors_on(u: Combatant, points: Array[Vector2]) -> void:
+	for p in points:
+		for c in MovementRules.cells_touched(p, u.radius()):
+			if level.get_tile(c) == Level.Tile.DOOR_CLOSED:
+				level.set_tile(c, Level.Tile.DOOR_OPEN)
+				_emit({"t": "door", "cell": c})
+
+
+## Forced movement: n squares' worth (1.5 m each) straight along the line from `from` through the target. Hitting a
+## wall or a creature hurts: 1 damage for each square's worth left over.
+func _push(t: Combatant, from: Vector2, n: int, pusher: Combatant = null) -> void:
+	var dir := t.pos - from
+	if dir.length() < 0.01 or n <= 0:
 		return
+	dir = dir.normalized()
 	if t.kind == "solo":
 		n = mini(n, 1)   # too heavy to drive far
-	var path: Array[Vector2i] = []
-	var slam := 0
+	var total := MovementRules.px(n * SQ)
+	var moved := 0.0
 	var other: Combatant = null
-	for i in n:
-		var nxt := t.cell + dir
-		var o := occupant(nxt)
-		if level.can_step(t.cell, dir) and o == null and level.get_tile(nxt) != Level.Tile.DOOR_CLOSED:
-			t.cell = nxt
-			path.append(nxt)
-		else:
-			slam = n - i
-			other = o
+	var stopped := false
+	var path: Array[Vector2] = []
+	while moved < total - 0.01:
+		var step := minf(2.0, total - moved)
+		var nxt := t.pos + dir * step
+		other = _body_at(t, nxt)
+		if other != null or MovementRules.touches_wall(level, nxt, t.radius()) or _closed_door_ahead(nxt, dir, t.radius()):
+			stopped = true
 			break
+		t.pos = nxt
+		moved += step
+		if path.is_empty() or path[-1].distance_to(nxt) >= 4.0:
+			path.append(nxt)
+	if moved > 0.0 and (path.is_empty() or path[-1] != t.pos):
+		path.append(t.pos)
 	if not path.is_empty():
-		_emit({"t": "push", "unit": t, "path": path})
+		_emit({"t": "push", "unit": t, "points": path})
 		_cancel_telegraph(t, "knocked off balance")
-	if slam > 0:
-		_emit({"t": "slam", "unit": t, "cell": t.cell + dir})
+	var left := total - moved
+	if stopped and left > 2.0:
+		var slam := ceili(left / MovementRules.TILE - 0.001)
+		_emit({"t": "slam", "unit": t, "at": t.pos + dir * t.radius()})
 		if other != null:
 			_log("%s is slammed into %s." % [t.title(), other.the()])
 		else:
@@ -669,6 +889,18 @@ func _push(t: Combatant, from: Vector2i, n: int, pusher: Combatant = null) -> vo
 			_damage(other, slam, false, 1)
 		if pusher != null:
 			_hammers_due(pusher, "slam")
+
+
+## Another creature whose body a body of `u`'s size at `p` would overlap.
+func _body_at(u: Combatant, p: Vector2) -> Combatant:
+	for o in units:
+		if o != u and o.alive() and p.distance_to(o.pos) < u.radius() + o.radius() - 0.01:
+			return o
+	return null
+
+
+func _closed_door_ahead(p: Vector2, dir: Vector2, r: float) -> bool:
+	return level.get_tile(MovementRules.cell_of(p + dir * r)) == Level.Tile.DOOR_CLOSED
 
 
 # ---------------------------------------------------------------- attacks and damage
@@ -697,10 +929,10 @@ func _attack(u: Combatant, ab: Dictionary, targets: Array) -> bool:
 		edges += 1
 	if targets.size() == 1 and targets[0].dazed > 0 and u.perks.has("ringing_blows") and ab.get("weapon", "") == "mace":
 		edges += 1
-	if targets.size() == 1 and u.team != hero.team and _flanks(u, u.cell) and targets[0] == hero:
+	if targets.size() == 1 and u.team != hero.team and _flanks(u, u.pos) and targets[0] == hero:
 		edges += 1
 	var r := _roll(u.might, edges)
-	_emit({"t": "roll", "unit": u, "ability": ab, "roll": r})
+	_emit({"t": "roll", "unit": u, "ability": ab, "roll": r, "at": (targets[0] as Combatant).pos if not targets.is_empty() else u.pos})
 	var mod := ""
 	if r.edges > 0:
 		mod = " with an edge"
@@ -745,7 +977,7 @@ func _hit(u: Combatant, t: Combatant, ab: Dictionary, r: Dictionary) -> void:
 		_log("%s goes down." % t.title())
 		_cancel_telegraph(t, "knocked down")
 	if int(eff.get("push", 0)) > 0:
-		_push(t, u.cell, int(eff.push), u)
+		_push(t, u.pos, int(eff.push), u)
 	if injuries_on and ab.injury_part != "" and not t.dead:
 		var chance: int = (ab.injury as Array)[r.tier - 1]
 		if mace and u.perks.has("bone_deep") and chance > 0:
@@ -789,7 +1021,7 @@ func _damage(t: Combatant, dmg: int, crit: bool, tier: int) -> void:
 		_kill(t)
 	if excess > 0:
 		for o in units:
-			if o != t and o.alive() and o.kind == "minion" and o.team == t.team and adjacent(o.cell, t.cell):
+			if o != t and o.alive() and o.kind == "minion" and o.team == t.team and in_reach(o, t):
 				_log("The blow carries on into another of them.")
 				_damage(o, excess, false, tier)
 				break
@@ -812,7 +1044,7 @@ func _kill(t: Combatant) -> void:
 	if t.dead:
 		return
 	t.dead = true
-	t.telegraph.clear()
+	t.telegraph = {}
 	_emit({"t": "death", "unit": t, "crushed": t.crushed})
 	if t == hero:
 		_log("Thomas Wren is dead.")

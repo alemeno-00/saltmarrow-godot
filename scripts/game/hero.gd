@@ -6,6 +6,7 @@ extends ActorView
 
 func _ready() -> void:
 	sheet = Sheet.thomas()
+	is_hero = true
 
 
 func _draw_body() -> void:

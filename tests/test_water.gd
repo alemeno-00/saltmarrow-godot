@@ -44,10 +44,11 @@ func test_wading_makes_ripples() -> void:
 	var to := c + Vector2i(1, 0)
 	game.level.set_tile(to, Level.Tile.WATER)
 	var before := game.ripples_made
-	game.try_step(Vector2i(1, 0))
-	eq(game.hero.grid_pos, to, "Thomas steps into the water")
-	eq(game.ripples_made, before + 1, "a ripple spreads where he stepped")
-	game.try_step(Vector2i(-1, 0))
+	hold(game, ["move_right"], 0.6)
+	eq(game.hero.grid_pos, to, "Thomas walks into the water")
+	eq(game.ripples_made, before + 1, "a ripple spreads where he stepped in")
+	hold(game, ["move_left"], 0.6)
+	eq(game.hero.grid_pos, c, "and back out")
 	eq(game.ripples_made, before + 1, "stepping out onto dry floor makes none")
 
 

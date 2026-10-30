@@ -60,6 +60,7 @@ static func make_light(color: Color, energy: float, radius_squares: float) -> Po
 	l.color = color
 	l.energy = energy
 	l.texture_scale = radius_squares * TILE * 2.0 / 256.0
+	l.height = Grounding.LIGHT_HEIGHT   # for the creatures' normal maps
 	return l
 
 
@@ -121,6 +122,10 @@ func build(level: Level) -> void:
 	for l in _lights:
 		l.queue_free()
 	_lights.clear()
+	Grounding.level = level
+	Grounding.lights.clear()
+	for p in light_points(level):
+		Grounding.lights.append(p[0])
 	for p in light_points(level):
 		var l := make_light(BRAZIER if p[1] else LANTERN, BRAZIER_ENERGY if p[1] else LANTERN_ENERGY, LANTERN_RADIUS)
 		l.position = p[0]
