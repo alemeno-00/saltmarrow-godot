@@ -46,6 +46,14 @@ highlighted "top-down, slightly angled" panel, the in-game example and the chara
 **Start with a camera test** (art job 15-0): Thomas facing south, idle and walk, and walking east. Claude puts it in
 the game beside a painted room for Julian to approve before the rest is drawn.
 
+## Pose guides (paint over them)
+
+ChatGPT, 2026-10-30, was getting stuck: generated frames don't keep track of which leg is which, so the legs came out
+the same in every frame. Claude now makes **pose guides**: each frame of each animation as a colour-coded figure
+(left leg red, right leg blue), worked out as a real walk and drawn from the rooms' camera, with marks where planted
+feet stay. Paint Thomas over them one frame at a time. They are in `guides/` beside this brief, with a README on how
+to use them. More animations (sneak, attacks, getting hurt) get guides as they come up.
+
 ## What makes it fluid (applies to every row)
 
 - **Readable key poses.** A walk cycle is two steps; each step has a contact pose (heel down, legs wide), a down
