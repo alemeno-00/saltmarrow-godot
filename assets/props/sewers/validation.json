@@ -159,7 +159,7 @@
       "row_counts": [
         1
       ],
-      "opaque_colours": 32,
+      "opaque_colours": 30,
       "distinct_frames": 1,
       "binary_alpha": true,
       "cleared_transparent_rgb": true

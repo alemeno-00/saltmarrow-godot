@@ -5,6 +5,8 @@ Review artifacts only; `.gdignore` keeps them out of imports. Every PNG is one s
 | File | Canvas / frames | Purpose |
 | --- | --- | --- |
 | `all-assets.png` | 512×1152, 1 frame(s) | Nearest-sampled art review |
+| `body-before-after-room.png` | 1536×768, 1 frame | Same room and placements; original left, revised right |
+| `body-before-after-closeup.png` | 768×512, 1 frame | Before left, revised right; satchel top, tally body bottom |
 | `barrel.gif` | 128×128, 2 frame(s) | State/turn animation preview |
 | `contact-4x.png` | 1024×2304, 1 frame(s) | Nearest-sampled art review |
 | `crate.gif` | 128×128, 2 frame(s) | State/turn animation preview |

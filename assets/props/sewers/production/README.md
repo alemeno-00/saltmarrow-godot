@@ -1,12 +1,14 @@
 # Sewer contents production
 
-All 18 requested assets were generated with the built-in image-generation tool, one asset per call. Multi-frame source images contain only that asset’s states. The full prompt specification for each is saved as `<name>-prompt.txt`. The miner tally body additionally referenced `satchel_body-master.png` to retain clothing, face and pose. No CLI image-generation fallback was used.
+All 18 requested assets were generated with the built-in image-generation tool, one asset per call. Multi-frame source images contain only that asset’s states. The full prompt specification for each is saved as `<name>-prompt.txt`. The original miner tally body referenced `satchel_body-master.png`. Both original body masters are retained for history but are superseded by the overhead redraw in `body-v2/`; those three single-image sources now supply runtime body frames. No CLI image-generation fallback was used.
 
 `grate-format.json` preserves Julian’s explicit clarification: four total per sheet, two shut and two open. Grate source images use a 2×2 grid and export to two animation rows of two frames. Other multi-frame masters use one row.
 
 `export.py` crops binary-alpha silhouettes, fits complete art to native cells with nearest sampling, uses shared scale for each pair/animation, registers baselines or centres, quantizes each sheet to 32 colours and clears hidden transparent RGB. Grates use a per-axis fit of their flat source plane to fixed bounds; they are not scaled independently by the game. This is mechanical export, not procedural sprite drawing.
 
 `validate.py` checks all runtime files and makes review sheets/GIFs and a placement assembly. Run export.py then validate.py with Python and Pillow. It does not run Godot or test gameplay.
+
+`body-v2/README.md` lists the selected redraw masters, full prompts and before/after records. The redraw starts from the approved room camera and materials; searched-satchel and tally-tag variants edit that same prone pose.
 
 ## Inventory
 

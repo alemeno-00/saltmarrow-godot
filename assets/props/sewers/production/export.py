@@ -21,14 +21,23 @@ entries=[];images={}
 for name,spec in specs.items():
  path=P/(name+'-master.png')
  if not path.exists():continue
- source=Image.open(path).convert('RGBA');a=source.getchannel('A').point(lambda v:255 if v>=128 else 0);source.putalpha(a);fw,fh=spec['frame_size'];n=spec['frames'];pieces=[];bounds=[]
- sc,sr=spec.get('source_grid',[n,1])
- for i in range(n):
-  col,row=i%sc,i//sc;x0=round(source.width*col/sc);x1=round(source.width*(col+1)/sc);y0=round(source.height*row/sr);y1=round(source.height*(row+1)/sr)
-  if col:assert not a.crop((max(0,x0-2),y0,min(source.width,x0+2),y1)).getbbox(),(name,'sprite crosses column cut',i)
-  if row:assert not a.crop((x0,max(0,y0-2),x1,min(source.height,y0+2))).getbbox(),(name,'sprite crosses row cut',i)
-  f=source.crop((x0,y0,x1,y1));b=f.getchannel('A').getbbox();assert b,(name,i)
-  pieces.append(f.crop(b));bounds.append([b[0]+x0,b[1]+y0,b[2]+x0,b[3]+y0])
+ fw,fh=spec['frame_size'];n=spec['frames'];pieces=[];bounds=[];body_sources=[]
+ if name in ['satchel_body','miner_tag_body']:
+  # Each revision is a separate generated image with the same reference pose.
+  # Crop alpha and normalize its complete silhouette to the same native footprint.
+  names=['closed','open'] if name=='satchel_body' else ['tag']
+  for state in names:
+   source_path=P/'body-v2'/(state+'-master.png');source=Image.open(source_path).convert('RGBA');source.putalpha(source.getchannel('A').point(lambda v:255 if v>=128 else 0));b=source.getchannel('A').getbbox();assert b
+   pieces.append(source.crop(b));bounds.append(list(b));body_sources.append({'file':'body-v2/'+source_path.name,'canvas':list(source.size)})
+ else:
+  source=Image.open(path).convert('RGBA');a=source.getchannel('A').point(lambda v:255 if v>=128 else 0);source.putalpha(a)
+  sc,sr=spec.get('source_grid',[n,1])
+  for i in range(n):
+   col,row=i%sc,i//sc;x0=round(source.width*col/sc);x1=round(source.width*(col+1)/sc);y0=round(source.height*row/sr);y1=round(source.height*(row+1)/sr)
+   if col:assert not a.crop((max(0,x0-2),y0,min(source.width,x0+2),y1)).getbbox(),(name,'sprite crosses column cut',i)
+   if row:assert not a.crop((x0,max(0,y0-2),x1,min(source.height,y0+2))).getbbox(),(name,'sprite crosses row cut',i)
+   f=source.crop((x0,y0,x1,y1));b=f.getchannel('A').getbbox();assert b,(name,i)
+   pieces.append(f.crop(b));bounds.append([b[0]+x0,b[1]+y0,b[2]+x0,b[3]+y0])
  tw,th=spec['target'];scale=min(tw/max(f.width for f in pieces),th/max(f.height for f in pieces));frames=[]
  for f in pieces:
   size=tuple(spec['target']) if name.startswith('grate_') else (max(1,round(f.width*scale)),max(1,round(f.height*scale)));f=f.resize(size,N);frame=Image.new('RGBA',(fw,fh));x=(fw-f.width)//2;y=(fh-f.height)//2 if spec['align']=='centre' else fh-2-f.height
@@ -37,7 +46,10 @@ for name,spec in specs.items():
  for i,f in enumerate(frames):sheet.paste(f,((i%cols)*fw,(i//cols)*fh))
  # One palette per whole sheet; preserve binary alpha and clear hidden RGB.
  a=sheet.getchannel('A');q=sheet.convert('RGB').quantize(colors=32,dither=Image.Dither.NONE).convert('RGBA');q.putalpha(a);sheet=Image.new('RGBA',q.size);sheet.paste(q,mask=a);sheet.save(R/(name+'.png'));images[name]=sheet
- entry={'file':name+'.png','frame_size':[fw,fh],'canvas':list(sheet.size),'rows':spec['rows'],'states':spec['states'],'origin_px':[fw//2,fh//2],'source_canvas':list(source.size),'source_bounds':bounds,'shared_scale':None if name.startswith('grate_') else scale,'source_grid':spec.get('source_grid',[n,1]),'resampling':'fixed per-axis plane fit' if name.startswith('grate_') else 'shared uniform nearest scale','alignment':spec['align'],'frame_alpha_boxes':[f.getchannel('A').getbbox() for f in frames],'sha256':hashlib.sha256((R/(name+'.png')).read_bytes()).hexdigest()};entries.append(entry)
+ entry={'file':name+'.png','frame_size':[fw,fh],'canvas':list(sheet.size),'rows':spec['rows'],'states':spec['states'],'origin_px':[fw//2,fh//2],'source_canvas':list(source.size),'source_bounds':bounds,'shared_scale':None if name.startswith('grate_') else scale,'source_grid':spec.get('source_grid',[n,1]),'resampling':'fixed per-axis plane fit' if name.startswith('grate_') else 'shared uniform nearest scale','alignment':spec['align'],'frame_alpha_boxes':[f.getchannel('A').getbbox() for f in frames],'sha256':hashlib.sha256((R/(name+'.png')).read_bytes()).hexdigest()}
+ if body_sources:
+  entry.pop('source_canvas');entry.pop('source_grid');entry['source_images']=body_sources;entry['art_revision']='overhead prone, material edges and local contact occlusion'
+ entries.append(entry)
 (R/'manifest.json').write_text(json.dumps({'job':14,'grid_px':32,'pixel_origin':'upper left,+x right,+y down; sprite origins centre of frame','assets':entries},indent=2)+'\n')
 # Review gallery: one row per file; no labels inside game images.
 g=Image.new('RGBA',(512,64*len(entries)),(25,28,31,255))

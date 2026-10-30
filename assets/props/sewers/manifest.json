@@ -295,46 +295,55 @@
         32,
         16
       ],
-      "source_canvas": [
-        2172,
-        724
-      ],
       "source_bounds": [
         [
-          72,
-          235,
-          1004,
-          495
+          321,
+          224,
+          1497,
+          704
         ],
         [
-          1159,
-          226,
-          2091,
-          495
+          320,
+          224,
+          1499,
+          709
         ]
       ],
-      "shared_scale": 0.060085836909871244,
-      "source_grid": [
-        2,
-        1
-      ],
+      "shared_scale": 0.04749787955894826,
       "resampling": "shared uniform nearest scale",
       "alignment": "centre",
       "frame_alpha_boxes": [
         [
           4,
-          8,
+          4,
           60,
-          24
+          27
         ],
         [
           4,
-          8,
+          4,
           60,
-          24
+          27
         ]
       ],
-      "sha256": "bd8b947418ad504c51adfb26b94dde50f1d9d876d00b23e0e35a28cecebdc02b"
+      "sha256": "2b428e1ad7448a1127593a99e862f8cd546e21e934ec5360ee87221c4d1eb04f",
+      "source_images": [
+        {
+          "file": "body-v2/closed-master.png",
+          "canvas": [
+            1774,
+            887
+          ]
+        },
+        {
+          "file": "body-v2/open-master.png",
+          "canvas": [
+            1774,
+            887
+          ]
+        }
+      ],
+      "art_revision": "overhead prone, material edges and local contact occlusion"
     },
     {
       "file": "letter.png",
@@ -454,34 +463,36 @@
         32,
         16
       ],
-      "source_canvas": [
-        1774,
-        887
-      ],
       "source_bounds": [
         [
-          88,
-          247,
-          1677,
-          722
+          319,
+          224,
+          1499,
+          706
         ]
       ],
-      "shared_scale": 0.03524229074889868,
-      "source_grid": [
-        1,
-        1
-      ],
+      "shared_scale": 0.04745762711864407,
       "resampling": "shared uniform nearest scale",
       "alignment": "centre",
       "frame_alpha_boxes": [
         [
           4,
-          7,
+          4,
           60,
-          24
+          27
         ]
       ],
-      "sha256": "874210cc108f6d924925f9b38b34e66fb3504d4e3a8cbd5941165b7ecb8f8158"
+      "sha256": "642a3c82ad241c851488e9ccecc8d669b094fdbe56366377167e668242d68279",
+      "source_images": [
+        {
+          "file": "body-v2/tag-master.png",
+          "canvas": [
+            1774,
+            887
+          ]
+        }
+      ],
+      "art_revision": "overhead prone, material edges and local contact occlusion"
     },
     {
       "file": "valve.png",

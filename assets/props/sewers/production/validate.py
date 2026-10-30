@@ -45,5 +45,16 @@ room=Image.open(B/'assets/tiles/sewers/rooms/junction_a/1.png').convert('RGBA');
 for file,index,x,y in placements:
  f=frames[file][index];room.alpha_composite(f,(x*32,y*32))
 room.resize((768,768),Image.Resampling.NEAREST).save(R/'previews/room-placement-2x.png')
+# Repeatable before/after review and preservation check for the body redraw.
+v=P/'body-v2';before=json.loads((v/'before-hashes.json').read_text())
+changed=sorted(name for name,old in before.items() if hashlib.sha256((R/name).read_bytes()).hexdigest()!=old)
+assert changed==['miner_tag_body.png','satchel_body.png'],changed
+old=Image.open(v/'before-room-2x.png').convert('RGBA');new=Image.open(R/'previews/room-placement-2x.png').convert('RGBA')
+comparison=Image.new('RGBA',(1536,768));comparison.paste(old,(0,0));comparison.paste(new,(768,0));comparison.save(R/'previews/body-before-after-room.png')
+comparison=Image.new('RGBA',(768,512))
+for row,box in enumerate([(112,360,304,488),(432,552,624,680)]):
+ for col,im in enumerate([old,new]):comparison.paste(im.crop(box).resize((384,256),Image.Resampling.NEAREST),(col*384,row*256))
+comparison.save(R/'previews/body-before-after-closeup.png')
+(v/'revision-checks.json').write_text(json.dumps({'changed_runtime_pngs':changed,'unchanged_runtime_pngs':16,'same_room_and_placement':True,'preview_columns':['before','after'],'preview_rows':['satchel body','miner tally body']},indent=2)+'\n')
 report={'runtime_pngs':18,'frames_total':30,'assets':checks,'grate_clearance':clearance,'three_distinct_bone_variants':True,'three_distinct_debris_variants':True,'native_visual_review':'Icons, paired caches, valve and both grate rows reviewed at nearest enlargement. Placement preview uses actual exported sprites.','limit':'Art checks only. Collision, interaction states, actual game lighting and animation timing require Claude integration.'}
 (R/'validation.json').write_text(json.dumps(report,indent=2)+'\n');print('PASS: 18 PNGs, 30 distinct frames, sizes/alpha/palettes/margins, three clutter variants, open grate clearance.')
