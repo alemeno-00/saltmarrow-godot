@@ -311,7 +311,7 @@ func _draw() -> void:
 	if prone:
 		draw_set_transform(off + Vector2(0, 7), PI / 2.0 * facing, Vector2.ONE)
 	elif dying:
-		draw_set_transform(off + Vector2(0, 4), 0.35 * facing, Vector2(1, 0.85))
+		draw_set_transform(off + Vector2(0, 2), 0.15 * facing, Vector2(1, 0.92))
 	else:
 		draw_set_transform(off, 0, Vector2.ONE)
 	_draw_body()
@@ -332,7 +332,8 @@ func _pick_anim() -> String:
 		return "skull_crushed" if crushed and sheet.has("skull_crushed") else "death"
 	if _once != "":
 		return _once
-	if dying and sheet.has("dying_crawl"):
+	# dying, he can still act and move (Draw Steel): he stays on his feet, hunched; he crawls only once knocked down
+	if dying and prone and sheet.has("dying_crawl"):
 		return "dying_crawl"
 	if prone:
 		for n in ["lying_prone", "knocked_prone", "prone"]:
