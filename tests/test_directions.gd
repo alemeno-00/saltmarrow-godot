@@ -94,3 +94,12 @@ func test_moving_turns_the_way_it_faces() -> void:
 	v.face_point(Vector2(140, 130))
 	check(v.look.distance_to(Vector2(40, 40).normalized()) < 0.01, "and facing a target turns it that way")
 	v.free()
+
+
+func test_dying_he_stays_on_his_feet_until_knocked_down() -> void:
+	var v := _view([])
+	v.sheet._add("dying_crawl", 3, 6, 8)
+	v.dying = true
+	check(v._pick_anim() != "dying_crawl", "dying, he can still act, so he isn't drawn crawling")
+	v.prone = true
+	eq(v._pick_anim(), "dying_crawl", "knocked down while dying, he crawls")
