@@ -45,11 +45,16 @@ var fleeing := false     # broke and is running
 var fled := false        # got away; gone from the fight, may come back
 var fled_once := false   # only runs once
 var group := -1         # which band it belongs to; a band fights together
-var state := "idle"      # outside a fight: idle, hunting (coming for Thomas), searching (going to where he was seen) or patrolling
+var state := "idle"      # outside a fight: idle, patrolling, suspicious (stopped, staring), investigating (going to look),
+                         # hunting (coming for Thomas) or searching (going to where he was seen)
 var route: Array[Vector2i] = []   # a patrol leader's waypoints (room centres), walked back and forth
 var route_i := 0                  # the waypoint it is heading for
 var route_dir := 1                # +1 along the route, -1 back
 var target := Vector2i.ZERO
+var alert := 0.0          # outside a fight: how close it is to spotting Thomas (0 unaware .. 1 spotted)
+var resume_state := ""    # what it goes back to after investigating a noise or a glimpse
+var wait := 0.0           # seconds left standing still (staring, or looking about)
+var surprised := false    # caught unaware when the fight began: no free strikes, attacks on it have an edge (round 1)
 
 
 ## How the fight log names it at the start of a sentence: "Garrick", "Thomas", or "The Drowned Miner".

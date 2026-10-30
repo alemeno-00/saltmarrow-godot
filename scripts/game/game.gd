@@ -47,6 +47,13 @@ var tree_screen: TreeScreen
 var returning: Array = []   # [Combatant, seconds left] for enemies that ran and will come back
 var tag_cell := Vector2i(-1, -1)   # where Garrick's tally tag lies, once he is dead
 var won := false
+var sneaking := false    # C: crouched, slow and quiet (design/quick-specs/sneaking-2026-10-30.md)
+var lantern := "lit"     # Thomas's lantern: lit, shuttered (dimmed) or out
+var hero_lantern: PointLight2D
+var noises := 0          # times something heard him (tests read this)
+var _relight := 0.0      # seconds left striking a light
+var _ambush: Combatant = null   # the unaware enemy Thomas is creeping up to strike
+var _heads := {}         # Combatant -> seconds until an idle enemy next turns its head
 
 var _hover := Vector2i(-1, -1)
 var _hover_px := Vector2.INF
@@ -90,9 +97,9 @@ func _ready() -> void:
 	add_child(darkness)
 	lighting = Lighting.new()
 	add_child(lighting)
-	var lantern := Lighting.make_light(Lighting.HERO_LIGHT, Lighting.HERO_ENERGY, Lighting.HERO_RADIUS)
-	lantern.position = Vector2(0, 4)
-	hero.add_child(lantern)
+	hero_lantern = Lighting.make_light(Lighting.HERO_LIGHT, Lighting.HERO_ENERGY, Lighting.HERO_RADIUS)
+	hero_lantern.position = Vector2(0, 4)
+	hero.add_child(hero_lantern)
 	hero.stepped.connect(_on_stepped)
 	world_ui = CanvasLayer.new()
 	world_ui.follow_viewport_enabled = true
@@ -151,6 +158,11 @@ func new_level(seed_in: int, keep := false) -> void:
 	fights = 0
 	_vel = Vector2.ZERO
 	_routes.clear()
+	_heads.clear()
+	_ambush = null
+	_relight = 0.0
+	sneaking = false
+	set_lantern("lit")
 	_update_hud()
 
 
@@ -381,6 +393,7 @@ func _add_enemy(u: Combatant, c: Vector2i) -> Combatant:
 	actors.add_child(v)
 	v.place(c)
 	v.facing = -1
+	v.look = Vector2.LEFT
 	enemies.append(u)
 	views[u] = v
 	return u
@@ -430,11 +443,22 @@ func _tick_explore(delta: float) -> void:
 	var wish := held_vector() if not tree_screen.visible else Vector2.ZERO
 	if wish != Vector2.ZERO:
 		path.clear()
+		_ambush = null
 	elif not path.is_empty():
 		wish = _path_wish()
+	if _relight > 0.0:
+		# striking a light: he stands still until it catches
+		wish = Vector2.ZERO
+		path.clear()
+		_relight -= delta
+		if _relight <= 0.0:
+			set_lantern("lit")
+			_make_noise(StealthRules.NOISE_RELIGHT)
 	var top := MovementRules.px(MovementRules.WALK_SPEED)
 	if level.get_tile(hero.grid_pos) == Level.Tile.WATER and not hero_unit.wades:
 		top *= MovementRules.WATER_SLOW
+	if sneaking:
+		top *= StealthRules.SNEAK_SPEED
 	var before := _vel
 	_vel = MovementRules.steer(_vel, wish, top, delta)
 	_turn_dust(before, wish, top, delta)
@@ -455,6 +479,12 @@ func _tick_explore(delta: float) -> void:
 	_open_doors(to, r)
 	hero.glide_free(to, _vel.length() / MovementRules.px(MovementRules.WALK_SPEED))
 	hero_unit.pos = to
+	_make_noise(StealthRules.noise_radius(sneaking, level.get_tile(hero.grid_pos) == Level.Tile.WATER))
+	if _ambush != null and _ambush.alive() and not in_fight():
+		_ambush.pos = views[_ambush].position
+		if Battle.in_reach(hero_unit, _ambush):
+			_start_battle(_ambush)
+			return
 	if level.get_tile(hero.grid_pos) == Level.Tile.STAIRS:
 		_descend()
 	elif hero.grid_pos == tag_cell:
@@ -565,19 +595,24 @@ func _tick_world(delta: float) -> void:
 	if in_fight() or dead or won or level == null or tree_screen.visible:
 		return
 	for e in enemies:
-		if not e.alive() or e.fled or not _after_him(e):
+		if not e.alive() or e.fled:
 			continue
-		var goal := hero.grid_pos if e.state == "hunting" else e.target
-		_roam(e, goal, MovementRules.HUNT_SPEED, delta)
-		if e.state == "searching" and e.cell == e.target:
-			e.state = "idle"
+		if _after_him(e):
+			var goal := hero.grid_pos if e.state == "hunting" else e.target
+			_roam(e, goal, MovementRules.HUNT_SPEED, delta)
+			if e.state == "searching" and e.cell == e.target:
+				e.state = "idle"
+		elif e.state == "suspicious" or e.state == "investigating":
+			_tick_suspicion(e, delta)
+		elif e.state == "idle":
+			_look_about(e, delta)
 	patrol_tick(delta)
 	for r in returning.duplicate():
 		r[1] -= delta
 		if r[1] <= 0.0:
 			returning.erase(r)
 			_bring_back(r[0])
-	_check_spotted()
+	_check_spotted(delta)
 
 
 ## A runaway returns from somewhere Thomas can't see, partly healed, with two more Faithful.
@@ -620,28 +655,167 @@ func _bring_back(u: Combatant) -> void:
 	combat_hud.show_banner("Somewhere behind you, bare feet on stone.", 2.2)
 
 
-## Can this creature see Thomas: close enough (MovementRules.SIGHT metres) with a clear line of sight?
+## Can this creature see Thomas right now: close enough (MovementRules.SIGHT metres), in its view (a cone the way
+## it faces; all round when it is close or already after him), with a clear line of sight?
 func sees_thomas(e: Combatant) -> bool:
-	return e.alive() and not e.fled and views[e].position.distance_to(hero.position) <= MovementRules.px(MovementRules.SIGHT) \
-		and level.line_of_sight(e.cell, hero.grid_pos)
+	if not e.alive() or e.fled or not views[e].visible:
+		return false
+	var v: ActorView = views[e]
+	if v.position.distance_to(hero.position) > MovementRules.px(MovementRules.SIGHT):
+		return false
+	return StealthRules.in_view(v.position, v.look, hero.position, _after_him(e)) and level.line_of_sight(e.cell, hero.grid_pos)
 
 
-## Something that can see Thomas starts a fight.
-func _check_spotted() -> void:
+## How light it is where Thomas stands (0 black .. 1), counting his own lantern.
+func light_on_thomas() -> float:
+	return StealthRules.light_at(hero.position, Grounding.lights, lantern)
+
+
+## Everyone who can see Thomas fills their spotting meter (sneaking spec); out of sight it drains. Half full, an
+## enemy is suspicious and comes to look; full, it has spotted him and the fight starts. With no `delta` (tests),
+## anyone who can see him spots him at once.
+func _check_spotted(delta := INF) -> void:
 	if in_fight() or dead:
 		return
+	var light := light_on_thomas()
 	for e in enemies:
+		if not e.alive() or e.fled:
+			continue
 		if sees_thomas(e):
-			_start_battle()
-			return
+			var d := MovementRules.metres(views[e].position.distance_to(hero.position))
+			var t := StealthRules.FILL_FAST if _after_him(e) else StealthRules.fill_time(d, light, sneaking)
+			e.alert = minf(1.0, e.alert + delta / t)
+			e.target = hero.grid_pos
+			if e.alert >= 1.0:
+				_start_battle()
+				return
+			if e.alert >= StealthRules.SUSPICIOUS_AT:
+				_become_suspicious(e, hero.grid_pos)
+		else:
+			e.alert = maxf(0.0, e.alert - StealthRules.DRAIN * (delta if delta < INF else 1.0))
 
 
-func _start_battle() -> void:
+## Something caught a glimpse or a sound: it stops, stares toward `at`, then goes to look.
+func _become_suspicious(e: Combatant, at: Vector2i) -> void:
+	if _after_him(e):
+		return
+	if e.state != "suspicious" and e.state != "investigating":
+		e.resume_state = e.state
+	if e.state != "suspicious":
+		e.wait = StealthRules.SUSPICIOUS_WAIT
+	e.state = "suspicious"
+	e.target = at
+	views[e].face_point(MovementRules.centre(at))
+
+
+## A suspicious enemy stares, then walks to where it saw or heard him, looks about, and goes back to what it was
+## doing (a patrol picks up its route again).
+func _tick_suspicion(e: Combatant, delta: float) -> void:
+	if e.state == "suspicious":
+		e.wait -= delta
+		if e.wait <= 0.0:
+			e.state = "investigating"
+			e.wait = StealthRules.SEARCH_LOOK
+		return
+	if e.cell != e.target and level.find_path(e.cell, e.target).size() > 0:
+		_roam(e, e.target, MovementRules.PATROL_SPEED, delta)
+		return
+	_look_about(e, delta * 3.0)
+	e.wait -= delta
+	if e.wait <= 0.0:
+		e.state = e.resume_state if e.resume_state != "" else "idle"
+		e.resume_state = ""
+
+
+## An idle enemy turns its head now and then, toward open floor, so its view sweeps the room.
+func _look_about(e: Combatant, delta: float) -> void:
+	var v: ActorView = views[e]
+	if not _heads.has(e):
+		_heads[e] = _head_rng(e).randf_range(0.0, StealthRules.LOOK_ABOUT.y)
+	_heads[e] -= delta
+	if _heads[e] > 0.0:
+		return
+	var rng := _head_rng(e)
+	_heads[e] = rng.randf_range(StealthRules.LOOK_ABOUT.x, StealthRules.LOOK_ABOUT.y)
+	var open: Array[Vector2] = []
+	for i in 8:
+		var dir := Vector2.RIGHT.rotated(TAU * i / 8.0)
+		if level.is_walkable(MovementRules.cell_of(v.position + dir * TILE * 2.0)):
+			open.append(dir)
+	if not open.is_empty():
+		v.face_point(v.position + open[rng.randi_range(0, open.size() - 1)] * 10.0)
+
+
+## Each enemy's head turns come from the level's seed, its place and how many turns it has made, so a life repeats.
+func _head_rng(e: Combatant) -> RandomNumberGenerator:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash([level.seed_value, enemies.find(e), int(_heads.get(e, 0.0) * 1000.0), roundi(views[e].look.angle() * 100.0)])
+	return rng
+
+
+## Thomas makes a sound `radius` metres across: anyone idle or patrolling who hears it comes to look.
+func _make_noise(radius: float) -> void:
+	if radius <= 0.0 or in_fight():
+		return
+	for e in enemies:
+		if not e.alive() or e.fled or _after_him(e) or e.state == "suspicious" or e.state == "investigating":
+			continue
+		if StealthRules.hears(level, hero.position, views[e].position, radius):
+			noises += 1
+			e.alert = maxf(e.alert, StealthRules.SUSPICIOUS_AT * 0.6)
+			_become_suspicious(e, hero.grid_pos)
+
+
+## C: crouch and sneak, or stand up.
+func toggle_sneak() -> void:
+	sneaking = not sneaking
+	hero.sneaking = sneaking
+	_update_hud()
+
+
+## The lantern: lit, shuttered (a small dim pool) or out (dark, best for sneaking).
+func set_lantern(state: String) -> void:
+	lantern = state
+	if hero_lantern == null:
+		return
+	hero_lantern.enabled = state != "out"
+	if state == "shuttered":
+		hero_lantern.energy = StealthRules.SHUTTERED_ENERGY
+		hero_lantern.texture_scale = StealthRules.SHUTTERED_RADIUS * TILE * 2.0 / 256.0
+	else:
+		hero_lantern.energy = Lighting.HERO_ENERGY
+		hero_lantern.texture_scale = Lighting.HERO_RADIUS * TILE * 2.0 / 256.0
+	_update_hud()
+
+
+## L: shutter the lantern or open it again; if it is out, strike a light (it takes a moment, standing still, and
+## makes a little noise).
+func shutter_lantern() -> void:
+	if lantern == "out":
+		if _relight <= 0.0:
+			_relight = StealthRules.RELIGHT_TIME
+			combat_hud.show_banner("Striking a light...", StealthRules.RELIGHT_TIME)
+	else:
+		set_lantern("lit" if lantern == "shuttered" else "shuttered")
+
+
+## O: put the lantern out.
+func douse_lantern() -> void:
+	_relight = 0.0
+	set_lantern("out")
+
+
+## Start a fight. `ambush`: Thomas struck an unaware enemy from hiding, so he goes first and everyone who hadn't
+## spotted him is surprised for the first round.
+func _start_battle(ambush: Combatant = null) -> void:
 	stop_walking()
+	_ambush = null
 	_take_positions()
 	# whoever saw him, their band, and anything already hunting or searching for him, fight; the rest may join if
 	# they see him
 	var bands := {}
+	if ambush != null:
+		bands[ambush.group] = true   # the one he strikes, and its band, are in it whether or not they saw him
 	for e in enemies:
 		if e.alive() and not e.fled and (_after_him(e) or sees_thomas(e)):
 			bands[e.group] = true
@@ -664,9 +838,18 @@ func _start_battle() -> void:
 			views[u].glide_along([u.pos], MovementRules.px(MovementRules.FIGHT_WALK_SPEED))
 	if level.outflow.has_area() and fighting.any(func(u): return u.kind == "solo"):
 		battle.arena = level.outflow
+	for e in fighting:
+		e.surprised = ambush != null and e.alert < 1.0
+		e.alert = 0.0
 	combat_hud.clear_log()
 	combat_hud.show_fight(true)
-	_act(battle.start(battle.roll_initiative()))
+	if ambush != null:
+		var ev := battle.start(true)
+		ev.append({"t": "log", "text": "Thomas strikes from the dark. They didn't see him coming."})
+		ev.append_array(battle.hero_ability_on(0, ambush))
+		_act(ev)
+	else:
+		_act(battle.start(battle.roll_initiative()))
 
 
 # ---------------------------------------------------------------- input
@@ -701,9 +884,27 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif in_fight():
 		pass
+	elif event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_C:
+		toggle_sneak()
+	elif event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_L:
+		shutter_lantern()
+	elif event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_O:
+		douse_lantern()
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		walk_to_point(get_global_mouse_position())
+		creep_or_walk(get_global_mouse_position())
 	_zoom_input(event)
+
+
+## A click while exploring: on an enemy that hasn't spotted him, creep up and strike it from the dark; anywhere
+## else, walk there.
+func creep_or_walk(p: Vector2) -> void:
+	_ambush = null
+	for e in enemies:
+		if e.alive() and not e.fled and views[e].visible and views[e].position.distance_to(p) <= MovementRules.px(MovementRules.ENEMY_RADIUS) + 8.0:
+			_ambush = e
+			walk_to_point(views[e].position)
+			return
+	walk_to_point(p)
 
 
 func _zoom_input(event: InputEvent) -> void:
@@ -1115,7 +1316,7 @@ func _process(delta: float) -> void:
 		_tick_fight_keys(delta)
 	_tick_explore(delta)
 	_tick_world(delta)
-	Grounding.hero_light = hero.position
+	Grounding.hero_light = hero.position if lantern != "out" else Vector2.INF
 	var target: Vector2 = _focus if _focus != null else hero.position
 	cam.position = cam.position.lerp(target, 1.0 - exp(-delta * 12.0))
 	if _shake > 0.05:
@@ -1124,8 +1325,7 @@ func _process(delta: float) -> void:
 	else:
 		cam.offset = Vector2.ZERO
 	_tick_hover()
-	if in_fight() or tag_cell.x >= 0 or not path.is_empty():
-		overlay.queue_redraw()
+	overlay.queue_redraw()   # cones, meters and routes move every frame
 
 
 ## What is under the mouse (for the HUD's line about an enemy), updated when the mouse or Thomas moves.
@@ -1158,4 +1358,5 @@ func _update_hud() -> void:
 		hud.text = "Click anywhere to move  ·  click an enemy to strike (he walks up if he can)  ·  1-5 abilities  ·  F careful step  ·  Q stand  ·  B catch breath  ·  %sEnter end turn  ·  R new level" % ("G shut a sluice gate  ·  " if battle.arena.has_area() else "")
 	else:
 		var spend := progress.points_for("maces") + progress.level_points + progress.stat_points
-		hud.text = "Depth %d  ·  Level %d  ·  XP %d / %d  ·  K skills%s  ·  WASD / arrows to move, click to walk, wheel to zoom, R new life, F9 test as a veteran" % [depth, progress.level, progress.xp, progress.xp_needed(), " (points to spend!)" if spend > 0 else "", ]
+		var how := ("Sneaking" if sneaking else "Walking") + ", lantern " + lantern
+		hud.text = "Depth %d  ·  Level %d  ·  XP %d / %d  ·  K skills%s  ·  %s  ·  click to walk, click an enemy to strike from the dark  ·  C sneak  ·  L shutter / light lantern  ·  O put it out  ·  R new life" % [depth, progress.level, progress.xp, progress.xp_needed(), " (points to spend!)" if spend > 0 else "", how]

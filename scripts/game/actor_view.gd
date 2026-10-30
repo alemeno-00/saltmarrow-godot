@@ -26,6 +26,7 @@ var dir_sheets := {}    # direction -> Sheet: art drawn in five directions, used
 var look := Vector2.RIGHT  # the way it faces, any direction
 var is_hero := false    # Thomas: his own lantern throws no shadow of him
 var wading := false     # standing in water: drawn sunk to the shins
+var sneaking := false   # crouched: the sneak row, held still when not moving
 
 const DAZED_STRIP := "res://assets/effects/mace/dazed.png"
 static var _dazed_tex: Texture2D = null
@@ -229,8 +230,10 @@ func _process(delta: float) -> void:
 	_time += delta
 	var redraw := false
 	if sheet != null:
-		var walking := _once == "" and (_anim == "walk" or _anim == "wounded_walk")
-		_anim_t += delta * (walk_rate if walking else 1.0)
+		var walking := _once == "" and (_anim == "walk" or _anim == "wounded_walk" or _anim == "sneak")
+		var moving := is_gliding() or _walk_linger > 0.0
+		# a crouch held still doesn't step on the spot
+		_anim_t += delta * ((walk_rate if moving else 0.0) if _anim == "sneak" else (walk_rate if walking else 1.0))
 		_walk_linger = maxf(0.0, _walk_linger - delta)
 		if _once != "" and _anim_t >= sheet.duration(_once):
 			_once = _queue.pop_front() if not _queue.is_empty() else ""
@@ -339,6 +342,8 @@ func _pick_anim() -> String:
 		return "windup"
 	if dazed and sheet.has("dazed"):
 		return "dazed"
+	if sneaking and sheet.has("sneak"):
+		return "sneak"
 	if is_gliding() or _walk_linger > 0.0:
 		return "wounded_walk" if hurt >= 0.5 and sheet.has("wounded_walk") else "walk"
 	return "idle"
