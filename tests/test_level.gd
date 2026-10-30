@@ -13,6 +13,8 @@ func test_every_floor_square_is_reachable() -> void:
 	for s in [1, 2, 3, 7, 99, 1234, 55555]:
 		var l := Level.new(); l.generate(s)
 		check(l.rooms.size() >= 6, "seed %d has at least 6 rooms (has %d)" % [s, l.rooms.size()])
+		for g in l.grate:
+			l.set_tile(g, Level.Tile.GRATE_OPEN)   # behind the locked grate is reachable once it's open
 		var seen := l.reachable_from(l.start)
 		var walk := 0
 		for y in l.height:

@@ -44,6 +44,20 @@ When a level is built, each room rolls for its contents from a table for its typ
 
 7. **Clutter.** Bones, debris and the odd dead miner, placed lightly by rule on free floor; painted rooms carry most of the clutter themselves.
 
+## Built (2026-10-30)
+
+- **Part 1** (#33): enemies and the patrol.
+- **Parts 3 and 4**: the belt (4 slots, keys 6-9 or click), salves and bandages (a maneuver in a fight), 2-3 caches
+  per level in the crates and barrels that already stand as cover, and one puzzle per level: a locked grate across a
+  tunnel to a quiet side room (key in a cache elsewhere, a cache behind it) or a sluice valve that drains a flooded
+  room and reveals a satchel in its basin. Searching makes a little noise. Not yet: bodies with satchels as ordinary
+  caches, saving caches and puzzles with the level.
+- **Controls**, as in Baldur's Gate 3 (Julian, 2026-10-30): left-click does the obvious thing (walk, strike from the
+  dark, search a crate, turn the valve, try the grate); right-click opens a menu of everything that can be done with
+  what is under the mouse, in or out of a fight, with actions that can't be done now greyed out and the reason given;
+  hovering picks out what can be used, with its name; the belt's slots can be clicked.
+- **Still to build**: part 2 (lore and the journal; texts waiting for Julian), part 5 (events), clutter.
+
 ## Tuning Knobs
 
 | Knob | Default | Range | Category | Rationale |

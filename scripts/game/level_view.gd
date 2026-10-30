@@ -228,6 +228,13 @@ func _draw_region(canvas: CanvasItem, region: Rect2i) -> void:
 			else:
 				var r := Rect2(Vector2(spot.position) * TILE, Vector2(spot.size) * TILE)
 				canvas.draw_rect(r, Color(0.16, 0.15, 0.16))
+	# a basin the sluice valve has drained: wet silt where the painting shows water
+	for c in level.drained:
+		if region.has_point(c):
+			var dr := Rect2(Vector2(c * TILE), Vector2(TILE, TILE))
+			canvas.draw_rect(dr, Color(0.21, 0.17, 0.12, 0.93))
+			canvas.draw_rect(Rect2(dr.position + Vector2(5, 17), Vector2(15, 4)), Color(0.12, 0.16, 0.16, 0.7))
+			canvas.draw_rect(Rect2(dr.position + Vector2(18, 7), Vector2(8, 3)), Color(0.27, 0.22, 0.15, 0.8))
 	for y in range(region.position.y, region.end.y):
 		for x in range(region.position.x, region.end.x):
 			var c := Vector2i(x, y)

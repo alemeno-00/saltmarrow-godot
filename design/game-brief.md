@@ -62,7 +62,7 @@ The MVP keeps the dive at the heart of it:
 5. Free movement, phase A: moving freely while exploring, and the hit feel (free-movement spec). *Built.*
 6. 8-direction characters: the game picks a direction's frames; ChatGPT draws idle and walk in 8 directions first, then attacks and hit reactions.
 7. Free movement, phase B: fights in metres, like Baldur's Gate 3. *Built*, with sprites grounded in the rooms (shadows from the lights, wading, normal-mapped lighting).
-8. Fill the rooms: enemies and patrols (*done*), then lore drops and the journal, then items and caches, then the puzzles, then events (room-contents spec).
+8. Fill the rooms: enemies and patrols (*done*), then lore drops and the journal, then items and caches (*done*), then the puzzles (*done*), then events (room-contents spec). Mouse-first controls as in Baldur's Gate 3 (*done*).
 9. Directional sprites in code (5 drawn directions, the west side mirrored, 80 × 80 frames), ready for art job 15.
 10. Sneaking, with the Daggers tree, the Shadow backstory and choosing a backstory (*parts 1, 2 and cover built; part 3 to come*); then the lantern and its oil, and the dark.
 11. Deep sewage tunnels: blockouts for art job 18, then the lurkers, dragging under and ledges.

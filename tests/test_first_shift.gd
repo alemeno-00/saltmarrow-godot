@@ -76,6 +76,8 @@ func test_outflow_matches_the_blockout_on_every_seed() -> void:
 	for seed in 40:
 		var l := Level.new()
 		l.generate(seed, true)
+		for g in l.grate:
+			l.set_tile(g, Level.Tile.GRATE_OPEN)   # behind the locked grate is reachable once it's open
 		var o := l.outflow
 		eq(o.size, Vector2i(12, 9), "seed %d: 12 x 9 inside" % seed)
 		eq(l.gates, [o.position + Vector2i(2, -1), o.position + Vector2i(9, -1)] as Array[Vector2i], "seed %d: gates on the blockout's red squares" % seed)

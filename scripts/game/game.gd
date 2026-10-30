@@ -57,6 +57,13 @@ var _relight := 0.0      # seconds left striking a light
 var aiming_throw := false   # T: the next click throws a dagger (Daggers: Throw)
 var _ambush: Combatant = null   # the unaware enemy Thomas is creeping up to strike
 var _heads := {}         # Combatant -> seconds until an idle enemy next turns its head
+var _props := {}         # square -> CoverProp: crates, barrels, satchels, the valve, the grate
+var _draining: Array[Vector2i] = []   # water squares still to drain, row by row
+var context_menu: PopupMenu            # right-click: what can be done with what is under the mouse
+var _context_actions: Array[Callable] = []
+var _then := Callable()                # something to do once he has walked up to it (search, turn, unlock)
+var _then_at := Vector2i(-1, -1)
+var _drain_timer := 0.0
 
 var _hover := Vector2i(-1, -1)
 var _hover_px := Vector2.INF
@@ -116,6 +123,10 @@ func _ready() -> void:
 	tree_screen = TreeScreen.new()
 	layer.add_child(tree_screen)
 	tree_screen.changed.connect(_apply_progress)
+	context_menu = PopupMenu.new()
+	layer.add_child(context_menu)
+	context_menu.id_pressed.connect(func(i): if i < _context_actions.size() and _context_actions[i].is_valid(): _context_actions[i].call())
+	combat_hud.belt_pressed.connect(use_belt)
 	backstory_screen = BackstoryScreen.new()
 	layer.add_child(backstory_screen)
 	backstory_screen.chosen.connect(choose_backstory)
@@ -153,6 +164,7 @@ func new_level(seed_in: int, keep := false) -> void:
 	gore.clear_all()
 	_place_cover_props()
 	clear_enemies()
+	combat_hud.set_belt(progress.belt)
 	_spawn_enemies()
 	battle = null
 	busy = false
@@ -495,6 +507,11 @@ func _tick_explore(delta: float) -> void:
 	hero.glide_free(to, _vel.length() / MovementRules.px(MovementRules.WALK_SPEED))
 	hero_unit.pos = to
 	_make_noise(StealthRules.noise_radius(sneaking, level.get_tile(hero.grid_pos) == Level.Tile.WATER))
+	if _then.is_valid() and hero.position.distance_to(MovementRules.centre(_then_at)) <= Items.REACH * TILE:
+		var then := _then
+		_then = Callable()
+		stop_walking()
+		then.call()
 	if _ambush != null and _ambush.alive() and not in_fight():
 		_ambush.pos = views[_ambush].position
 		if Battle.in_reach(hero_unit, _ambush):
@@ -600,6 +617,8 @@ func walk_to_point(target: Vector2) -> bool:
 
 func stop_walking() -> void:
 	path.clear()
+	if not _then.is_valid() or hero.position.distance_to(MovementRules.centre(_then_at)) > Items.REACH * TILE:
+		_then = Callable()
 	overlay.queue_redraw()
 
 
@@ -686,17 +705,159 @@ func choose_backstory(b: String) -> void:
 	hero.sync(hero_unit)
 	combat_hud.set_abilities(hero_unit.abilities)
 	combat_hud.refresh(hero_unit, null, true)
+	combat_hud.set_belt(progress.belt)
 	combat_hud.show_banner("Thomas Wren, %s." % ("who fights angry" if b == "fury" else "who kills quietly"), 2.0)
 	_update_hud()
 
 
-## The level's crates and barrels, drawn among the creatures.
+## The level's crates, barrels, satchels, valve and grate, drawn among the creatures.
 func _place_cover_props() -> void:
 	for c in actors.get_children():
 		if c is CoverProp:
 			c.queue_free()
+	_props.clear()
+	_draining.clear()
 	for c in level.cover:
-		CoverProp.spawn(actors, c, level.cover[c])
+		_props[c] = CoverProp.spawn(actors, c, level.cover[c])
+	for c in level.caches:
+		var cache: Dictionary = level.caches[c]
+		if cache.kind == "satchel" and not cache.get("drowned", false):
+			_props[c] = CoverProp.spawn(actors, c, "satchel")
+	if level.valve.x >= 0:
+		_props[level.valve] = CoverProp.spawn(actors, level.valve, "valve")
+	if not level.grate.is_empty():
+		var mid := (MovementRules.centre(level.grate[0]) + MovementRules.centre(level.grate[-1])) / 2.0
+		_props[level.grate[0]] = CoverProp.spawn(actors, level.grate[0], "grate_" + level.grate_across, mid)
+
+
+## E, exploring: search the nearest cache within reach, turn the valve, or unlock the grate. Returns what happened:
+## "searched", "full", "empty", "valve", "drained", "unlocked", "locked" or "" (nothing within reach).
+func interact() -> String:
+	var best := Vector2i(-1, -1)
+	var best_d := Items.REACH * TILE
+	var targets: Array[Vector2i] = []
+	for c in level.caches:
+		var cache: Dictionary = level.caches[c]
+		if not cache.opened and not cache.get("drowned", false):
+			targets.append(c)
+	if level.valve.x >= 0:
+		targets.append(level.valve)
+	for g in level.grate:
+		targets.append(g)
+	for c in targets:
+		var d := hero.position.distance_to(MovementRules.centre(c))
+		if d <= best_d:
+			best_d = d
+			best = c
+	if best.x < 0:
+		return ""
+	if best == level.valve:
+		return _turn_valve()
+	if level.grate.has(best):
+		return _unlock_grate()
+	return _search(best)
+
+
+## Search a cache: its item goes on the belt (a full belt leaves it there). Rummaging makes a little noise.
+func _search(c: Vector2i) -> String:
+	var cache: Dictionary = level.caches[c]
+	_make_noise(Items.SEARCH_NOISE)
+	var what: String = {"crate": "the crate", "barrel": "the barrel", "satchel": "the drowned man's satchel"}.get(cache.kind, "it")
+	if not progress.add_to_belt(cache.item):
+		combat_hud.show_banner("In %s: %s. His belt is full; he leaves it." % [what, Items.NAMES[cache.item].to_lower()], 2.0)
+		return "full"
+	cache.opened = true
+	if _props.has(c):
+		_props[c].open()
+	combat_hud.show_banner("In %s: %s." % [what, Items.NAMES[cache.item].to_lower()], 1.8)
+	combat_hud.set_belt(progress.belt)
+	return "searched"
+
+
+## The sluice valve: turning it drains the flooded room it feeds, row by row.
+func _turn_valve() -> String:
+	if level.drain.is_empty():
+		combat_hud.show_banner("The valve is turned as far as it goes.", 1.4)
+		return "drained"
+	if _props.has(level.valve):
+		_props[level.valve].turn()
+	_draining = level.drain.duplicate()
+	_draining.sort_custom(func(a, b): return a.y < b.y or (a.y == b.y and a.x < b.x))
+	level.drain.clear()
+	_drain_timer = 0.0
+	_make_noise(StealthRules.NOISE_WALK)
+	combat_hud.show_banner("The valve groans round. Somewhere, water drains away.", 2.2)
+	return "valve"
+
+
+## Water running out of the basin a row at a time; when it is gone, what lay under it can be reached.
+func _tick_drain(delta: float) -> void:
+	if _draining.is_empty():
+		return
+	_drain_timer -= delta
+	if _drain_timer > 0.0:
+		return
+	_drain_timer = 0.35
+	var row: int = _draining[0].y
+	while not _draining.is_empty() and _draining[0].y == row:
+		var c: Vector2i = _draining.pop_front()
+		level.set_tile(c, Level.Tile.FLOOR)
+		level.drained[c] = true
+	view.queue_redraw()
+	if _draining.is_empty():
+		for c in level.caches:
+			var cache: Dictionary = level.caches[c]
+			if cache.get("drowned", false):
+				cache.drowned = false
+				_props[c] = CoverProp.spawn(actors, c, "satchel")
+
+
+## The locked grate: the key from this level's caches opens it (and is used up).
+func _unlock_grate() -> String:
+	if level.get_tile(level.grate[0]) == Level.Tile.GRATE_OPEN:
+		return ""
+	if not progress.belt.has("grate_key"):
+		combat_hud.show_banner("Locked. The key must be somewhere on this level.", 1.8)
+		return "locked"
+	progress.belt.erase("grate_key")
+	for g in level.grate:
+		level.set_tile(g, Level.Tile.GRATE_OPEN)
+	if _props.has(level.grate[0]):
+		_props[level.grate[0]].open()
+	combat_hud.set_belt(progress.belt)
+	combat_hud.show_banner("The key turns. The grate swings open.", 1.8)
+	return "unlocked"
+
+
+## 6-9: use what is in that belt slot. In a fight a salve or bandage takes a maneuver; outside one a salve heals at
+## once. The key is used at the grate (E).
+func use_belt(slot: int) -> void:
+	if slot < 0 or slot >= progress.belt.size():
+		return
+	var item: String = progress.belt[slot]
+	if in_fight():
+		if not _can_act():
+			return
+		var ev := battle.hero_use(item)
+		if ev.any(func(e): return e.t == "heal" or (e.t == "status" and item == "bandage")):
+			progress.belt.remove_at(slot)
+			combat_hud.set_belt(progress.belt)
+		_act(ev)
+		return
+	match item:
+		"salve":
+			if hero_unit.stamina >= hero_unit.max_stamina:
+				combat_hud.show_banner("He isn't hurt.", 1.2)
+				return
+			hero_unit.stamina = mini(hero_unit.max_stamina, hero_unit.stamina + Items.SALVE_HEAL)
+			progress.belt.remove_at(slot)
+			combat_hud.show_banner("He smears salve into his wounds.", 1.4)
+			_refresh()
+		"bandage":
+			combat_hud.show_banner("Nothing is bleeding. A bandage is for a fight.", 1.4)
+		"grate_key":
+			combat_hud.show_banner(Items.TEXT.grate_key, 1.8)
+	combat_hud.set_belt(progress.belt)
 
 
 ## Can this creature see Thomas right now: close enough (MovementRules.SIGHT metres), in its view (a cone the way
@@ -1010,8 +1171,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		douse_lantern()
 	elif event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_T:
 		aim_throw()
+	elif event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_E:
+		interact()
+	elif event is InputEventKey and event.pressed and not event.echo and event.keycode >= KEY_6 and event.keycode <= KEY_9:
+		use_belt(event.keycode - KEY_6)
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT and aiming_throw:
 		aiming_throw = false
+	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_RIGHT:
+		open_context_menu(get_global_mouse_position())
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		if aiming_throw:
 			aiming_throw = false
@@ -1025,12 +1192,151 @@ func _unhandled_input(event: InputEvent) -> void:
 ## else, walk there.
 func creep_or_walk(p: Vector2) -> void:
 	_ambush = null
+	_then = Callable()
+	# a crate, the valve or the grate: walk up and use it (as Baldur's Gate 3's left-click does)
+	var thing := thing_at(p)
+	if not thing.is_empty():
+		_go_and(thing.cell, thing.action)
+		return
 	for e in enemies:
 		if e.alive() and not e.fled and views[e].visible and views[e].position.distance_to(p) <= MovementRules.px(MovementRules.ENEMY_RADIUS) + 8.0:
 			_ambush = e
 			walk_to_point(views[e].position)
 			return
 	walk_to_point(p)
+
+
+## Right-click: a menu of what can be done with what is under the mouse (Thomas, an enemy, a crate, the valve, the
+## grate, a lamp, the floor), in or out of a fight.
+func open_context_menu(p: Vector2) -> void:
+	var opts := context_options(p)
+	if opts.is_empty():
+		return
+	context_menu.clear()
+	_context_actions.clear()
+	for i in opts.size():
+		context_menu.add_item(opts[i][0], i)
+		_context_actions.append(opts[i][1])
+		if opts[i].size() > 2 and opts[i][2]:
+			context_menu.set_item_disabled(i, true)   # shown, greyed, with the reason in its label
+	context_menu.position = Vector2i(get_viewport().get_mouse_position()) + Vector2i(4, 4)
+	context_menu.reset_size()
+	context_menu.popup()
+
+
+## The thing under the mouse that can be used, for left-click and the hover highlight: {cell, name, action}, or
+## empty. Caches not yet searched, the valve, a shut grate.
+func thing_at(p: Vector2) -> Dictionary:
+	if level == null:
+		return {}
+	for k in level.caches:
+		var cache: Dictionary = level.caches[k]
+		if not cache.opened and not cache.get("drowned", false) and MovementRules.centre(k).distance_to(p) <= 18.0:
+			return {"cell": k, "name": {"crate": "Crate", "barrel": "Barrel", "satchel": "Drowned miner's satchel"}.get(cache.kind, "Cache"), "action": _search.bind(k)}
+	if level.valve.x >= 0 and MovementRules.centre(level.valve).distance_to(p) <= 18.0:
+		return {"cell": level.valve, "name": "Sluice valve", "action": _turn_valve}
+	for g in level.grate:
+		if MovementRules.centre(g).distance_to(p) <= 20.0 and level.get_tile(g) == Level.Tile.GRATE_SHUT:
+			return {"cell": g, "name": "Iron grate (locked)", "action": _unlock_grate}
+	return {}
+
+
+## The choices for a right-click at `p`, as [label, what it does] or [label, what it does, true] for one shown greyed
+## out because it can't be done now (the label says why).
+func context_options(p: Vector2) -> Array:
+	if in_fight():
+		return _fight_options(p)
+	var out: Array = []
+	var c := MovementRules.cell_of(p)
+	# Thomas himself: crouching, the lantern, the belt
+	if hero.position.distance_to(p) <= 14.0:
+		out.append(["Stand up" if sneaking else "Crouch and sneak", toggle_sneak])
+		match lantern:
+			"lit":
+				out.append(["Shutter the lantern", shutter_lantern])
+				out.append(["Put the lantern out", douse_lantern])
+			"shuttered":
+				out.append(["Open the lantern", shutter_lantern])
+				out.append(["Put the lantern out", douse_lantern])
+			"out":
+				out.append(["Light the lantern", shutter_lantern])
+		for i in progress.belt.size():
+			if progress.belt[i] != "grate_key":   # the key is used at the grate
+				out.append(["Use the %s" % Items.NAMES[progress.belt[i]].to_lower(), use_belt.bind(i)])
+		return out
+	# an enemy: creep up and strike it
+	for e in enemies:
+		if e.alive() and not e.fled and views[e].visible and views[e].position.distance_to(p) <= MovementRules.px(MovementRules.ENEMY_RADIUS) + 8.0:
+			out.append(["Strike from the dark" if not _after_him(e) and e.alert < 1.0 else "Attack", creep_or_walk.bind(views[e].position)])
+			return out
+	# things to search or work
+	for k in level.caches:
+		var cache: Dictionary = level.caches[k]
+		if not cache.opened and not cache.get("drowned", false) and MovementRules.centre(k).distance_to(p) <= 20.0:
+			var what: String = {"crate": "the crate", "barrel": "the barrel", "satchel": "the satchel"}.get(cache.kind, "it")
+			out.append(["Search %s" % what, _go_and.bind(k, _search.bind(k))])
+	if level.valve.x >= 0 and MovementRules.centre(level.valve).distance_to(p) <= 20.0:
+		out.append(["Turn the valve", _go_and.bind(level.valve, _turn_valve)])
+	for g in level.grate:
+		if MovementRules.centre(g).distance_to(p) <= 24.0 and level.get_tile(g) == Level.Tile.GRATE_SHUT:
+			out.append(["Unlock the grate" if progress.belt.has("grate_key") else "Try the grate", _go_and.bind(g, _unlock_grate)])
+			break
+	var lamp := false
+	for l in level.lights:
+		if Battle.dist(l, c) <= StealthRules.DOUSE_REACH:
+			lamp = true
+	if progress.owns("daggers", "throw"):
+		out.append(["Throw a dagger at the lamp" if lamp else "Throw a dagger here (a clatter)", throw_at.bind(p)])
+	if open_spot_near(p, MovementRules.px(MovementRules.HERO_RADIUS)) != Vector2.INF:
+		out.append(["Walk here", walk_to_point.bind(p)])
+		out.append(["Sneak here", func(): if not sneaking: toggle_sneak(); walk_to_point(p)])
+	return out
+
+
+func _fight_options(p: Vector2) -> Array:
+	var out: Array = []
+	if not _can_act():
+		return out
+	var t := battle.unit_at(p)
+	if t == hero_unit:
+		for i in progress.belt.size():
+			if progress.belt[i] != "grate_key":
+				out.append(["Use the %s (maneuver)" % Items.NAMES[progress.belt[i]].to_lower(), use_belt.bind(i)])
+		if hero_unit.prone:
+			out.append(["Stand up (maneuver)", func(): _act(battle.hero_stand())])
+		out.append(["Catch your breath (main action)", func(): _act(battle.hero_catch_breath())])
+		out.append(["End the turn", _end_hero_turn])
+		return out
+	if t != null and t.team != hero_unit.team:
+		for i in hero_unit.abilities.size():
+			var ab: Dictionary = hero_unit.abilities[i]
+			var why := battle.cannot_use(hero_unit, ab)
+			if why == "" and not battle.meets_needs(t, ab):
+				why = "Only against one caught unaware, or flanked." if (ab.needs as Array).has("unaware") else "Only against a dazed, prone or dying enemy."
+			if why != "":
+				out.append(["%s: %s" % [ab.name, why.trim_suffix(".").to_lower()], Callable(), true])
+				continue
+			var near := Battle.in_reach(hero_unit, t, Battle.reach_of(ab))
+			out.append([ab.name + ("" if near else " (walk up)"), func(): _select(-1); _act(battle.hero_close_and_strike(i, t))])
+		return out
+	var c := MovementRules.cell_of(p)
+	if level.gates.has(c) and level.get_tile(c) == Level.Tile.GATE_OPEN:
+		out.append(["Shut the sluice gate (main action)", func(): _act(battle.hero_shut_gate(c))])
+	out.append(["Move here", func(): _act(battle.hero_move_to_point(p))])
+	if battle.can_shift() and hero_unit.pos.distance_to(p) <= MovementRules.px(MovementRules.SHIFT) + 16.0:
+		out.append(["Careful step here (maneuver)", func(): _act(battle.hero_shift_to(p))])
+	return out
+
+
+## Walk up to square `c` and then do `f` (search, turn the valve, unlock the grate); at once if he is already there.
+func _go_and(c: Vector2i, f: Callable) -> void:
+	if hero.position.distance_to(MovementRules.centre(c)) <= Items.REACH * TILE:
+		f.call()
+		return
+	var spot := open_spot_near(MovementRules.centre(c) + (hero.position - MovementRules.centre(c)).limit_length(20.0), MovementRules.px(MovementRules.HERO_RADIUS))
+	if spot != Vector2.INF and walk_to_point(spot):
+		_then = f
+		_then_at = c
 
 
 func _zoom_input(event: InputEvent) -> void:
@@ -1044,7 +1350,10 @@ func _zoom_input(event: InputEvent) -> void:
 func _combat_input(event: InputEvent) -> bool:
 	if event is InputEventKey and event.pressed and not event.echo:
 		var k: int = event.keycode
-		if k >= KEY_1 and k <= KEY_9:
+		if k >= KEY_6 and k <= KEY_9:
+			use_belt(k - KEY_6)
+			return true
+		if k >= KEY_1 and k <= KEY_5:
 			_on_ability_key(k - KEY_1)
 			return true
 		match k:
@@ -1075,7 +1384,12 @@ func _combat_input(event: InputEvent) -> bool:
 				return true
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_RIGHT:
-			_select(-1)
+			if selected >= 0 or stepping:
+				_select(-1)
+				stepping = false
+				combat_hud.set_stepping(false)
+			else:
+				open_context_menu(get_global_mouse_position())
 			return true
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.shift_pressed:
@@ -1442,6 +1756,7 @@ func _process(delta: float) -> void:
 		_tick_fight_keys(delta)
 	_tick_explore(delta)
 	_tick_world(delta)
+	_tick_drain(delta)
 	Grounding.hero_light = hero.position if lantern != "out" else Vector2.INF
 	var target: Vector2 = _focus if _focus != null else hero.position
 	cam.position = cam.position.lerp(target, 1.0 - exp(-delta * 12.0))
@@ -1481,8 +1796,8 @@ func _update_hud() -> void:
 	elif dead or won:
 		hud.text = "R to start again"
 	elif in_fight():
-		hud.text = "Click anywhere to move  ·  click an enemy to strike (he walks up if he can)  ·  1-5 abilities  ·  F careful step  ·  Q stand  ·  B catch breath  ·  %sEnter end turn  ·  R new level" % ("G shut a sluice gate  ·  " if battle.arena.has_area() else "")
+		hud.text = "Click anywhere to move  ·  click an enemy to strike (he walks up if he can)  ·  right-click for more  ·  1-5 abilities  ·  6-9 belt  ·  F careful step  ·  Q stand  ·  B catch breath  ·  %sEnter end turn  ·  R new level" % ("G shut a sluice gate  ·  " if battle.arena.has_area() else "")
 	else:
 		var spend := progress.points_for(progress.weapon_tree()) + progress.level_points + progress.stat_points
 		var how := ("Sneaking" if sneaking else "Walking") + ", lantern " + lantern + ("  ·  T throw a dagger" if progress.owns("daggers", "throw") else "")
-		hud.text = "Depth %d  ·  Level %d  ·  XP %d / %d  ·  K skills%s  ·  %s  ·  click to walk, click an enemy to strike from the dark  ·  C sneak  ·  L shutter / light lantern  ·  O put it out  ·  R new life" % [depth, progress.level, progress.xp, progress.xp_needed(), " (points to spend!)" if spend > 0 else "", how]
+		hud.text = "Depth %d  ·  Level %d  ·  XP %d / %d  ·  K skills%s  ·  %s  ·  click to walk, right-click for more  ·  click an enemy to strike from the dark  ·  E search / use  ·  6-9 belt  ·  C sneak  ·  L shutter / light lantern  ·  O put it out  ·  R new life" % [depth, progress.level, progress.xp, progress.xp_needed(), " (points to spend!)" if spend > 0 else "", how]
