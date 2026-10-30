@@ -3,7 +3,8 @@ extends RefCounted
 ## One level's tiles and the rules for walking them.
 ## Pure data with no drawing, so it can be tested headless and saved as it is.
 
-enum Tile { WALL, FLOOR, DOOR_CLOSED, DOOR_OPEN, WATER, STAIRS, GATE_OPEN, GATE_SHUT, PROP, RAIL }
+enum Tile { WALL, FLOOR, DOOR_CLOSED, DOOR_OPEN, WATER, STAIRS, GATE_OPEN, GATE_SHUT, PROP, RAIL, COVER }
+## COVER: a crate or barrel. Blocks walking, not sight; a crouched Thomas right behind one is hidden (sneaking spec).
 ## PROP: machinery, pillars, crates: blocks movement and sight. RAIL: a railing: blocks movement, not sight.
 
 const DIRS_8: Array[Vector2i] = [
@@ -25,6 +26,10 @@ var stairs: Vector2i = Vector2i(-1, -1)
 ## The boss room on the deepest level (empty elsewhere), and the sluice gates in its walls.
 var outflow := Rect2i()
 var gates: Array[Vector2i] = []
+## Crates and barrels (COVER squares): square -> "crate" or "barrel".
+var cover := {}
+## Extra connections the generator made where doorways lined up (so the level isn't a tree).
+var loops := 0
 
 const OUTFLOW_SIZE := Vector2i(12, 9)
 # The Outflow's fixed layout, matching design/art-briefs/outflow/outflow-blockout.png (columns and rows inside the room).
@@ -156,6 +161,8 @@ func generate(seed_in: int, bottom := false) -> void:
 
 func _clear() -> void:
 	tiles.fill(Tile.WALL)
+	cover.clear()
+	loops = 0
 	rooms.clear()
 	pieces.clear()
 	lights.clear()
@@ -250,7 +257,8 @@ func to_dict() -> Dictionary:
 			"depth": p.depth, "parent": p.parent, "open": p.open})
 	return {"w": width, "h": height, "seed": seed_value, "tiles": Marshalls.raw_to_base64(tiles), "start": [start.x, start.y],
 		"stairs": [stairs.x, stairs.y], "outflow": [outflow.position.x, outflow.position.y, outflow.size.x, outflow.size.y],
-		"gates": gates.map(func(g): return [g.x, g.y]), "lights": lights.map(func(c): return [c.x, c.y]), "pieces": ps}
+		"gates": gates.map(func(g): return [g.x, g.y]), "lights": lights.map(func(c): return [c.x, c.y]), "pieces": ps,
+		"cover": cover.keys().map(func(c): return [c.x, c.y, cover[c]])}
 
 
 static func _v(a) -> Vector2i:
@@ -262,6 +270,8 @@ static func from_dict(d: Dictionary) -> Level:
 	l.seed_value = int(d.seed)
 	l.tiles = Marshalls.base64_to_raw(d.tiles)
 	l.start = _v(d.start)
+	for c in d.get("cover", []):
+		l.cover[Vector2i(int(c[0]), int(c[1]))] = String(c[2])
 	if d.has("stairs"):
 		l.stairs = _v(d.stairs)
 		l.outflow = Rect2i(int(d.outflow[0]), int(d.outflow[1]), int(d.outflow[2]), int(d.outflow[3]))

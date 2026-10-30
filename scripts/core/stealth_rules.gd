@@ -22,6 +22,10 @@ const FAR_SHARE := 0.4           # at the edge of sight
 const DARK_SHARE := 0.35         # in complete darkness
 const SNEAK_SHARE := 0.25        # sneaking
 
+# ---- cover
+const COVER_REACH := 1.5         # m: a crouched Thomas this close behind a crate or barrel is hidden by it
+const WATER_HIDE := 1.4          # crouched in water, the meter takes this many times as long to fill
+
 # ---- sneaking and noise
 const SNEAK_SPEED := 0.5         # share of walking speed
 const NOISE_WALK := 4.0          # m: walking is heard this far
@@ -52,6 +56,20 @@ static func in_view(from: Vector2, look: Vector2, to: Vector2, alert := false) -
 	if look.length() < 0.01 or d.length() < 0.01:
 		return true
 	return absf(rad_to_deg(look.angle_to(d))) <= CONE_ANGLE / 2.0
+
+
+## Is a crouched Thomas at `hider` hidden from `watcher` by a crate or barrel just in front of him (within
+## COVER_REACH, on the line between them)?
+static func behind_cover(level: Level, watcher: Vector2, hider: Vector2) -> bool:
+	var to := watcher - hider
+	var reach := minf(MovementRules.px(COVER_REACH), to.length())
+	var dir := to.normalized()
+	var d := 4.0
+	while d <= reach:
+		if level.get_tile(MovementRules.cell_of(hider + dir * d)) == Level.Tile.COVER:
+			return true
+		d += 4.0
+	return false
 
 
 ## How light it is where Thomas stands, 0 (black) to 1: his own lantern, or the room's lights near him.
