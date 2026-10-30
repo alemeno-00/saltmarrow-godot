@@ -1,5 +1,7 @@
 # Thomas Wren — first production tranche
 
+Environment coordination addendum: `SEWER_DIRECTION_HANDOFF.md` and `directional-manifest-proposal.json` preserve the compatibility contract and propose eight separately authored directions. Scale remains pending comparison in the actual sewer environment; no new directional art is delivered by that addendum.
+
 Art-only review package, built from main f5926ca. No Godot code or runtime integration. No ART_JOBS completion claimed.
 
 ## Delivered
