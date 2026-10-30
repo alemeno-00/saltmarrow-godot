@@ -28,6 +28,7 @@ const PARTS := {
 	"thigh_r": [9, Vector2(12, 2), "r_hip", "r_knee", 1],
 	"shin_r": [10, Vector2(12, 2), "r_knee", "r_ankle", 1],
 }
+const COVER_ANGLE := 22.5   # degrees: half the gap between two drawn directions
 const LEGS := ["thigh_l", "shin_l", "thigh_r", "shin_r"]
 const ARMS := ["upper_arm_l", "forearm_l", "upper_arm_r", "forearm_r"]
 
@@ -47,6 +48,17 @@ static func load_from(folder: String) -> Rig:
 ## The drawn direction for a way of facing, and whether to mirror it, from the directions this rig has: the nearest
 ## one, the west side being the east side mirrored.
 func pick(look: Vector2) -> Array:
+	return _nearest(look).slice(0, 2)
+
+
+## Is there a drawing for this way of facing (itself, or mirrored)? While only some directions are painted, the
+## others keep the old painted art rather than showing the wrong side of him.
+func covers(look: Vector2) -> bool:
+	return _nearest(look)[2] <= COVER_ANGLE
+
+
+## [direction, mirror, degrees off] for the nearest drawn direction.
+func _nearest(look: Vector2) -> Array:
 	var want := rad_to_deg(look.angle())
 	var best := ""
 	var mirror := false
@@ -59,7 +71,7 @@ func pick(look: Vector2) -> Array:
 				best_d = diff
 				best = d
 				mirror = m
-	return [best, mirror]
+	return [best, mirror, best_d]
 
 
 ## Where each part goes for a pose, seen facing `f`, with the feet at `root`: [{part, at (where its pivot goes),

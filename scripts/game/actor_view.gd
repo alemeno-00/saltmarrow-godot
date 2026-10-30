@@ -394,7 +394,7 @@ func _draw_sheet() -> void:
 func _draw_rig(off: Vector2) -> bool:
 	var moving := is_gliding() or _walk_linger > 0.0
 	var pose := Rig.pose_for(_anim, _anim_t, moving)
-	if pose.is_empty():
+	if pose.is_empty() or not rig.covers(look):
 		return false
 	var pick := rig.pick(look)
 	var tex: Texture2D = rig.sheets[pick[0]]

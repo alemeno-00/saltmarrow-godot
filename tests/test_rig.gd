@@ -102,3 +102,24 @@ func test_wading_hides_the_parts_under_the_water() -> void:
 
 func test_no_rig_until_the_art_arrives() -> void:
 	check(Rig.load_from("res://assets/characters/nobody/rig/") == null, "a folder with no sheets gives no rig: the old art stays")
+
+
+func test_until_a_direction_is_painted_the_old_art_shows() -> void:
+	var r := Rig.new()
+	r.sheets["s"] = ImageTexture.create_from_image(Image.create(264, 24, false, Image.FORMAT_RGBA8))
+	check(r.covers(Vector2.DOWN), "facing the camera, the painted parts")
+	check(r.covers(Vector2(0.2, 1)), "and a little off it")
+	check(not r.covers(Vector2.RIGHT), "walking east, not the front view sliding sideways")
+	check(not r.covers(Vector2(1, 1)), "nor south-east")
+	r.sheets["e"] = r.sheets["s"]
+	check(r.covers(Vector2.LEFT), "once the east side is painted, west is it mirrored")
+
+
+func test_the_view_falls_back_to_the_painted_sheet_for_other_directions() -> void:
+	var v := ActorView.new()
+	v.rig = Rig.new()
+	v.rig.sheets["s"] = ImageTexture.create_from_image(Image.create(264, 24, false, Image.FORMAT_RGBA8))
+	v._anim = "walk"
+	v.look = Vector2.RIGHT
+	check(not v._draw_rig(Vector2.ZERO), "walking east, the rig steps aside for the old art")
+	v.free()
