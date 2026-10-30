@@ -114,6 +114,20 @@ func find_path(from: Vector2i, to: Vector2i) -> Array[Vector2i]:
 	return out
 
 
+## A path like find_path, treating the `blocked` squares as solid too (where creatures stand). The start and end
+## squares are never blocked.
+func find_path_avoiding(from: Vector2i, to: Vector2i, blocked: Array[Vector2i]) -> Array[Vector2i]:
+	var changed: Array[Vector2i] = []
+	for c in blocked:
+		if c != from and c != to and in_bounds(c) and not _astar.is_point_solid(c):
+			_astar.set_point_solid(c, true)
+			changed.append(c)
+	var out := find_path(from, to)
+	for c in changed:
+		_astar.set_point_solid(c, false)
+	return out
+
+
 func rebuild_paths() -> void:
 	_astar.region = Rect2i(0, 0, width, height)
 	_astar.cell_size = Vector2(1, 1)

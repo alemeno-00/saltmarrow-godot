@@ -1,7 +1,8 @@
 extends Node2D
 ## Drawn above the level and the creatures.
-## Exploring: the square under the mouse and the route Thomas would take to it.
-## Fighting: where Thomas can move, who he can hit, and the squares a big blow is about to land on.
+## Exploring: while Thomas walks a clicked route, the rest of it as a dotted line to where it ends.
+## Fighting (like Baldur's Gate 3): the route Thomas would walk with its cost in metres, who he can reach, who would
+## get a free strike, and the band on the floor a big blow is about to land on.
 
 const TILE := 32
 const TAG_ART := "res://assets/tiles/sewers/outflow/tally_tag_floor.png"
@@ -21,14 +22,10 @@ func _draw() -> void:
 	if game.battle != null and not game.battle.over:
 		_draw_fight()
 		return
-	var c := game.hover_cell()
-	if not game.level.in_bounds(c):
-		return
-	var p := game.hover_path()
-	for s in p:
-		draw_circle(Vector2(s.x * TILE + TILE / 2.0, s.y * TILE + TILE / 2.0), 2.0, Color(1, 0.85, 0.5, 0.5))
-	var ok := not p.is_empty()
-	draw_rect(_rect(c), Color(1, 0.85, 0.5, 0.65) if ok else Color(1, 0.4, 0.3, 0.35), false, 1.5)
+	# exploring: only while he walks a clicked route, what is left of it
+	if not game.path.is_empty():
+		_dotted_path(game.hero.position, game.path, Color(1, 0.85, 0.5, 0.6))
+		_ring(game.path[-1], 5.0, Color(1, 0.85, 0.5, 0.75))
 
 
 ## Garrick's brass tally tag, glinting beside his body. Drawn above the creatures so his body doesn't hide it.
@@ -50,33 +47,114 @@ func _draw_tag(c: Vector2i) -> void:
 func _draw_fight() -> void:
 	var b := game.battle
 	var t := Time.get_ticks_msec() / 1000.0
-	# telegraphed blows: darkened squares, pulsing
+	var amber := Color(1, 0.8, 0.45)
+	var red := Color(0.9, 0.3, 0.25)
+	# big blows being raised: the band on the floor they will land on, pulsing
 	for e in game.enemies:
-		for c in e.telegraph:
-			draw_rect(_rect(c), Color(0.35, 0.0, 0.02, 0.35 + 0.15 * sin(t * 7.0)))
-			draw_rect(_rect(c).grow(-1), Color(0.7, 0.1, 0.08, 0.8), false, 1.5)
+		if not e.telegraph.is_empty():
+			_draw_band(e.telegraph, t)
 	if not (b.is_hero_turn() and not game.busy and not game.dead):
 		return
-	var amber := Color(1, 0.8, 0.45)
+	var h := game.hero_unit
+	var mouse := get_global_mouse_position()
+	var foe := b.unit_at(mouse)
+	if foe != null and foe.team == h.team:
+		foe = null
 	if game.stepping:
-		for c in b.shift_cells():
-			draw_rect(_rect(c).grow(-2), Color(0.6, 0.85, 1.0, 0.18))
-			draw_rect(_rect(c).grow(-2), Color(0.6, 0.85, 1.0, 0.6), false, 1.0)
-	elif game.selected >= 0:
-		var ab: Dictionary = game.hero_unit.abilities[game.selected]
-		for e in b.valid_targets(game.hero_unit, ab):
-			draw_rect(_rect(e.cell).grow(-1), amber, false, 2.0)
-	else:
-		for c in game.reach:
-			draw_rect(_rect(c).grow(-2), Color(0.95, 0.85, 0.6, 0.06))
-		for e in b.valid_targets(game.hero_unit, game.hero_unit.basic):
-			draw_rect(_rect(e.cell).grow(-1), Color(amber, 0.5), false, 1.0)
-	var h := game.hover_cell()
-	var foe := game._enemy_at(h)
+		# a careful step: anywhere within 1.5 m
+		_ring(h.pos, MovementRules.px(MovementRules.SHIFT), Color(0.6, 0.85, 1.0, 0.7))
+		var to := h.pos + (mouse - h.pos).limit_length(MovementRules.px(MovementRules.SHIFT))
+		draw_line(h.pos, to, Color(0.6, 0.85, 1.0, 0.8), 1.5)
+		draw_circle(to, 3.0, Color(0.6, 0.85, 1.0, 0.9))
+		return
+	var ab: Dictionary = h.abilities[game.selected] if game.selected >= 0 else h.basic
+	# who can be hit from here, and how far the weapon reaches
+	_ring(h.pos, h.radius() + MovementRules.px(Battle.reach_of(ab) * Battle.SQ), Color(amber, 0.35 if game.selected < 0 else 0.7))
+	for e in b.valid_targets(h, ab):
+		_ring(e.pos, e.radius() + 2.0, Color(amber, 0.9 if game.selected >= 0 else 0.5))
 	if foe != null:
-		draw_rect(_rect(h), Color(0.9, 0.3, 0.25, 0.8), false, 1.5)
-	elif game.reach.has(h) and game.selected < 0 and not game.stepping:
-		var route := Battle.path_to(game.battle.reachable(game.hero_unit, b.budget.move), game.hero_unit.cell, h)
-		for s in route:
-			draw_circle(Vector2(s.x * TILE + TILE / 2.0, s.y * TILE + TILE / 2.0), 2.0, Color(amber, 0.6))
-		draw_rect(_rect(h), Color(amber, 0.7), false, 1.5)
+		_ring(foe.pos, foe.radius() + 3.0, red)
+		if not Battle.in_reach(h, foe, Battle.reach_of(ab)):
+			# out of reach: show the walk up to it
+			var spot := b._spot_beside(h, foe, b.budget.move)
+			_draw_route(h.pos, spot, spot, amber, red)
+		return
+	if game.selected >= 0:
+		return
+	# the route to wherever the mouse is: amber as far as his movement goes, red beyond, with what it costs
+	var pv := b.move_preview(mouse)
+	var pts: Array[Vector2] = pv.points
+	if pts.is_empty():
+		return
+	_draw_route(h.pos, pts, pv.reach, amber, red)
+	var end: Vector2 = pts[-1]
+	var label := "%.1f m" % pv.cost
+	if pv.cost > b.budget.move + 0.05:
+		label += "  (%.1f m left)" % b.budget.move
+	draw_string(ThemeDB.fallback_font, end + Vector2(8, -6), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 10, amber if pv.cost <= b.budget.move + 0.05 else red)
+	# enemies who would get a free strike as he leaves their reach
+	for e in pv.strikes:
+		var c: Vector2 = e.pos + Vector2(0, -26)
+		draw_string(ThemeDB.fallback_font, c + Vector2(-3, 0), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, red)
+		_ring(e.pos, e.radius() + 3.0, Color(red, 0.8))
+
+
+## A route as a dotted line: the part his movement pays for in `good`, the rest in `bad`.
+func _draw_route(from: Vector2, all: Array[Vector2], paid: Array[Vector2], good: Color, bad: Color) -> void:
+	_dotted_path(from, paid, good)
+	if all.is_empty():
+		return
+	var ok := not paid.is_empty() and all[-1].distance_to(paid[-1]) < 0.5
+	if not ok:
+		# the rest of the route, past where his movement runs out
+		var start := paid[-1] if not paid.is_empty() else from
+		var rest: Array[Vector2] = []
+		var past := paid.is_empty()
+		var at := from
+		for p in all:
+			if not past and _between(start, at, p):
+				past = true
+			if past:
+				rest.append(p)
+			at = p
+		_dotted_path(start, rest, Color(bad, 0.75))
+	draw_circle(all[-1], 2.5, Color(good if ok else bad, 0.9))
+
+
+static func _between(q: Vector2, a: Vector2, b: Vector2) -> bool:
+	var ab := b - a
+	if ab.length() < 0.001:
+		return q.distance_to(a) < 0.5
+	var t := clampf((q - a).dot(ab) / ab.length_squared(), 0.0, 1.0)
+	return q.distance_to(a + ab * t) < 0.5
+
+
+## Dots every few pixels along a line through `points`, starting at `from`.
+func _dotted_path(from: Vector2, points: Array[Vector2], col: Color) -> void:
+	const GAP := 6.0
+	var at := from
+	var carry := GAP / 2.0
+	for p in points:
+		var length := at.distance_to(p)
+		var d := carry
+		while d < length:
+			draw_circle(at.lerp(p, d / length), 1.1, col)
+			d += GAP
+		carry = d - length
+		at = p
+
+
+func _ring(c: Vector2, r: float, col: Color) -> void:
+	draw_set_transform(c, 0, Vector2(1, 0.6))   # flattened onto the floor
+	draw_arc(Vector2.ZERO, r, 0, TAU, 40, col, 1.5)
+	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+
+
+## A telegraphed blow's band on the floor (Battle.band), dark red and pulsing.
+func _draw_band(band: Dictionary, t: float) -> void:
+	var dir: Vector2 = band.dir
+	draw_set_transform(band.centre, dir.angle(), Vector2.ONE)
+	var r := Rect2(Vector2(-band.half_d, -band.half_w), Vector2(band.half_d * 2.0, band.half_w * 2.0))
+	draw_rect(r, Color(0.35, 0.0, 0.02, 0.35 + 0.15 * sin(t * 7.0)))
+	draw_rect(r.grow(-1), Color(0.7, 0.1, 0.08, 0.8), false, 1.5)
+	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)

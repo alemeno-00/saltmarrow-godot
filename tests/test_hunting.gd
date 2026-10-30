@@ -21,8 +21,8 @@ func test_runaway_comes_back_with_friends() -> void:
 	m.stamina = 3
 	game.views[m].visible = false
 	var before := game.enemies.size()
-	game.returning.append([m, 1])
-	game.wait_turn()
+	game.returning.append([m, 0.05])
+	game._tick_world(0.1)
 	check(not m.fled and m.alive(), "the miner is back")
 	check(game.views[m].visible, "and can be seen")
 	check(m.stamina >= 12, "partly healed")
@@ -30,16 +30,17 @@ func test_runaway_comes_back_with_friends() -> void:
 	eq(m.state, "hunting", "and it is hunting Thomas")
 
 
-func test_hunters_close_in_one_square_a_turn() -> void:
+func test_hunters_close_in_while_thomas_stands_still() -> void:
 	var m: Combatant = game.enemies[0]
 	for e in game.enemies:
 		if e != m:
 			e.dead = true
 	m.state = "hunting"
 	var d0 := game.level.find_path(m.cell, game.hero.grid_pos).size()
-	game.wait_turn()
+	run(game, 1.0)
 	if not game.in_fight():
-		eq(game.level.find_path(m.cell, game.hero.grid_pos).size(), d0 - 1, "one square closer")
+		# 2.6 m/s is about 1.7 squares a second
+		check(game.level.find_path(m.cell, game.hero.grid_pos).size() <= d0 - 1, "a second later it is closer (%d squares from %d)" % [game.level.find_path(m.cell, game.hero.grid_pos).size(), d0])
 	else:
 		check(true, "it closed in and spotted him")
 

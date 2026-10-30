@@ -28,6 +28,8 @@ var card: Label
 var card_panel: PanelContainer
 var banner: Label
 var log_label: Label
+var turn_row: HBoxContainer   # the turn order along the top, the one acting lit
+var _turn_key := ""
 var _log_lines: Array[String] = []
 var history: Array[String] = []   # every line this level, for tests and tools
 var _banner_time := 0.0
@@ -78,6 +80,12 @@ func _ready() -> void:
 	card_panel.add_child(card)
 	card_panel.visible = false
 
+	turn_row = HBoxContainer.new()
+	turn_row.position = Vector2(14, 44)
+	turn_row.add_theme_constant_override("separation", 14)
+	turn_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(turn_row)
+
 	dice = DiceView.new()
 	dice.position = Vector2(640 - 110, 18)
 	dice.size = Vector2(220, 120)
@@ -127,7 +135,7 @@ func set_abilities(abilities: Array) -> void:
 		ability_buttons.append(b)
 	step_button = _button("F  Careful step")
 	step_button.pressed.connect(func(): step_pressed.emit())
-	step_button.mouse_entered.connect(func(): _hint("Careful step   ·   maneuver\nMove one square without giving anyone a free strike.\nPress F (or hold Shift) and click a square next to you."))
+	step_button.mouse_entered.connect(func(): _hint("Careful step   ·   maneuver\nStep up to 1.5 m without giving anyone a free strike.\nPress F (or hold Shift) and click where to step."))
 	step_button.mouse_exited.connect(func(): _show_card())
 	stand_button = _button("Q  Stand up")
 	stand_button.pressed.connect(func(): stand_pressed.emit())
@@ -173,6 +181,7 @@ func show_fight(on: bool) -> void:
 	resolve_label.visible = on
 	malice_label.visible = on
 	log_label.visible = on
+	turn_row.visible = on
 	if not on:
 		card_panel.visible = false
 		select(-1)
@@ -188,9 +197,10 @@ func refresh(hero: Combatant, battle: Battle, can_act: bool) -> void:
 	if mine:
 		var b := battle.budget
 		var dz := "   (dazed: one action only)" if hero.dazed > 0 else ""
-		actions_label.text = "Move %d   ·   Maneuver %s   ·   Main %s   ·   Recoveries %d%s" % [b.move, "yes" if b.maneuver > 0 else "used", "yes" if b.main > 0 else "used", hero.recoveries, dz]
+		actions_label.text = "Move %.1f m   ·   Maneuver %s   ·   Main %s   ·   Recoveries %d%s" % [b.move, "yes" if b.maneuver > 0 else "used", "yes" if b.main > 0 else "used", hero.recoveries, dz]
 	else:
 		actions_label.text = "Their turn"
+	set_turn_order(battle)
 	for i in ability_buttons.size():
 		var ab: Dictionary = _abilities[i]
 		ability_buttons[i].disabled = not (mine and can_act and battle.cannot_use(hero, ab) == "")
@@ -198,6 +208,34 @@ func refresh(hero: Combatant, battle: Battle, can_act: bool) -> void:
 	step_button.disabled = not (mine and can_act and not hero.prone and battle.budget.maneuver > 0)
 	breath_button.disabled = not (mine and can_act and battle.budget.main > 0 and hero.recoveries > 0)
 	end_button.disabled = not (mine and can_act)
+
+
+## The turn order along the top (as in Baldur's Gate 3): everyone still in the fight, in the order they act, the
+## one acting now lit.
+func set_turn_order(battle: Battle) -> void:
+	var key := "%d %s" % [battle.round, str(battle.active)]
+	for u in battle.units:
+		key += "1" if u.alive() else "0"
+	if key == _turn_key:
+		return
+	_turn_key = key
+	for c in turn_row.get_children():
+		c.queue_free()
+	turn_row.add_child(_chip("Round %d:" % battle.round, 13, DIM))
+	for u in battle.units:
+		if u.alive():
+			var col := AMBER if u == battle.active else (INK if u.team == "hero" else Color(0.8, 0.5, 0.45))
+			turn_row.add_child(_chip(("▶ " if u == battle.active else "") + u.name, 14 if u == battle.active else 13, col))
+
+
+func _chip(text: String, font: int, col: Color) -> Label:
+	var l := Label.new()
+	l.text = text
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	l.add_theme_color_override("font_color", col)
+	l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
+	l.add_theme_font_size_override("font_size", font)
+	return l
 
 
 ## The enemy side's Malice: it grows every round, so long fights get worse.
