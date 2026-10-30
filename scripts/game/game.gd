@@ -94,6 +94,13 @@ var lighting: Lighting
 var darkness: CanvasModulate
 var world_ui: CanvasLayer   # follows the camera but isn't dimmed: fight markers, hit flashes
 var ripples_made := 0       # ripples and splashes so far (tests read this)
+var fog: Fog                # fog of war: what he has explored and what he can see now
+var fog_view: Sprite2D      # drawn over the world: black where unexplored, dimmed where only remembered
+var _fog_level: Level = null
+var _fog_recheck := 0.0
+const FOG_RECHECK := 0.25   # s between looks again while he stands still (doors open, grates rise)
+const FOG_REMEMBERED := 0.35  # how dark a remembered square is drawn
+const FOG_FADE := 10.0      # how fast a creature fades in and out of sight
 
 
 func _ready() -> void:
@@ -112,6 +119,13 @@ func _ready() -> void:
 	hero_lantern.position = Vector2(0, 4)
 	hero.add_child(hero_lantern)
 	hero.stepped.connect(_on_stepped)
+	fog_view = Sprite2D.new()
+	fog_view.centered = false
+	fog_view.scale = Vector2(MovementRules.TILE, MovementRules.TILE)
+	fog_view.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR   # soft edges between seen and unseen
+	fog_view.z_index = 50
+	fog_view.light_mask = 0
+	add_child(fog_view)
 	actors.y_sort_enabled = true   # creatures and crates drawn in order of their feet, so behind means behind
 	world_ui = CanvasLayer.new()
 	world_ui.follow_viewport_enabled = true
@@ -185,6 +199,7 @@ func new_level(seed_in: int, keep := false) -> void:
 	_ambush = null
 	_relight = 0.0
 	sneaking = false
+	hero.sneaking = false
 	set_lantern("lit")
 	_update_hud()
 
@@ -1157,6 +1172,10 @@ func douse_lantern() -> void:
 ## they go first and he is surprised.
 func _start_battle(ambush: Combatant = null, ambushed := false) -> void:
 	stop_walking()
+	# a fight is fought on his feet: the crouch has done its work (the surprise is already settled), and C does
+	# nothing mid-fight, so he would stay stuck in it
+	if sneaking:
+		toggle_sneak()
 	_ambush = null
 	_take_positions()
 	# whoever saw him, their band, and anything already hunting or searching for him, fight; the rest may join if
@@ -1688,7 +1707,7 @@ func _play_one(e: Dictionary) -> void:
 			await _wait(0.25)
 		"dying":
 			views[e.unit].sync(e.unit)
-			combat_hud.show_banner("Thomas is dying", 1.6)
+			combat_hud.show_banner("Thomas is dying.   B to catch his breath, or a salve from the belt.", 3.0)
 			_refresh()
 			await _wait(0.5)
 		"telegraph":
@@ -1844,8 +1863,49 @@ func _process(delta: float) -> void:
 		_shake = lerpf(_shake, 0.0, 1.0 - exp(-delta * 14.0))
 	else:
 		cam.offset = Vector2.ZERO
+	_tick_fog(delta)
 	_tick_hover()
 	overlay.queue_redraw()   # cones, meters and routes move every frame
+
+
+## Fog of war: work out what he sees when he moves (and every so often while he stands, for doors opening), redraw
+## the fog, and fade creatures in and out of sight.
+func _tick_fog(delta: float) -> void:
+	if level == null:
+		return
+	if level != _fog_level:
+		_fog_level = level
+		fog = Fog.new(level.width, level.height)
+		_fog_recheck = 0.0
+	_fog_recheck -= delta
+	if fog.update(level, hero.grid_pos, _fog_recheck <= 0.0):
+		_draw_fog()
+	if _fog_recheck <= 0.0:
+		_fog_recheck = FOG_RECHECK
+	for e in enemies:
+		var v: ActorView = views.get(e)
+		if v != null:
+			v.modulate.a = move_toward(v.modulate.a, 1.0 if can_see(e) else 0.0, delta * FOG_FADE)
+
+
+func _draw_fog() -> void:
+	var img := Image.create(fog.width, fog.height, false, Image.FORMAT_RGBA8)
+	for y in fog.height:
+		for x in fog.width:
+			var c := Vector2i(x, y)
+			if not fog.sees(c):
+				img.set_pixel(x, y, Color(0, 0, 0, FOG_REMEMBERED if fog.knows(c) else 1.0))
+	fog_view.texture = ImageTexture.create_from_image(img)
+
+
+## Is this creature shown? Only in his sight, or in the fight with him (and not under the water).
+func can_see(e: Combatant) -> bool:
+	var v: ActorView = views.get(e)
+	if v == null or not v.visible or not e.alive():
+		return false
+	if in_fight() and battle.units.has(e):
+		return true
+	return fog != null and fog.sees(e.cell)
 
 
 ## What is under the mouse (for the HUD's line about an enemy), updated when the mouse or Thomas moves.
@@ -1869,7 +1929,7 @@ func _update_hud() -> void:
 	if hud == null:
 		return
 	var e := _enemy_at(_hover) if level != null else null
-	if e != null:
+	if e != null and can_see(e):
 		var words := [e.health_word()] + Array(e.condition_words())
 		hud.text = "%s:  %s" % [e.name, ", ".join(words)]
 	elif dead or won:

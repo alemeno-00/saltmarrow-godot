@@ -197,6 +197,24 @@ func test_striking_from_the_dark_gives_a_surprise_round() -> void:
 	check(game.combat_hud.history.any(func(l): return l.contains("with an edge")), "his first blow lands with an edge")
 
 
+func test_a_fight_stands_him_up_from_the_crouch() -> void:
+	_hall()
+	game.toggle_sneak()
+	var f := _watcher(Vector2i(6, 5), Vector2.RIGHT)
+	_watcher(Vector2i(7, 7), Vector2.RIGHT)
+	game.creep_or_walk(game.views[f].position)
+	run(game, 4.0)
+	check(game.in_fight(), "striking from the dark starts the fight")
+	check(not game.sneaking and not game.hero.sneaking, "and he fights on his feet, not stuck crouching")
+
+
+func test_a_new_life_starts_standing() -> void:
+	_hall()
+	game.toggle_sneak()
+	game.new_level(7)
+	check(not game.hero.sneaking, "his body stands up as well as the rules")
+
+
 func test_surprised_enemies_give_no_free_strike_and_it_wears_off() -> void:
 	var l := Level.new(10, 8)
 	for y in range(1, 7):

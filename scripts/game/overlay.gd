@@ -26,7 +26,7 @@ func _draw() -> void:
 		return
 	# exploring: what nearby enemies can see, and how close they are to spotting him
 	for e in game.enemies:
-		if e.alive() and not e.fled and game.views[e].visible:
+		if e.alive() and not e.fled and game.can_see(e):
 			var v: ActorView = game.views[e]
 			if MovementRules.metres(v.position.distance_to(game.hero.position)) <= StealthRules.CONE_SHOW:
 				_draw_cone(e, v)
@@ -34,7 +34,7 @@ func _draw() -> void:
 	# a lurker's tell on the sewage: slow bubbles and a still ring of scum (stronger once Thomas has spotted it)
 	var tick := Time.get_ticks_msec() / 1000.0
 	for e in game.enemies:
-		if e.alive() and e.state == "lurking" and MovementRules.metres(game.views[e].position.distance_to(game.hero.position)) <= StealthRules.CONE_SHOW:
+		if e.alive() and e.state == "lurking" and game.fog != null and game.fog.sees(e.cell) and MovementRules.metres(game.views[e].position.distance_to(game.hero.position)) <= StealthRules.CONE_SHOW:
 			var at: Vector2 = game.views[e].position + Vector2(0, 6)
 			var strong := 1.0 if e.noticed else 0.45
 			_ring(at, 9.0, Color(0.55, 0.52, 0.3, 0.35 * strong))
