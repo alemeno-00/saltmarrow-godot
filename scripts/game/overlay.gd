@@ -1,6 +1,8 @@
 extends Node2D
 ## Drawn above the level and the creatures.
-## Exploring: while Thomas walks a clicked route, the rest of it as a dotted line to where it ends.
+## Exploring: while Thomas walks a clicked route, the rest of it as a dotted line to where it ends; the view cones of
+## enemies near him on the floor (as in Baldur's Gate 3), and over each one how close it is to spotting him: a
+## filling ring, "?" when it is suspicious.
 ## Fighting (like Baldur's Gate 3): the route Thomas would walk with its cost in metres, who he can reach, who would
 ## get a free strike, and the band on the floor a big blow is about to land on.
 
@@ -22,7 +24,14 @@ func _draw() -> void:
 	if game.battle != null and not game.battle.over:
 		_draw_fight()
 		return
-	# exploring: only while he walks a clicked route, what is left of it
+	# exploring: what nearby enemies can see, and how close they are to spotting him
+	for e in game.enemies:
+		if e.alive() and not e.fled and game.views[e].visible:
+			var v: ActorView = game.views[e]
+			if MovementRules.metres(v.position.distance_to(game.hero.position)) <= StealthRules.CONE_SHOW:
+				_draw_cone(e, v)
+				_draw_alert(e, v)
+	# only while he walks a clicked route, what is left of it
 	if not game.path.is_empty():
 		_dotted_path(game.hero.position, game.path, Color(1, 0.85, 0.5, 0.6))
 		_ring(game.path[-1], 5.0, Color(1, 0.85, 0.5, 0.75))
@@ -142,6 +151,39 @@ func _dotted_path(from: Vector2, points: Array[Vector2], col: Color) -> void:
 			d += GAP
 		carry = d - length
 		at = p
+
+
+## An enemy's view on the floor: a cone the way it faces, cut short by walls, and the small circle all round it
+## where it notices anything. Pale while it is calm, amber when suspicious; none for those already after him.
+func _draw_cone(e: Combatant, v: ActorView) -> void:
+	if game._after_him(e):
+		return
+	var warm := e.state == "suspicious" or e.state == "investigating"
+	var col := Color(1.0, 0.75, 0.35) if warm else Color(0.85, 0.85, 0.8)
+	var eye := v.position + Vector2(0, 4)
+	var reach := MovementRules.px(MovementRules.SIGHT)
+	var half := deg_to_rad(StealthRules.CONE_ANGLE / 2.0)
+	var pts := PackedVector2Array([eye])
+	const RAYS := 18
+	for i in RAYS + 1:
+		var dir := v.look.rotated(-half + 2.0 * half * i / RAYS)
+		var d := 0.0
+		while d < reach and not game.level.blocks_sight(MovementRules.cell_of(eye + dir * (d + 4.0))):
+			d += 4.0
+		pts.append(eye + dir * d)
+	draw_colored_polygon(pts, Color(col, 0.10 if warm else 0.06))
+	draw_polyline(pts, Color(col, 0.22 if warm else 0.12), 1.0)
+	_ring(v.position, MovementRules.px(StealthRules.AROUND), Color(col, 0.10))
+
+
+## How close an enemy is to spotting Thomas: a ring over its head that fills, and "?" once it is suspicious.
+func _draw_alert(e: Combatant, v: ActorView) -> void:
+	var head := v.position + Vector2(0, -34)
+	if e.alert > 0.02:
+		var col := Color(1.0, 0.75, 0.35).lerp(Color(0.95, 0.25, 0.2), e.alert)
+		draw_arc(head, 5.0, -PI / 2.0, -PI / 2.0 + TAU * e.alert, 24, col, 2.0)
+	if e.state == "suspicious" or e.state == "investigating":
+		draw_string(ThemeDB.fallback_font, head + Vector2(-3, 5), "?", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(1.0, 0.8, 0.4))
 
 
 func _ring(c: Vector2, r: float, col: Color) -> void:

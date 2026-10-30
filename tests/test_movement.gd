@@ -150,6 +150,7 @@ func test_a_fight_starts_where_everyone_stands() -> void:
 	_put(MovementRules.centre(Vector2i(2, 3)) + Vector2(10, 5))
 	var f := game._add_enemy(Bestiary.faithful(), Vector2i(3, 5))
 	game.views[f].glide_free(MovementRules.centre(Vector2i(3, 5)) + Vector2(-9, 7), 0.0)
+	game.views[f].face_point(game.hero.position)   # looking his way
 	var where := game.hero.position
 	game._check_spotted()
 	check(game.in_fight(), "being seen starts a fight")

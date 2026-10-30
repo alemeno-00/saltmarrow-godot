@@ -98,6 +98,7 @@ func test_the_patrol_spots_thomas() -> void:
 			game.hero.place(c)
 			game.hero_unit.cell = c
 			break
+	game.views[leader].face_point(game.hero.position)   # looking his way
 	game._check_spotted()
 	check(game.in_fight(), "seeing Thomas starts a fight")
 	check(game.battle.units.has(leader), "and the patrol is in it")
@@ -115,6 +116,7 @@ func test_a_far_off_patrol_stays_out_of_someone_elses_fight() -> void:
 			if far and game.level.get_tile(c) == Level.Tile.FLOOR and game._enemy_at(c) == null and game.level.line_of_sight(c, e.cell):
 				game.hero.place(c)
 				game.hero_unit.cell = c
+				game.views[e].face_point(game.hero.position)
 				game._check_spotted()
 				check(game.in_fight(), "the group starts a fight")
 				check(not game.battle.units.has(leader), "the patrol, out of sight across the level, is not in it")
