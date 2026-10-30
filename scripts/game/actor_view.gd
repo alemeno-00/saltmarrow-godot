@@ -23,6 +23,7 @@ var bleeding := false
 var hurt := 0.0         # 0 unhurt .. 1 nearly dead
 var sheet: Sheet = null # the art, when there is some (drawn facing right, mirrored to face left)
 var dir_sheets := {}    # direction -> Sheet: art drawn in five directions, used for the rows it has
+var rig: Rig = null     # parts on a skeleton: draws idle, walk, sneak and the limp when there is one (Rig)
 var look := Vector2.RIGHT  # the way it faces, any direction
 var is_hero := false    # Thomas: his own lantern throws no shadow of him
 var wading := false     # standing in water: drawn sunk to the shins
@@ -357,6 +358,8 @@ func _draw_sheet() -> void:
 	if not dead:
 		Grounding.draw_shadows(self, position, Vector2(0, 12), is_hero, wading)
 	var off := _lunge + Vector2(0, -_bob * 2.0)
+	if rig != null and not dead and not prone and _once == "" and _draw_rig(off):
+		return
 	# the art faces right; a mirrored transform turns it to face left
 	var pick := art_for(_anim)
 	var s: Sheet = pick[0]
@@ -383,6 +386,37 @@ func _draw_sheet() -> void:
 	if bleeding and not dead:
 		var drip := fmod(_time * 1.5, 1.0)
 		draw_rect(Rect2(Vector2(2, 2 + drip * 9.0), Vector2(1, 2)), Color(0.45, 0.03, 0.05, 1.0 - drip))
+
+
+## Draw the body as parts on its skeleton, posed for the current animation. False if the rig doesn't do this
+## animation (attacks and the like stay painted).
+func _draw_rig(off: Vector2) -> bool:
+	var moving := is_gliding() or _walk_linger > 0.0
+	var pose := Rig.pose_for(_anim, _anim_t, moving)
+	if pose.is_empty():
+		return false
+	var pick := rig.pick(look)
+	var tex: Texture2D = rig.sheets[pick[0]]
+	var mirror := -1.0 if pick[1] else 1.0
+	var face: Vector2 = Rig.DIRS[pick[0]]
+	var hidden := Rig.under_water(Grounding.wade_depth(position)) if wading else []
+	var lit := Grounding.lit(tex)
+	for pl in Rig.placements(pose, face, Vector2(0, 12)):
+		if pl.part in hidden:
+			continue
+		var place := Transform2D(0.0, Vector2(mirror, 1.0), 0.0, off) * Transform2D(pl.angle, pl.at)
+		draw_set_transform_matrix(place)
+		var pivot: Vector2 = pl.pivot
+		draw_texture_rect_region(lit, Rect2(-pivot, Rig.CELL), Rect2(Vector2(pl.cell * Rig.CELL.x, 0), Rig.CELL), _sheet_tint())
+	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+	if wading:
+		Grounding.draw_waterline(self, Vector2(0, 12), _time, Grounding.wade_depth(position))
+	if dazed:
+		_draw_dazed()
+	if bleeding:
+		var drip := fmod(_time * 1.5, 1.0)
+		draw_rect(Rect2(Vector2(2, 2 + drip * 9.0), Vector2(1, 2)), Color(0.45, 0.03, 0.05, 1.0 - drip))
+	return true
 
 
 ## The ringing shimmer over a dazed head (assets/effects/mace/dazed.png, 6 frames, looped).
