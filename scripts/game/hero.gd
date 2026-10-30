@@ -7,6 +7,7 @@ extends ActorView
 func _ready() -> void:
 	sheet = Sheet.thomas()
 	dir_sheets = Sheet.thomas_dirs()
+	rig = Rig.load_from("res://assets/characters/thomas/rig/")
 	is_hero = true
 
 

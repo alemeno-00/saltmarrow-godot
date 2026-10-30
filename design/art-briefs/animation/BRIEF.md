@@ -46,7 +46,49 @@ highlighted "top-down, slightly angled" panel, the in-game example and the chara
 **Start with a camera test** (art job 15-0): Thomas facing south, idle and walk, and walking east. Claude puts it in
 the game beside a painted room for Julian to approve before the rest is drawn.
 
+## The skeleton: paint parts, not frames (Julian, 2026-10-30)
+
+Painting every frame doesn't work: even over the pose guides (#47), each frame came out a slightly different Thomas,
+so he flickered, and the detail turned to mush. So characters are now **parts on a skeleton**: you paint each
+character **once per direction, as separate parts**, and the game moves the parts with the same walk the guides
+show (`scripts/game/rig.gd`, `rig_pose.gd`). Every frame is the same drawing, so nothing flickers, and walking,
+standing, sneaking and limping all come from one sheet. Proof: `production/qa/evidence/rig-proof/walk_compare.html`
+(your own south frame, cut into parts, walking).
+
+**A parts sheet** is one row of eleven 24 × 24 cells (264 × 24 px), one part per cell, in this order:
+
+| Cell | Part | What it holds | Pivot (the white cross) |
+| --- | --- | --- | --- |
+| 1 | head | the head and hair, standing up from the neck | bottom middle, the neck |
+| 2 | torso | shoulders to waist: coat, scarf, belt, satchel strap, the lantern at the hip | bottom middle, the waist |
+| 3 | skirt | the coat below the waist, hanging down | top middle, the waist |
+| 4 | upper arm, left | his left upper arm and sleeve, hanging down | top, the shoulder |
+| 5 | forearm, left | his left forearm and hand, hanging down | top, the elbow |
+| 6 | upper arm, right | | top, the shoulder |
+| 7 | forearm, right | | top, the elbow |
+| 8 | thigh, left | his left thigh (mostly under the coat), hanging down | top, the hip |
+| 9 | shin, left | his left shin and boot, hanging down | top, the knee |
+| 10 | thigh, right | | top, the hip |
+| 11 | shin, right | | top, the knee |
+
+- **Templates**: `rig/template_<dir>.png` (and `_4x`) show every cell with a stand-in shape of the part at the
+  right size and its pivot marked. Paint the real part over the stand-in, joint on the cross.
+- **Rest pose**: limbs hang straight down from their joint; the head and torso stand straight up from theirs. The
+  game turns them; don't draw them bent or swinging.
+- **"Left" means Thomas's left.** Facing south (toward us) his left arm is on the screen's right.
+- **Each direction is its own sheet**, seen from the rooms' camera from that side: `s`, `se`, `e`, `ne`, `n`. Facing
+  east, the far arm and leg (his left) are partly hidden by the body; paint them anyway, whole.
+- **Overlap a little at the joints** (a pixel or two past the pivot), so no gap opens when a part turns.
+- **`rig/assembled_<dir>.png`** shows the stand-ins put together standing, and **`rig/walk_<dir>.png`** the
+  stand-ins walking through the real rig: what the game will do with your parts.
+- A normal map with each sheet (`s_n.png`), as the house style says.
+
+Attacks and hit reactions stay painted frames for now (job 16); they may move to the skeleton later.
+
 ## Pose guides (paint over them)
+
+*Kept for reference: the skeleton above replaces painting walks frame by frame. The guides still show what the
+walk looks like, and are drawn from the same rules the skeleton uses.*
 
 ChatGPT, 2026-10-30, was getting stuck: generated frames don't keep track of which leg is which, so the legs came out
 the same in every frame. Claude now makes **pose guides**: each frame of each animation as a colour-coded figure

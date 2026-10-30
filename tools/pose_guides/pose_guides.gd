@@ -1,5 +1,6 @@
 extends SceneTree
-## Draws pose guides for character animation, the way room blockouts guide the room paintings
+## Draws pose guides for character animation, the way room blockouts guide the room paintings. The poses and the
+## camera come from RigPose, the same rules the game's skeleton moves by.
 ## (design/art-briefs/animation/BRIEF.md, "Pose guides"):
 ##   godot --headless --path . -s tools/pose_guides/pose_guides.gd
 ##
@@ -69,88 +70,20 @@ func _sheet(dir: String, frames: int, idle: bool) -> Image:
 	return img
 
 
-# ---------------------------------------------------------------- poses, in the body's own space
-# x: the body's right, y: up, z: forward. Each pose is a dictionary of named points.
-
-## Where one foot is, `q` of the way through its own stride (0: heel down ahead; 0-0.5 planted and moving back under
-## the body; 0.5-1 lifted and swinging forward).
-static func _foot(q: float) -> Vector2:
-	q = fposmod(q, 1.0)
-	if q < 0.5:
-		return Vector2(STRIDE * (1.0 - 4.0 * q), 0.0)   # (forward, up): planted
-	var u := (q - 0.5) / 0.5
-	return Vector2(-STRIDE + 2.0 * STRIDE * smoothstep(0.0, 1.0, u), LIFT * sin(PI * u))
-
+# ---------------------------------------------------------------- poses (shared with the game: RigPose)
 
 func _walk_pose(t: float) -> Dictionary:
-	var left := _foot(t)
-	var right := _foot(t + 0.5)
-	var hip_y := HIP_Y - BOB * cos(4.0 * PI * (t - 0.125))
-	return _body(hip_y, left, right, t)
+	return RigPose.walk(t)
 
 
 func _idle_pose(t: float) -> Dictionary:
-	var breathe := 0.6 * sin(TAU * t)
-	var pose := _body(HIP_Y - 0.3, Vector2(2.5, 0), Vector2(-2.5, 0), 0.0)
-	for k in ["neck", "head", "l_shoulder", "r_shoulder", "l_elbow", "r_elbow", "l_hand", "r_hand"]:
-		pose[k] += Vector3(0, breathe, 0)
-	pose["planted"] = [pose.l_ankle, pose.r_ankle]
-	return pose
-
-
-func _body(hip_y: float, left: Vector2, right: Vector2, t: float) -> Dictionary:
-	var p := {}
-	p.l_hip = Vector3(-HIP_W, hip_y, 0)
-	p.r_hip = Vector3(HIP_W, hip_y, 0)
-	p.l_ankle = Vector3(-HIP_W + 1, ANKLE_Y + left.y, left.x)
-	p.r_ankle = Vector3(HIP_W - 1, ANKLE_Y + right.y, right.x)
-	p.l_knee = _knee(p.l_hip, p.l_ankle)
-	p.r_knee = _knee(p.r_hip, p.r_ankle)
-	p.l_toe = p.l_ankle + Vector3(0, -1, FOOT)
-	p.r_toe = p.r_ankle + Vector3(0, -1, FOOT)
-	var lean := 2.0
-	var dy := hip_y - HIP_Y
-	p.neck = Vector3(0, SHOULDER_Y + 3 + dy, lean)
-	p.head = Vector3(0, HEAD_Y + dy, lean + 0.5)
-	p.l_shoulder = Vector3(-SHOULDER_W, SHOULDER_Y + dy, lean)
-	p.r_shoulder = Vector3(SHOULDER_W, SHOULDER_Y + dy, lean)
-	# each arm swings with the opposite leg
-	var l_swing := ARM_SWING * right.x
-	var r_swing := ARM_SWING * left.x
-	p.l_elbow = p.l_shoulder + Vector3(-1, -9, l_swing * 0.45 - 0.5)
-	p.r_elbow = p.r_shoulder + Vector3(1, -9, r_swing * 0.45 - 0.5)
-	p.l_hand = p.l_shoulder + Vector3(-1, -17, l_swing + 1)
-	p.r_hand = p.r_shoulder + Vector3(1, -17, r_swing + 1)
-	p.planted = []
-	if left.y == 0.0:
-		p.planted.append(p.l_ankle)
-	if right.y == 0.0:
-		p.planted.append(p.r_ankle)
-	return p
-
-
-## The knee between a hip and an ankle, bending forward.
-static func _knee(hip: Vector3, ankle: Vector3) -> Vector3:
-	var to := Vector2(ankle.z - hip.z, ankle.y - hip.y)   # (forward, up) from the hip
-	var d := clampf(to.length(), 0.01, THIGH + SHIN - 0.01)
-	var a := acos(clampf((THIGH * THIGH + d * d - SHIN * SHIN) / (2.0 * THIGH * d), -1.0, 1.0))
-	var base := to.angle()
-	var k := Vector2.from_angle(base - a) * THIGH   # bend so the knee comes forward
-	if k.x < (to.x * THIGH / d):
-		k = Vector2.from_angle(base + a) * THIGH
-	return Vector3(lerpf(hip.x, ankle.x, THIGH / (THIGH + SHIN)), hip.y + k.y, hip.z + k.x)
+	return RigPose.idle(t)
 
 
 # ---------------------------------------------------------------- the camera and drawing
 
-## A point in the body's space as seen through the rooms' camera, for a body facing `f` (east, north on the ground).
 static func _project(p: Vector3, f: Vector2) -> Vector3:
-	var r := Vector2(f.y, -f.x)          # the body's right, on the ground
-	var east := r.x * p.x + f.x * p.z
-	var north := r.y * p.x + f.y * p.z
-	var c := cos(deg_to_rad(PITCH))
-	var s := sin(deg_to_rad(PITCH))
-	return Vector3(ROOT.x + east, ROOT.y - p.y * c - north * s, north)   # (screen x, screen y, depth: further is more)
+	return RigPose.project(p, f, ROOT)
 
 
 func _draw_frame(img: Image, at: Vector2, pose: Dictionary, f: Vector2) -> void:
