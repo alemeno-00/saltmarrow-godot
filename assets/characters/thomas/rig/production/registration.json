@@ -1,0 +1,321 @@
+{
+  "source": "south-parts-master.png",
+  "sheet_size": [
+    264,
+    24
+  ],
+  "cell_size": [
+    24,
+    24
+  ],
+  "parts": [
+    {
+      "cell": 0,
+      "part": "head",
+      "pivot": [
+        12,
+        22
+      ],
+      "source_box": [
+        105,
+        153,
+        246,
+        342
+      ],
+      "painted_size": [
+        9,
+        9
+      ],
+      "paste": [
+        8,
+        14
+      ],
+      "alpha_bounds": [
+        8,
+        14,
+        17,
+        23
+      ]
+    },
+    {
+      "cell": 1,
+      "part": "torso",
+      "pivot": [
+        12,
+        22
+      ],
+      "source_box": [
+        91,
+        108,
+        303,
+        362
+      ],
+      "painted_size": [
+        13,
+        18
+      ],
+      "paste": [
+        6,
+        5
+      ],
+      "alpha_bounds": [
+        6,
+        5,
+        19,
+        23
+      ]
+    },
+    {
+      "cell": 2,
+      "part": "skirt",
+      "pivot": [
+        12,
+        2
+      ],
+      "source_box": [
+        75,
+        101,
+        325,
+        362
+      ],
+      "painted_size": [
+        15,
+        17
+      ],
+      "paste": [
+        5,
+        0
+      ],
+      "alpha_bounds": [
+        5,
+        0,
+        20,
+        17
+      ]
+    },
+    {
+      "cell": 3,
+      "part": "upper_arm_l",
+      "pivot": [
+        12,
+        2
+      ],
+      "source_box": [
+        176,
+        114,
+        262,
+        362
+      ],
+      "painted_size": [
+        4,
+        12
+      ],
+      "paste": [
+        10,
+        0
+      ],
+      "alpha_bounds": [
+        10,
+        0,
+        14,
+        12
+      ]
+    },
+    {
+      "cell": 4,
+      "part": "forearm_l",
+      "pivot": [
+        12,
+        2
+      ],
+      "source_box": [
+        128,
+        124,
+        213,
+        351
+      ],
+      "painted_size": [
+        4,
+        12
+      ],
+      "paste": [
+        10,
+        0
+      ],
+      "alpha_bounds": [
+        10,
+        0,
+        14,
+        12
+      ]
+    },
+    {
+      "cell": 5,
+      "part": "upper_arm_r",
+      "pivot": [
+        12,
+        2
+      ],
+      "source_box": [
+        136,
+        122,
+        222,
+        358
+      ],
+      "painted_size": [
+        4,
+        12
+      ],
+      "paste": [
+        10,
+        0
+      ],
+      "alpha_bounds": [
+        10,
+        0,
+        14,
+        12
+      ]
+    },
+    {
+      "cell": 6,
+      "part": "forearm_r",
+      "pivot": [
+        12,
+        2
+      ],
+      "source_box": [
+        152,
+        127,
+        237,
+        350
+      ],
+      "painted_size": [
+        4,
+        12
+      ],
+      "paste": [
+        10,
+        0
+      ],
+      "alpha_bounds": [
+        10,
+        0,
+        14,
+        12
+      ]
+    },
+    {
+      "cell": 7,
+      "part": "thigh_l",
+      "pivot": [
+        12,
+        2
+      ],
+      "source_box": [
+        156,
+        114,
+        263,
+        362
+      ],
+      "painted_size": [
+        5,
+        14
+      ],
+      "paste": [
+        10,
+        0
+      ],
+      "alpha_bounds": [
+        10,
+        0,
+        15,
+        14
+      ]
+    },
+    {
+      "cell": 8,
+      "part": "shin_l",
+      "pivot": [
+        12,
+        2
+      ],
+      "source_box": [
+        136,
+        64,
+        213,
+        281
+      ],
+      "painted_size": [
+        5,
+        14
+      ],
+      "paste": [
+        10,
+        0
+      ],
+      "alpha_bounds": [
+        10,
+        0,
+        15,
+        14
+      ]
+    },
+    {
+      "cell": 9,
+      "part": "thigh_r",
+      "pivot": [
+        12,
+        2
+      ],
+      "source_box": [
+        127,
+        50,
+        239,
+        291
+      ],
+      "painted_size": [
+        5,
+        14
+      ],
+      "paste": [
+        10,
+        0
+      ],
+      "alpha_bounds": [
+        10,
+        0,
+        15,
+        14
+      ]
+    },
+    {
+      "cell": 10,
+      "part": "shin_r",
+      "pivot": [
+        12,
+        2
+      ],
+      "source_box": [
+        151,
+        65,
+        235,
+        279
+      ],
+      "painted_size": [
+        5,
+        14
+      ],
+      "paste": [
+        10,
+        0
+      ],
+      "alpha_bounds": [
+        10,
+        0,
+        15,
+        14
+      ]
+    }
+  ]
+}
