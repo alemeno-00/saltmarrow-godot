@@ -1,3 +1,5 @@
+> Historical job14 floor-body redraw. The pose is retained, but job15a subsequently applies the shared palette and normal maps in `../house-style/`. The 16 unchanged files mentioned below refer to that earlier body-only revision.
+
 # Floor-body redraw
 
 Built-in image generation, no CLI fallback. The first side-view bodies looked pasted onto the floor. The replacement uses the approved junction camera and materials: face down, cap crown and shoulder tops visible, broader prone footprint, broken material-coloured edges, selected contact-dark clusters. Head right, boots left; no floor patch or directional cast shadow.

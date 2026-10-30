@@ -1,3 +1,7 @@
+# Current production stage
+
+Job15a's `house-style/export.py` applies the room palette/contact treatment and registers generated normal maps. Run it after the original exporter described below, then run `assets/characters/thomas/production/room-fit/validate.py`. See `house-style/README.md` for current source/prompt inventory and checks. Original masters and body-v2 record the prior generation stages; running the old exporter alone restores their old palette.
+
 # Sewer contents production
 
 All 18 requested assets were generated with the built-in image-generation tool, one asset per call. Multi-frame source images contain only that asset’s states. The full prompt specification for each is saved as `<name>-prompt.txt`. The original miner tally body referenced `satchel_body-master.png`. Both original body masters are retained for history but are superseded by the overhead redraw in `body-v2/`; those three single-image sources now supply runtime body frames. No CLI image-generation fallback was used.

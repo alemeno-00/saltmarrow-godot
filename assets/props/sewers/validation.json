@@ -1,10 +1,12 @@
 {
+  "job": "15a",
   "runtime_pngs": 18,
+  "normal_maps": 15,
   "frames_total": 30,
   "assets": [
     {
-      "file": "salve.png",
-      "size": [
+      "file": "assets/props/sewers/salve.png",
+      "canvas": [
         32,
         32
       ],
@@ -12,17 +14,18 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         1
       ],
-      "opaque_colours": 32,
-      "distinct_frames": 1,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 16,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "c2136bcad30106b905e2b7ca2aded1c234cb65a83dad94ed806e1f68aee8b27e"
     },
     {
-      "file": "bandage.png",
-      "size": [
+      "file": "assets/props/sewers/bandage.png",
+      "canvas": [
         32,
         32
       ],
@@ -30,17 +33,18 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         1
       ],
-      "opaque_colours": 31,
-      "distinct_frames": 1,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 11,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "342477fb3d9593f6bc135074c811a28cec2a7233dc485f94252a715cef7fcc6b"
     },
     {
-      "file": "grate_key.png",
-      "size": [
+      "file": "assets/props/sewers/grate_key.png",
+      "canvas": [
         32,
         32
       ],
@@ -48,17 +52,18 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         1
       ],
-      "opaque_colours": 18,
-      "distinct_frames": 1,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 9,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "f3cc4ed0b58021ff176b616ce9a84e6e84d0a4ac3020aa0723d82781072e329c"
     },
     {
-      "file": "crate.png",
-      "size": [
+      "file": "assets/props/sewers/crate.png",
+      "canvas": [
         64,
         32
       ],
@@ -66,17 +71,23 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         2
       ],
-      "opaque_colours": 31,
-      "distinct_frames": 2,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 2,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 9,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "012f90335eabff6ac638c033342143dc15a0037e36839f935c4de6cc48240240",
+      "normal_map": "assets/props/sewers/crate_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.0055981378551529515,
+      "positive_z": true,
+      "normal_sha256": "f41197bf565d055dee38b27ae9204be00a357017602ce8056af1c10f05f36dcc"
     },
     {
-      "file": "barrel.png",
-      "size": [
+      "file": "assets/props/sewers/barrel.png",
+      "canvas": [
         64,
         32
       ],
@@ -84,17 +95,23 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         2
       ],
-      "opaque_colours": 32,
-      "distinct_frames": 2,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 2,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 10,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "b606087ba56d6f51d5fc98bd7fd77feb5c5883b5c9caaf819dc11ef6013843f6",
+      "normal_map": "assets/props/sewers/barrel_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005536385100440411,
+      "positive_z": true,
+      "normal_sha256": "dab4534201a52561f3d5b3499277d935f6a5f7472181a6416a0a25b7e8d8f3ae"
     },
     {
-      "file": "satchel_body.png",
-      "size": [
+      "file": "assets/props/sewers/satchel_body.png",
+      "canvas": [
         128,
         32
       ],
@@ -102,17 +119,23 @@
         64,
         32
       ],
-      "row_counts": [
+      "rows": [
         2
       ],
-      "opaque_colours": 32,
-      "distinct_frames": 2,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 2,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 11,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "98ef9db2a28b8e52e7e2a0755b234703cf0d251582e73678daf89959635cabee",
+      "normal_map": "assets/props/sewers/satchel_body_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.006025674917319757,
+      "positive_z": true,
+      "normal_sha256": "8bee1416f6d46cdb426afb32e20ebbbb9d68d094886f2bfba66274af9669df38"
     },
     {
-      "file": "letter.png",
-      "size": [
+      "file": "assets/props/sewers/letter.png",
+      "canvas": [
         32,
         32
       ],
@@ -120,17 +143,23 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         1
       ],
-      "opaque_colours": 30,
-      "distinct_frames": 1,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 12,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "73be30c35b5efed7031637d945ceb8b5775187ded8aaec1869ceefbe75a0a2dc",
+      "normal_map": "assets/props/sewers/letter_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005907491519452579,
+      "positive_z": true,
+      "normal_sha256": "afffcf09bb39bcba9aeee9c2d000ad15fb698f809f6b133fef6b8aa462272c0c"
     },
     {
-      "file": "hymn_sheet.png",
-      "size": [
+      "file": "assets/props/sewers/hymn_sheet.png",
+      "canvas": [
         32,
         32
       ],
@@ -138,17 +167,23 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         1
       ],
-      "opaque_colours": 30,
-      "distinct_frames": 1,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 11,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "656d39c886ddf7c7c9e5d85f14d68c98ca73ebf0512d535101e4cb71487babeb",
+      "normal_map": "assets/props/sewers/hymn_sheet_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.0049856493129019075,
+      "positive_z": true,
+      "normal_sha256": "816dd8d09c46dd51d23884d8636be08a591e63d483340fda52ee0eaac892b07e"
     },
     {
-      "file": "miner_tag_body.png",
-      "size": [
+      "file": "assets/props/sewers/miner_tag_body.png",
+      "canvas": [
         64,
         32
       ],
@@ -156,17 +191,23 @@
         64,
         32
       ],
-      "row_counts": [
+      "rows": [
         1
       ],
-      "opaque_colours": 30,
-      "distinct_frames": 1,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 13,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "2fe201862867aeec2650c56a08e3ccc1aaa9bbecfce3d3574ca8e0bf80dc8511",
+      "normal_map": "assets/props/sewers/miner_tag_body_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005964526705017903,
+      "positive_z": true,
+      "normal_sha256": "5c04d092f76525fc5886400cb66325012ff44a9237b138a1f71de7319e6fabcc"
     },
     {
-      "file": "valve.png",
-      "size": [
+      "file": "assets/props/sewers/valve.png",
+      "canvas": [
         128,
         32
       ],
@@ -174,17 +215,23 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         4
       ],
-      "opaque_colours": 31,
-      "distinct_frames": 4,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 4,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 11,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "527d0e0cd79dc18a9839192e6f11c2d8373f90f140da4ae50609c6a82ec32419",
+      "normal_map": "assets/props/sewers/valve_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.00590749151945269,
+      "positive_z": true,
+      "normal_sha256": "84460289107ae39b7e0535d5e162a4320438105887853bfff47722264fbe81e2"
     },
     {
-      "file": "bones_1.png",
-      "size": [
+      "file": "assets/props/sewers/bones_1.png",
+      "canvas": [
         32,
         32
       ],
@@ -192,17 +239,23 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         1
       ],
-      "opaque_colours": 31,
-      "distinct_frames": 1,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 18,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "2dc74cdc0f904ae2007eaaa450c48248bfc37693806000e9c89e50604743052b",
+      "normal_map": "assets/props/sewers/bones_1_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005719896677428116,
+      "positive_z": true,
+      "normal_sha256": "3e17c5f002337751b2fac9f9d628a057cf4403ee8b566b502ed9a32a075ce0c2"
     },
     {
-      "file": "bones_2.png",
-      "size": [
+      "file": "assets/props/sewers/bones_2.png",
+      "canvas": [
         32,
         32
       ],
@@ -210,17 +263,23 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         1
       ],
-      "opaque_colours": 29,
-      "distinct_frames": 1,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 16,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "135bfae48f64b9b14bd2c45df4976ea7df8faf40db510533d663650feb843fc9",
+      "normal_map": "assets/props/sewers/bones_2_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005536278670188022,
+      "positive_z": true,
+      "normal_sha256": "2d1f938f7b652c78bfbe3d00d870e068f94ce56997f172f25de7c74d30ab7f51"
     },
     {
-      "file": "bones_3.png",
-      "size": [
+      "file": "assets/props/sewers/bones_3.png",
+      "canvas": [
         32,
         32
       ],
@@ -228,17 +287,23 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         1
       ],
-      "opaque_colours": 31,
-      "distinct_frames": 1,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 15,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "717a1fc5ea1a420cc3181b79cd82fcf0f6e1ecff968454f33e7baba5111a7d9b",
+      "normal_map": "assets/props/sewers/bones_3_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005350724198155521,
+      "positive_z": true,
+      "normal_sha256": "3cee6f070f9bc92c77152429268ee23a0ea87d017d6e39ddc66025feb852e4cf"
     },
     {
-      "file": "debris_1.png",
-      "size": [
+      "file": "assets/props/sewers/debris_1.png",
+      "canvas": [
         32,
         32
       ],
@@ -246,17 +311,23 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         1
       ],
-      "opaque_colours": 30,
-      "distinct_frames": 1,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 12,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "99de4dc8a2c1ad99926b8eac1c12c6159a0b0acb3a3fbab6d4cc5eb29328a631",
+      "normal_map": "assets/props/sewers/debris_1_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.0052916508878742,
+      "positive_z": true,
+      "normal_sha256": "8e784ca3c6f20a15383accbd2956c2d9275c8ff52faa889fc18cefdf7867a742"
     },
     {
-      "file": "debris_2.png",
-      "size": [
+      "file": "assets/props/sewers/debris_2.png",
+      "canvas": [
         32,
         32
       ],
@@ -264,17 +335,23 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         1
       ],
-      "opaque_colours": 28,
-      "distinct_frames": 1,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 16,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "a0c336481a17a46d477c91aecef2202968c9efc970b2a7f7201efe0ee4401f9d",
+      "normal_map": "assets/props/sewers/debris_2_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.0056587298725438995,
+      "positive_z": true,
+      "normal_sha256": "4503af5f7dad22e3a83741c92d52e71d20b9e912264cfb08f6ddd77079aac9a2"
     },
     {
-      "file": "debris_3.png",
-      "size": [
+      "file": "assets/props/sewers/debris_3.png",
+      "canvas": [
         32,
         32
       ],
@@ -282,17 +359,23 @@
         32,
         32
       ],
-      "row_counts": [
+      "rows": [
         1
       ],
-      "opaque_colours": 31,
-      "distinct_frames": 1,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 1,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 12,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "2f346ad8e66781b8c3d2a118411652952020938cf9fde0357228087120ae1799",
+      "normal_map": "assets/props/sewers/debris_3_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.0052916508878742,
+      "positive_z": true,
+      "normal_sha256": "ba065f386d8b014268db5814f2fc50e70c78bf5d00b63f45e1c3dddd897a0a31"
     },
     {
-      "file": "grate_ns.png",
-      "size": [
+      "file": "assets/props/sewers/grate_ns.png",
+      "canvas": [
         128,
         64
       ],
@@ -300,18 +383,24 @@
         64,
         32
       ],
-      "row_counts": [
+      "rows": [
         2,
         2
       ],
-      "opaque_colours": 32,
-      "distinct_frames": 4,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 4,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 10,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "dc579a0f4bcba4b6a0ea6686f6bc1fb73f40dc2dc0a618bbe27f6c8f1c1eff9d",
+      "normal_map": "assets/props/sewers/grate_ns_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005719896677428116,
+      "positive_z": true,
+      "normal_sha256": "0922d42add87c8d3a019c3da9a08f9706a4df8c525a87f81cab4edf5b642937a"
     },
     {
-      "file": "grate_ew.png",
-      "size": [
+      "file": "assets/props/sewers/grate_ew.png",
+      "canvas": [
         64,
         128
       ],
@@ -319,50 +408,23 @@
         32,
         64
       ],
-      "row_counts": [
+      "rows": [
         2,
         2
       ],
-      "opaque_colours": 32,
-      "distinct_frames": 4,
-      "binary_alpha": true,
-      "cleared_transparent_rgb": true
+      "frames": 4,
+      "original_alpha_and_root_preserved": true,
+      "opaque_colours": 12,
+      "palette": "shared room palette plus explicitly approved muted-red scarf/blood accents",
+      "sha256": "5a8229753b8a6c1b15e7f98e690ae5279e65b5e95d9f2cbf976a6a29a959b942",
+      "normal_map": "assets/props/sewers/grate_ew_n.png",
+      "normal_alpha_matches": true,
+      "max_unit_vector_error": 0.005719896677428116,
+      "positive_z": true,
+      "normal_sha256": "a703f48e1f49dd078371471f29cf9e88e5c74d764b60545ba785c146d9cc2043"
     }
   ],
-  "grate_clearance": {
-    "grate_ns": {
-      "interior_opaque_fraction": [
-        0.5247395833333334,
-        0.5325520833333334,
-        0.13932291666666666,
-        0.13541666666666666
-      ],
-      "centreline_clear_run_px": [
-        2,
-        2,
-        48,
-        48
-      ],
-      "rows": "two shut, then two open, confirmed by Julian"
-    },
-    "grate_ew": {
-      "interior_opaque_fraction": [
-        0.7864583333333334,
-        0.7838541666666666,
-        0.08333333333333333,
-        0.18880208333333334
-      ],
-      "centreline_clear_run_px": [
-        5,
-        5,
-        52,
-        52
-      ],
-      "rows": "two shut, then two open, confirmed by Julian"
-    }
-  },
-  "three_distinct_bone_variants": true,
-  "three_distinct_debris_variants": true,
-  "native_visual_review": "Icons, paired caches, valve and both grate rows reviewed at nearest enlargement. Placement preview uses actual exported sprites.",
-  "limit": "Art checks only. Collision, interaction states, actual game lighting and animation timing require Claude integration."
+  "alpha_and_grate_openings_identical_to_before": true,
+  "house_style_review": "production/house-style/README.md",
+  "limit": "Native compositing and controlled normal-lighting reviews, not engine screenshots. Actual game light strengths and mirrored normal orientation require gameplay review."
 }

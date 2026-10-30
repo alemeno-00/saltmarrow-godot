@@ -1,0 +1,1858 @@
+{
+  "runtime": "assets/characters/thomas/body.png",
+  "canvas": [
+    384,
+    512
+  ],
+  "frame_size": [
+    64,
+    64
+  ],
+  "row_counts": [
+    4,
+    6,
+    6,
+    3,
+    6,
+    6,
+    6,
+    4
+  ],
+  "root": [
+    32,
+    56
+  ],
+  "palette_source": "assets/tiles/sewers/rooms/production/palette.json",
+  "preserved_red_accents": [
+    [
+      41,
+      16,
+      19
+    ],
+    [
+      69,
+      27,
+      29
+    ],
+    [
+      94,
+      39,
+      37
+    ],
+    [
+      122,
+      52,
+      45
+    ]
+  ],
+  "alpha": "exact original binary mask",
+  "colour_transfer": "generated value distribution applied to original pixel clusters; all poses and alpha retained",
+  "colour_guide_registration": [
+    {
+      "row": 1,
+      "frame": 1,
+      "source_cell": [
+        0,
+        0,
+        181,
+        181
+      ],
+      "source_alpha_bounds": [
+        65,
+        31,
+        117,
+        158
+      ],
+      "target_alpha_bounds": [
+        23,
+        10,
+        42,
+        56
+      ]
+    },
+    {
+      "row": 1,
+      "frame": 2,
+      "source_cell": [
+        181,
+        0,
+        362,
+        181
+      ],
+      "source_alpha_bounds": [
+        65,
+        32,
+        118,
+        158
+      ],
+      "target_alpha_bounds": [
+        23,
+        10,
+        42,
+        56
+      ]
+    },
+    {
+      "row": 1,
+      "frame": 3,
+      "source_cell": [
+        362,
+        0,
+        543,
+        181
+      ],
+      "source_alpha_bounds": [
+        64,
+        32,
+        117,
+        158
+      ],
+      "target_alpha_bounds": [
+        23,
+        10,
+        42,
+        56
+      ]
+    },
+    {
+      "row": 1,
+      "frame": 4,
+      "source_cell": [
+        543,
+        0,
+        724,
+        181
+      ],
+      "source_alpha_bounds": [
+        63,
+        32,
+        119,
+        158
+      ],
+      "target_alpha_bounds": [
+        22,
+        10,
+        42,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 1,
+      "source_cell": [
+        0,
+        181,
+        181,
+        362
+      ],
+      "source_alpha_bounds": [
+        53,
+        34,
+        126,
+        158
+      ],
+      "target_alpha_bounds": [
+        19,
+        11,
+        45,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 2,
+      "source_cell": [
+        181,
+        181,
+        362,
+        362
+      ],
+      "source_alpha_bounds": [
+        57,
+        36,
+        124,
+        158
+      ],
+      "target_alpha_bounds": [
+        20,
+        11,
+        44,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 3,
+      "source_cell": [
+        362,
+        181,
+        543,
+        362
+      ],
+      "source_alpha_bounds": [
+        56,
+        36,
+        125,
+        158
+      ],
+      "target_alpha_bounds": [
+        20,
+        11,
+        44,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 4,
+      "source_cell": [
+        543,
+        181,
+        724,
+        362
+      ],
+      "source_alpha_bounds": [
+        53,
+        36,
+        129,
+        158
+      ],
+      "target_alpha_bounds": [
+        19,
+        11,
+        46,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 5,
+      "source_cell": [
+        724,
+        181,
+        905,
+        362
+      ],
+      "source_alpha_bounds": [
+        58,
+        36,
+        127,
+        158
+      ],
+      "target_alpha_bounds": [
+        20,
+        11,
+        45,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 6,
+      "source_cell": [
+        905,
+        181,
+        1086,
+        362
+      ],
+      "source_alpha_bounds": [
+        55,
+        36,
+        122,
+        158
+      ],
+      "target_alpha_bounds": [
+        20,
+        11,
+        44,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 1,
+      "source_cell": [
+        0,
+        362,
+        181,
+        543
+      ],
+      "source_alpha_bounds": [
+        43,
+        61,
+        135,
+        158
+      ],
+      "target_alpha_bounds": [
+        16,
+        21,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 2,
+      "source_cell": [
+        181,
+        362,
+        362,
+        543
+      ],
+      "source_alpha_bounds": [
+        42,
+        63,
+        135,
+        158
+      ],
+      "target_alpha_bounds": [
+        16,
+        22,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 3,
+      "source_cell": [
+        362,
+        362,
+        543,
+        543
+      ],
+      "source_alpha_bounds": [
+        42,
+        66,
+        135,
+        158
+      ],
+      "target_alpha_bounds": [
+        16,
+        23,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 4,
+      "source_cell": [
+        543,
+        362,
+        724,
+        543
+      ],
+      "source_alpha_bounds": [
+        40,
+        66,
+        137,
+        158
+      ],
+      "target_alpha_bounds": [
+        16,
+        23,
+        49,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 5,
+      "source_cell": [
+        724,
+        362,
+        905,
+        543
+      ],
+      "source_alpha_bounds": [
+        40,
+        68,
+        134,
+        158
+      ],
+      "target_alpha_bounds": [
+        16,
+        24,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 6,
+      "source_cell": [
+        905,
+        362,
+        1086,
+        543
+      ],
+      "source_alpha_bounds": [
+        45,
+        63,
+        130,
+        158
+      ],
+      "target_alpha_bounds": [
+        17,
+        22,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 1,
+      "source_cell": [
+        0,
+        543,
+        181,
+        724
+      ],
+      "source_alpha_bounds": [
+        50,
+        34,
+        136,
+        160
+      ],
+      "target_alpha_bounds": [
+        18,
+        11,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 2,
+      "source_cell": [
+        181,
+        543,
+        362,
+        724
+      ],
+      "source_alpha_bounds": [
+        41,
+        32,
+        140,
+        160
+      ],
+      "target_alpha_bounds": [
+        16,
+        11,
+        49,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 3,
+      "source_cell": [
+        362,
+        543,
+        543,
+        724
+      ],
+      "source_alpha_bounds": [
+        48,
+        39,
+        132,
+        160
+      ],
+      "target_alpha_bounds": [
+        18,
+        14,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "frame": 1,
+      "source_cell": [
+        0,
+        724,
+        181,
+        905
+      ],
+      "source_alpha_bounds": [
+        45,
+        31,
+        136,
+        159
+      ],
+      "target_alpha_bounds": [
+        17,
+        11,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "frame": 2,
+      "source_cell": [
+        181,
+        724,
+        362,
+        905
+      ],
+      "source_alpha_bounds": [
+        47,
+        25,
+        131,
+        159
+      ],
+      "target_alpha_bounds": [
+        18,
+        9,
+        46,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "frame": 3,
+      "source_cell": [
+        362,
+        724,
+        543,
+        905
+      ],
+      "source_alpha_bounds": [
+        54,
+        25,
+        125,
+        159
+      ],
+      "target_alpha_bounds": [
+        20,
+        9,
+        44,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "frame": 4,
+      "source_cell": [
+        543,
+        724,
+        724,
+        905
+      ],
+      "source_alpha_bounds": [
+        48,
+        28,
+        130,
+        159
+      ],
+      "target_alpha_bounds": [
+        19,
+        10,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "frame": 5,
+      "source_cell": [
+        724,
+        724,
+        905,
+        905
+      ],
+      "source_alpha_bounds": [
+        52,
+        20,
+        128,
+        159
+      ],
+      "target_alpha_bounds": [
+        20,
+        7,
+        45,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "frame": 6,
+      "source_cell": [
+        905,
+        724,
+        1086,
+        905
+      ],
+      "source_alpha_bounds": [
+        51,
+        22,
+        125,
+        159
+      ],
+      "target_alpha_bounds": [
+        19,
+        7,
+        45,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "frame": 1,
+      "source_cell": [
+        0,
+        905,
+        181,
+        1086
+      ],
+      "source_alpha_bounds": [
+        30,
+        103,
+        152,
+        158
+      ],
+      "target_alpha_bounds": [
+        11,
+        37,
+        53,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "frame": 2,
+      "source_cell": [
+        181,
+        905,
+        362,
+        1086
+      ],
+      "source_alpha_bounds": [
+        30,
+        95,
+        151,
+        158
+      ],
+      "target_alpha_bounds": [
+        11,
+        34,
+        53,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "frame": 3,
+      "source_cell": [
+        362,
+        905,
+        543,
+        1086
+      ],
+      "source_alpha_bounds": [
+        37,
+        106,
+        148,
+        158
+      ],
+      "target_alpha_bounds": [
+        13,
+        38,
+        52,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "frame": 4,
+      "source_cell": [
+        543,
+        905,
+        724,
+        1086
+      ],
+      "source_alpha_bounds": [
+        25,
+        106,
+        156,
+        158
+      ],
+      "target_alpha_bounds": [
+        9,
+        38,
+        55,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "frame": 5,
+      "source_cell": [
+        724,
+        905,
+        905,
+        1086
+      ],
+      "source_alpha_bounds": [
+        30,
+        103,
+        152,
+        159
+      ],
+      "target_alpha_bounds": [
+        11,
+        37,
+        53,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "frame": 6,
+      "source_cell": [
+        905,
+        905,
+        1086,
+        1086
+      ],
+      "source_alpha_bounds": [
+        36,
+        106,
+        159,
+        158
+      ],
+      "target_alpha_bounds": [
+        13,
+        38,
+        51,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "frame": 1,
+      "source_cell": [
+        0,
+        1086,
+        181,
+        1267
+      ],
+      "source_alpha_bounds": [
+        57,
+        33,
+        124,
+        158
+      ],
+      "target_alpha_bounds": [
+        21,
+        12,
+        44,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "frame": 2,
+      "source_cell": [
+        181,
+        1086,
+        362,
+        1267
+      ],
+      "source_alpha_bounds": [
+        49,
+        56,
+        135,
+        158
+      ],
+      "target_alpha_bounds": [
+        18,
+        20,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "frame": 3,
+      "source_cell": [
+        362,
+        1086,
+        543,
+        1267
+      ],
+      "source_alpha_bounds": [
+        40,
+        85,
+        140,
+        159
+      ],
+      "target_alpha_bounds": [
+        15,
+        31,
+        49,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "frame": 4,
+      "source_cell": [
+        543,
+        1086,
+        724,
+        1267
+      ],
+      "source_alpha_bounds": [
+        31,
+        112,
+        150,
+        158
+      ],
+      "target_alpha_bounds": [
+        11,
+        40,
+        53,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "frame": 5,
+      "source_cell": [
+        724,
+        1086,
+        905,
+        1267
+      ],
+      "source_alpha_bounds": [
+        21,
+        119,
+        159,
+        158
+      ],
+      "target_alpha_bounds": [
+        8,
+        42,
+        56,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "frame": 6,
+      "source_cell": [
+        905,
+        1086,
+        1086,
+        1267
+      ],
+      "source_alpha_bounds": [
+        17,
+        121,
+        167,
+        158
+      ],
+      "target_alpha_bounds": [
+        6,
+        43,
+        59,
+        56
+      ]
+    },
+    {
+      "row": 8,
+      "frame": 1,
+      "source_cell": [
+        0,
+        1267,
+        181,
+        1448
+      ],
+      "source_alpha_bounds": [
+        29,
+        35,
+        155,
+        158
+      ],
+      "target_alpha_bounds": [
+        10,
+        12,
+        55,
+        56
+      ]
+    },
+    {
+      "row": 8,
+      "frame": 2,
+      "source_cell": [
+        181,
+        1267,
+        362,
+        1448
+      ],
+      "source_alpha_bounds": [
+        24,
+        35,
+        161,
+        158
+      ],
+      "target_alpha_bounds": [
+        8,
+        12,
+        57,
+        56
+      ]
+    },
+    {
+      "row": 8,
+      "frame": 3,
+      "source_cell": [
+        362,
+        1267,
+        543,
+        1448
+      ],
+      "source_alpha_bounds": [
+        27,
+        35,
+        158,
+        158
+      ],
+      "target_alpha_bounds": [
+        9,
+        12,
+        56,
+        56
+      ]
+    },
+    {
+      "row": 8,
+      "frame": 4,
+      "source_cell": [
+        543,
+        1267,
+        724,
+        1448
+      ],
+      "source_alpha_bounds": [
+        26,
+        35,
+        155,
+        158
+      ],
+      "target_alpha_bounds": [
+        9,
+        12,
+        55,
+        56
+      ]
+    }
+  ],
+  "normal_registration": [
+    {
+      "row": 1,
+      "frame": 1,
+      "source_cell": [
+        0,
+        0,
+        181,
+        181
+      ],
+      "source_alpha_bounds": [
+        62,
+        28,
+        117,
+        160
+      ],
+      "target_alpha_bounds": [
+        23,
+        10,
+        42,
+        56
+      ]
+    },
+    {
+      "row": 1,
+      "frame": 2,
+      "source_cell": [
+        181,
+        0,
+        362,
+        181
+      ],
+      "source_alpha_bounds": [
+        62,
+        28,
+        118,
+        159
+      ],
+      "target_alpha_bounds": [
+        23,
+        10,
+        42,
+        56
+      ]
+    },
+    {
+      "row": 1,
+      "frame": 3,
+      "source_cell": [
+        362,
+        0,
+        543,
+        181
+      ],
+      "source_alpha_bounds": [
+        63,
+        28,
+        118,
+        160
+      ],
+      "target_alpha_bounds": [
+        23,
+        10,
+        42,
+        56
+      ]
+    },
+    {
+      "row": 1,
+      "frame": 4,
+      "source_cell": [
+        543,
+        0,
+        724,
+        181
+      ],
+      "source_alpha_bounds": [
+        62,
+        28,
+        118,
+        160
+      ],
+      "target_alpha_bounds": [
+        22,
+        10,
+        42,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 1,
+      "source_cell": [
+        0,
+        181,
+        181,
+        362
+      ],
+      "source_alpha_bounds": [
+        52,
+        32,
+        128,
+        160
+      ],
+      "target_alpha_bounds": [
+        19,
+        11,
+        45,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 2,
+      "source_cell": [
+        181,
+        181,
+        362,
+        362
+      ],
+      "source_alpha_bounds": [
+        56,
+        32,
+        126,
+        160
+      ],
+      "target_alpha_bounds": [
+        20,
+        11,
+        44,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 3,
+      "source_cell": [
+        362,
+        181,
+        543,
+        362
+      ],
+      "source_alpha_bounds": [
+        56,
+        32,
+        127,
+        160
+      ],
+      "target_alpha_bounds": [
+        20,
+        11,
+        44,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 4,
+      "source_cell": [
+        543,
+        181,
+        724,
+        362
+      ],
+      "source_alpha_bounds": [
+        54,
+        32,
+        130,
+        160
+      ],
+      "target_alpha_bounds": [
+        19,
+        11,
+        46,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 5,
+      "source_cell": [
+        724,
+        181,
+        905,
+        362
+      ],
+      "source_alpha_bounds": [
+        56,
+        32,
+        129,
+        161
+      ],
+      "target_alpha_bounds": [
+        20,
+        11,
+        45,
+        56
+      ]
+    },
+    {
+      "row": 2,
+      "frame": 6,
+      "source_cell": [
+        905,
+        181,
+        1086,
+        362
+      ],
+      "source_alpha_bounds": [
+        56,
+        32,
+        126,
+        160
+      ],
+      "target_alpha_bounds": [
+        20,
+        11,
+        44,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 1,
+      "source_cell": [
+        0,
+        362,
+        181,
+        543
+      ],
+      "source_alpha_bounds": [
+        40,
+        57,
+        135,
+        160
+      ],
+      "target_alpha_bounds": [
+        16,
+        21,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 2,
+      "source_cell": [
+        181,
+        362,
+        362,
+        543
+      ],
+      "source_alpha_bounds": [
+        41,
+        59,
+        137,
+        157
+      ],
+      "target_alpha_bounds": [
+        16,
+        22,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 3,
+      "source_cell": [
+        362,
+        362,
+        543,
+        543
+      ],
+      "source_alpha_bounds": [
+        40,
+        60,
+        140,
+        160
+      ],
+      "target_alpha_bounds": [
+        16,
+        23,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 4,
+      "source_cell": [
+        543,
+        362,
+        724,
+        543
+      ],
+      "source_alpha_bounds": [
+        40,
+        61,
+        139,
+        160
+      ],
+      "target_alpha_bounds": [
+        16,
+        23,
+        49,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 5,
+      "source_cell": [
+        724,
+        362,
+        905,
+        543
+      ],
+      "source_alpha_bounds": [
+        41,
+        62,
+        139,
+        160
+      ],
+      "target_alpha_bounds": [
+        16,
+        24,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 3,
+      "frame": 6,
+      "source_cell": [
+        905,
+        362,
+        1086,
+        543
+      ],
+      "source_alpha_bounds": [
+        43,
+        60,
+        137,
+        160
+      ],
+      "target_alpha_bounds": [
+        17,
+        22,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 1,
+      "source_cell": [
+        0,
+        543,
+        181,
+        724
+      ],
+      "source_alpha_bounds": [
+        49,
+        30,
+        136,
+        162
+      ],
+      "target_alpha_bounds": [
+        18,
+        11,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 2,
+      "source_cell": [
+        181,
+        543,
+        362,
+        724
+      ],
+      "source_alpha_bounds": [
+        44,
+        30,
+        141,
+        162
+      ],
+      "target_alpha_bounds": [
+        16,
+        11,
+        49,
+        56
+      ]
+    },
+    {
+      "row": 4,
+      "frame": 3,
+      "source_cell": [
+        362,
+        543,
+        543,
+        724
+      ],
+      "source_alpha_bounds": [
+        49,
+        38,
+        136,
+        162
+      ],
+      "target_alpha_bounds": [
+        18,
+        14,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "frame": 1,
+      "source_cell": [
+        0,
+        724,
+        181,
+        905
+      ],
+      "source_alpha_bounds": [
+        42,
+        33,
+        133,
+        169
+      ],
+      "target_alpha_bounds": [
+        17,
+        11,
+        48,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "frame": 2,
+      "source_cell": [
+        181,
+        724,
+        362,
+        905
+      ],
+      "source_alpha_bounds": [
+        48,
+        31,
+        132,
+        169
+      ],
+      "target_alpha_bounds": [
+        18,
+        9,
+        46,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "frame": 3,
+      "source_cell": [
+        362,
+        724,
+        543,
+        905
+      ],
+      "source_alpha_bounds": [
+        52,
+        31,
+        124,
+        169
+      ],
+      "target_alpha_bounds": [
+        20,
+        9,
+        44,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "frame": 4,
+      "source_cell": [
+        543,
+        724,
+        724,
+        905
+      ],
+      "source_alpha_bounds": [
+        49,
+        31,
+        131,
+        169
+      ],
+      "target_alpha_bounds": [
+        19,
+        10,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "frame": 5,
+      "source_cell": [
+        724,
+        724,
+        905,
+        905
+      ],
+      "source_alpha_bounds": [
+        55,
+        26,
+        131,
+        169
+      ],
+      "target_alpha_bounds": [
+        20,
+        7,
+        45,
+        56
+      ]
+    },
+    {
+      "row": 5,
+      "frame": 6,
+      "source_cell": [
+        905,
+        724,
+        1086,
+        905
+      ],
+      "source_alpha_bounds": [
+        54,
+        27,
+        130,
+        169
+      ],
+      "target_alpha_bounds": [
+        19,
+        7,
+        45,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "frame": 1,
+      "source_cell": [
+        0,
+        905,
+        181,
+        1086
+      ],
+      "source_alpha_bounds": [
+        25,
+        93,
+        153,
+        152
+      ],
+      "target_alpha_bounds": [
+        11,
+        37,
+        53,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "frame": 2,
+      "source_cell": [
+        181,
+        905,
+        362,
+        1086
+      ],
+      "source_alpha_bounds": [
+        22,
+        87,
+        154,
+        153
+      ],
+      "target_alpha_bounds": [
+        11,
+        34,
+        53,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "frame": 3,
+      "source_cell": [
+        362,
+        905,
+        543,
+        1086
+      ],
+      "source_alpha_bounds": [
+        31,
+        94,
+        150,
+        151
+      ],
+      "target_alpha_bounds": [
+        13,
+        38,
+        52,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "frame": 4,
+      "source_cell": [
+        543,
+        905,
+        724,
+        1086
+      ],
+      "source_alpha_bounds": [
+        24,
+        93,
+        157,
+        151
+      ],
+      "target_alpha_bounds": [
+        9,
+        38,
+        55,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "frame": 5,
+      "source_cell": [
+        724,
+        905,
+        905,
+        1086
+      ],
+      "source_alpha_bounds": [
+        24,
+        88,
+        155,
+        154
+      ],
+      "target_alpha_bounds": [
+        11,
+        37,
+        53,
+        56
+      ]
+    },
+    {
+      "row": 6,
+      "frame": 6,
+      "source_cell": [
+        905,
+        905,
+        1086,
+        1086
+      ],
+      "source_alpha_bounds": [
+        27,
+        94,
+        156,
+        151
+      ],
+      "target_alpha_bounds": [
+        13,
+        38,
+        51,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "frame": 1,
+      "source_cell": [
+        0,
+        1086,
+        181,
+        1267
+      ],
+      "source_alpha_bounds": [
+        53,
+        26,
+        123,
+        154
+      ],
+      "target_alpha_bounds": [
+        21,
+        12,
+        44,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "frame": 2,
+      "source_cell": [
+        181,
+        1086,
+        362,
+        1267
+      ],
+      "source_alpha_bounds": [
+        48,
+        43,
+        137,
+        153
+      ],
+      "target_alpha_bounds": [
+        18,
+        20,
+        47,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "frame": 3,
+      "source_cell": [
+        362,
+        1086,
+        543,
+        1267
+      ],
+      "source_alpha_bounds": [
+        37,
+        71,
+        141,
+        151
+      ],
+      "target_alpha_bounds": [
+        15,
+        31,
+        49,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "frame": 4,
+      "source_cell": [
+        543,
+        1086,
+        724,
+        1267
+      ],
+      "source_alpha_bounds": [
+        25,
+        100,
+        153,
+        149
+      ],
+      "target_alpha_bounds": [
+        11,
+        40,
+        53,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "frame": 5,
+      "source_cell": [
+        724,
+        1086,
+        905,
+        1267
+      ],
+      "source_alpha_bounds": [
+        18,
+        106,
+        160,
+        149
+      ],
+      "target_alpha_bounds": [
+        8,
+        42,
+        56,
+        56
+      ]
+    },
+    {
+      "row": 7,
+      "frame": 6,
+      "source_cell": [
+        905,
+        1086,
+        1086,
+        1267
+      ],
+      "source_alpha_bounds": [
+        13,
+        108,
+        167,
+        152
+      ],
+      "target_alpha_bounds": [
+        6,
+        43,
+        59,
+        56
+      ]
+    },
+    {
+      "row": 8,
+      "frame": 1,
+      "source_cell": [
+        0,
+        1267,
+        181,
+        1448
+      ],
+      "source_alpha_bounds": [
+        24,
+        24,
+        169,
+        154
+      ],
+      "target_alpha_bounds": [
+        10,
+        12,
+        55,
+        56
+      ]
+    },
+    {
+      "row": 8,
+      "frame": 2,
+      "source_cell": [
+        181,
+        1267,
+        362,
+        1448
+      ],
+      "source_alpha_bounds": [
+        22,
+        24,
+        172,
+        154
+      ],
+      "target_alpha_bounds": [
+        8,
+        12,
+        57,
+        56
+      ]
+    },
+    {
+      "row": 8,
+      "frame": 3,
+      "source_cell": [
+        362,
+        1267,
+        543,
+        1448
+      ],
+      "source_alpha_bounds": [
+        22,
+        24,
+        170,
+        154
+      ],
+      "target_alpha_bounds": [
+        9,
+        12,
+        56,
+        56
+      ]
+    },
+    {
+      "row": 8,
+      "frame": 4,
+      "source_cell": [
+        543,
+        1267,
+        724,
+        1448
+      ],
+      "source_alpha_bounds": [
+        25,
+        24,
+        168,
+        154
+      ],
+      "target_alpha_bounds": [
+        9,
+        12,
+        55,
+        56
+      ]
+    }
+  ]
+}
