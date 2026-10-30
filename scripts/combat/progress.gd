@@ -20,6 +20,7 @@ var hits := {}            # weapon tree -> hits landed
 var mastery := {}         # weapon tree -> unspent mastery points
 var open_trees: Array[String] = []
 var owned: Array[String] = []   # "tree/node"
+var belt: Array[String] = []    # what he carries (Items.BELT_SLOTS at most); lost when he dies
 
 
 static func fury() -> Progress:
@@ -148,6 +149,14 @@ func raise_stat(stat: String) -> bool:
 		return false
 	stats[stat] = int(stats[stat]) + 1
 	stat_points -= 1
+	return true
+
+
+## Put an item on the belt. False if the belt is full (the item stays where it lies).
+func add_to_belt(item: String) -> bool:
+	if belt.size() >= Items.BELT_SLOTS:
+		return false
+	belt.append(item)
 	return true
 
 

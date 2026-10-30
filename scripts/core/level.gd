@@ -3,8 +3,9 @@ extends RefCounted
 ## One level's tiles and the rules for walking them.
 ## Pure data with no drawing, so it can be tested headless and saved as it is.
 
-enum Tile { WALL, FLOOR, DOOR_CLOSED, DOOR_OPEN, WATER, STAIRS, GATE_OPEN, GATE_SHUT, PROP, RAIL, COVER }
+enum Tile { WALL, FLOOR, DOOR_CLOSED, DOOR_OPEN, WATER, STAIRS, GATE_OPEN, GATE_SHUT, PROP, RAIL, COVER, GRATE_SHUT, GRATE_OPEN }
 ## COVER: a crate or barrel. Blocks walking, not sight; a crouched Thomas right behind one is hidden (sneaking spec).
+## GRATE_SHUT / GRATE_OPEN: an iron grate across a tunnel (room contents, part 4): bars you can see through.
 ## PROP: machinery, pillars, crates: blocks movement and sight. RAIL: a railing: blocks movement, not sight.
 
 const DIRS_8: Array[Vector2i] = [
@@ -30,6 +31,15 @@ var gates: Array[Vector2i] = []
 var cover := {}
 ## Extra connections the generator made where doorways lined up (so the level isn't a tree).
 var loops := 0
+## Room contents (design/quick-specs/room-contents-2026-10-30.md, parts 3-4), placed by RoomContents.
+## Caches: square -> {kind: crate / barrel / satchel, item: salve / bandage / grate_key, opened, drowned (under water
+## until the valve drains it)}.
+var caches := {}
+var grate: Array[Vector2i] = []   # the locked grate's squares, if this level's puzzle is a grate
+var grate_across := ""            # "ns" (across a north-south tunnel) or "ew"
+var valve := Vector2i(-1, -1)     # the sluice valve, if this level's puzzle is a valve
+var drain: Array[Vector2i] = []   # the water squares the valve drains
+var drained := {}                 # squares the valve has drained (drawn as wet silt over the painting)
 
 const OUTFLOW_SIZE := Vector2i(12, 9)
 # The Outflow's fixed layout, matching design/art-briefs/outflow/outflow-blockout.png (columns and rows inside the room).
@@ -70,7 +80,7 @@ func set_tile(c: Vector2i, t: int) -> void:
 
 
 static func _passable(t: int) -> bool:
-	return t == Tile.FLOOR or t == Tile.DOOR_CLOSED or t == Tile.DOOR_OPEN or t == Tile.WATER or t == Tile.STAIRS
+	return t == Tile.FLOOR or t == Tile.DOOR_CLOSED or t == Tile.DOOR_OPEN or t == Tile.WATER or t == Tile.STAIRS or t == Tile.GRATE_OPEN
 
 
 func is_walkable(c: Vector2i) -> bool:
@@ -157,12 +167,19 @@ func generate(seed_in: int, bottom := false) -> void:
 		if SewerKit.build(self, rng, bottom):
 			break
 	rebuild_paths()
+	RoomContents.place(self)
 
 
 func _clear() -> void:
 	tiles.fill(Tile.WALL)
 	cover.clear()
 	loops = 0
+	caches.clear()
+	grate.clear()
+	grate_across = ""
+	valve = Vector2i(-1, -1)
+	drain.clear()
+	drained.clear()
 	rooms.clear()
 	pieces.clear()
 	lights.clear()

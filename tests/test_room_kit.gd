@@ -89,8 +89,8 @@ func _piece_matches(l: Level, p: Dictionary) -> int:
 				if not (p.open as Array).has(side):
 					code = "F" if side == "n" else "#"
 			var t := l.get_tile(r.position + Vector2i(x, y))
-			if t == Level.Tile.COVER and TILE_OF[code] == Level.Tile.FLOOR:
-				continue   # a crate or barrel stands on the blockout's floor
+			if (t == Level.Tile.COVER or t == Level.Tile.GRATE_SHUT or t == Level.Tile.GRATE_OPEN) and TILE_OF[code] == Level.Tile.FLOOR:
+				continue   # a crate, barrel, valve or grate stands on the blockout's floor
 			if t != TILE_OF[code]:
 				bad += 1
 	return bad
@@ -101,6 +101,8 @@ func test_levels_over_many_seeds() -> void:
 		var bottom := s % 3 == 0
 		var l := Level.new()
 		l.generate(s, bottom)
+		for g in l.grate:
+			l.set_tile(g, Level.Tile.GRATE_OPEN)   # behind the locked grate is reachable once it's open
 		var rooms := l.pieces.filter(func(p): return p.kind != "connector")
 		check(rooms.size() >= 8 and rooms.size() <= 13, "seed %d: 8-12 rooms plus the exit (has %d)" % [s, rooms.size()])
 		var reach := l.reachable_from(l.start)

@@ -31,6 +31,12 @@ func _draw() -> void:
 			if MovementRules.metres(v.position.distance_to(game.hero.position)) <= StealthRules.CONE_SHOW:
 				_draw_cone(e, v)
 				_draw_alert(e, v)
+	# what the mouse is over that can be used: picked out, with its name (as in Baldur's Gate 3)
+	var thing := game.thing_at(get_global_mouse_position())
+	if not thing.is_empty():
+		var at := MovementRules.centre(thing.cell)
+		draw_rect(Rect2(at - Vector2(15, 15), Vector2(30, 30)), Color(1.0, 0.85, 0.5, 0.8), false, 1.0)
+		draw_string(ThemeDB.fallback_font, at + Vector2(-80, -22), thing.name, HORIZONTAL_ALIGNMENT_CENTER, 160, 10, Color(1.0, 0.88, 0.6))
 	# getting ready to throw a dagger: how far it reaches, and where it would land
 	if game.aiming_throw:
 		var reach := Game.throw_reach()

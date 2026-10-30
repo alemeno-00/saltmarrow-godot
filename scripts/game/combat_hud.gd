@@ -8,6 +8,7 @@ signal stand_pressed
 signal breath_pressed
 signal end_turn_pressed
 signal step_pressed
+signal belt_pressed(slot: int)
 
 const INK := Color(0.9, 0.85, 0.75)
 const DIM := Color(0.6, 0.57, 0.52)
@@ -29,6 +30,7 @@ var card_panel: PanelContainer
 var banner: Label
 var log_label: Label
 var turn_row: HBoxContainer   # the turn order along the top, the one acting lit
+var belt_row: HBoxContainer   # the belt's four slots, bottom right, always shown
 var _turn_key := ""
 var _log_lines: Array[String] = []
 var history: Array[String] = []   # every line this level, for tests and tools
@@ -79,6 +81,13 @@ func _ready() -> void:
 	card.add_theme_font_size_override("font_size", 14)
 	card_panel.add_child(card)
 	card_panel.visible = false
+
+	belt_row = HBoxContainer.new()
+	belt_row.position = Vector2(1280 - 4 * 46 - 14, 720 - 56)
+	belt_row.add_theme_constant_override("separation", 6)
+	belt_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(belt_row)
+	set_belt([])
 
 	turn_row = HBoxContainer.new()
 	turn_row.position = Vector2(14, 44)
@@ -236,6 +245,42 @@ func _chip(text: String, font: int, col: Color) -> Label:
 	l.add_theme_color_override("font_shadow_color", Color(0, 0, 0, 0.85))
 	l.add_theme_font_size_override("font_size", font)
 	return l
+
+
+## The belt: four slots (keys 6-9), each the item's icon or empty.
+func set_belt(items: Array) -> void:
+	for c in belt_row.get_children():
+		c.queue_free()
+	for i in Items.BELT_SLOTS:
+		var slot := Button.new()
+		slot.custom_minimum_size = Vector2(40, 40)
+		slot.focus_mode = Control.FOCUS_NONE
+		slot.pressed.connect(func(): belt_pressed.emit(i))
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.06, 0.06, 0.07, 0.85)
+		sb.border_color = Color(0.45, 0.38, 0.28)
+		sb.set_border_width_all(1)
+		slot.add_theme_stylebox_override("normal", sb)
+		var hover := sb.duplicate()
+		hover.border_color = AMBER
+		slot.add_theme_stylebox_override("hover", hover)
+		if i < items.size():
+			var tex := Items.icon(items[i])
+			if tex != null:
+				var icon := TextureRect.new()
+				icon.texture = tex
+				icon.position = Vector2(4, 4)
+				icon.size = Vector2(32, 32)
+				icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+				icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				slot.add_child(icon)
+			else:
+				slot.add_child(_chip(Items.NAMES[items[i]], 10, INK))
+			slot.tooltip_text = Items.TEXT[items[i]]
+		var key := _chip(str(6 + i), 11, AMBER)
+		key.position = Vector2(2, 0)
+		slot.add_child(key)
+		belt_row.add_child(slot)
 
 
 ## The enemy side's Malice: it grows every round, so long fights get worse.

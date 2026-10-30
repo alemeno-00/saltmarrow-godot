@@ -438,6 +438,36 @@ func hero_catch_breath() -> Array:
 	return _flush()
 
 
+## Use something from the belt (a maneuver): a salve gives back 8 Stamina, a bandage stops bleeding. Returns no
+## events if it can't be used now.
+func hero_use(item: String) -> Array:
+	if not is_hero_turn():
+		return []
+	if budget.maneuver <= 0:
+		_log("No maneuver left this turn.")
+		return _flush()
+	match item:
+		"salve":
+			hero.stamina = mini(hero.max_stamina, hero.stamina + Items.SALVE_HEAL)
+			if hero.stamina > 0 and hero.dying:
+				hero.dying = false
+			_emit({"t": "heal", "unit": hero})
+			_log("Thomas smears salve into his wounds.")
+		"bandage":
+			if not hero.bleeding:
+				_log("He isn't bleeding.")
+				return _flush()
+			hero.bleeding = false
+			hero.bleed = 0
+			_emit({"t": "status", "unit": hero})
+			_log("Thomas binds the wound. The bleeding stops.")
+		_:
+			_log("That's no use in a fight.")
+			return _flush()
+	_spend("maneuver")
+	return _flush()
+
+
 ## Is Thomas within reach of square `c` (a gate in the wall)?
 func _reaches_square(u: Combatant, c: Vector2i) -> bool:
 	var box := Rect2(Vector2(c * MovementRules.TILE), Vector2(MovementRules.TILE, MovementRules.TILE))
