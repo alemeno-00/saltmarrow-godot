@@ -1885,7 +1885,7 @@ func _tick_fog(delta: float) -> void:
 	for e in enemies:
 		var v: ActorView = views.get(e)
 		if v != null:
-			v.modulate.a = move_toward(v.modulate.a, 1.0 if can_see(e) else 0.0, delta * FOG_FADE)
+			v.fog_alpha = move_toward(v.fog_alpha, 1.0 if can_see(e) else 0.0, delta * FOG_FADE)
 
 
 func _draw_fog() -> void:
