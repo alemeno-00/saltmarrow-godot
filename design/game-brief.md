@@ -78,6 +78,8 @@ The MVP keeps the dive at the heart of it:
 
 **Reference game:** Stoneshard — skill trees that grow by use, and costly, grounded fights on a dungeon dive. The first version keeps one weapon tree and the dive, and drops survival and the overworld. The fight rules come from the Draw Steel tabletop RPG.
 
+After the build order: the jobs for later, in `production/backlog.md` (skill trees, experience, weapons, magic, bosses, death, sneaking, items, the hub, story, dialogue, quests, backstories, UI, menus, sound).
+
 ## Open questions
 - Is a Sewers boss the right ending for the first version, with Ellen saved for the full game?
 - What the dark does to Thomas over time, and how scarce lantern oil is (the lantern spec, still to write).
