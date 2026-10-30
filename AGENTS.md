@@ -22,6 +22,7 @@ The story is in `docs/story.md` and the cast in `docs/characters.md`.
 - Put files under `assets/<group>/`, for example `assets/characters/thomas/`, `assets/tiles/salt_pits/`.
 - PNG with transparency. Pixel art with hard edges; no smoothing or anti-aliasing.
 - Sizes, facing and sheet layout are in the table at the top of `ART_JOBS.md`.
+- **Everything that stands in a room follows the house style** in `ART_JOBS.md` ("House style: everything drawn over the rooms"): no black outline, the rooms' palette and grain, readable values, grounded feet, neutral light, a `_n.png` normal map with every sheet, and the 1.25 × character scale on 80 × 80 frames from job 15 on. It applies to every job, including ones that don't repeat it, so that all the art stays consistent.
 - Add a short `README.md` in each folder: what each file is, its frame size, frame counts per row, and the facing directions.
 - Open a pull request; don't push to `main` directly.
 
