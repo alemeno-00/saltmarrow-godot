@@ -7,13 +7,14 @@ extends RefCounted
 ## Each square becomes one character:
 ##   #  wall top    F  wall face    .  floor    ,  raised walkway    ~  shallow water    P  blocking prop
 ##   r  railing     D  door         X  special fixture    S  stairs down    L  wall face with a lantern
-##   B  prop with a standing light
+##   B  prop with a standing light    w  deep sewage    d  door through deep sewage
 
 const DIR := "res://scripts/levels/sewers/layouts/"
 const T := 32
 const BASE := {
 	"#": Color("3a3a42"), "F": Color("6a6a76"), ".": Color("b8b2a4"), ",": Color("d8d0bc"), "~": Color("2f7f9a"),
 	"P": Color("7a4f2a"), "r": Color("8e5aa8"), "D": Color("3fae5a"), "X": Color("c0392b"), "S": Color("4b3f6b"),
+	"w": Color("5c4b23"), "d": Color("1f6e3a"),
 }
 const LANTERN := Color("f1c40f")
 const BRAZIER := Color("e67e22")
@@ -65,7 +66,7 @@ func _read(img: Image) -> void:
 				stairs = c
 	for side in ["n", "e", "s", "w"]:
 		for c in _edge(side):
-			if cell(c) == "D":
+			if cell(c) == "D" or cell(c) == "d":
 				doors.append(side)
 				break
 

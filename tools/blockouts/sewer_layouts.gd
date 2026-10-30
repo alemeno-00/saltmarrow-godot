@@ -9,6 +9,7 @@ extends SceneTree
 ##   #  wall top        F  wall face        .  floor          ,  raised walkway   ~  shallow water
 ##   P  blocking prop   r  railing          D  door           X  special fixture  S  stairs down
 ##   L  wall face with a lantern            B  prop with a standing light (brazier)
+##   w  deep sewage (waist deep)            d  door through deep sewage
 ##
 ## Door standard (design/quick-specs/sewer-room-kit-2026-10-29.md): doors are 2 squares wide, in squares 5-6 of
 ## a side for rooms (the side's middle block, the later one when there are two), squares 1-2 for connectors.
@@ -19,7 +20,7 @@ const T := 32
 const COLOURS := {
 	"#": Color("3a3a42"), "F": Color("6a6a76"), ".": Color("b8b2a4"), ",": Color("d8d0bc"), "~": Color("2f7f9a"),
 	"P": Color("7a4f2a"), "r": Color("8e5aa8"), "D": Color("3fae5a"), "X": Color("c0392b"), "S": Color("4b3f6b"),
-	"L": Color("6a6a76"), "B": Color("7a4f2a"),
+	"L": Color("6a6a76"), "B": Color("7a4f2a"), "w": Color("5c4b23"), "d": Color("1f6e3a"),
 }
 const MARKS := {"L": Color("f1c40f"), "B": Color("e67e22")}
 
@@ -204,6 +205,38 @@ static func connector(sides: String) -> Array[String]:
 	return out
 
 
+## A 4 x 4 block of a long sewage tunnel (design/quick-specs/deep-sewage-tunnels-2026-10-30.md): the 2-square
+## walkway is waist-deep sewage, or, with `ledge` ("w", "e" for a north-south tunnel; "n", "s" for an east-west one),
+## one side is a narrow raised ledge above the other. Straight only: a tunnel is a run of these.
+static func sewage(axis: String, ledge := "") -> Array[String]:
+	var g: Array = []
+	for row in connector(axis):
+		var cells: Array[String] = []
+		for ch in row:
+			cells.append(ch)
+		g.append(cells)
+	for y in 4:
+		for x in 4:
+			var lane := x if axis == "ns" else y   # which column (or row) of the walkway
+			var in_way: bool = (lane == 1 or lane == 2)
+			if not in_way or not (g[y][x] == "." or g[y][x] == "D"):
+				continue
+			var on_ledge: bool = (ledge == "w" and x == 1) or (ledge == "e" and x == 2) or (ledge == "n" and y == 1) or (ledge == "s" and y == 2)
+			if on_ledge:
+				g[y][x] = "D" if g[y][x] == "D" else ","
+			else:
+				g[y][x] = "d" if g[y][x] == "D" else "w"
+	var out: Array[String] = []
+	for row in g:
+		out.append("".join(row))
+	return out
+
+
+## Every sewage tunnel block: plain, and with a ledge on either side.
+static func sewage_names() -> Array:
+	return [["ns", ""], ["ns", "w"], ["ns", "e"], ["ew", ""], ["ew", "n"], ["ew", "s"]]
+
+
 ## Every connector shape: straight, bend, T, crossing and dead end, in each orientation.
 static func connector_names() -> Array[String]:
 	return ["ew", "ns", "ne", "nw", "es", "sw", "new", "nes", "esw", "nsw", "nesw", "n", "e", "s", "w"] as Array[String]
@@ -215,6 +248,8 @@ func _initialize() -> void:
 		_write(id, ROOMS[id])
 	for sides in connector_names():
 		_write("connector_" + sides, connector(sides))
+	for s in sewage_names():
+		_write("sewage_" + s[0] + ("_" + s[1] if s[1] != "" else ""), sewage(s[0], s[1]))
 	quit()
 
 

@@ -58,6 +58,7 @@ var target := Vector2i.ZERO
 var alert := 0.0          # outside a fight: how close it is to spotting Thomas (0 unaware .. 1 spotted)
 var resume_state := ""    # what it goes back to after investigating a noise or a glimpse
 var wait := 0.0           # seconds left standing still (staring, or looking about)
+var noticed := false      # a lurker Thomas has spotted under the sewage
 var surprised := false    # caught unaware when the fight began: no free strikes, attacks on it have an edge (round 1)
 
 

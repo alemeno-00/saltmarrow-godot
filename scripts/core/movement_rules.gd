@@ -15,6 +15,7 @@ const ACCEL_TIME := 0.1          # s from standing to full speed
 const STOP_TIME := 0.08          # s from full speed to standing
 const HERO_RADIUS := 0.35        # m
 const WATER_SLOW := 0.6          # speed in shallow water, for those who don't wade
+const DEEP_SLOW := 0.4           # speed in waist-deep sewage (design/quick-specs/deep-sewage-tunnels-2026-10-30.md)
 const ARRIVE := 3.0              # px: close enough to a path point to move on to the next
 const STUCK_AFTER := 0.4         # s of trying to walk without getting anywhere before a click-walk gives up
 
@@ -31,6 +32,7 @@ const RETURN_AFTER := 15.0       # s before a runaway comes back with friends
 const BODY_RADIUS := 0.4         # m: a normal-size creature in a fight
 const LARGE_RADIUS := 0.7        # m: Garrick (still inside one square)
 const WATER_COST := 2.0          # metres of movement spent per metre waded, for those who don't wade
+const DEEP_COST := 3.0           # the same in waist-deep sewage
 const SHIFT := 1.5               # m: a careful step
 const FLANK_ANGLE := 120.0       # degrees round the target between two attackers for a flank
 const LOSE_WITHIN := 3.0         # m: enemies this close always know where Thomas is
@@ -204,7 +206,26 @@ static func route_cost(level: Level, from: Vector2, points: Array[Vector2], wade
 
 
 static func _cost_factor(level: Level, p: Vector2, wades: bool) -> float:
-	return WATER_COST if not wades and level.get_tile(cell_of(p)) == Level.Tile.WATER else 1.0
+	if wades:
+		return 1.0
+	match level.get_tile(cell_of(p)):
+		Level.Tile.WATER:
+			return WATER_COST
+		Level.Tile.DEEP:
+			return DEEP_COST
+	return 1.0
+
+
+## How much a square slows someone walking through it (1 on dry ground).
+static func slow_in(level: Level, c: Vector2i, wades := false) -> float:
+	if wades:
+		return 1.0
+	match level.get_tile(c):
+		Level.Tile.WATER:
+			return WATER_SLOW
+		Level.Tile.DEEP:
+			return DEEP_SLOW
+	return 1.0
 
 
 ## The part of a route that `budget` metres of movement pays for (the same points, cut short).

@@ -57,6 +57,7 @@ var _relight := 0.0      # seconds left striking a light
 var aiming_throw := false   # T: the next click throws a dagger (Daggers: Throw)
 var _ambush: Combatant = null   # the unaware enemy Thomas is creeping up to strike
 var _heads := {}         # Combatant -> seconds until an idle enemy next turns its head
+var _watching := {}      # lurker -> seconds Thomas has been watching its spot
 var _props := {}         # square -> CoverProp: crates, barrels, satchels, the valve, the grate
 var _draining: Array[Vector2i] = []   # water squares still to drain, row by row
 var context_menu: PopupMenu            # right-click: what can be done with what is under the mouse
@@ -280,8 +281,10 @@ func patrol_tick(delta: float) -> void:
 		_roam(leader, leader.route[leader.route_i], MovementRules.PATROL_SPEED, delta)
 		for f in enemies:
 			if f != leader and f.alive() and f.state == "patrolling" and f.group == leader.group:
-				if views[f].position.distance_to(views[leader].position) > MovementRules.FOLLOW_GAP * TILE:
-					_roam(f, leader.cell, MovementRules.PATROL_SPEED * 1.15, delta)
+				var gap: float = views[f].position.distance_to(views[leader].position)
+				if gap > MovementRules.FOLLOW_GAP * TILE:
+					# a follower that has fallen behind hurries to catch up
+					_roam(f, leader.cell, MovementRules.PATROL_SPEED * (1.6 if gap > TILE * 4 else 1.15), delta)
 
 
 ## Move a creature toward a square for `delta` seconds at `speed` m/s, along a route that goes round walls and cuts
@@ -301,14 +304,21 @@ func _roam(e: Combatant, goal: Vector2i, speed: float, delta: float) -> void:
 	if p.is_empty():
 		return
 	var step := MovementRules.px(speed) * delta
-	if level.get_tile(e.cell) == Level.Tile.WATER and not e.wades:
-		step *= MovementRules.WATER_SLOW
+	step *= MovementRules.slow_in(level, e.cell, e.wades)
 	var target: Vector2 = p[0]
 	var to := v.position.move_toward(target, step)
-	if MovementRules.overlaps(to, radius, _bodies_near(e, to)):
-		r.age = MovementRules.REPATH_EVERY   # someone is in the way: find a way round them next time
+	# someone is in the way: find a way round them; stuck for long, squeeze past the others (never through Thomas).
+	# Only steps that bring it closer to someone count, so two that already overlap can walk apart.
+	var from := v.position
+	var in_way := _bodies_near(e, to).filter(func(b): return (b[0] as Vector2).distance_to(to) < (b[0] as Vector2).distance_to(from))
+	if r.get("blocked", 0.0) >= 0.5:
+		in_way = in_way.filter(func(b): return b[0] == hero.position)
+	if MovementRules.overlaps(to, radius, in_way):
+		r.blocked = r.get("blocked", 0.0) + delta
+		r.age = MovementRules.REPATH_EVERY
 		r.goal = Vector2i(-9999, -9999)
 		return
+	r.blocked = 0.0
 	if to.distance_to(target) < 0.5:
 		p.pop_front()
 	v.glide_free(to, speed / MovementRules.WALK_SPEED)
@@ -348,7 +358,7 @@ func _bodies_near(me: Combatant, at: Vector2, squares := 2) -> Array:
 
 ## Anyone stepping into water sends a ripple out across it.
 func _on_stepped(_from: Vector2i, to: Vector2i) -> void:
-	if level != null and level.get_tile(to) == Level.Tile.WATER:
+	if level != null and level.is_wet(to):
 		_ripple(to, false)
 
 
@@ -396,6 +406,24 @@ func _spawn_enemies() -> void:
 		group += 1
 	for _n in PATROLS:
 		_spawn_patrol(pick)
+	# lurkers: a Drowned Miner lying under the sewage in the middle stretch of each sewage tunnel
+	for i in level.sewage.size():
+		var r: Rect2i = level.sewage[i]
+		var deep: Array[Vector2i] = []
+		# the middle stretch: a block in from each end, along the tunnel (not across it)
+		var mid := Rect2i(r.position + Vector2i(4, 0), r.size - Vector2i(8, 0)) if r.size.x > r.size.y else Rect2i(r.position + Vector2i(0, 4), r.size - Vector2i(0, 8))
+		for y in range(mid.position.y, mid.end.y):
+			for x in range(mid.position.x, mid.end.x):
+				var c := Vector2i(x, y)
+				if level.get_tile(c) == Level.Tile.DEEP and _enemy_at(c) == null and level.find_path(level.start, c).size() >= START_DISTANCE:
+					deep.append(c)
+		for _k in StealthRules.LURKERS_PER_TUNNEL:
+			if deep.is_empty():
+				break
+			var c: Vector2i = deep.pop_at(pick.randi_range(0, deep.size() - 1))
+			var l := _add_enemy(Bestiary.lurker(), c)
+			l.group = 2000 + i
+			views[l].visible = false
 
 
 ## After learning something: rebuild Thomas's abilities, passives and stats.
@@ -482,8 +510,7 @@ func _tick_explore(delta: float) -> void:
 			set_lantern("lit")
 			_make_noise(StealthRules.NOISE_RELIGHT)
 	var top := MovementRules.px(MovementRules.WALK_SPEED)
-	if level.get_tile(hero.grid_pos) == Level.Tile.WATER and not hero_unit.wades:
-		top *= MovementRules.WATER_SLOW
+	top *= MovementRules.slow_in(level, hero.grid_pos, hero_unit.wades)
 	if sneaking:
 		top *= StealthRules.SNEAK_SPEED
 	var before := _vel
@@ -506,7 +533,7 @@ func _tick_explore(delta: float) -> void:
 	_open_doors(to, r)
 	hero.glide_free(to, _vel.length() / MovementRules.px(MovementRules.WALK_SPEED))
 	hero_unit.pos = to
-	_make_noise(StealthRules.noise_radius(sneaking, level.get_tile(hero.grid_pos) == Level.Tile.WATER))
+	_make_noise(StealthRules.noise_radius(sneaking, level.is_wet(hero.grid_pos)))
 	if _then.is_valid() and hero.position.distance_to(MovementRules.centre(_then_at)) <= Items.REACH * TILE:
 		var then := _then
 		_then = Callable()
@@ -630,6 +657,11 @@ func _tick_world(delta: float) -> void:
 		return
 	for e in enemies:
 		if not e.alive() or e.fled:
+			continue
+		if e.state == "lurking":
+			_tick_lurker(e, delta)
+			if in_fight():
+				return
 			continue
 		if _after_him(e):
 			var goal := hero.grid_pos if e.state == "hunting" else e.target
@@ -863,7 +895,7 @@ func use_belt(slot: int) -> void:
 ## Can this creature see Thomas right now: close enough (MovementRules.SIGHT metres), in its view (a cone the way
 ## it faces; all round when it is close or already after him), with a clear line of sight?
 func sees_thomas(e: Combatant) -> bool:
-	if not e.alive() or e.fled or not views[e].visible:
+	if not e.alive() or e.fled or not views[e].visible or e.state == "lurking":
 		return false
 	var v: ActorView = views[e]
 	var d := v.position.distance_to(hero.position)
@@ -895,6 +927,8 @@ func _check_spotted(delta := INF) -> void:
 			var t := StealthRules.FILL_FAST if _after_him(e) else StealthRules.fill_time(d, light, sneaking)
 			if sneaking and level.get_tile(hero.grid_pos) == Level.Tile.WATER:
 				t *= StealthRules.WATER_HIDE   # crouched in water, half of him is under it
+			elif sneaking and level.get_tile(hero.grid_pos) == Level.Tile.DEEP:
+				t *= StealthRules.DEEP_HIDE    # crouched in the sewage, only his head shows
 			e.alert = minf(1.0, e.alert + delta / t)
 			e.target = hero.grid_pos
 			if e.alert >= 1.0:
@@ -904,6 +938,40 @@ func _check_spotted(delta := INF) -> void:
 				_become_suspicious(e, hero.grid_pos)
 		else:
 			e.alert = maxf(0.0, e.alert - StealthRules.DRAIN * (delta if delta < INF else 1.0))
+
+
+## A lurker under the sewage. Crouched within 6 m with a clear view for a moment, Thomas spots its tell, and it shows
+## (he can strike it first). Within 2 m it rises, and if he hadn't spotted it, it strikes first and he is surprised.
+func _tick_lurker(e: Combatant, delta: float) -> void:
+	var v: ActorView = views[e]
+	var d := MovementRules.metres(v.position.distance_to(hero.position))
+	if not e.noticed and sneaking and d <= StealthRules.LURKER_NOTICE and level.line_of_sight(hero.grid_pos, e.cell):
+		_watching[e] = _watching.get(e, 0.0) + delta
+		if _watching[e] >= StealthRules.LURKER_NOTICE_TIME:
+			notice_lurker(e)
+	if d <= StealthRules.LURKER_RISE:
+		lurker_rises(e)
+
+
+## Thomas has spotted a lurker's tell: it shows, faintly, and he can strike it from the dark.
+func notice_lurker(e: Combatant) -> void:
+	e.noticed = true
+	var v: ActorView = views[e]
+	v.visible = true
+	v.modulate.a = 0.45
+	combat_hud.show_banner("Bubbles, and a ring of scum that doesn't drift. Something lies under the sewage, waiting.", 2.4)
+
+
+## It rises out of the sewage. Spotted, it is just a fight; unspotted, it strikes first and Thomas is surprised.
+func lurker_rises(e: Combatant) -> void:
+	var v: ActorView = views[e]
+	v.visible = true
+	v.modulate.a = 1.0
+	e.state = "hunting"
+	e.alert = 1.0
+	stop_walking()
+	combat_hud.show_banner("The sewage heaves, and something rises out of it." if e.noticed else "The sewage heaves at your feet. Something rises, already reaching for you.", 2.0)
+	_start_battle(null, not e.noticed)
 
 
 ## Something caught a glimpse or a sound: it stops, stares toward `at`, then goes to look.
@@ -969,7 +1037,7 @@ func _make_noise(radius: float) -> void:
 	if radius <= 0.0 or in_fight():
 		return
 	for e in enemies:
-		if not e.alive() or e.fled or _after_him(e) or e.state == "suspicious" or e.state == "investigating":
+		if not e.alive() or e.fled or _after_him(e) or e.state == "suspicious" or e.state == "investigating" or e.state == "lurking":
 			continue
 		if StealthRules.hears(level, hero.position, views[e].position, radius):
 			noises += 1
@@ -1028,7 +1096,7 @@ func _clatter(p: Vector2) -> void:
 	var best: Combatant = null
 	var best_d := INF
 	for e in enemies:
-		if not e.alive() or e.fled or _after_him(e):
+		if not e.alive() or e.fled or _after_him(e) or e.state == "lurking":
 			continue
 		var d: float = (views[e] as ActorView).position.distance_to(p)
 		if d < best_d and StealthRules.hears(level, p, views[e].position, StealthRules.CLATTER):
@@ -1085,8 +1153,9 @@ func douse_lantern() -> void:
 
 
 ## Start a fight. `ambush`: Thomas struck an unaware enemy from hiding, so he goes first and everyone who hadn't
-## spotted him is surprised for the first round.
-func _start_battle(ambush: Combatant = null) -> void:
+## spotted him is surprised for the first round. `ambushed`: something struck him unawares (a lurker rising), so
+## they go first and he is surprised.
+func _start_battle(ambush: Combatant = null, ambushed := false) -> void:
 	stop_walking()
 	_ambush = null
 	_take_positions()
@@ -1122,7 +1191,12 @@ func _start_battle(ambush: Combatant = null) -> void:
 		e.alert = 0.0
 	combat_hud.clear_log()
 	combat_hud.show_fight(true)
-	if ambush != null:
+	hero_unit.surprised = ambushed
+	if ambushed:
+		var ev := battle.start(false)
+		ev.push_front({"t": "log", "text": "Caught unawares: they move first."})
+		_act(ev)
+	elif ambush != null:
 		var ev := battle.start(true)
 		ev.append({"t": "log", "text": "Thomas strikes from the dark. They didn't see him coming."})
 		ev.append_array(battle.hero_ability_on(0, ambush))
@@ -1597,7 +1671,7 @@ func _play_one(e: Dictionary) -> void:
 			gore.splash(body, wall - body, 2.0)
 			await _hitstop(0.08)
 		"prone", "stand", "status", "heal":
-			if e.t == "prone" and level.get_tile(e.unit.cell) == Level.Tile.WATER:
+			if e.t == "prone" and level.is_wet(e.unit.cell):
 				_ripple(e.unit.cell, true)
 			views[e.unit].sync(e.unit)
 			_refresh()
@@ -1734,6 +1808,7 @@ func _finish(winner: String) -> void:
 		hero_unit.dazed = 0
 		hero_unit.slowed = 0
 		hero_unit.bleeding = false
+		hero_unit.surprised = false
 		if hero_unit.stamina <= 0:
 			hero_unit.stamina = 1
 			hero_unit.dying = false

@@ -520,7 +520,7 @@ func _begin_turn(u: Combatant) -> void:
 	if u.bleeding or (u.dying and u == hero):
 		_log("%s bleeds." % u.name)
 		_damage(u, maxi(2, u.bleed), false, 1)
-	if u.prone and not u.dead and level.get_tile(u.cell) == Level.Tile.WATER:
+	if u.prone and not u.dead and level.is_wet(u.cell):
 		_log("%s is under the water, drowning." % u.name)
 		_damage(u, DROWN_DAMAGE, false, 1)
 
@@ -921,6 +921,11 @@ func _push(t: Combatant, from: Vector2, n: int, pusher: Combatant = null) -> voi
 	if not path.is_empty():
 		_emit({"t": "push", "unit": t, "points": path})
 		_cancel_telegraph(t, "knocked off balance")
+		# knocked off a ledge into the sewage: under it goes
+		if level.get_tile(t.cell) == Level.Tile.DEEP and level.get_tile(MovementRules.cell_of(path[0] - dir * 2.0)) != Level.Tile.DEEP and not t.prone and not t.dead:
+			t.prone = true
+			_emit({"t": "prone", "unit": t})
+			_log("%s goes off the edge and under the sewage." % t.title())
 	var left := total - moved
 	if stopped and left > 2.0:
 		var slam := ceili(left / MovementRules.TILE - 0.001)

@@ -7,7 +7,7 @@ const WALKABLE_CODES := [".", ",", "D", "~", "S"]
 const TILE_OF := {
 	"#": Level.Tile.WALL, "F": Level.Tile.WALL, "L": Level.Tile.WALL, ".": Level.Tile.FLOOR, ",": Level.Tile.FLOOR,
 	"D": Level.Tile.FLOOR, "~": Level.Tile.WATER, "P": Level.Tile.PROP, "B": Level.Tile.PROP, "X": Level.Tile.PROP,
-	"r": Level.Tile.RAIL, "S": Level.Tile.STAIRS,
+	"r": Level.Tile.RAIL, "S": Level.Tile.STAIRS, "w": Level.Tile.DEEP, "d": Level.Tile.DEEP,
 }
 
 
@@ -82,7 +82,7 @@ func _piece_matches(l: Level, p: Dictionary) -> int:
 		for x in r.size.x:
 			var src := Vector2i(r.size.x - 1 - x if p.mirrored else x, y)
 			var code := lay.cell(src)
-			if code == "D":
+			if code == "D" or code == "d":
 				var side := _door_side(lay, src)
 				if p.mirrored:
 					side = {"w": "e", "e": "w"}.get(side, side)

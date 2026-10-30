@@ -11,7 +11,8 @@ const SHADOW_REACH := 150.0      # px: lights further than this cast no long sha
 const SHADOW_LENGTH := 18.0      # px: the longest a cast shadow gets, right beside a light
 const SHADOW_ALPHA := 0.32
 const CONTACT_ALPHA := 0.42
-const WADE_DEPTH := 5            # px of the body hidden under the water
+const WADE_DEPTH := 5            # px of the body hidden under shallow water
+const DEEP_DEPTH := 15           # px hidden in waist-deep sewage
 const BEVEL := 2.2               # how rounded the generated normal maps make the body
 const LIGHT_HEIGHT := 28.0       # px: how high the lights hang above the floor, for normal mapping
 
@@ -36,7 +37,19 @@ static func shadow_light(at: Vector2, is_hero: bool) -> Vector2:
 
 
 static func wading(at: Vector2) -> bool:
-	return level != null and level.get_tile(MovementRules.cell_of(at)) == Level.Tile.WATER
+	return level != null and level.is_wet(MovementRules.cell_of(at))
+
+
+## How much of a body standing at `at` is under the water, in px: 0 dry, a little in shallows, to the waist in sewage.
+static func wade_depth(at: Vector2) -> float:
+	if level == null:
+		return 0.0
+	match level.get_tile(MovementRules.cell_of(at)):
+		Level.Tile.WATER:
+			return WADE_DEPTH
+		Level.Tile.DEEP:
+			return DEEP_DEPTH
+	return 0.0
 
 
 ## Draw the shadows on `item` (an ActorView), with the feet at `feet` in its own space.
@@ -62,8 +75,8 @@ static func draw_shadows(item: CanvasItem, at: Vector2, feet: Vector2, is_hero: 
 
 
 ## The water round a wading creature's legs: a dark film and a ring of ripples at the waterline.
-static func draw_waterline(item: CanvasItem, feet: Vector2, t: float) -> void:
-	var line := feet - Vector2(0, WADE_DEPTH)
+static func draw_waterline(item: CanvasItem, feet: Vector2, t: float, depth := WADE_DEPTH) -> void:
+	var line := feet - Vector2(0, depth)
 	item.draw_set_transform(line, 0, Vector2(1, 0.38))
 	item.draw_circle(Vector2.ZERO, 10.0, Color(0.06, 0.12, 0.13, 0.35))
 	var r := 9.0 + sin(t * 3.0) * 0.8
