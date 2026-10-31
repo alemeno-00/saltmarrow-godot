@@ -1,3 +1,5 @@
+> Historical rejected job15-0 previews. Current approved-model cut previews are in ../production/cut-15r/previews/.
+
 # South rig review media
 
 - `south-parts-8x.png`: the264×24 parts sheet enlarged8×;11 cells in one row.

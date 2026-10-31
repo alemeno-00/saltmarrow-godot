@@ -1,6 +1,6 @@
 # Job15-R — approved whole-figure model
 
-This is one south-facing model, painted as a complete figure from `assets/characters/thomas/production/concepts/canonical-reference-v1.png` and the character brief. It is not assembled from the rejected parts. The approved model is awaiting compatible rig/template calibration before cutting. Existing `rig/s.png` and `s_n.png`, approved still/portrait paths and the canonical reference remain unchanged.
+This is one south-facing model, painted as a complete figure from `assets/characters/thomas/production/concepts/canonical-reference-v1.png` and the character brief. It is not assembled from the rejected parts. The approved model has now been cut using the calibrated PR57 coordinates; see ../cut-15r/README.md. The whole model, approved still/portrait paths and canonical reference remain unchanged; runtime parts are delivered separately.
 
 ## Approved model
 
@@ -36,4 +36,4 @@ See `previews/README.md`: the8× model beside the canonical sheet, a1× room com
 
 Julian approved the whole model and chose the warmer dark-brown coat: “warmer dark brown , that sprite is great also”. The coat now uses four existing room colours. This approval applies to this south model and its skin ramp; it does not approve other directions or in-game animation.
 
-Step2 began with the template-fit audit in `../cut-15r/README.md`. The current rig places the waist so the torso cell cannot retain the bottom of the approved scarf and carried kit. Preserve the model and calibrate the template/rig before cutting; do not silently crop, resize, or repaint it. Runtime parts remain untouched and job15-R remains unchecked.
+Step2's original fit issue was resolved by merged PR57. After PR55 merged, the same approved diffuse/normal pixels were cut into the calibrated eleven cells. Both rebuild with0 differing pixels. See ../cut-15r/README.md for current cut evidence and pending in-game review. No approved whole-model pixels were changed.

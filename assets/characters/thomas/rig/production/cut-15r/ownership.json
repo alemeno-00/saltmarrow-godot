@@ -1,0 +1,682 @@
+{
+  "part_ids": {
+    "head": 1,
+    "torso": 2,
+    "skirt": 3,
+    "upper_arm_l": 4,
+    "forearm_l": 5,
+    "upper_arm_r": 6,
+    "forearm_r": 7,
+    "thigh_l": 8,
+    "shin_l": 9,
+    "thigh_r": 10,
+    "shin_r": 11
+  },
+  "counts": {
+    "head": 65,
+    "torso": 251,
+    "upper_arm_r": 27,
+    "upper_arm_l": 18,
+    "forearm_r": 45,
+    "forearm_l": 26,
+    "skirt": 122,
+    "thigh_r": 21,
+    "thigh_l": 21,
+    "shin_r": 43,
+    "shin_l": 42
+  },
+  "model_pixel_count": 681,
+  "overlaps": [
+    {
+      "part": "thigh_r",
+      "model": [
+        35,
+        50
+      ],
+      "covered_by": "skirt",
+      "source": [
+        35,
+        52
+      ]
+    },
+    {
+      "part": "thigh_r",
+      "model": [
+        36,
+        50
+      ],
+      "covered_by": "torso",
+      "source": [
+        36,
+        52
+      ]
+    },
+    {
+      "part": "thigh_r",
+      "model": [
+        37,
+        50
+      ],
+      "covered_by": "torso",
+      "source": [
+        37,
+        52
+      ]
+    },
+    {
+      "part": "thigh_r",
+      "model": [
+        35,
+        51
+      ],
+      "covered_by": "skirt",
+      "source": [
+        35,
+        53
+      ]
+    },
+    {
+      "part": "thigh_r",
+      "model": [
+        36,
+        51
+      ],
+      "covered_by": "torso",
+      "source": [
+        36,
+        53
+      ]
+    },
+    {
+      "part": "thigh_r",
+      "model": [
+        37,
+        51
+      ],
+      "covered_by": "torso",
+      "source": [
+        37,
+        53
+      ]
+    },
+    {
+      "part": "thigh_r",
+      "model": [
+        35,
+        59
+      ],
+      "covered_by": "shin_r",
+      "source": [
+        35,
+        59
+      ]
+    },
+    {
+      "part": "thigh_r",
+      "model": [
+        36,
+        59
+      ],
+      "covered_by": "shin_r",
+      "source": [
+        36,
+        59
+      ]
+    },
+    {
+      "part": "thigh_r",
+      "model": [
+        37,
+        59
+      ],
+      "covered_by": "shin_r",
+      "source": [
+        37,
+        59
+      ]
+    },
+    {
+      "part": "thigh_r",
+      "model": [
+        35,
+        60
+      ],
+      "covered_by": "shin_r",
+      "source": [
+        35,
+        60
+      ]
+    },
+    {
+      "part": "thigh_r",
+      "model": [
+        36,
+        60
+      ],
+      "covered_by": "shin_r",
+      "source": [
+        36,
+        60
+      ]
+    },
+    {
+      "part": "thigh_r",
+      "model": [
+        37,
+        60
+      ],
+      "covered_by": "shin_r",
+      "source": [
+        37,
+        60
+      ]
+    },
+    {
+      "part": "thigh_l",
+      "model": [
+        41,
+        50
+      ],
+      "covered_by": "skirt",
+      "source": [
+        41,
+        52
+      ]
+    },
+    {
+      "part": "thigh_l",
+      "model": [
+        42,
+        50
+      ],
+      "covered_by": "skirt",
+      "source": [
+        42,
+        52
+      ]
+    },
+    {
+      "part": "thigh_l",
+      "model": [
+        43,
+        50
+      ],
+      "covered_by": "skirt",
+      "source": [
+        43,
+        52
+      ]
+    },
+    {
+      "part": "thigh_l",
+      "model": [
+        41,
+        51
+      ],
+      "covered_by": "skirt",
+      "source": [
+        41,
+        53
+      ]
+    },
+    {
+      "part": "thigh_l",
+      "model": [
+        42,
+        51
+      ],
+      "covered_by": "skirt",
+      "source": [
+        42,
+        53
+      ]
+    },
+    {
+      "part": "thigh_l",
+      "model": [
+        43,
+        51
+      ],
+      "covered_by": "skirt",
+      "source": [
+        43,
+        53
+      ]
+    },
+    {
+      "part": "thigh_l",
+      "model": [
+        41,
+        59
+      ],
+      "covered_by": "shin_l",
+      "source": [
+        41,
+        59
+      ]
+    },
+    {
+      "part": "thigh_l",
+      "model": [
+        42,
+        59
+      ],
+      "covered_by": "shin_l",
+      "source": [
+        42,
+        59
+      ]
+    },
+    {
+      "part": "thigh_l",
+      "model": [
+        43,
+        59
+      ],
+      "covered_by": "shin_l",
+      "source": [
+        43,
+        59
+      ]
+    },
+    {
+      "part": "thigh_l",
+      "model": [
+        41,
+        60
+      ],
+      "covered_by": "shin_l",
+      "source": [
+        41,
+        60
+      ]
+    },
+    {
+      "part": "thigh_l",
+      "model": [
+        42,
+        60
+      ],
+      "covered_by": "shin_l",
+      "source": [
+        42,
+        60
+      ]
+    },
+    {
+      "part": "thigh_l",
+      "model": [
+        43,
+        60
+      ],
+      "covered_by": "shin_l",
+      "source": [
+        43,
+        60
+      ]
+    },
+    {
+      "part": "upper_arm_r",
+      "model": [
+        30,
+        40
+      ],
+      "covered_by": "forearm_r",
+      "source": [
+        30,
+        40
+      ]
+    },
+    {
+      "part": "upper_arm_r",
+      "model": [
+        31,
+        40
+      ],
+      "covered_by": "forearm_r",
+      "source": [
+        31,
+        40
+      ]
+    },
+    {
+      "part": "upper_arm_r",
+      "model": [
+        32,
+        40
+      ],
+      "covered_by": "forearm_r",
+      "source": [
+        32,
+        40
+      ]
+    },
+    {
+      "part": "upper_arm_r",
+      "model": [
+        33,
+        40
+      ],
+      "covered_by": "forearm_r",
+      "source": [
+        33,
+        40
+      ]
+    },
+    {
+      "part": "upper_arm_r",
+      "model": [
+        30,
+        41
+      ],
+      "covered_by": "forearm_r",
+      "source": [
+        30,
+        41
+      ]
+    },
+    {
+      "part": "upper_arm_r",
+      "model": [
+        31,
+        41
+      ],
+      "covered_by": "forearm_r",
+      "source": [
+        31,
+        41
+      ]
+    },
+    {
+      "part": "upper_arm_r",
+      "model": [
+        32,
+        41
+      ],
+      "covered_by": "forearm_r",
+      "source": [
+        32,
+        41
+      ]
+    },
+    {
+      "part": "upper_arm_r",
+      "model": [
+        33,
+        41
+      ],
+      "covered_by": "forearm_r",
+      "source": [
+        33,
+        41
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        31,
+        32
+      ],
+      "covered_by": "upper_arm_r",
+      "source": [
+        31,
+        32
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        32,
+        32
+      ],
+      "covered_by": "upper_arm_r",
+      "source": [
+        32,
+        32
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        33,
+        32
+      ],
+      "covered_by": "upper_arm_r",
+      "source": [
+        33,
+        32
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        31,
+        33
+      ],
+      "covered_by": "upper_arm_r",
+      "source": [
+        31,
+        33
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        32,
+        33
+      ],
+      "covered_by": "upper_arm_r",
+      "source": [
+        32,
+        33
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        33,
+        33
+      ],
+      "covered_by": "upper_arm_r",
+      "source": [
+        33,
+        33
+      ]
+    },
+    {
+      "part": "upper_arm_l",
+      "model": [
+        46,
+        40
+      ],
+      "covered_by": "forearm_l",
+      "source": [
+        46,
+        40
+      ]
+    },
+    {
+      "part": "upper_arm_l",
+      "model": [
+        47,
+        40
+      ],
+      "covered_by": "forearm_l",
+      "source": [
+        47,
+        40
+      ]
+    },
+    {
+      "part": "upper_arm_l",
+      "model": [
+        48,
+        40
+      ],
+      "covered_by": "forearm_l",
+      "source": [
+        48,
+        40
+      ]
+    },
+    {
+      "part": "upper_arm_l",
+      "model": [
+        46,
+        41
+      ],
+      "covered_by": "forearm_l",
+      "source": [
+        46,
+        41
+      ]
+    },
+    {
+      "part": "upper_arm_l",
+      "model": [
+        47,
+        41
+      ],
+      "covered_by": "forearm_l",
+      "source": [
+        47,
+        41
+      ]
+    },
+    {
+      "part": "upper_arm_l",
+      "model": [
+        48,
+        41
+      ],
+      "covered_by": "forearm_l",
+      "source": [
+        48,
+        41
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        46,
+        32
+      ],
+      "covered_by": "upper_arm_l",
+      "source": [
+        46,
+        32
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        46,
+        33
+      ],
+      "covered_by": "upper_arm_l",
+      "source": [
+        46,
+        33
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        47,
+        33
+      ],
+      "covered_by": "upper_arm_l",
+      "source": [
+        47,
+        33
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        37,
+        29
+      ],
+      "covered_by": "head",
+      "source": [
+        37,
+        29
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        38,
+        29
+      ],
+      "covered_by": "head",
+      "source": [
+        38,
+        29
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        39,
+        29
+      ],
+      "covered_by": "head",
+      "source": [
+        39,
+        29
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        40,
+        29
+      ],
+      "covered_by": "head",
+      "source": [
+        40,
+        29
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        41,
+        29
+      ],
+      "covered_by": "head",
+      "source": [
+        41,
+        29
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        42,
+        29
+      ],
+      "covered_by": "head",
+      "source": [
+        42,
+        29
+      ]
+    },
+    {
+      "part": "torso",
+      "model": [
+        43,
+        29
+      ],
+      "covered_by": "head",
+      "source": [
+        43,
+        29
+      ]
+    }
+  ],
+  "added_overlap_pixels": 54,
+  "repainted_pixels": 0,
+  "all_overlap_colours": "existing approved diffuse/normal copies;12 hidden hip pixels extend the same leg two rows upward,42 duplicate the same coordinate"
+}

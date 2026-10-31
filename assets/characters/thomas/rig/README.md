@@ -1,36 +1,32 @@
-# Thomas south-facing rig parts — job 15-0
+# Thomas — approved south model cut into rig parts (job15-R)
 
-Painted over the south template from the skeleton brief at revision5d836a0. This replaces painting every walking frame separately: the rig moves the same eleven drawings. South faces the viewer, seen from the raised room camera.
+`production/model-s.png` is Julian's approved whole model from PR55, with the warmer dark-brown coat. The runtime parts below are cut from its exact pixels using the calibrated PR57 bind coordinates. No figure, face, costume, palette, camera or proportions were repainted.
 
-| File | Cell size | Layout |
-| --- | --- | --- |
-| `s.png` | 24×24 | One row of11 cells;264×24 total |
-| `s_n.png` | 24×24 | Matching OpenGL normal map, green up, identical alpha |
-
-Cells left to right, using Thomas's anatomical left/right:
+| File | Cell size | Layout | Facing |
+| --- | --- | --- | --- |
+| `s.png` |24×24| One row of11 cells;264×24 total | South, toward viewer from raised room camera |
+| `s_n.png` |24×24| Same11 cells, exact diffuse alpha | Matching OpenGL normal map, green up |
 
 | Cell (1-based) | Part | Pivot in cell |
 | --- | --- | --- |
-| 1 | Head/hair/neck | (12,22) |
-| 2 | Torso, scarf, strap, belt, hip lantern | (12,22) |
-| 3 | Split coat skirt below waist | (12,2) |
-| 4 | Left upper arm | (12,2) |
-| 5 | Left forearm/hand | (12,2) |
-| 6 | Right upper arm | (12,2) |
-| 7 | Right forearm/hand | (12,2) |
-| 8 | Left thigh | (12,2) |
-| 9 | Left shin/wrap/boot | (12,2) |
-| 10 | Right thigh | (12,2) |
-| 11 | Right shin/wrap/boot | (12,2) |
+|1|Head/hair/neck|(12,22)|
+|2|Torso, whole scarf, strap, satchel and belt lantern|(12,21)|
+|3|Long coat skirt below waist, hem at model row62|(12,2)|
+|4|Left upper arm|(12,2)|
+|5|Left forearm/hand|(12,2)|
+|6|Right upper arm|(12,2)|
+|7|Right forearm/hand|(12,2)|
+|8|Left thigh|(12,2)|
+|9|Left shin/wrap/boot|(12,2)|
+|10|Right thigh|(12,2)|
+|11|Right shin/wrap/boot|(12,2)|
 
-Head and torso extend upward from their pivots; limbs and skirt hang straight down. All11 pivots have painted material. Joint coverage is extended to overlap adjacent pieces. The torso owns the belt; the duplicate belt in the generated skirt source is cropped out during export. Each piece is registered once, rather than repositioned separately for each animation frame.
+Left/right are anatomical: Thomas's left is screen-right. The torso pivot is row21 as explicitly calibrated in PR57. Bind assembly is one80×80 frame,52px high, feet-root(40,72). All681 visible model pixels have one owning part. Another54 copied pixels provide small hidden joint overlaps (12 extend the same leg two rows upward;42 duplicate existing joint pixels); every overlap is covered by a later part in the bind pose. Both diffuse and normal maps reconstruct the approved whole images with0 differing pixels through the supplied Godot checker.
 
-House-style checks: shared room palette plus Julian's approved four muted reds; coloured material edges; hard binary transparency; worn pixel clusters; lighter face/hands and dark charcoal coat; damp boot contact pixels; neutral diffuse colouring and no added shadow. The head, shoulders and boot tops are drawn for the raised camera. Mechanical standing assembly is52px tall on an80×80 preview with root(40,72).
-
-`production/` preserves the template, generated master, prompts, fixed registration, normal-map source and mechanical export/preview scripts. `previews/` contains the parts, standing assembly, eight-frame walking loop and floor comparison. Both folders are excluded from Godot imports.
+`production/cut-15r/` contains the ownership mask, exact coordinates, audit, exporter and current previews. `production/model-15r/` preserves the approved model's generation sources. Earlier direct-painted sources and `previews/` are historical rejected job15-0 material, not previews of this cut.
 
 ## Claude handoff
 
-The skeleton branch's existing loader reads this folder's `s.png`; attach `s_n.png` through the intended rig lighting support. No code, scenes or existing sprite assets were edited. This sheet depends on the skeleton implementation and revised job15-0 brief, which were read from branch`skeleton` rather than the older main-branch job description.
+Switch the held-back south rig to these new parts and send Julian an in-game idle/walk review beside a room. The approved models, canonical reference and protected still/portrait paths remain unchanged. Only south is delivered; other directions await whole-model approval. Attacks remain on existing painted sheets.
 
-The previews mechanically reproduce that pinned rig's placements and camera; they are not screenshots of the running game. Check rotations for exposed seams, near/far limb ordering, camera fit, moving foot contact and normal orientation under actual lights. Julian's in-game approval is pending; other directions have not been started. Keep job15-0 unchecked until that review is complete.
+The numerical bind checks and rendered motion samples use unchanged main Rig/RigPose/RigMotion from PR57 in Godot4.7.2. They are review composites, not screenshots of the game or a lighting approval. Actual dynamic lights, normal orientation during rotation, water masking, transitions and final camera appearance still need game review. No code or scenes were changed.
