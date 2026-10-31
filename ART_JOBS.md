@@ -126,6 +126,32 @@ These come first because the first fight is being built next. **Please do jobs 1
   - `star_frost.png` (with `_n`): salt frost on the floor. A sheet of 6 tileable 32 × 32 patches of crystals, from a
     few scattered needles to a dense crust, pale blue-white with a pearly glint, transparent between crystals. The game
     spreads them across a room from where Thomas stands, then melts them.
+- [ ] **14c. Lore on the floor: papers and the First Shift's dead** (`assets/props/lore/`). Design:
+  `design/quick-specs/room-contents-2026-10-30.md`, part 2; texts in `scripts/data/lore.gd`. The game draws stand-ins
+  until these arrive. House style, neutral light, from the rooms' camera, each with an `_n` normal map.
+  - **Papers**, 16 × 16, lying flat on the stone, damp at the edges: `letter.png` (a folded letter in a small neat
+    hand), `hymn_sheet.png` (printed verses, a lamp drawn at the top), `handbill.png` (a printed notice), `note.png`
+    (a scrap with a rusty pin through it).
+  - **The dead of the First Shift.** Six miners of Garrick's night shift, each wearing a brass tally tag. Each has
+    **two looks**, `a` and `b`, matching the two descriptions in `scripts/data/lore.gd` (`TAGS`): a life shows one or
+    the other. Julian, 2026-10-31: some should be **big visual centrepieces**, some **subtle**.
+    - **Centrepieces**, 96 × 64 (3 × 2 squares), the kind of thing a player stops and stares at:
+      - `miner_03_a/b.png`, **Owen Treloar**: (a) face down in the shallows, one boot gone, hands crusted white to the
+        wrist with salt crystals; (b) on his back staring up, salt grown over his lips like a crust of frost.
+      - `miner_07_a/b.png`, **Jory Pellow**: sitting against the wall as if resting, lamp in his lap; (a) the lamp
+        cold and he is smiling; (b) the lamp still faintly lit with no oil in it, a small pearly glow on his face.
+      - `miner_12_a/b.png`, **Ned Pascoe**: half in a pool of water; (a) the water around him very still, very clear,
+        faintly lit from below (the star's light); (b) where his hand trails in, the water has become a white salt
+        crust spreading out from his fingers.
+    - **Subtle**, 48 × 32 (1.5 × 1 squares), easy to walk past:
+      - `miner_11_a/b.png`, **Sam Hocking**, curled up small: (a) a child's carved wooden bird in his fist; (b) his fist
+        closed on nothing, the bird just out of reach.
+      - `miner_15_a/b.png`, **Will Trevan**: (a) his pick beside him, the haft worn pale, salt on his closed eyes;
+        (b) no pick, his hands still curled around its shape.
+      - `miner_19_a/b.png`, **Kit Penrose**, the youngest, small and thin: (a) the tag on a new cord; (b) the tag on a
+        cord of faded red wool, the same red as Thomas's scarf.
+    - All of them: the star's signs (pearly sheen, faint inner light, salt crystals at the edges) in proportion: strong
+      on the centrepieces, a touch on the subtle ones. The brass tag visible on every one, catching a little light.
 
 - [x] **15a. Make today's sprites sit in the rooms** (`assets/characters/thomas/`, `assets/enemies/drowned_miner/`, `assets/enemies/faithful/`). **Do this first: it is quick and the game uses these sheets now.** Julian, after playtesting: "the sprites don't feel like part of the environment, just sprites stuck onto a background". **Keep this to the quick fixes; don't redraw poses or the camera angle**: job 15 redraws Thomas from the rooms' camera (house style rule 9), so poses redrawn here would be thrown away. Rework the existing sheets in place (same files, sizes, rows and frames, feet still at x 32, y 56). That means: replace the black outline with a dark outline in each area's own colour, dropped on the lit side; take the colours from the rooms' shared palette; separate the values so the figure reads against the paving (lighter face and hands, darker coat, a gap between the legs); a damp darker bottom row on the boots and feet; the rooms' grain on the coat and smocks instead of flat fills. No baked light direction. Also check the room-contents props from job 14 against the house style and fix any that miss it. Then a normal map for each sheet, the same name with `_n` (`body_n.png`, `attack_mace_n.png`, `mace_abilities_n.png`, and the two enemies' `body_n.png`): same frames, OpenGL normal colours (green up), rounded volumes. The game picks up `_n.png` files on its own and lights the sprites with them.
 - [ ] ~~**15-0. Skeleton test: Thomas's south parts sheet**~~ **Delivered (#50), rejected 2026-10-31: replaced by 15-R.** The skeleton works, but the painted parts no longer look like Thomas. Original job, kept for the record: (`assets/characters/thomas/rig/s.png` and `s_n.png`). **Do this first; it replaces the frame-by-frame camera test (#47).** Painting every frame made Thomas flicker; now you paint him **once per direction as eleven separate parts** and the game moves them (`design/art-briefs/animation/BRIEF.md`, "The skeleton"). One row of eleven 24 × 24 cells (264 × 24), in the order and with the pivots in the brief, painted over `design/art-briefs/animation/rig/template_s.png`, from the rooms' camera, house style, about 1.5 squares tall when put together. Claude puts it in the game walking beside a painted room and sends Julian a screenshot; once he approves it, the other four directions are drawn the same way.
