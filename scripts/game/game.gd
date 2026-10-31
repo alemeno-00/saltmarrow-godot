@@ -1309,7 +1309,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F8:
 		hero.show_rig(hero.rig == null)
-		combat_hud.show_banner("Test: Thomas on the skeleton (not yet approved art)." if hero.rig != null else "Back to Thomas's painted art.", 2.0)
+		combat_hud.show_banner("Thomas on the skeleton (the new parts)." if hero.rig != null else "Thomas's old painted art, to compare (F8 to switch back).", 2.5)
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_F9:
 		veteran = not veteran

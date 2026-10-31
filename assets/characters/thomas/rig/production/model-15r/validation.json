@@ -1,0 +1,59 @@
+{
+  "job": "15-R",
+  "step": 1,
+  "approval": "APPROVED JULIAN 2026-10-31, with warmer dark-brown coat",
+  "step2_started": true,
+  "frame_size": [
+    80,
+    80
+  ],
+  "frames": 1,
+  "facing": "south",
+  "feet_root": [
+    40,
+    72
+  ],
+  "body_bounds": [
+    29,
+    20,
+    50,
+    72
+  ],
+  "body_height": 52,
+  "alpha": "binary; normal matches diffuse exactly",
+  "material_ramp_limit": 4,
+  "palette": "shared room colours + approved muted reds + canonical skin accents accepted with whole model",
+  "diffuse_sha256": "93617715b316bc3a816a5c89f3ccfa24c88bc0a4a58e2342461656d183a64564",
+  "normal_sha256": "233ed255b024ff146197957f701a211e54bdae5f37181e1a86fa51cc03ecc15c",
+  "canonical_sha256": "352a72f6b78fa9e4451f7b426ff20cf32b24e3cdb1d4a04dfd113b255213b7b8",
+  "protected_files_unchanged": [
+    "assets/characters/thomas/production/sprites/standing-candidate.png",
+    "assets/characters/thomas/production/sprites/steady-portrait-candidate.png",
+    "assets/characters/thomas/production/concepts/canonical-reference-v1.png"
+  ],
+  "checks": "format, registration, alpha, colour-set and protected-file checks only; visual fidelity remains for review",
+  "normal_registration": "normal source body bounds fitted to diffuse body bounds; vector extension to exact diffuse alpha",
+  "step2_status": "DELIVERED calibrated exact cut; diffuse and normal bind difference0; in-game review pending",
+  "approved_skin_accents": [
+    [
+      82,
+      60,
+      48
+    ],
+    [
+      113,
+      79,
+      61
+    ],
+    [
+      145,
+      104,
+      80
+    ],
+    [
+      167,
+      123,
+      98
+    ]
+  ]
+}

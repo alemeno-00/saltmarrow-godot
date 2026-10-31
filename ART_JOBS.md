@@ -155,7 +155,7 @@ These come first because the first fight is being built next. **Please do jobs 1
 
 - [x] **15a. Make today's sprites sit in the rooms** (`assets/characters/thomas/`, `assets/enemies/drowned_miner/`, `assets/enemies/faithful/`). **Do this first: it is quick and the game uses these sheets now.** Julian, after playtesting: "the sprites don't feel like part of the environment, just sprites stuck onto a background". **Keep this to the quick fixes; don't redraw poses or the camera angle**: job 15 redraws Thomas from the rooms' camera (house style rule 9), so poses redrawn here would be thrown away. Rework the existing sheets in place (same files, sizes, rows and frames, feet still at x 32, y 56). That means: replace the black outline with a dark outline in each area's own colour, dropped on the lit side; take the colours from the rooms' shared palette; separate the values so the figure reads against the paving (lighter face and hands, darker coat, a gap between the legs); a damp darker bottom row on the boots and feet; the rooms' grain on the coat and smocks instead of flat fills. No baked light direction. Also check the room-contents props from job 14 against the house style and fix any that miss it. Then a normal map for each sheet, the same name with `_n` (`body_n.png`, `attack_mace_n.png`, `mace_abilities_n.png`, and the two enemies' `body_n.png`): same frames, OpenGL normal colours (green up), rounded volumes. The game picks up `_n.png` files on its own and lights the sprites with them.
 - [ ] ~~**15-0. Skeleton test: Thomas's south parts sheet**~~ **Delivered (#50), rejected 2026-10-31: replaced by 15-R.** The skeleton works, but the painted parts no longer look like Thomas. Original job, kept for the record: (`assets/characters/thomas/rig/s.png` and `s_n.png`). **Do this first; it replaces the frame-by-frame camera test (#47).** Painting every frame made Thomas flicker; now you paint him **once per direction as eleven separate parts** and the game moves them (`design/art-briefs/animation/BRIEF.md`, "The skeleton"). One row of eleven 24 × 24 cells (264 × 24), in the order and with the pivots in the brief, painted over `design/art-briefs/animation/rig/template_s.png`, from the rooms' camera, house style, about 1.5 squares tall when put together. Claude puts it in the game walking beside a painted room and sends Julian a screenshot; once he approves it, the other four directions are drawn the same way.
-- [ ] **15-R. Repaint Thomas's south sprite from the concept, then cut it into parts.** Julian, 2026-10-31: the
+- [x] **15-R. Repaint Thomas's south sprite from the concept, then cut it into parts.** Julian, 2026-10-31: the
   south parts sheet "looks really weird and not like the concepts anymore". In game the face reads as a skull (a pale
   block with dark holes), the greatcoat as a short jacket over shorts, the satchel and lantern are lost, and speckled
   noise muddies the whole figure. The parts were painted one by one and never as a whole man. The game keeps his old
@@ -178,11 +178,21 @@ These come first because the first fight is being built next. **Please do jobs 1
       Miner.
     - Every other house style rule, and a matching `model-s_n.png` normal map.
     - Deliver an 8× preview beside the concept sheet and a 1× preview on a room floor, then stop for approval.
-  - **Step 2: cut the approved model into the parts.** The 11 cells of
-    `design/art-briefs/animation/rig/template_s.png`, as `s.png` and `s_n.png`. Cut the approved pixels; don't
-    repaint them. Add only the few pixels each joint needs where a part tucks under the next (the thighs under the
-    coat, the arms at the shoulders) so nothing gaps when it turns. The coat below the waist goes in the skirt cell
-    and reaches mid-calf. Put back together standing, the parts must match the model sprite pixel for pixel.
+  - **Step 1 approved** (#55, 2026-10-31, the warmer dark-brown coat). Its template-fit handoff is answered: the
+    rig's proportions are now measured from the approved model and the torso's pivot moved to row 21 of its cell, so
+    the scarf, strap, satchel and lantern fit the torso (`design/art-briefs/animation/BRIEF.md`, "The skeleton").
+  - **Step 2: cut the approved model into the parts.** The 11 cells, as `s.png` and `s_n.png` (the normal map cut
+    the same way from `model-s_n.png`). For each part, `design/art-briefs/animation/rig/bind_s.json` gives the 24 × 24
+    square of the model its cell holds; copy the approved pixels in unmoved, each pixel to exactly one part
+    (`cut_guide_s.png` shows the squares). Add only the few hidden pixels each joint needs where a part tucks under
+    one drawn over it (the thighs under the coat skirt, the arms' tops under the torso). The coat below the waist
+    goes in the skirt cell. Then run the check (`tools/rig/rig_template.gd -- check`): put back together in the
+    bind pose, the parts must match the model pixel for pixel. Claude then switches the game to the new sheet and
+    sends Julian the walk to approve.
+  - **Cut delivered (#60) and checked**: the parts and the normal map rebuild the approved model exactly (0 pixels
+    differ, also run by `tests/test_rig.gd`). **Switched on in the game** (2026-10-31): Thomas walks, stands, sneaks
+    and limps facing south on the new parts; other directions keep the old art until job 15; F8 swaps to the old
+    art to compare. Waiting on Julian's in-game approval of the walk, then job 15.
 - [ ] **15. Thomas's parts sheets, all five directions** (`assets/characters/thomas/rig/se.png`, `e.png`, `ne.png`, `n.png`, with `_n` normal maps). After 15-R is approved, by the same two steps: a whole model sprite per direction, approved, then cut into parts. Templates: `design/art-briefs/animation/rig/template_<dir>.png`. The game then walks, stands, sneaks and limps him in every direction from these alone.
 - [ ] **16. Thomas fighting, in five directions** (`assets/characters/thomas/dir/<dir>_mace.png`). After 15. *May move to the skeleton (a maul part held in the hand) once 15 is in; Claude will say before you start.* Rows: maul wind-up (4), strike (3, one smear frame), recovery (4), critical overhead (10), hurt (4), pushed back (4), knocked prone (5), lying prone (2, looped), getting up (5). Brief as job 15.
 - [ ] **17. Normal maps** for the sheets in jobs 15 and 16: the same names with `_n` (`s_n.png`, `s_mace_n.png`), same frames, OpenGL normal colours (green up), rounded volumes. Then the Drowned Miner, the Faithful and Garrick get idle, walk, attack and hurt in five directions, with normal maps.

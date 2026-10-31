@@ -1,3 +1,7 @@
+# Production archive and current15-R delivery
+
+Current runtime parts are exact cuts from the approved whole model; see cut-15r/README.md for masks, checks and current previews. The direct-painted job15-0 files listed below are historical rejected material; do not rerun export_parts.py over the approved cut.
+
 # South rig production files
 
 - `template_s.png`, `template_s_4x.png`, `assembled_s_4x.png`: unchanged upstream south template and assembled stand-in reference from skeleton revision5d836a0. Template:11 cells of24×24. Assembled reference: one80×80 frame enlarged4×.
@@ -13,3 +17,7 @@
 - `.gdignore`: excludes production sources from runtime imports.
 
 Runtime outputs: `../s.png` and `../s_n.png`, one row of11 cells,24×24 each. See the parent README for cell order and pivots.
+
+## Job15-R: approved whole model and exact cut
+
+model-s.png and model-s_n.png are the approved80×80 south model and normal,52px tall, feet-root(40,72), unchanged from PR55. See model-15r/README.md for sources and approval. Runtime rig/s.png and s_n.png now use the exact approved-model cut from cut-15r/README.md.

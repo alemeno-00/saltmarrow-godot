@@ -425,7 +425,8 @@ func _draw_rig(off: Vector2) -> bool:
 	for pl in Rig.placements(pose, face, Vector2(0, 12)):
 		if pl.part in hidden:
 			continue
-		var place := Transform2D(0.0, Vector2(mirror, 1.0), 0.0, off) * Transform2D(pl.angle, pl.at)
+		# each pivot on a whole pixel, as the parts were cut (Rig.compose): no shimmer, and standing still is the model
+		var place := Transform2D(0.0, Vector2(mirror, 1.0), 0.0, off) * Transform2D(pl.angle, (pl.at as Vector2).round())
 		draw_set_transform_matrix(place)
 		var pivot: Vector2 = pl.pivot
 		draw_texture_rect_region(lit, Rect2(-pivot, Rig.CELL), Rect2(Vector2(pl.cell * Rig.CELL.x, 0), Rig.CELL), _sheet_tint())

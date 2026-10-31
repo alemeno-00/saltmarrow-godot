@@ -1,0 +1,32 @@
+{
+  "approval_text": "warmer dark brown , that sprite is great also",
+  "date": "2026-10-31",
+  "model_approved_except_requested_coat_warming": true,
+  "warm_coat_ramp": [
+    [
+      21,
+      19,
+      19
+    ],
+    [
+      33,
+      33,
+      34
+    ],
+    [
+      63,
+      50,
+      44
+    ],
+    [
+      90,
+      59,
+      30
+    ]
+  ],
+  "coat_pixels_changed": 180,
+  "noncoat_pixels_changed": 0,
+  "alpha_changed": false,
+  "normal_changed": false,
+  "approved_warm_model_sha256": "93617715b316bc3a816a5c89f3ccfa24c88bc0a4a58e2342461656d183a64564"
+}
