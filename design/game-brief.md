@@ -58,7 +58,7 @@ The MVP keeps the dive at the heart of it:
 1. Put the fight art in the game, to prove the fights feel heavy and costly.
 2. Build the Sewers room kit: the door standard, the generator that places painted rooms, then the paintings (once the painted Outflow proves the method).
 3. Design and build the Sewers boss and its fight. *Done.*
-4. Add the win and death screens and the restart.
+4. Add the win and death screens and the restart. *Built* (2026-10-31): a title screen (Wake, Journal, Quit), a death screen (what killed him, how deep, this life's count, what the journal keeps) and a win screen once Garrick's tag is taken (the tag goes into the journal); mouse first, R and J still work.
 5. Free movement, phase A: moving freely while exploring, and the hit feel (free-movement spec). *Built.*
 6. 8-direction characters: the game picks a direction's frames; ChatGPT draws idle and walk in 8 directions first, then attacks and hit reactions.
 7. Free movement, phase B: fights in metres, like Baldur's Gate 3. *Built*, with sprites grounded in the rooms (shadows from the lights, wading, normal-mapped lighting).
