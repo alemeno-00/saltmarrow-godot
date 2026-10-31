@@ -1,0 +1,13 @@
+{
+  "diffuse_bind_differing_pixels": 0,
+  "engine": "4.7.2-stable (official)",
+  "implementation": "unchanged main Rig.compose / RigPose; isolated temporary project; no game lighting or RigMotion spring simulation",
+  "motions": [
+    "idle",
+    "walk",
+    "sneak",
+    "limp"
+  ],
+  "normal_bind_differing_pixels": 0,
+  "samples_per_motion": 16
+}

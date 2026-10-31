@@ -27,15 +27,13 @@
   "normal_sha256": "233ed255b024ff146197957f701a211e54bdae5f37181e1a86fa51cc03ecc15c",
   "canonical_sha256": "352a72f6b78fa9e4451f7b426ff20cf32b24e3cdb1d4a04dfd113b255213b7b8",
   "protected_files_unchanged": [
-    "assets/characters/thomas/rig/s.png",
-    "assets/characters/thomas/rig/s_n.png",
     "assets/characters/thomas/production/sprites/standing-candidate.png",
     "assets/characters/thomas/production/sprites/steady-portrait-candidate.png",
     "assets/characters/thomas/production/concepts/canonical-reference-v1.png"
   ],
   "checks": "format, registration, alpha, colour-set and protected-file checks only; visual fidelity remains for review",
   "normal_registration": "normal source body bounds fitted to diffuse body bounds; vector extension to exact diffuse alpha",
-  "step2_status": "Fit audit: current torso cell cannot preserve approved scarf and kit; calibration required",
+  "step2_status": "DELIVERED calibrated exact cut; diffuse and normal bind difference0; in-game review pending",
   "approved_skin_accents": [
     [
       82,
