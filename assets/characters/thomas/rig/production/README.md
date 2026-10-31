@@ -13,3 +13,7 @@
 - `.gdignore`: excludes production sources from runtime imports.
 
 Runtime outputs: `../s.png` and `../s_n.png`, one row of11 cells,24×24 each. See the parent README for cell order and pivots.
+
+## Job15-R step1: whole model approval
+
+model-s.png and model-s_n.png are one80×80 south-facing whole-figure approval candidate,52px tall, feet-root(40,72). They are not runtime parts replacements. See model-15r/README.md for source prompts, concept/room/cast previews, the proposed four-colour skin exception and the explicit stop before any cutting. Existing rig/s.png and s_n.png remain untouched.
