@@ -65,9 +65,11 @@ starts with a quick spec or a GDD section for Julian to approve.
 ## Story and people
 
 10. **Refine the story.** *Now:* `docs/story.md`; the Sewers boss ends the first version, Ellen is saved for the full
-    game; lore texts for part 2 of room contents are drafted (Ellen's letters, the tally tags, chapel hymns) but not
-    approved. *Job:* the acts, how the star's rewriting shows from life to life, how a run ends, and the full game's
-    ending with Ellen.
+    game; the lore texts are in the game (`scripts/data/lore.gd`: Ellen's letters, the tally tags, chapel hymns),
+    approved as drafts. *Job:* the acts, how the star's rewriting shows from life to life, how a run ends, and the
+    full game's ending with Ellen. Julian, 2026-10-31: extend the chapel's lore (more hymns, notices, Agathe's notes)
+    into a rich story to find; workshop Ellen's letters, especially how the Fury and Shadow versions show the
+    relationship.
 11. **Review all dialogue and the dialogue trees.** *Now:* talking is a proposal (`design/quick-specs/dialogue-2026-10-30.md`);
     no lines are written. *Job:* write the first four encounter types and their variants for review, the data format
     for branching conversations, the tests a choice can call for, and a pass over every line for voice and

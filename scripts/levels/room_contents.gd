@@ -8,12 +8,18 @@ extends RefCounted
 ##   - **a locked grate** across a tunnel that leads only to a quiet side room (never the way to the exit), with a
 ##     cache behind it and the grate key in a cache elsewhere;
 ##   - **a sluice valve** in one room that drains a flooded room elsewhere, revealing a satchel in its basin.
+## - **Lore drops** (part 2): 1-2 in the rooms, plus one in every lore room, never in a door's landing: Ellen's
+##   letters, dead miners with their tally tags, chapel papers.
 ## - **1-2 events** (part 5), each in its own room and each a different kind, firing once when Thomas first walks in:
 ##   a hymn through the walls, something at the edge of the light, the Drowned rising (flooded rooms only), star frost.
 
 const CACHES := Vector2i(2, 3)          # ordinary caches per level
 const CACHE_ROOMS := ["junction", "chamber", "stairs", "lore", "flooded"]
 const ITEMS := ["salve", "bandage"]
+const LORE := Vector2i(1, 2)            # lore drops per level, besides the one in each lore room
+const LORE_ROOMS := ["junction", "chamber", "flooded", "stairs"]
+const LORE_KINDS := {"letter": 5, "tag": 4, "chapel": 2}   # how often each kind turns up
+const DOOR_CLEAR := 2                   # squares in front of a door kept clear
 const EVENTS := Vector2i(1, 2)          # events per level
 const EVENT_ROOMS := ["junction", "chamber", "flooded", "lore", "stairs"]
 const EVENT_KINDS := ["hymn", "watcher", "drowned_rise", "star_frost"]
@@ -45,7 +51,62 @@ func _place() -> void:
 			break
 		var c: Vector2i = free.pop_at(rng.randi_range(0, free.size() - 1))
 		level.caches[c] = {"kind": level.cover[c], "item": ITEMS[rng.randi_range(0, ITEMS.size() - 1)], "opened": false}
+	_lore()
 	_events()
+
+
+## Lore drops: one in each lore room (a letter), and 1-2 more in other rooms, each in its own room.
+func _lore() -> void:
+	var rooms: Array[int] = []
+	for i in level.pieces.size():
+		var kind: String = level.pieces[i].kind
+		if kind == "lore":
+			_drop_in(i, "letter")
+		elif kind in LORE_ROOMS and not (level.pieces[i].rect as Rect2i).has_point(level.start):
+			rooms.append(i)
+	for _i in rng.randi_range(LORE.x, LORE.y):
+		if rooms.is_empty():
+			return
+		_drop_in(rooms.pop_at(rng.randi_range(0, rooms.size() - 1)), _lore_kind())
+
+
+func _lore_kind() -> String:
+	var total := 0
+	for k in LORE_KINDS:
+		total += LORE_KINDS[k]
+	var roll := rng.randi_range(1, total)
+	for k in LORE_KINDS:
+		roll -= LORE_KINDS[k]
+		if roll <= 0:
+			return k
+	return "letter"
+
+
+## Put a drop of `kind` on a free floor square in room `i`: dry, walkable floor, not a cache, cover or the start, and
+## clear of every door's landing.
+func _drop_in(i: int, kind: String) -> void:
+	var r: Rect2i = level.pieces[i].rect
+	var free: Array[Vector2i] = []
+	for y in range(r.position.y, r.end.y):
+		for x in range(r.position.x, r.end.x):
+			var c := Vector2i(x, y)
+			if level.get_tile(c) == Level.Tile.FLOOR and not level.caches.has(c) and not level.lore.has(c) and c != level.start and not _by_door(c, r):
+				free.append(c)
+	if free.is_empty():
+		return
+	level.lore[free[rng.randi_range(0, free.size() - 1)]] = {"kind": kind, "id": ""}
+
+
+## Is `c` in a doorway's landing: within DOOR_CLEAR squares of a gap in room `r`'s walls (a walkable square on its
+## edge)? The kit's rooms join through such gaps, not door tiles.
+func _by_door(c: Vector2i, r: Rect2i) -> bool:
+	for y in range(r.position.y, r.end.y):
+		for x in range(r.position.x, r.end.x):
+			var e := Vector2i(x, y)
+			var edge := x == r.position.x or y == r.position.y or x == r.end.x - 1 or y == r.end.y - 1
+			if edge and level.is_walkable(e) and maxi(absi(e.x - c.x), absi(e.y - c.y)) <= DOOR_CLEAR:
+				return true
+	return false
 
 
 ## 1-2 events in different rooms, each a different kind. The Drowned rise only where there is water to rise from.

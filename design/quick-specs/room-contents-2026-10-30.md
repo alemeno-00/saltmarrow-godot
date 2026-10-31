@@ -62,7 +62,15 @@ When a level is built, each room rolls for its contents from a table for its typ
   second and a half; the Drowned rise 2-5 squares away in flooded rooms only and come for him; star frost spreads
   across the room's floor and its lanterns gutter. Stand-in drawings until art job 14b; the hymn lines are
   placeholders until the hymns are written with Julian. Events, like caches, are not yet saved with the level.
-- **Still to build**: part 2 (lore and the journal; texts waiting for Julian), clutter.
+- **Part 2** (2026-10-31): one letter in every lore room and 1-2 more drops in other rooms (letters, dead miners,
+  chapel papers), on dry floor clear of doorways (the gaps in a room's walls). Letters come in story order across
+  lives, worded for the backstory; a miner lies one of two ways, fixed for the life. Mouse first, as in Baldur's
+  Gate 3 (Julian, 2026-10-31): hovering names a drop, left-click walks over and reads it, right-click offers "Read it"
+  or "Look at him"; E also works. The page opens and the world waits; what is read goes into the journal (J, or the
+  Journal button), kept on disk across deaths and lives. Texts in `scripts/data/lore.gd`: approved to go in, the
+  letters to be workshopped later; the chapel lore to be extended later. The hymn heard through the walls now quotes
+  the hymn sheets. Stand-in drawings until art job 14c (some miners big centrepieces, some subtle).
+- **Still to build**: clutter.
 
 ## Tuning Knobs
 
@@ -83,7 +91,7 @@ Values live as named constants in the code (`assets/` belongs to ChatGPT).
 
 - [ ] Over 300 seeds: no content in a door's landing, on the start, on water or stairs; the same seed always gives the same contents. *(test)*
 - [ ] Part 1: groups in 75% of eligible rooms within ±10% over 300 seeds; one patrol that walks its loop and spots Thomas. *(test)*
-- [ ] Part 2: reading a drop adds it to the journal; the journal survives death and a new life. *(test)*
+- [x] Part 2: reading a drop adds it to the journal; the journal survives death and a new life. *(test)*
 - [ ] Part 3: opening a cache puts its item on the belt; a full belt leaves it; salve and bandage work and use a maneuver; items are lost on death. *(test)*
 - [ ] Part 4: the valve drains its room; the grate opens only with its key; neither blocks the exit (every level still reachable to the exit with the grate shut). *(test)*
 - [x] Part 5: each event fires once on entering its room; the Drowned rise adds a miner. *(test)*

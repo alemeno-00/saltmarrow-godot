@@ -46,6 +46,9 @@ var sewage: Array[Rect2i] = []    # the long sewage tunnels (each a straight run
 ## Room events (room contents part 5), placed by RoomContents: room (index into `pieces`) -> {kind, fired}. Kinds:
 ## "hymn", "watcher" (something at the edge of the light), "drowned_rise", "star_frost". Each fires once.
 var events := {}
+## Lore drops (room contents part 2), placed by RoomContents: square -> {kind: letter / tag / chapel, id}. The game
+## picks each drop's `id` (which letter, which miner) when the level starts, from the journal.
+var lore := {}
 
 const OUTFLOW_SIZE := Vector2i(12, 9)
 # The Outflow's fixed layout, matching design/art-briefs/outflow/outflow-blockout.png (columns and rows inside the room).
@@ -188,6 +191,7 @@ func _clear() -> void:
 	loops = 0
 	caches.clear()
 	events.clear()
+	lore.clear()
 	grate.clear()
 	grate_across = ""
 	valve = Vector2i(-1, -1)

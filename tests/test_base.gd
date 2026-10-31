@@ -2,6 +2,7 @@ class_name TestBase
 extends RefCounted
 
 var failures: Array = []
+const TEST_JOURNAL := "user://test_journal.json"
 
 
 func check(cond: bool, msg: String) -> void:
@@ -52,6 +53,10 @@ func add_game(tree: SceneTree) -> Node:
 		node.level_seed = 7   # a fixed first level, so game tests repeat exactly
 	if "ask_backstory" in node:
 		node.ask_backstory = false   # tests start as Fury unless they choose
+	if "journal_path" in node:
+		node.journal_path = TEST_JOURNAL   # never the player's own journal
+		if FileAccess.file_exists(TEST_JOURNAL):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(TEST_JOURNAL))
 	tree.root.add_child(node)
 	await tree.process_frame
 	return node

@@ -94,6 +94,11 @@ var lighting: Lighting
 var darkness: CanvasModulate
 var world_ui: CanvasLayer   # follows the camera but isn't dimmed: fight markers, hit flashes
 var ripples_made := 0       # ripples and splashes so far (tests read this)
+var journal_path := Journal.PATH       # where the journal is kept (tests use their own)
+var journal: Journal                    # everything Thomas has read, kept across deaths and lives
+var journal_screen: JournalScreen
+var journal_button: Button
+var _lore_views := {}                   # square -> LoreDrop
 var events_fired: Array[String] = []   # room events that have happened on this level, in order (tests read this)
 var watcher: RoomEventFx = null        # the last pale figure shown (tests read this)
 const HYMN_REACH := 12.0    # squares: how near a Faithful band must be for its hymn to carry through the walls
@@ -102,12 +107,6 @@ const WATCHER_FAR := 6.5    # ...but close enough to see
 const RISE_NEAR := 2.0      # squares: how close the Drowned rise from the water
 const RISE_FAR := 5.0
 const RISEN_GROUP := 2000   # band numbers for the risen, apart from the level's own bands
-## Lines of hymn heard through the walls (placeholders until the hymns are written with Julian).
-const HYMN_LINES := [
-	"Through the stone, faintly:  \"...and the deep gave back what it was given...\"",
-	"Singing, somewhere near. Many voices, one breath.",
-	"Beyond the wall:  \"...salt for the wound, and light for the drowned...\"",
-]
 var fog: Fog                # fog of war: what he has explored and what he can see now
 var fog_view: Sprite2D      # drawn over the world: black where unexplored, dimmed where only remembered
 var _fog_level: Level = null
@@ -156,6 +155,16 @@ func _ready() -> void:
 	layer.add_child(context_menu)
 	context_menu.id_pressed.connect(func(i): if i < _context_actions.size() and _context_actions[i].is_valid(): _context_actions[i].call())
 	combat_hud.belt_pressed.connect(use_belt)
+	journal = Journal.open(journal_path)
+	journal_screen = JournalScreen.new()
+	layer.add_child(journal_screen)
+	journal_button = Button.new()
+	journal_button.text = "Journal (J)"
+	journal_button.focus_mode = Control.FOCUS_NONE
+	journal_button.position = Vector2(1150, 626)
+	journal_button.size = Vector2(110, 28)
+	journal_button.pressed.connect(toggle_journal)
+	$HUD.add_child(journal_button)
 	backstory_screen = BackstoryScreen.new()
 	layer.add_child(backstory_screen)
 	backstory_screen.chosen.connect(choose_backstory)
@@ -193,6 +202,7 @@ func new_level(seed_in: int, keep := false) -> void:
 	gore.clear_all()
 	_place_cover_props()
 	clear_enemies()
+	_place_lore()
 	combat_hud.set_belt(progress.belt)
 	_spawn_enemies()
 	battle = null
@@ -221,7 +231,7 @@ func new_level(seed_in: int, keep := false) -> void:
 
 func clear_enemies() -> void:
 	for c in actors.get_children():
-		if c != hero and not c is CoverProp:
+		if c != hero and not c is CoverProp and not c is LoreDrop:
 			c.queue_free()
 	enemies.clear()
 	views = {hero_unit: hero}
@@ -753,7 +763,7 @@ func _bring_back(u: Combatant) -> void:
 
 ## The game waits while a menu is open: the skill tree, or choosing a backstory.
 func paused() -> bool:
-	return tree_screen.visible or backstory_screen.visible
+	return tree_screen.visible or backstory_screen.visible or (journal_screen != null and journal_screen.visible)
 
 
 ## A new life begins as the chosen backstory: Fury (maces) or Shadow (daggers).
@@ -806,6 +816,8 @@ func interact() -> String:
 		targets.append(level.valve)
 	for g in level.grate:
 		targets.append(g)
+	for c in level.lore:
+		targets.append(c)
 	for c in targets:
 		var d := hero.position.distance_to(MovementRules.centre(c))
 		if d <= best_d:
@@ -817,6 +829,8 @@ func interact() -> String:
 		return _turn_valve()
 	if level.grate.has(best):
 		return _unlock_grate()
+	if level.lore.has(best):
+		return read_lore(best)
 	return _search(best)
 
 
@@ -1251,6 +1265,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			_toggle_tree()
 			get_viewport().set_input_as_handled()
 			return
+		if (event.keycode == KEY_J and not in_fight()) or (event.keycode == KEY_ESCAPE and journal_screen.visible):
+			toggle_journal()
+			get_viewport().set_input_as_handled()
+			return
 	if paused():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R:
@@ -1347,6 +1365,9 @@ func thing_at(p: Vector2) -> Dictionary:
 			return {"cell": k, "name": {"crate": "Crate", "barrel": "Barrel", "satchel": "Drowned miner's satchel"}.get(cache.kind, "Cache"), "action": _search.bind(k)}
 	if level.valve.x >= 0 and MovementRules.centre(level.valve).distance_to(p) <= 18.0:
 		return {"cell": level.valve, "name": "Sluice valve", "action": _turn_valve}
+	for k in level.lore:
+		if MovementRules.centre(k).distance_to(p) <= (20.0 if level.lore[k].kind == "tag" else 16.0):
+			return {"cell": k, "name": lore_name(k), "action": read_lore.bind(k)}
 	for g in level.grate:
 		if MovementRules.centre(g).distance_to(p) <= 20.0 and level.get_tile(g) == Level.Tile.GRATE_SHUT:
 			return {"cell": g, "name": "Iron grate (locked)", "action": _unlock_grate}
@@ -1389,6 +1410,10 @@ func context_options(p: Vector2) -> Array:
 			out.append(["Search %s" % what, _go_and.bind(k, _search.bind(k))])
 	if level.valve.x >= 0 and MovementRules.centre(level.valve).distance_to(p) <= 20.0:
 		out.append(["Turn the valve", _go_and.bind(level.valve, _turn_valve)])
+	for k in level.lore:
+		if MovementRules.centre(k).distance_to(p) <= (22.0 if level.lore[k].kind == "tag" else 18.0):
+			var verb := "Look at him" if level.lore[k].kind == "tag" else "Read it"
+			out.append([verb + (" again" if journal.has(level.lore[k].id) else ""), _go_and.bind(k, read_lore.bind(k))])
 	for g in level.grate:
 		if MovementRules.centre(g).distance_to(p) <= 24.0 and level.get_tile(g) == Level.Tile.GRATE_SHUT:
 			out.append(["Unlock the grate" if progress.belt.has("grate_key") else "Try the grate", _go_and.bind(g, _unlock_grate)])
@@ -1924,6 +1949,67 @@ func can_see(e: Combatant) -> bool:
 	return fog != null and fog.sees(e.cell)
 
 
+# ---------------------------------------------------------------- lore and the journal
+
+## Decide what each of the level's lore drops is, and lay them out. Letters come in story order: the first one not
+## yet in the journal. Miners and chapel papers: one not yet read, if any is left. Once all of a kind are read, old
+## ones turn up again (marked as read).
+func _place_lore() -> void:
+	for v in _lore_views.values():
+		if is_instance_valid(v):
+			v.queue_free()
+	_lore_views.clear()
+	var used := {}
+	var cells: Array = level.lore.keys()
+	cells.sort()
+	for c in cells:
+		var drop: Dictionary = level.lore[c]
+		var rng := RandomNumberGenerator.new()
+		rng.seed = hash([level.seed_value, "lore", c])
+		var all := Lore.ids(drop.kind).filter(func(i): return not used.has(i))
+		if all.is_empty():
+			all = Lore.ids(drop.kind)
+		var fresh := all.filter(func(i): return not journal.has(i))
+		var id: String
+		if not fresh.is_empty():
+			id = fresh[0] if drop.kind == "letter" else fresh[rng.randi_range(0, fresh.size() - 1)]
+		else:
+			id = all[rng.randi_range(0, all.size() - 1)]
+		drop.id = id
+		used[id] = true
+		var v := LoreDrop.spawn(actors, c, drop.kind)
+		v.read = journal.has(id)
+		_lore_views[c] = v
+
+
+## What a lore drop is called on the floor, with "(read)" once it is in the journal.
+func lore_name(c: Vector2i) -> String:
+	var id: String = level.lore[c].id
+	return Lore.floor_name(id) + ("  (read)" if journal.has(id) else "")
+
+
+## Read the lore drop at `c`: the page opens, and it goes into the journal. Returns "read" (new) or "reread".
+func read_lore(c: Vector2i) -> String:
+	var id: String = level.lore[c].id
+	var page := Lore.page(id, progress.backstory, life_seed)
+	var added := journal.add(id, page[0], page[1])
+	stop_walking()
+	journal_screen.show_page(page[0], page[1], "Added to the journal (J)." if added else "Already in the journal.")
+	if _lore_views.has(c):
+		_lore_views[c].read = true
+		_lore_views[c].queue_redraw()
+	return "read" if added else "reread"
+
+
+## J, or the Journal button: open or close the journal. Not mid-fight.
+func toggle_journal() -> void:
+	if journal_screen.visible:
+		journal_screen.close()
+	elif not in_fight():
+		stop_walking()
+		journal_screen.open_journal(journal)
+
+
 # ---------------------------------------------------------------- room events
 
 ## Room events (room contents part 5): when Thomas walks into a room that holds one, it happens, once. The hymn waits
@@ -1951,7 +2037,7 @@ func fire_event(kind: String, room: int) -> bool:
 		"hymn":
 			for e in enemies:
 				if e.alive() and not e.fled and e.style == "faithful" and Vector2(e.cell - hero.grid_pos).length() <= HYMN_REACH:
-					combat_hud.show_banner(HYMN_LINES[rng.randi_range(0, HYMN_LINES.size() - 1)], 3.5)
+					combat_hud.show_banner(Lore.HEARD[rng.randi_range(0, Lore.HEARD.size() - 1)], 3.5)
 					return true
 			return false
 		"watcher":
