@@ -203,6 +203,48 @@ These come first because the first fight is being built next. **Please do jobs 1
   - a lantern or brazier going out (6 frames)
   - a clatter: a small spark and dust where a dagger hits stone (4 frames)
 
+- [ ] **20. The UI kit** (`assets/ui/`). Design: `design/ux/hud.md` (the layout Julian approved, 2026-10-31). The
+  game draws placeholders until each file arrives; `scripts/game/ui_style.gd` loads them from these exact paths.
+  Pixel art, hard edges, the house palette: **dark wet slate** panels, a **worn brass** edge, **amber** for what is
+  active or chosen, **pearl** for anything touched by the star, a dull **red** for harm. No glow, no gradients beyond
+  the paintings' own grain. Each PNG with a README line saying its 9-slice margins where it has them.
+  - **Frames** (`assets/ui/frames/`), drawn to stretch (9-slice: corners and edges kept, the middle tiled):
+    - `panel.png` 48 × 48, margins 12: the large panels (the hotbar, the menu, the journal, the skill tree).
+    - `panel_small.png` 24 × 24, margins 6: tooltips and cards.
+    - `slot.png`, `slot_hover.png`, `slot_active.png`, `slot_disabled.png`, 44 × 44, margins 8: an ability or belt
+      slot, empty, under the mouse, chosen, and can't be used now.
+    - `button.png`, `button_hover.png`, `button_pressed.png`, `button_disabled.png`, 48 × 24, margins 8: text
+      buttons (Journal, Menu, Wake, the menu's choices). `button_end_turn.png` (and `_hover`, `_pressed`), 96 × 40,
+      margins 10: the End turn button, bigger and amber-edged.
+    - `bar_frame.png` 96 × 10, margins 3, with `bar_stamina.png` (dull red) and `bar_xp.png` (amber), 4 × 6 fills
+      that the game stretches.
+  - **Ability icons** (`assets/ui/icons/abilities/<id>.png`, 32 × 32, drawn to sit inside a slot), one for each:
+    `heavy_blow`, `skull_crack`, `knee_breaker`, `wide_arc`, `execution` (the maul's); `stab`, `backstab`,
+    `open_the_vein`, `throw` (the daggers'); `careful_step`, `stand_up`, `catch_breath`; and for exploring `sneak`,
+    `lantern_lit`, `lantern_shuttered`, `lantern_out`, `search`. Read at a glance from shape first: a maul's head, a
+    blade, a boot, a lungful of breath, a crouch, the lantern three ways.
+  - **Conditions** (`assets/ui/icons/conditions/<name>.png`, 16 × 16): `prone`, `dazed`, `bleeding`, `slowed`,
+    `surprised`, `dying`, `hidden`. Shown on the turn order and in tooltips.
+  - **Resources** (`assets/ui/icons/`, 16 × 16): `resolve.png` (an amber spark), `recovery.png`, `malice.png`.
+  - **Turn-order tokens** (`assets/ui/portraits/<style>.png`, 32 × 32, head and shoulders, framed by `slot.png`):
+    `thomas`, `faithful`, `miner`, `garrick`, `lurker`. Recognisable at a glance; the star's signs on the changed.
+  - **Cursors** (`assets/ui/cursors/<name>.png`, 24 × 24, hotspot top-left unless the README says otherwise):
+    `walk`, `attack`, `use` (search, read, turn), `talk`, `cant`.
+  - **The title** (`assets/ui/title.png`, about 640 × 140): "SALTMARROW DEEP" in carved, salt-crusted letters, a
+    faint pearly light under them. Transparent around it.
+  - **The title screen's backdrop** (`assets/ui/title_background.png`, 1280 × 720, opaque): Saltmarrow on its cliff
+    at night in the storm, from the painting in `assets/reference/saltmarrow-deep/town-hub/town-style-reference.png`
+    (Julian, 2026-10-31: the game should open on that artwork). Reframed to 16:9 with calm, dark sky or sea where the
+    title and the three buttons sit (top third for the title, a band across the lower middle for the buttons), the
+    lift and the chapel still readable.
+  - **The sea's mask** (`assets/ui/title_background_sea.png`, 1280 × 720, the same framing): **red** where there is
+    open sea, **green** where surf and foam break on the rocks and the wharf posts, black everywhere else (land, sky,
+    buildings, the lift). Julian, 2026-10-31: the ocean on the title should move. The game animates only the masked
+    parts (a slow swell, light moving on the water, the surf breathing; `scripts/game/canvas_ui_title_sea.gdshader`)
+    and adds rain and a distant lightning flash, so paint the sea calm and still: no motion blur, no spray frozen
+    mid-air that would look wrong when the water under it moves. Hard edges on the mask, no soft gradients.
+  - Fonts are not part of this job: Claude proposes free, openly licensed ones to Julian.
+
 ## Later: Thomas in full
 
 - [ ] **13c. Room kit variants** (`assets/tiles/sewers/rooms/<layout>/2.png`, `3.png`). After 14. More paintings of the same layouts, so rooms don't repeat: junctions to 3 each, chambers, flooded rooms, entry, stairs and tunnels to 2 each (counts from `design/quick-specs/sewer-room-kit-2026-10-29.md`). Same blockouts and rules; change materials, wear, damp, salt and what stands on the prop squares. Add each new painting's glass positions to `manifest.json`.
