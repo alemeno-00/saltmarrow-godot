@@ -94,6 +94,20 @@ var lighting: Lighting
 var darkness: CanvasModulate
 var world_ui: CanvasLayer   # follows the camera but isn't dimmed: fight markers, hit flashes
 var ripples_made := 0       # ripples and splashes so far (tests read this)
+var events_fired: Array[String] = []   # room events that have happened on this level, in order (tests read this)
+var watcher: RoomEventFx = null        # the last pale figure shown (tests read this)
+const HYMN_REACH := 12.0    # squares: how near a Faithful band must be for its hymn to carry through the walls
+const WATCHER_NEAR := 4.5   # squares: the pale figure stands just past the lantern's reach (3.5)...
+const WATCHER_FAR := 6.5    # ...but close enough to see
+const RISE_NEAR := 2.0      # squares: how close the Drowned rise from the water
+const RISE_FAR := 5.0
+const RISEN_GROUP := 2000   # band numbers for the risen, apart from the level's own bands
+## Lines of hymn heard through the walls (placeholders until the hymns are written with Julian).
+const HYMN_LINES := [
+	"Through the stone, faintly:  \"...and the deep gave back what it was given...\"",
+	"Singing, somewhere near. Many voices, one breath.",
+	"Beyond the wall:  \"...salt for the wound, and light for the drowned...\"",
+]
 var fog: Fog                # fog of war: what he has explored and what he can see now
 var fog_view: Sprite2D      # drawn over the world: black where unexplored, dimmed where only remembered
 var _fog_level: Level = null
@@ -186,6 +200,7 @@ func new_level(seed_in: int, keep := false) -> void:
 	dead = false
 	selected = -1
 	returning.clear()
+	events_fired.clear()
 	combat_hud.set_abilities(hero_unit.abilities)
 	combat_hud.show_fight(false)
 	combat_hud.clear_log()
@@ -1855,6 +1870,7 @@ func _process(delta: float) -> void:
 	_tick_explore(delta)
 	_tick_world(delta)
 	_tick_drain(delta)
+	_tick_events()
 	Grounding.hero_light = hero.position if lantern != "out" else Vector2.INF
 	var target: Vector2 = _focus if _focus != null else hero.position
 	cam.position = cam.position.lerp(target, 1.0 - exp(-delta * 12.0))
@@ -1906,6 +1922,83 @@ func can_see(e: Combatant) -> bool:
 	if in_fight() and battle.units.has(e):
 		return true
 	return fog != null and fog.sees(e.cell)
+
+
+# ---------------------------------------------------------------- room events
+
+## Room events (room contents part 5): when Thomas walks into a room that holds one, it happens, once. The hymn waits
+## until a Faithful band is near enough to hear.
+func _tick_events() -> void:
+	if in_fight() or dead or won or busy or level == null or paused():
+		return
+	var room := level.piece_at(hero.grid_pos)
+	if room < 0 or not level.events.has(room):
+		return
+	var ev: Dictionary = level.events[room]
+	if ev.fired:
+		return
+	if fire_event(ev.kind, room):
+		ev.fired = true
+		events_fired.append(ev.kind)
+
+
+## Make an event happen in `room`. Returns false if it can't happen yet (the hymn, with no Faithful near).
+func fire_event(kind: String, room: int) -> bool:
+	var r: Rect2i = level.pieces[room].rect
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash([level.seed_value, room, kind])
+	match kind:
+		"hymn":
+			for e in enemies:
+				if e.alive() and not e.fled and e.style == "faithful" and Vector2(e.cell - hero.grid_pos).length() <= HYMN_REACH:
+					combat_hud.show_banner(HYMN_LINES[rng.randi_range(0, HYMN_LINES.size() - 1)], 3.5)
+					return true
+			return false
+		"watcher":
+			var spot := _watcher_spot(rng)
+			if spot.x >= 0:
+				var fx := RoomEventFx.watcher(MovementRules.centre(spot) + Vector2(0, 12))
+				world_ui.add_child(fx)   # outside the dark: it is seen by its own pale light, not the lantern's
+				watcher = fx
+				if is_inside_tree():
+					get_tree().create_timer(fx.lifetime() + 0.4).timeout.connect(func(): if not in_fight(): combat_hud.show_banner("Something was standing there.", 2.0))
+		"drowned_rise":
+			var water: Array[Vector2i] = []
+			for y in range(r.position.y, r.end.y):
+				for x in range(r.position.x, r.end.x):
+					var c := Vector2i(x, y)
+					var d := Vector2(c - hero.grid_pos).length()
+					if level.is_wet(c) and d >= RISE_NEAR and d <= RISE_FAR and _enemy_at(c) == null and level.line_of_sight(hero.grid_pos, c):
+						water.append(c)
+			if not water.is_empty():
+				var c: Vector2i = water[rng.randi_range(0, water.size() - 1)]
+				var e := _add_enemy(Bestiary.drowned_miner(), c)
+				e.group = RISEN_GROUP + room
+				e.state = "hunting"
+				e.target = hero.grid_pos
+				views[e].face_point(hero.position)
+				_ripple(c, true)
+				_shake = maxf(_shake, 3.0)
+				combat_hud.show_banner("Something rises from the water.", 2.0)
+		"star_frost":
+			var px := Rect2(Vector2(r.position) * MovementRules.TILE, Vector2(r.size) * MovementRules.TILE)
+			gore.add_child(RoomEventFx.frost(hero.position, px, rng.randi()))   # on the floor, under everyone
+			lighting.gutter(px)
+			combat_hud.show_banner("Salt frost creeps across the stones. The lanterns gutter.", 3.0)
+	return true
+
+
+## A floor square just past the reach of Thomas's lantern, in his sight, where nothing stands.
+func _watcher_spot(rng: RandomNumberGenerator) -> Vector2i:
+	var spots: Array[Vector2i] = []
+	var far := ceili(WATCHER_FAR)
+	for y in range(hero.grid_pos.y - far, hero.grid_pos.y + far + 1):
+		for x in range(hero.grid_pos.x - far, hero.grid_pos.x + far + 1):
+			var c := Vector2i(x, y)
+			var d := Vector2(c - hero.grid_pos).length()
+			if d >= WATCHER_NEAR and d <= WATCHER_FAR and level.is_walkable(c) and not level.is_wet(c) and _enemy_at(c) == null and level.line_of_sight(hero.grid_pos, c):
+				spots.append(c)
+	return spots[rng.randi_range(0, spots.size() - 1)] if not spots.is_empty() else Vector2i(-1, -1)
 
 
 ## What is under the mouse (for the HUD's line about an enemy), updated when the mouse or Thomas moves.

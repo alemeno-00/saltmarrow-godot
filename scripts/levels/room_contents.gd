@@ -8,10 +8,15 @@ extends RefCounted
 ##   - **a locked grate** across a tunnel that leads only to a quiet side room (never the way to the exit), with a
 ##     cache behind it and the grate key in a cache elsewhere;
 ##   - **a sluice valve** in one room that drains a flooded room elsewhere, revealing a satchel in its basin.
+## - **1-2 events** (part 5), each in its own room and each a different kind, firing once when Thomas first walks in:
+##   a hymn through the walls, something at the edge of the light, the Drowned rising (flooded rooms only), star frost.
 
 const CACHES := Vector2i(2, 3)          # ordinary caches per level
 const CACHE_ROOMS := ["junction", "chamber", "stairs", "lore", "flooded"]
 const ITEMS := ["salve", "bandage"]
+const EVENTS := Vector2i(1, 2)          # events per level
+const EVENT_ROOMS := ["junction", "chamber", "flooded", "lore", "stairs"]
+const EVENT_KINDS := ["hymn", "watcher", "drowned_rise", "star_frost"]
 
 var level: Level
 var rng := RandomNumberGenerator.new()
@@ -40,6 +45,26 @@ func _place() -> void:
 			break
 		var c: Vector2i = free.pop_at(rng.randi_range(0, free.size() - 1))
 		level.caches[c] = {"kind": level.cover[c], "item": ITEMS[rng.randi_range(0, ITEMS.size() - 1)], "opened": false}
+	_events()
+
+
+## 1-2 events in different rooms, each a different kind. The Drowned rise only where there is water to rise from.
+func _events() -> void:
+	var rooms: Array[int] = []
+	for i in level.pieces.size():
+		if level.pieces[i].kind in EVENT_ROOMS and not (level.pieces[i].rect as Rect2i).has_point(level.start):
+			rooms.append(i)
+	var kinds: Array = EVENT_KINDS.duplicate()
+	for _i in rng.randi_range(EVENTS.x, EVENTS.y):
+		if rooms.is_empty() or kinds.is_empty():
+			return
+		var room: int = rooms.pop_at(rng.randi_range(0, rooms.size() - 1))
+		var fits := kinds.filter(func(k): return k != "drowned_rise" or level.pieces[room].kind == "flooded")
+		if fits.is_empty():
+			continue
+		var kind: String = fits[rng.randi_range(0, fits.size() - 1)]
+		kinds.erase(kind)
+		level.events[room] = {"kind": kind, "fired": false}
 
 
 ## The kind of room a square is in ("" outside rooms).

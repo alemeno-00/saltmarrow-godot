@@ -43,6 +43,9 @@ var valve := Vector2i(-1, -1)     # the sluice valve, if this level's puzzle is 
 var drain: Array[Vector2i] = []   # the water squares the valve drains
 var drained := {}                 # squares the valve has drained (drawn as wet silt over the painting)
 var sewage: Array[Rect2i] = []    # the long sewage tunnels (each a straight run of deep-sewage blocks)
+## Room events (room contents part 5), placed by RoomContents: room (index into `pieces`) -> {kind, fired}. Kinds:
+## "hymn", "watcher" (something at the edge of the light), "drowned_rise", "star_frost". Each fires once.
+var events := {}
 
 const OUTFLOW_SIZE := Vector2i(12, 9)
 # The Outflow's fixed layout, matching design/art-briefs/outflow/outflow-blockout.png (columns and rows inside the room).
@@ -184,6 +187,7 @@ func _clear() -> void:
 	cover.clear()
 	loops = 0
 	caches.clear()
+	events.clear()
 	grate.clear()
 	grate_across = ""
 	valve = Vector2i(-1, -1)
@@ -273,6 +277,14 @@ func reachable_from(from: Vector2i) -> Dictionary:
 				seen[n] = true
 				queue.append(n)
 	return seen
+
+
+## The room (index into `pieces`) a square is in, or -1 outside every room and tunnel.
+func piece_at(c: Vector2i) -> int:
+	for i in pieces.size():
+		if (pieces[i].rect as Rect2i).has_point(c):
+			return i
+	return -1
 
 
 func to_dict() -> Dictionary:
