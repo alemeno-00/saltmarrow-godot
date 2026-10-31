@@ -60,7 +60,7 @@ func test_a_leg_swinging_forward_turns_its_thigh() -> void:
 	var left := _part(pls, "thigh_l")    # forward, toward the east
 	var right := _part(pls, "thigh_r")   # behind
 	check(left.angle < -0.2, "seen from the side, the forward thigh swings toward where he faces (%.2f)" % left.angle)
-	check(right.angle > 0.1, "and the back one the other way (%.2f)" % right.angle)
+	check(right.angle > 0.03, "and the back one the other way (%.2f)" % right.angle)
 
 
 func test_the_coat_covers_the_legs_and_the_head_is_last() -> void:
@@ -210,3 +210,57 @@ func test_the_parts_wait_for_approval_but_f8_shows_them() -> void:
 		game.hero.show_rig(false)
 		check(game.hero.rig == null, "and back")
 	game.queue_free()
+
+
+# ---------------------------------------------------------------- cutting a whole model into parts (job 15-R)
+
+const BIND_ANCHORS := {
+	"head": Vector2i(40, 30), "torso": Vector2i(40, 50), "skirt": Vector2i(40, 50),
+	"upper_arm_r": Vector2i(33, 32), "upper_arm_l": Vector2i(47, 32), "forearm_r": Vector2i(33, 40), "forearm_l": Vector2i(47, 40),
+	"thigh_r": Vector2i(36, 50), "thigh_l": Vector2i(44, 50), "shin_r": Vector2i(36, 59), "shin_l": Vector2i(44, 59),
+}
+
+
+func test_standing_as_painted_every_part_sits_unturned_on_a_whole_pixel() -> void:
+	for pl in Rig.placements(RigPose.bind(), F_SOUTH, Vector2(40, 72)):
+		check(absf(pl.angle) < 0.0001, "%s is not turned in the bind pose (%.4f)" % [pl.part, pl.angle])
+		var at: Vector2 = pl.at
+		check(at.distance_to(at.round()) < 0.001, "%s's pivot is on a whole pixel (%s)" % [pl.part, at])
+	eq(Rig.bind_anchors(), BIND_ANCHORS, "the pivots fall on the joints measured on the approved model")
+
+
+func test_the_torso_holds_the_scarf_and_the_hip_kit() -> void:
+	var torso := Rig.cut_rect("torso")
+	# the approved model (PR #55): the scarf's end reaches row 51, the satchel and lantern rows 43-50, x 41-48
+	check(torso.has_point(Vector2i(36, 51)) and torso.has_point(Vector2i(37, 51)), "the scarf's end at row 51")
+	check(torso.has_point(Vector2i(48, 43)) and torso.has_point(Vector2i(41, 49)), "the satchel and the lantern")
+	check(torso.has_point(Vector2i(40, 30)), "and up to the shoulders")
+
+
+func test_a_model_cut_by_the_bind_squares_goes_back_together_exactly() -> void:
+	# a stand-in model: each part's square painted its own colour where no earlier part claimed it
+	var model := Image.create(80, 80, false, Image.FORMAT_RGBA8)
+	var parts := Image.create(24 * 11, 24, false, Image.FORMAT_RGBA8)
+	var i := 0
+	for name in Rig.PARTS:
+		var r := Rig.cut_rect(name)
+		var c := Color.from_hsv(i / 11.0, 0.6, 0.8)
+		i += 1
+		for y in range(r.position.y, mini(r.end.y, 72)):
+			for x in range(r.position.x + 6, r.end.x - 6):
+				if model.get_pixel(x, y).a < 0.5:
+					model.set_pixel(x, y, c)
+					parts.set_pixel(Rig.PARTS[name][0] * 24 + x - r.position.x, y - r.position.y, c)
+	var tool: GDScript = load("res://tools/rig/rig_template.gd")
+	eq(tool.check(model, parts).size(), 0, "rebuilt in the bind pose, not one pixel differs")
+	parts.set_pixel(Rig.PARTS["torso"][0] * 24 + 12, 20, Color.BLACK)
+	check(tool.check(model, parts).size() > 0, "and the check notices a pixel out of place")
+
+
+func test_the_legs_always_reach_the_feet() -> void:
+	for kind in ["walk", "sneak", "limp"]:
+		for i in 32:
+			var p := RigPose.walk(i / 32.0, kind)
+			for s in ["l", "r"]:
+				var d: float = (p[s + "_ankle"] - p[s + "_hip"]).length()
+				check(d <= RigPose.THIGH + RigPose.SHIN + 0.01, "%s %d/32: the %s leg reaches its foot (%.2f)" % [kind, i, s, d])

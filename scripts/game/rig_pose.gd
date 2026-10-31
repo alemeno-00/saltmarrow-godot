@@ -5,26 +5,36 @@ extends RefCounted
 ## (Rig moves the painted parts) and by tools/pose_guides (the colour-coded guides), so the two never disagree.
 ##
 ## Body space: x the body's right, y up, z forward, in pixels at the game's scale (about 1.5 squares tall on screen).
+##
+## **The proportions are measured from the approved model** (job 15-R, Julian 2026-10-31:
+## `assets/characters/thomas/rig/production/model-s.png`, 80 x 80, feet at (40, 72)). Standing as painted (`bind()`),
+## seen from the south, every joint lands on a whole pixel of that model: the neck at row 30, the shoulders at row
+## 32, x 33 and 47, the elbows at row 40, the hands at row 48, the hips at row 50, x 36 and 44, the knees at row 59,
+## the ankles at row 68, the coat's hem at row 62. Heights are those rows' distance above the feet divided by the
+## camera's cos(30°), so they project back onto the model exactly.
 
 const PITCH := 30.0        # degrees the rooms' camera looks down from level
+const COS := 0.8660254     # cos(PITCH): how much shorter a height looks from the rooms' camera
 
-const HIP_Y := 30.0
-const HIP_W := 5.0
-const SHOULDER_Y := 47.0
-const SHOULDER_W := 7.0
-const HEAD_Y := 55.0
-const THIGH := 14.5
-const SHIN := 14.5
-const ANKLE_Y := 2.0
+const HIP_Y := 22.0 / COS        # row 50
+const HIP_W := 4.0               # x 36 and 44
+const NECK_Y := 42.0 / COS       # row 30
+const SHOULDER_Y := 40.0 / COS   # row 32
+const SHOULDER_W := 7.0          # x 33 and 47
+const HEAD_Y := NECK_Y + 6.0     # which way the head points (straight up from the neck, standing)
+const THIGH := 9.0 / COS         # rows 50-59
+const SHIN := 9.0 / COS          # rows 59-68
+const ANKLE_Y := 4.0 / COS       # row 68: the ankle; the boot below it is painted on the shin
 const FOOT := 6.0
-const UPPER_ARM := 9.0
-const FOREARM := 8.5
-const STRIDE := 12.0       # how far a foot reaches ahead of the hip and behind it
-const LIFT := 5.0          # how high a swinging foot lifts
-const BOB := 1.5           # how far the body dips at each step and rises between
+const UPPER_ARM := 8.0 / COS     # rows 32-40
+const FOREARM := 8.0 / COS       # rows 40-48
+const HEM := 12.0 / COS          # the coat skirt, rows 50-62
+const STRIDE := 9.0        # how far a foot reaches ahead of the hip and behind it (the legs are short: no further)
+const LIFT := 4.0          # how high a swinging foot lifts
+const BOB := 1.2           # how far the body dips at each step and rises between
 const ARM_SWING := 0.6     # how far an arm swings, as a share of the opposite leg's
 const LEAN := 2.0          # the body leans this far forward walking
-const WALK_DROP := 2.0     # walking, the knees stay a little bent: the hips ride this much lower than standing
+const WALK_DROP := 3.0     # walking, the knees stay a little bent: the hips ride this much lower than standing
 # weight (The Animator's Survival Kit; Overgrowth's procedural walk): the body is carried over the standing leg
 const SWAY := 1.2          # px the hips shift sideways over the standing foot
 const HIP_TWIST := 1.2     # px a hip swings forward with its leg
@@ -35,7 +45,7 @@ const WALK_TIME := 0.8     # s for a whole walk cycle (two steps) at full walkin
 const IDLE_TIME := 2.4     # s for one breath
 
 # sneaking: crouched, short steps, leaning in
-const SNEAK_DROP := 5.0
+const SNEAK_DROP := 4.0
 const SNEAK_STRIDE := 0.6
 const SNEAK_LEAN := 5.0
 
@@ -63,6 +73,33 @@ static func walk(t: float, kind := "walk") -> Dictionary:
 	if kind == "limp" and fposmod(t, 1.0) < 0.5:
 		hip_y -= 1.5 * sin(TAU * t)   # sags onto the bad leg
 	return body(hip_y, left, right, SNEAK_LEAN if kind == "sneak" else LEAN, t)
+
+
+## The bind pose: standing exactly as the model is painted, facing south. Legs and arms hang straight down, nothing
+## leans or breathes. In it every part sits at angle 0 with its pivot on a whole pixel of the model (Rig.bind_anchors),
+## so the parts cut from the model put back together give the model again, pixel for pixel.
+static func bind() -> Dictionary:
+	var p := {}
+	p.hip = Vector3(0, HIP_Y, 0)
+	p.l_hip = Vector3(-HIP_W, HIP_Y, 0)
+	p.r_hip = Vector3(HIP_W, HIP_Y, 0)
+	p.l_knee = Vector3(-HIP_W, HIP_Y - THIGH, 0)
+	p.r_knee = Vector3(HIP_W, HIP_Y - THIGH, 0)
+	p.l_ankle = Vector3(-HIP_W, ANKLE_Y, 0)
+	p.r_ankle = Vector3(HIP_W, ANKLE_Y, 0)
+	p.l_toe = p.l_ankle + Vector3(0, -1, FOOT)
+	p.r_toe = p.r_ankle + Vector3(0, -1, FOOT)
+	p.neck = Vector3(0, NECK_Y, 0)
+	p.head = Vector3(0, HEAD_Y, 0)
+	p.l_shoulder = Vector3(-SHOULDER_W, SHOULDER_Y, 0)
+	p.r_shoulder = Vector3(SHOULDER_W, SHOULDER_Y, 0)
+	p.l_elbow = p.l_shoulder + Vector3(0, -UPPER_ARM, 0)
+	p.r_elbow = p.r_shoulder + Vector3(0, -UPPER_ARM, 0)
+	p.l_hand = p.l_elbow + Vector3(0, -FOREARM, 0)
+	p.r_hand = p.r_elbow + Vector3(0, -FOREARM, 0)
+	p.hem = Vector3(0, HIP_Y - HEM, 0)
+	p.planted = [p.l_ankle, p.r_ankle]
+	return p
 
 
 ## Standing still, `t` (0-1) through a breath.
@@ -97,7 +134,7 @@ static func body(hip_y: float, left: Vector2, right: Vector2, lean := LEAN, t :=
 	p.r_toe = p.r_ankle + Vector3(0, -1, FOOT)
 	var dy := hip_y - HIP_Y
 	# the upper body follows the hips' sway a little less, the head less again: he keeps his eyes level
-	p.neck = Vector3(sway * 0.6, SHOULDER_Y + 3 + dy, lean)
+	p.neck = Vector3(sway * 0.6, NECK_Y + dy, lean)
 	p.head = Vector3(sway * 0.4, HEAD_Y + dy, lean + 0.5)
 	p.l_shoulder = Vector3(-SHOULDER_W + sway * 0.6, SHOULDER_Y + dy, lean - SHOULDER_TWIST * twist)
 	p.r_shoulder = Vector3(SHOULDER_W + sway * 0.6, SHOULDER_Y + dy, lean + SHOULDER_TWIST * twist)
@@ -109,7 +146,7 @@ static func body(hip_y: float, left: Vector2, right: Vector2, lean := LEAN, t :=
 	p.l_hand = p.l_elbow + Vector3(0, -FOREARM, l_swing * 0.55 + 1.5)
 	p.r_hand = p.r_elbow + Vector3(0, -FOREARM, r_swing * 0.55 + 1.5)
 	# the coat skirt hangs from the hips and swings a little behind the legs
-	p.hem = Vector3(0, hip_y - 16.0, lean * 0.5 - (left.x + right.x) * 0.15)
+	p.hem = Vector3(0, hip_y - HEM, lean * 0.5 - (left.x + right.x) * 0.15)
 	p.planted = []
 	if left.y == 0.0:
 		p.planted.append(p.l_ankle)
