@@ -11,10 +11,11 @@ ROOM=[tuple(c) for c in json.loads((ROOT/'assets/tiles/sewers/rooms/production/p
 TARGETS=[(21,19,19),(33,33,34),(46,46,49),(64,63,64),(59,57,61),(63,50,44),(90,59,30),(118,109,97),(135,126,111),(154,145,130),(125,119,106),(97,94,90),(134,83,31),(179,129,55)]
 PAL=list(dict.fromkeys(min(ROOM,key=lambda c:sum((c[k]-t[k])**2 for k in range(3))) for t in TARGETS))
 def ramp(targets):return list(dict.fromkeys(min(ROOM,key=lambda c:sum((c[k]-t[k])**2 for k in range(3))) for t in targets))
-COAT=ramp([(21,19,19),(33,33,34),(46,46,49),(64,63,64)])
+COAT_REFERENCE=ramp([(21,19,19),(33,33,34),(46,46,49),(64,63,64)])
+COAT=ramp([(21,19,19),(33,33,34),(63,50,44),(90,59,30)])
 canonical=Image.open(ROOT/'assets/characters/thomas/production/concepts/canonical-reference-v1.png').convert('RGB').crop((690,82,770,170))
 flesh=list({c for c in canonical.get_flattened_data() if 75<=c[0]<=190 and 45<=c[1]<=155 and 30<=c[2]<=130 and c[0]>c[1]*1.1 and c[1]>c[2]*1.1})
-# Proposed approval-only skin exception: the room palette lacks these warm mid-tones.
+# Canonical skin accents accepted with Julian's whole-model approval, 2026-10-31.
 SKIN=[min(flesh,key=lambda c:sum((c[k]-t[k])**2 for k in range(3))) for t in [(83,60,48),(112,80,61),(145,105,79),(164,128,98)]]
 HAIR=ramp([(21,19,19),(33,33,34),(63,50,44),(90,59,30)])
 CANVAS=ramp([(63,50,44),(90,59,30),(118,109,97),(135,126,111)])
@@ -62,16 +63,21 @@ def export():
     scale=52/crop.height;size=(round(crop.width*scale),52);small=crop.resize(size,N)
     feet=crop.getchannel('A').crop((0,round(crop.height*.90),crop.width,crop.height)).getbbox()
     anchor=(feet[0]+feet[2])/2;x=40-round(anchor*scale);y=20
-    data=[]
+    data=[];ids=[]
     for index,(r,g,b,a) in enumerate(small.get_flattened_data()):
-        if not a:data.append((0,0,0,0));continue
+        if not a:data.append((0,0,0,0));ids.append(0);continue
         colours=material_ramp((r,g,b),x+index%size[0],y+index//size[0])
+        ids.append(next((j for j,p in enumerate([COAT,SKIN,HAIR,CANVAS,WRAP,BRASS,RED],1) if colours is p),8))
         if colours==SKIN:
             light=.2126*r+.7152*g+.0722*b
             c=SKIN[3] if light>=175 else SKIN[2] if light>=125 else SKIN[1] if light>=85 else SKIN[0]
+        elif colours is COAT:
+            shade=min(range(len(COAT_REFERENCE)),key=lambda j:sum((COAT_REFERENCE[j][k]-[r,g,b][k])**2 for k in range(3)))
+            c=COAT[shade]
         else:c=min(colours,key=lambda c:sum((c[k]-[r,g,b][k])**2 for k in range(3)))
         data.append((*c,255))
     small.putdata(data);frame=Image.new('RGBA',(80,80));frame.paste(small,(x,y))
+    material_small=Image.new('L',size);material_small.putdata(ids);material_ids=Image.new('L',(80,80));material_ids.paste(material_small,(x,y));material_ids.save(P/'material-ids.png')
     for xx in range(80):
         c=frame.getpixel((xx,71))
         if c[3]:frame.putpixel((xx,71),(33,33,34,255))
@@ -98,7 +104,7 @@ def export():
     faithful=Image.open(ROOT/'assets/enemies/faithful/body.png').convert('RGBA').crop((0,0,64,64))
     miner=Image.open(ROOT/'assets/enemies/drowned_miner/body.png').convert('RGBA').crop((0,0,64,64))
     cast=Image.new('RGBA',(240,80),(90,93,92,255));cast.alpha_composite(frame,(0,0));cast.alpha_composite(faithful,(88,16));cast.alpha_composite(miner,(168,16));cast.save(preview/'cast-1x.png');cast.resize((1440,480),N).save(preview/'cast-6x.png')
-    (P/'registration.json').write_text(json.dumps({'source_size':source.size,'source_bounds':box,'export_size':[80,80],'body_height':52,'feet_root':[40,72],'uniform_scale':scale,'paste':[x,y],'body_size':size,'material_ramps':{'coat':COAT,'skin':SKIN,'hair_boots':HAIR,'canvas_trousers':CANVAS,'wraps':WRAP,'brass':BRASS,'scarf':RED},'step2':'NOT STARTED; requires Julian approval'},indent=2)+'\n')
+    (P/'registration.json').write_text(json.dumps({'source_size':source.size,'source_bounds':box,'export_size':[80,80],'body_height':52,'feet_root':[40,72],'uniform_scale':scale,'paste':[x,y],'body_size':size,'material_ramps':{'coat':COAT,'skin':SKIN,'hair_boots':HAIR,'canvas_trousers':CANVAS,'wraps':WRAP,'brass':BRASS,'scarf':RED},'step2':'Approved 2026-10-31; see ../cut-15r/README.md for template fit audit'},indent=2)+'\n')
     print('Exported whole52px model only. Bounds:',frame.getbbox())
 
 if __name__=='__main__':export()

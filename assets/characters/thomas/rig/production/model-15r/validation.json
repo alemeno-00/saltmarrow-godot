@@ -1,8 +1,8 @@
 {
   "job": "15-R",
   "step": 1,
-  "approval": "PENDING JULIAN",
-  "step2_started": false,
+  "approval": "APPROVED JULIAN 2026-10-31, with warmer dark-brown coat",
+  "step2_started": true,
   "frame_size": [
     80,
     80
@@ -22,8 +22,21 @@
   "body_height": 52,
   "alpha": "binary; normal matches diffuse exactly",
   "material_ramp_limit": 4,
-  "palette": "shared room colours + approved muted reds + PROPOSED canonical skin accents",
-  "skin_accents_require_approval": [
+  "palette": "shared room colours + approved muted reds + canonical skin accents accepted with whole model",
+  "diffuse_sha256": "93617715b316bc3a816a5c89f3ccfa24c88bc0a4a58e2342461656d183a64564",
+  "normal_sha256": "233ed255b024ff146197957f701a211e54bdae5f37181e1a86fa51cc03ecc15c",
+  "canonical_sha256": "352a72f6b78fa9e4451f7b426ff20cf32b24e3cdb1d4a04dfd113b255213b7b8",
+  "protected_files_unchanged": [
+    "assets/characters/thomas/rig/s.png",
+    "assets/characters/thomas/rig/s_n.png",
+    "assets/characters/thomas/production/sprites/standing-candidate.png",
+    "assets/characters/thomas/production/sprites/steady-portrait-candidate.png",
+    "assets/characters/thomas/production/concepts/canonical-reference-v1.png"
+  ],
+  "checks": "format, registration, alpha, colour-set and protected-file checks only; visual fidelity remains for review",
+  "normal_registration": "normal source body bounds fitted to diffuse body bounds; vector extension to exact diffuse alpha",
+  "step2_status": "Fit audit: current torso cell cannot preserve approved scarf and kit; calibration required",
+  "approved_skin_accents": [
     [
       82,
       60,
@@ -44,17 +57,5 @@
       123,
       98
     ]
-  ],
-  "diffuse_sha256": "597279e0809b80259318ebee9a0eb4a2fea84cfa45d3128dcc4a61a3138b2dd3",
-  "normal_sha256": "233ed255b024ff146197957f701a211e54bdae5f37181e1a86fa51cc03ecc15c",
-  "canonical_sha256": "352a72f6b78fa9e4451f7b426ff20cf32b24e3cdb1d4a04dfd113b255213b7b8",
-  "protected_files_unchanged": [
-    "assets/characters/thomas/rig/s.png",
-    "assets/characters/thomas/rig/s_n.png",
-    "assets/characters/thomas/production/sprites/standing-candidate.png",
-    "assets/characters/thomas/production/sprites/steady-portrait-candidate.png",
-    "assets/characters/thomas/production/concepts/canonical-reference-v1.png"
-  ],
-  "checks": "format, registration, alpha, colour-set and protected-file checks only; visual fidelity remains for review",
-  "normal_registration": "normal source body bounds fitted to diffuse body bounds; vector extension to exact diffuse alpha"
+  ]
 }

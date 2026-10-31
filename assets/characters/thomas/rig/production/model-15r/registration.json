@@ -40,14 +40,14 @@
         34
       ],
       [
-        46,
-        46,
-        49
+        63,
+        50,
+        44
       ],
       [
-        64,
-        63,
-        64
+        90,
+        59,
+        30
       ]
     ],
     "skin": [
@@ -183,5 +183,5 @@
       ]
     ]
   },
-  "step2": "NOT STARTED; requires Julian approval"
+  "step2": "Approval received; fit audit found current torso template incompatible. See ../cut-15r/README.md"
 }
