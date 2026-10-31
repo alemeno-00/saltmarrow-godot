@@ -189,6 +189,10 @@ These come first because the first fight is being built next. **Please do jobs 1
     goes in the skirt cell. Then run the check (`tools/rig/rig_template.gd -- check`): put back together in the
     bind pose, the parts must match the model pixel for pixel. Claude then switches the game to the new sheet and
     sends Julian the walk to approve.
+  - **Cut delivered (#60) and checked**: the parts and the normal map rebuild the approved model exactly (0 pixels
+    differ, also run by `tests/test_rig.gd`). **Switched on in the game** (2026-10-31): Thomas walks, stands, sneaks
+    and limps facing south on the new parts; other directions keep the old art until job 15; F8 swaps to the old
+    art to compare. Waiting on Julian's in-game approval of the walk, then job 15.
 - [ ] **15. Thomas's parts sheets, all five directions** (`assets/characters/thomas/rig/se.png`, `e.png`, `ne.png`, `n.png`, with `_n` normal maps). After 15-R is approved, by the same two steps: a whole model sprite per direction, approved, then cut into parts. Templates: `design/art-briefs/animation/rig/template_<dir>.png`. The game then walks, stands, sneaks and limps him in every direction from these alone.
 - [ ] **16. Thomas fighting, in five directions** (`assets/characters/thomas/dir/<dir>_mace.png`). After 15. *May move to the skeleton (a maul part held in the hand) once 15 is in; Claude will say before you start.* Rows: maul wind-up (4), strike (3, one smear frame), recovery (4), critical overhead (10), hurt (4), pushed back (4), knocked prone (5), lying prone (2, looped), getting up (5). Brief as job 15.
 - [ ] **17. Normal maps** for the sheets in jobs 15 and 16: the same names with `_n` (`s_n.png`, `s_mace_n.png`), same frames, OpenGL normal colours (green up), rounded volumes. Then the Drowned Miner, the Faithful and Garrick get idle, walk, attack and hurt in five directions, with normal maps.
