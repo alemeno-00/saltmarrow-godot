@@ -32,6 +32,9 @@ static var _glass := {}         # layout -> {blockout square: glass pixel}; empt
 static var _glass_read := false
 
 var _lights: Array[PointLight2D] = []
+var _gutters: Array = []        # [{area (px), t, len}]: flames sinking and coming back
+const GUTTER_TIME := 2.0
+const GUTTER_LOW := 0.15
 var _time := 0.0
 
 
@@ -137,10 +140,27 @@ func light_count() -> int:
 	return _lights.size()
 
 
+## Make the flames in `area` (px) gutter: they sink nearly out and come back over `seconds` (star frost).
+func gutter(area: Rect2, seconds := GUTTER_TIME) -> void:
+	_gutters.append({"area": area, "t": 0.0, "len": seconds})
+
+
+## How far a flame at `p` is guttering now: 1 burning normally, down to GUTTER_LOW.
+func gutter_at(p: Vector2) -> float:
+	var k := 1.0
+	for g in _gutters:
+		if (g.area as Rect2).has_point(p):
+			k = minf(k, lerpf(GUTTER_LOW, 1.0, absf(cos(PI * g.t / g.len))))
+	return k
+
+
 func _process(delta: float) -> void:
 	# a slow, uneven flicker, different for each flame
 	_time += delta
+	for g in _gutters:
+		g.t += delta
+	_gutters = _gutters.filter(func(g): return g.t < g.len)
 	for i in _lights.size():
 		var f := sin(_time * 3.1 + i * 1.7) * 0.5 + sin(_time * 7.3 + i * 2.9) * 0.25
 		var base := BRAZIER_ENERGY if _lights[i].color == BRAZIER else LANTERN_ENERGY
-		_lights[i].energy = base * (1.0 + FLICKER * f)
+		_lights[i].energy = base * (1.0 + FLICKER * f) * gutter_at(_lights[i].position)

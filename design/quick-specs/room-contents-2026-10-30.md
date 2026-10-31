@@ -56,7 +56,13 @@ When a level is built, each room rolls for its contents from a table for its typ
   dark, search a crate, turn the valve, try the grate); right-click opens a menu of everything that can be done with
   what is under the mouse, in or out of a fight, with actions that can't be done now greyed out and the reason given;
   hovering picks out what can be used, with its name; the belt's slots can be clicked.
-- **Still to build**: part 2 (lore and the journal; texts waiting for Julian), part 5 (events), clutter.
+- **Part 5** (2026-10-31): 1-2 events per level, each in its own room (junction, chamber, flooded, lore or stairs room,
+  never where he starts) and each a different kind, firing once when Thomas first walks in. The hymn waits until a
+  Faithful is within 12 squares; the pale figure stands 4.5-6.5 squares off, just past his lantern, for about a
+  second and a half; the Drowned rise 2-5 squares away in flooded rooms only and come for him; star frost spreads
+  across the room's floor and its lanterns gutter. Stand-in drawings until art job 14b; the hymn lines are
+  placeholders until the hymns are written with Julian. Events, like caches, are not yet saved with the level.
+- **Still to build**: part 2 (lore and the journal; texts waiting for Julian), clutter.
 
 ## Tuning Knobs
 
@@ -80,7 +86,7 @@ Values live as named constants in the code (`assets/` belongs to ChatGPT).
 - [ ] Part 2: reading a drop adds it to the journal; the journal survives death and a new life. *(test)*
 - [ ] Part 3: opening a cache puts its item on the belt; a full belt leaves it; salve and bandage work and use a maneuver; items are lost on death. *(test)*
 - [ ] Part 4: the valve drains its room; the grate opens only with its key; neither blocks the exit (every level still reachable to the exit with the grate shut). *(test)*
-- [ ] Part 5: each event fires once on entering its room; the Drowned rise adds a miner. *(test)*
+- [x] Part 5: each event fires once on entering its room; the Drowned rise adds a miner. *(test)*
 - [ ] Feel (playtest): rooms feel worth entering; the dark feels inhabited.
 - [ ] No regression: all existing tests pass.
 
