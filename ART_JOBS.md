@@ -117,7 +117,7 @@ These come first because the first fight is being built next. **Please do jobs 1
   - a valve wheel on its standpipe, 32 × 32, four frames turning: `valve.png`
   - an iron grate across a 2-square tunnel, shut and open (two frames each): across a north-south tunnel 64 × 32 `grate_ns.png`, across an east-west tunnel 32 × 64 `grate_ew.png`
   - floor clutter, 32 × 32, three variants each: `bones_1-3.png`, `debris_1-3.png`
-- [ ] **14b. Room events** (`assets/effects/events/`). Design: `design/quick-specs/room-contents-2026-10-30.md`,
+- [x] **14b. Room events** (`assets/effects/events/`). Design: `design/quick-specs/room-contents-2026-10-30.md`,
   part 5. The game draws stand-ins until these arrive. House style; neutral light.
   - `watcher.png`: the pale figure that stands at the edge of Thomas's light for a second, then is gone. One 80 × 80
     frame, feet at (40, 72), about 58 px tall (taller than a man), from the rooms' camera, facing south. Too thin, arms
