@@ -1,0 +1,205 @@
+{
+	"model": "80 x 80, south, feet at (40, 72)",
+	"parts": {
+		"forearm_l": {
+			"cell": 4,
+			"cell_x": 96,
+			"model_square": [
+				35,
+				38,
+				24,
+				24
+			],
+			"pivot_in_cell": [
+				12,
+				2
+			],
+			"pivot_on_model": [
+				47,
+				40
+			]
+		},
+		"forearm_r": {
+			"cell": 6,
+			"cell_x": 144,
+			"model_square": [
+				21,
+				38,
+				24,
+				24
+			],
+			"pivot_in_cell": [
+				12,
+				2
+			],
+			"pivot_on_model": [
+				33,
+				40
+			]
+		},
+		"head": {
+			"cell": 0,
+			"cell_x": 0,
+			"model_square": [
+				28,
+				8,
+				24,
+				24
+			],
+			"pivot_in_cell": [
+				12,
+				22
+			],
+			"pivot_on_model": [
+				40,
+				30
+			]
+		},
+		"shin_l": {
+			"cell": 8,
+			"cell_x": 192,
+			"model_square": [
+				32,
+				57,
+				24,
+				24
+			],
+			"pivot_in_cell": [
+				12,
+				2
+			],
+			"pivot_on_model": [
+				44,
+				59
+			]
+		},
+		"shin_r": {
+			"cell": 10,
+			"cell_x": 240,
+			"model_square": [
+				24,
+				57,
+				24,
+				24
+			],
+			"pivot_in_cell": [
+				12,
+				2
+			],
+			"pivot_on_model": [
+				36,
+				59
+			]
+		},
+		"skirt": {
+			"cell": 2,
+			"cell_x": 48,
+			"model_square": [
+				28,
+				48,
+				24,
+				24
+			],
+			"pivot_in_cell": [
+				12,
+				2
+			],
+			"pivot_on_model": [
+				40,
+				50
+			]
+		},
+		"thigh_l": {
+			"cell": 7,
+			"cell_x": 168,
+			"model_square": [
+				32,
+				48,
+				24,
+				24
+			],
+			"pivot_in_cell": [
+				12,
+				2
+			],
+			"pivot_on_model": [
+				44,
+				50
+			]
+		},
+		"thigh_r": {
+			"cell": 9,
+			"cell_x": 216,
+			"model_square": [
+				24,
+				48,
+				24,
+				24
+			],
+			"pivot_in_cell": [
+				12,
+				2
+			],
+			"pivot_on_model": [
+				36,
+				50
+			]
+		},
+		"torso": {
+			"cell": 1,
+			"cell_x": 24,
+			"model_square": [
+				28,
+				29,
+				24,
+				24
+			],
+			"pivot_in_cell": [
+				12,
+				21
+			],
+			"pivot_on_model": [
+				40,
+				50
+			]
+		},
+		"upper_arm_l": {
+			"cell": 3,
+			"cell_x": 72,
+			"model_square": [
+				35,
+				30,
+				24,
+				24
+			],
+			"pivot_in_cell": [
+				12,
+				2
+			],
+			"pivot_on_model": [
+				47,
+				32
+			]
+		},
+		"upper_arm_r": {
+			"cell": 5,
+			"cell_x": 120,
+			"model_square": [
+				21,
+				30,
+				24,
+				24
+			],
+			"pivot_in_cell": [
+				12,
+				2
+			],
+			"pivot_on_model": [
+				33,
+				32
+			]
+		}
+	},
+	"pose": "RigPose.bind(): standing as painted, every part at angle 0",
+	"rule": "copy model pixel (x, y) into the part's cell at (x - model_square.x + cell_x, y - model_square.y); each model pixel goes to exactly one part"
+}

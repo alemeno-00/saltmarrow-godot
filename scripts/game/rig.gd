@@ -8,6 +8,11 @@ extends RefCounted
 ## its rest pose: limbs hanging straight down from their pivot, the head and torso standing straight up from theirs.
 ## The pivot is the joint it turns about (the shoulder for an upper arm, the hip for a thigh). Templates showing every
 ## cell, its pivot and a stand-in shape: design/art-briefs/animation/rig/ (made by tools/rig/rig_template.gd).
+## **Cutting a parts sheet from a whole model** (house style rule 10): `bind_anchors()` gives, for each part, where its
+## pivot falls on the 80 x 80 model in the bind pose (RigPose.bind, facing south, feet at (40, 72)), and `cut_rect()`
+## the 24 x 24 square of the model its cell holds. Copy each part's pixels from that square into its cell unmoved;
+## `compose()` with the bind pose then rebuilds the model exactly (tools/rig/rig_template.gd writes these as
+## design/art-briefs/animation/rig/bind_s.json and checks a cut with `-- check <model> <parts>`).
 ## Sheets go in a character's `rig/` folder, one per drawn direction: s.png, se.png, e.png, ne.png, n.png (and a
 ## normal map beside each, `s_n.png`). The game mirrors SE, E and NE for the west side.
 
@@ -17,7 +22,7 @@ const DIR_ANGLE := {"e": 0.0, "se": 45.0, "s": 90.0, "ne": -45.0, "n": -90.0}
 ## part -> [cell, pivot in the cell, from joint, to joint, which way it points at rest (1 down, -1 up)]
 const PARTS := {
 	"head": [0, Vector2(12, 22), "neck", "head", -1],
-	"torso": [1, Vector2(12, 22), "hip", "neck", -1],
+	"torso": [1, Vector2(12, 21), "hip", "neck", -1],   # row 21, not 22: room below the hip for the scarf's end and the hip kit (job 15-R)
 	"skirt": [2, Vector2(12, 2), "hip", "hem", 1],
 	"upper_arm_l": [3, Vector2(12, 2), "l_shoulder", "l_elbow", 1],
 	"forearm_l": [4, Vector2(12, 2), "l_elbow", "l_hand", 1],
@@ -98,6 +103,43 @@ static func placements(pose: Dictionary, f: Vector2, root := Vector2.ZERO) -> Ar
 			"cell": d[0], "pivot": d[1], "order": layer * 1000.0 - depth})
 	out.sort_custom(func(x, y): return x.order < y.order)
 	return out
+
+
+## Where each part's pivot falls on a whole model standing in the bind pose, facing `f`, feet at `root`: part ->
+## Vector2i. Whole pixels, by design of RigPose's proportions.
+static func bind_anchors(f := Vector2(0, -1), root := Vector2(40, 72)) -> Dictionary:
+	var out := {}
+	for pl in placements(RigPose.bind(), f, root):
+		out[pl.part] = Vector2i((pl.at as Vector2).round())
+	return out
+
+
+## The square of the model (80 x 80, feet at (40, 72)) that part `name`'s cell holds in the bind pose.
+static func cut_rect(name: String, f := Vector2(0, -1), root := Vector2(40, 72)) -> Rect2i:
+	var d: Array = PARTS[name]
+	return Rect2i(bind_anchors(f, root)[name] - Vector2i(d[1]), Vector2i(CELL))
+
+
+## Draw a pose from a parts sheet into an image, pixel by pixel, as the game draws it (nearest pixel, each part
+## turned about its pivot, the pivot on a whole pixel): for the template tools and tests. `frame` is the image size.
+static func compose(sheet: Image, pose: Dictionary, f: Vector2, root: Vector2, frame := Vector2i(80, 80), hidden: Array = []) -> Image:
+	var img := Image.create(frame.x, frame.y, false, Image.FORMAT_RGBA8)
+	for pl in placements(pose, f, root):
+		if pl.part in hidden:
+			continue
+		var at: Vector2 = (pl.at as Vector2).round()
+		var to_part := Transform2D(pl.angle, at).affine_inverse()
+		var pivot: Vector2 = pl.pivot
+		var reach := CELL.length()
+		for y in range(maxi(0, floori(at.y - reach)), mini(frame.y, ceili(at.y + reach))):
+			for x in range(maxi(0, floori(at.x - reach)), mini(frame.x, ceili(at.x + reach))):
+				var q: Vector2 = to_part * Vector2(x + 0.5, y + 0.5) + pivot
+				if q.x < 0.0 or q.y < 0.0 or q.x >= CELL.x or q.y >= CELL.y:
+					continue
+				var c := sheet.get_pixel(int(pl.cell * CELL.x + q.x), int(q.y))
+				if c.a > 0.5:
+					img.set_pixel(x, y, c)
+	return img
 
 
 ## The pose for one of the moving animations, `t` seconds in: idle, walk, sneak (crouched; still when not moving),

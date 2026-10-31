@@ -71,15 +71,30 @@ standing, sneaking and limping all come from one sheet. Proof: `production/qa/ev
 | 10 | thigh, right | | top, the hip |
 | 11 | shin, right | | top, the knee |
 
-- **Templates**: `rig/template_<dir>.png` (and `_4x`) show every cell with a stand-in shape of the part at the
-  right size and its pivot marked. Paint the real part over the stand-in, joint on the cross.
+- **Cut from an approved whole model, never painted part by part** (house style rule 10, job 15-R). The rig's
+  proportions are measured from Thomas's approved south model (`rig/production/model-s.png`, 80 × 80, feet at
+  (40, 72)): neck row 30; shoulders row 32 at x 33 and 47; elbows row 40; hands row 48; hips row 50 at x 36 and 44;
+  knees row 59; ankles row 68; the coat's hem row 62. Standing as painted (the **bind pose**, `RigPose.bind()`), every
+  part's pivot falls on a whole pixel of the model and nothing is turned.
+- **`rig/bind_s.json`** gives, for each part, the 24 × 24 square of the model its cell holds (`model_square`) and
+  where its pivot is (`pivot_on_model`, `pivot_in_cell`). Copy each model pixel into the cell of the part it belongs
+  to, at (x − square x + cell x, y − square y), unmoved; every model pixel goes to exactly one part.
+  **`rig/cut_guide_s.png`** shows the squares and pivots over the model at 8 ×.
+- **The torso's pivot is at row 21 of its cell** (not 22, as first drawn): its square covers model rows 29–52, so
+  the scarf's end (row 51), the strap, the satchel and the lantern all stay on the torso, as the brief assigns them.
+- **Check a cut**: `godot --headless --path . -s tools/rig/rig_template.gd -- check <model.png> <parts.png>` puts the
+  parts back together in the bind pose and lists every pixel that differs; none means the cut is right.
+- **Templates**: `rig/template_s.png` (and `_4x`) show every cell with a stand-in shape of the part and its pivot.
+  The other directions get theirs once each has an approved whole model (job 15).
 - **Rest pose**: limbs hang straight down from their joint; the head and torso stand straight up from theirs. The
   game turns them; don't draw them bent or swinging.
 - **"Left" means Thomas's left.** Facing south (toward us) his left arm is on the screen's right.
 - **Each direction is its own sheet**, seen from the rooms' camera from that side: `s`, `se`, `e`, `ne`, `n`. Facing
   east, the far arm and leg (his left) are partly hidden by the body; paint them anyway, whole.
-- **Overlap a little at the joints** (a pixel or two past the pivot), so no gap opens when a part turns.
-- **`rig/assembled_<dir>.png`** shows the stand-ins put together standing, and **`rig/walk_<dir>.png`** the
+- **Overlap a little at the joints** (a pixel or two past the pivot), so no gap opens when a part turns. Overlap
+  pixels go only where a part drawn later covers them in the bind pose (the coat skirt over the thighs, the torso
+  over the upper arms' tops), so the check still finds no difference.
+- **`rig/assembled_s.png`** shows the stand-ins put together in the bind pose, and **`rig/walk_s.png`** the
   stand-ins walking through the real rig: what the game will do with your parts.
 - A normal map with each sheet (`s_n.png`), as the house style says.
 
