@@ -1,0 +1,159 @@
+{
+  "job": "14b",
+  "date": "2026-10-31",
+  "assets": [
+    {
+      "file": "watcher.png",
+      "normal": "watcher_n.png",
+      "size": [
+        80,
+        80
+      ],
+      "colours": [
+        [
+          64,
+          63,
+          64
+        ],
+        [
+          101,
+          97,
+          90
+        ],
+        [
+          125,
+          119,
+          106
+        ],
+        [
+          154,
+          145,
+          130
+        ],
+        [
+          209,
+          224,
+          235
+        ]
+      ],
+      "normal_length_range": [
+        0.994030626194761,
+        1.0053528400262597
+      ],
+      "alpha_matches": true,
+      "sha256": "532f95692c0a1b6e354ebb3541d3954cd5ab2cf3625813e4122ab855974064ea",
+      "normal_sha256": "de478d7860ea910b5ea634375d89c7b77712e77eeeda4c5a35431784bb21392b"
+    },
+    {
+      "file": "star_frost.png",
+      "normal": "star_frost_n.png",
+      "size": [
+        192,
+        32
+      ],
+      "colours": [
+        [
+          57,
+          78,
+          80
+        ],
+        [
+          125,
+          151,
+          159
+        ],
+        [
+          178,
+          201,
+          210
+        ],
+        [
+          209,
+          224,
+          235
+        ]
+      ],
+      "normal_length_range": [
+        0.994463721329812,
+        1.0052304580248597
+      ],
+      "alpha_matches": true,
+      "sha256": "fc35125ef0f7cddf457d77feca6ba23ec7b008c30fac4fc436160e5b650fb947",
+      "normal_sha256": "0c680d090c9d4a7e7ce41e2d72fba447fdcf79bd544fcd08677032d39047d2ea"
+    }
+  ],
+  "watcher_bounds": [
+    33,
+    14,
+    47,
+    72
+  ],
+  "watcher_height": 58,
+  "feet_root": [
+    40,
+    72
+  ],
+  "pearl_eye_pixels": [
+    [
+      38,
+      20
+    ],
+    [
+      41,
+      20
+    ]
+  ],
+  "frost_frames": 6,
+  "frame_size": [
+    32,
+    32
+  ],
+  "rows": 1,
+  "frost_opaque_pixels": [
+    83,
+    147,
+    204,
+    215,
+    339,
+    403
+  ],
+  "frost_coverage_percent": [
+    8.11,
+    14.36,
+    19.92,
+    21.0,
+    33.11,
+    39.36
+  ],
+  "tileability": "exactly transparent1px wrap boundary in diffuse and normal; repeatable isolated patches",
+  "pearl_palette_approval": "Julian: Add small pearly-blue accents",
+  "new_pearl_colours": [
+    [
+      125,
+      151,
+      159
+    ],
+    [
+      178,
+      201,
+      210
+    ],
+    [
+      209,
+      224,
+      235
+    ]
+  ],
+  "body_palette": "shared room greys only",
+  "protected_files_unchanged": [
+    "assets/characters/thomas/rig/production/model-s.png",
+    "assets/characters/thomas/rig/production/model-s_n.png",
+    "assets/characters/thomas/rig/s.png",
+    "assets/characters/thomas/rig/s_n.png",
+    "assets/characters/thomas/production/sprites/standing-candidate.png",
+    "assets/characters/thomas/production/sprites/steady-portrait-candidate.png",
+    "assets/characters/thomas/production/concepts/canonical-reference-v1.png"
+  ],
+  "checks": "format, registration, declared palette, exact alpha, positive-z unit normals, unique increasing-density patches, transparent wrap boundary, protected file equality",
+  "limits": "Visual camera/readability reviewed in native room composites. Real game activation, lighting, blend and effect pacing require Claude wiring and in-game review."
+}
