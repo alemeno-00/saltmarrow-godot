@@ -26,6 +26,7 @@ const STAIRS_GUARD_CHANCE := 0.5
 
 @export var level_seed: int = 0   # 0: a random first life; tests set a fixed seed
 @export var ask_backstory := true # each new life starts by choosing who Thomas was; tests skip it (Fury)
+@export var show_title := true    # the title screen when the game opens; tests skip it
 var life_seed := 0                  # this life's seed; every depth's level comes from it (depth_seed)
 
 var level: Level
@@ -97,6 +98,10 @@ var ripples_made := 0       # ripples and splashes so far (tests read this)
 var journal_path := Journal.PATH       # where the journal is kept (tests use their own)
 var journal: Journal                    # everything Thomas has read, kept across deaths and lives
 var journal_screen: JournalScreen
+var run_screen: RunScreen               # the title, the death screen and the win
+var kills_this_life := 0
+var death_cause := ""
+var found_this_life := 0                # pages first read in this life
 var journal_button: Button
 var _lore_views := {}                   # square -> LoreDrop
 var events_fired: Array[String] = []   # room events that have happened on this level, in order (tests read this)
@@ -156,6 +161,11 @@ func _ready() -> void:
 	context_menu.id_pressed.connect(func(i): if i < _context_actions.size() and _context_actions[i].is_valid(): _context_actions[i].call())
 	combat_hud.belt_pressed.connect(use_belt)
 	journal = Journal.open(journal_path)
+	run_screen = RunScreen.new()
+	layer.add_child(run_screen)   # before the journal, so the journal opens over it
+	run_screen.wake.connect(_on_wake)
+	run_screen.journal.connect(toggle_journal)
+	run_screen.quit.connect(func(): get_tree().quit())
 	journal_screen = JournalScreen.new()
 	layer.add_child(journal_screen)
 	journal_button = Button.new()
@@ -168,6 +178,8 @@ func _ready() -> void:
 	backstory_screen = BackstoryScreen.new()
 	layer.add_child(backstory_screen)
 	backstory_screen.chosen.connect(choose_backstory)
+	if show_title:
+		run_screen.open_title(journal.entries.size())
 	new_level(level_seed if level_seed != 0 else randi())
 
 
@@ -195,8 +207,12 @@ func new_level(seed_in: int, keep := false) -> void:
 		depth = 1
 		progress = Progress.veteran(10) if veteran else Progress.fury()
 		hero_unit = Bestiary.thomas(progress)
-		if ask_backstory and not veteran:
-			backstory_screen.open()
+		kills_this_life = 0
+		found_this_life = 0
+		if run_screen.mode != "title":
+			run_screen.close()
+			if ask_backstory and not veteran:
+				backstory_screen.open()
 	hero_unit.cell = level.start
 	hero.sync(hero_unit)
 	gore.clear_all()
@@ -652,7 +668,8 @@ func _win() -> void:
 	won = true
 	tag_cell = Vector2i(-1, -1)
 	view.queue_redraw()
-	combat_hud.show_banner("Garrick's brass tally tag, still on its cord. The First Shift is over.\nYou have won this run.   Press R to begin again.", 99999.0)
+	journal.add("tag_1", "Garrick's tally tag: No. 1", "SALTMARROW LIFT · NIGHT SHIFT · No. 1 · GARRICK\n\nStill on its cord, wet and cold. The first man into the new seam, and the last of the First Shift.")
+	run_screen.open_won(life_stats())
 	_update_hud()
 
 
@@ -763,7 +780,7 @@ func _bring_back(u: Combatant) -> void:
 
 ## The game waits while a menu is open: the skill tree, or choosing a backstory.
 func paused() -> bool:
-	return tree_screen.visible or backstory_screen.visible or (journal_screen != null and journal_screen.visible)
+	return tree_screen.visible or backstory_screen.visible or (journal_screen != null and journal_screen.visible) or (run_screen != null and run_screen.visible)
 
 
 ## A new life begins as the chosen backstory: Fury (maces) or Shadow (daggers).
@@ -1269,6 +1286,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			toggle_journal()
 			get_viewport().set_input_as_handled()
 			return
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R and run_screen.visible and not journal_screen.visible and run_screen.mode != "title":
+		_on_wake()
+		get_viewport().set_input_as_handled()
+		return
 	if paused():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R:
@@ -1767,6 +1788,7 @@ func _play_one(e: Dictionary) -> void:
 				tag_cell = e.unit.cell
 				overlay.queue_redraw()
 			if e.unit != hero_unit:
+				kills_this_life += 1
 				var gained := progress.add_xp({"minion": 1, "solo": 10}.get(e.unit.kind, 4))
 				if gained > 0:
 					hero_unit.max_stamina = progress.max_stamina()
@@ -1883,7 +1905,8 @@ func _finish(winner: String) -> void:
 		overlay.queue_redraw()
 	else:
 		dead = true
-		combat_hud.show_banner("Thomas Wren is dead.   Press R to wake again.", 99999.0)
+		death_cause = _cause_of_death()
+		run_screen.open_dead(life_stats())
 	_refresh()
 
 
@@ -1993,12 +2016,45 @@ func read_lore(c: Vector2i) -> String:
 	var id: String = level.lore[c].id
 	var page := Lore.page(id, progress.backstory, life_seed)
 	var added := journal.add(id, page[0], page[1])
+	if added:
+		found_this_life += 1
 	stop_walking()
 	journal_screen.show_page(page[0], page[1], "Added to the journal (J)." if added else "Already in the journal.")
 	if _lore_views.has(c):
 		_lore_views[c].read = true
 		_lore_views[c].queue_redraw()
 	return "read" if added else "reread"
+
+
+## What this life came to, for the death and win screens.
+func life_stats() -> Dictionary:
+	return {"cause": death_cause, "depth": depth, "level": progress.level, "kills": kills_this_life,
+		"found_now": found_this_life, "found_all": journal.entries.size()}
+
+
+## How he died, in a few words: who struck the last blow, or the water, or his wounds.
+func _cause_of_death() -> String:
+	var k: Combatant = battle.active if battle != null else null
+	if k != null and k != hero_unit:
+		match k.style:
+			"faithful":
+				return "Killed by one of the Faithful"
+			"miner":
+				return "Killed by a Drowned Miner"
+		return "Killed by " + ("Garrick" if k.kind == "solo" else "a " + k.name)
+	if hero_unit.prone and level.is_wet(hero_unit.cell):
+		return "Drowned"
+	return "Bled out"
+
+
+## Wake: from the title, the life begins (who was he?); from the death or win screen, a new life.
+func _on_wake() -> void:
+	if run_screen.mode == "title":
+		run_screen.close()
+		if ask_backstory and not veteran:
+			backstory_screen.open()
+		return
+	new_level(randi())
 
 
 ## J, or the Journal button: open or close the journal. Not mid-fight.

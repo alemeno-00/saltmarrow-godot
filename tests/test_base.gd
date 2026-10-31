@@ -53,6 +53,8 @@ func add_game(tree: SceneTree) -> Node:
 		node.level_seed = 7   # a fixed first level, so game tests repeat exactly
 	if "ask_backstory" in node:
 		node.ask_backstory = false   # tests start as Fury unless they choose
+	if "show_title" in node:
+		node.show_title = false   # tests start in the sewers, not at the title
 	if "journal_path" in node:
 		node.journal_path = TEST_JOURNAL   # never the player's own journal
 		if FileAccess.file_exists(TEST_JOURNAL):
