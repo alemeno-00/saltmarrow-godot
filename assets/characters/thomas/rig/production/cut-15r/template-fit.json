@@ -1,0 +1,111 @@
+{
+  "status": "STEP 1 APPROVED; STEP 2 TEMPLATE FIT INCOMPATIBILITY",
+  "model_sha256": "93617715b316bc3a816a5c89f3ccfa24c88bc0a4a58e2342461656d183a64564",
+  "rig_revision": "9765aee",
+  "pose": "RigPose.idle(0), south, root (40,72)",
+  "torso": {
+    "angle": 0.0,
+    "at": [
+      40.0,
+      46.2790451049805
+    ],
+    "cell": 1,
+    "order": 3000.25,
+    "part": "torso",
+    "pivot": [
+      12.0,
+      22.0
+    ]
+  },
+  "cell_size": [
+    24,
+    24
+  ],
+  "sampling": "q=floor((pixel + 0.5) - at + pivot); torso rotation is zero",
+  "last_representable_model_row": 47,
+  "scarf_pixels_outside_torso": [
+    {
+      "model": [
+        36,
+        48
+      ],
+      "cell": [
+        8,
+        24
+      ]
+    },
+    {
+      "model": [
+        37,
+        48
+      ],
+      "cell": [
+        9,
+        24
+      ]
+    },
+    {
+      "model": [
+        36,
+        49
+      ],
+      "cell": [
+        8,
+        25
+      ]
+    },
+    {
+      "model": [
+        37,
+        49
+      ],
+      "cell": [
+        9,
+        25
+      ]
+    },
+    {
+      "model": [
+        36,
+        50
+      ],
+      "cell": [
+        8,
+        26
+      ]
+    },
+    {
+      "model": [
+        37,
+        50
+      ],
+      "cell": [
+        9,
+        26
+      ]
+    },
+    {
+      "model": [
+        36,
+        51
+      ],
+      "cell": [
+        8,
+        27
+      ]
+    },
+    {
+      "model": [
+        37,
+        51
+      ],
+      "cell": [
+        9,
+        27
+      ]
+    }
+  ],
+  "handoff": "Calibrate the rig/template to this approved whole model before cutting. Do not crop kit/scarf, move it to another part, or change approved proportions to make the current anchors fit.",
+  "runtime_parts_changed": false,
+  "job_complete": false
+}
