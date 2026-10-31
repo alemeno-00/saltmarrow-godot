@@ -201,15 +201,30 @@ func test_the_coat_and_hands_trail_then_settle() -> void:
 	check(m._off["hem"].z > 0.5, "stopping, it swings on ahead (%.2f)" % m._off["hem"].z)
 
 
-func test_the_parts_wait_for_approval_but_f8_shows_them() -> void:
+func test_he_walks_on_the_new_parts_and_f8_compares_the_old_art() -> void:
 	var game: Game = await add_game(Engine.get_main_loop() as SceneTree)
-	check(Hero.RIG_APPROVED or game.hero.rig == null, "until approved, Thomas keeps his painted art")
-	if game.hero.rig_parts != null:
-		game.hero.show_rig(true)
-		check(game.hero.rig == game.hero.rig_parts, "F8 puts him on the skeleton to try it")
-		game.hero.show_rig(false)
-		check(game.hero.rig == null, "and back")
+	check(game.hero.rig_parts != null and game.hero.rig_parts.sheets.has("s"), "the south parts sheet is in")
+	eq(game.hero.rig, game.hero.rig_parts, "and he is drawn with it")
+	check(game.hero.rig.covers(Vector2.DOWN) and not game.hero.rig.covers(Vector2.RIGHT), "facing south only; the rest keep the old art for now")
+	game.hero.show_rig(false)
+	check(game.hero.rig == null, "F8: the old painted art, to compare")
+	game.hero.show_rig(true)
+	check(game.hero.rig == game.hero.rig_parts, "and back")
 	game.queue_free()
+
+
+func test_the_cut_rebuilds_the_approved_model() -> void:
+	var tool: GDScript = load("res://tools/rig/rig_template.gd")
+	var base := "res://assets/characters/thomas/rig/"
+	for pair in [["production/model-s.png", "s.png"], ["production/model-s_n.png", "s_n.png"]]:
+		var model := Image.load_from_file(ProjectSettings.globalize_path(base + pair[0]))
+		var parts := Image.load_from_file(ProjectSettings.globalize_path(base + pair[1]))
+		check(model != null and parts != null, "%s and %s are there" % pair)
+		if model == null or parts == null:
+			continue
+		model.convert(Image.FORMAT_RGBA8)
+		parts.convert(Image.FORMAT_RGBA8)
+		eq(tool.check(model, parts).size(), 0, "%s, put back together, is %s exactly" % [pair[1], pair[0]])
 
 
 # ---------------------------------------------------------------- cutting a whole model into parts (job 15-R)

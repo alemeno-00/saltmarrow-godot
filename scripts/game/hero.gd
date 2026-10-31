@@ -4,9 +4,10 @@ extends ActorView
 ## mirrored to face left. Falls back to a drawn placeholder if the sheet is missing.
 
 
-## The skeleton's parts sheets are drawn only once Julian approves them (ART_JOBS 15-R): the first south sheet no
-## longer looked like Thomas. Until then he keeps his painted sheets; F8 shows the skeleton to try it.
-const RIG_APPROVED := false
+## The skeleton's parts sheets (ART_JOBS 15-R): the south sheet is cut from Julian's approved model (#55, cut in
+## #60, rebuilding it pixel for pixel) and is on for his review in game. Directions not yet painted keep the old
+## painted sheets (Rig.covers). F8 swaps to the old art and back, to compare.
+const RIG_APPROVED := true
 
 var rig_parts: Rig = null   # the parts sheets, loaded whether or not they are shown
 
