@@ -102,7 +102,7 @@ var run_screen: RunScreen               # the title, the death screen and the wi
 var kills_this_life := 0
 var death_cause := ""
 var found_this_life := 0                # pages first read in this life
-var journal_button: Button
+var menu: GameMenu                      # Esc or the Menu button
 var _lore_views := {}                   # square -> LoreDrop
 var events_fired: Array[String] = []   # room events that have happened on this level, in order (tests read this)
 var watcher: RoomEventFx = null        # the last pale figure shown (tests read this)
@@ -168,13 +168,15 @@ func _ready() -> void:
 	run_screen.quit.connect(func(): get_tree().quit())
 	journal_screen = JournalScreen.new()
 	layer.add_child(journal_screen)
-	journal_button = Button.new()
-	journal_button.text = "Journal (J)"
-	journal_button.focus_mode = Control.FOCUS_NONE
-	journal_button.position = Vector2(1150, 626)
-	journal_button.size = Vector2(110, 28)
-	journal_button.pressed.connect(toggle_journal)
-	$HUD.add_child(journal_button)
+	menu = GameMenu.new()
+	layer.add_child(menu)
+	menu.new_life.connect(func(): new_level(randi()))
+	menu.quit.connect(func(): get_tree().quit())
+	combat_hud.explore_pressed.connect(_on_explore)
+	combat_hud.journal_pressed.connect(toggle_journal)
+	combat_hud.skills_pressed.connect(_toggle_tree)
+	combat_hud.menu_pressed.connect(toggle_menu)
+	hud.visible = false   # the old hint line: its hints are in the menu now (design/ux/hud.md)
 	backstory_screen = BackstoryScreen.new()
 	layer.add_child(backstory_screen)
 	backstory_screen.chosen.connect(choose_backstory)
@@ -780,7 +782,7 @@ func _bring_back(u: Combatant) -> void:
 
 ## The game waits while a menu is open: the skill tree, or choosing a backstory.
 func paused() -> bool:
-	return tree_screen.visible or backstory_screen.visible or (journal_screen != null and journal_screen.visible) or (run_screen != null and run_screen.visible)
+	return tree_screen.visible or backstory_screen.visible or (journal_screen != null and journal_screen.visible) or (run_screen != null and run_screen.visible) or (menu != null and menu.visible)
 
 
 ## A new life begins as the chosen backstory: Fury (maces) or Shadow (daggers).
@@ -822,6 +824,20 @@ func _place_cover_props() -> void:
 ## E, exploring: search the nearest cache within reach, turn the valve, or unlock the grate. Returns what happened:
 ## "searched", "full", "empty", "valve", "drained", "unlocked", "locked" or "" (nothing within reach).
 func interact() -> String:
+	var best := _interact_target()
+	if best.x < 0:
+		return ""
+	if best == level.valve:
+		return _turn_valve()
+	if level.grate.has(best):
+		return _unlock_grate()
+	if level.lore.has(best):
+		return read_lore(best)
+	return _search(best)
+
+
+## The nearest thing within reach to search or use (a cache, the valve, the grate, something to read), or (-1, -1).
+func _interact_target() -> Vector2i:
 	var best := Vector2i(-1, -1)
 	var best_d := Items.REACH * TILE
 	var targets: Array[Vector2i] = []
@@ -840,15 +856,7 @@ func interact() -> String:
 		if d <= best_d:
 			best_d = d
 			best = c
-	if best.x < 0:
-		return ""
-	if best == level.valve:
-		return _turn_valve()
-	if level.grate.has(best):
-		return _unlock_grate()
-	if level.lore.has(best):
-		return read_lore(best)
-	return _search(best)
+	return best
 
 
 ## Search a cache: its item goes on the belt (a full belt leaves it there). Rummaging makes a little noise.
@@ -1284,6 +1292,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 		if (event.keycode == KEY_J and not in_fight()) or (event.keycode == KEY_ESCAPE and journal_screen.visible):
 			toggle_journal()
+			get_viewport().set_input_as_handled()
+			return
+		if event.keycode == KEY_ESCAPE and (menu.visible or not (paused() or aiming_throw or (in_fight() and (selected >= 0 or stepping)))):
+			toggle_menu()
 			get_viewport().set_input_as_handled()
 			return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_R and run_screen.visible and not journal_screen.visible and run_screen.mode != "title":
@@ -2057,6 +2069,33 @@ func _on_wake() -> void:
 	new_level(randi())
 
 
+## Esc, or the Menu button: open or close the menu.
+func toggle_menu() -> void:
+	if menu.visible:
+		menu.close()
+	elif not paused():
+		stop_walking()
+		menu.open()
+
+
+## The hotbar's exploring slots: sneak, the lantern (right-click: put it out), throw, search or use.
+func _on_explore(action: String) -> void:
+	if in_fight() or paused() or dead or won:
+		return
+	match action:
+		"sneak":
+			toggle_sneak()
+		"lantern":
+			shutter_lantern()
+		"douse":
+			douse_lantern()
+		"throw":
+			aim_throw()
+		"search":
+			interact()
+	_update_hud()
+
+
 ## J, or the Journal button: open or close the journal. Not mid-fight.
 func toggle_journal() -> void:
 	if journal_screen.visible:
@@ -2161,17 +2200,26 @@ func _refresh() -> void:
 
 
 func _update_hud() -> void:
-	if hud == null:
+	if hud == null or level == null:
 		return
-	var e := _enemy_at(_hover) if level != null else null
-	if e != null and can_see(e):
-		var words := [e.health_word()] + Array(e.condition_words())
-		hud.text = "%s:  %s" % [e.name, ", ".join(words)]
-	elif dead or won:
-		hud.text = "R to start again"
-	elif in_fight():
-		hud.text = "Click anywhere to move  ·  click an enemy to strike (he walks up if he can)  ·  right-click for more  ·  1-5 abilities  ·  6-9 belt  ·  F careful step  ·  Q stand  ·  B catch breath  ·  %sEnter end turn  ·  R new level" % ("G shut a sluice gate  ·  " if battle.arena.has_area() else "")
-	else:
-		var spend := progress.points_for(progress.weapon_tree()) + progress.level_points + progress.stat_points
-		var how := ("Sneaking" if sneaking else "Walking") + ", lantern " + lantern + ("  ·  T throw a dagger" if progress.owns("daggers", "throw") else "")
-		hud.text = "Depth %d  ·  Level %d  ·  XP %d / %d  ·  K skills%s  ·  %s  ·  click to walk, right-click for more  ·  click an enemy to strike from the dark  ·  E search / use  ·  6-9 belt  ·  C sneak  ·  L shutter / light lantern  ·  O put it out  ·  R new life" % [depth, progress.level, progress.xp, progress.xp_needed(), " (points to spend!)" if spend > 0 else "", how]
+	var spend := progress.points_for(progress.weapon_tree()) + progress.level_points + progress.stat_points
+	combat_hud.set_status(depth, progress.level, progress.xp, progress.xp_needed(), spend > 0)
+	combat_hud.set_explore(sneaking, lantern, progress.owns("daggers", "throw"), _interact_target().x >= 0)
+	combat_hud.show_tip(hover_tip(_hover_px) if _hover_px != Vector2.INF else [], get_viewport().get_mouse_position())
+
+
+## The tooltip for what is under the mouse at `p` (world pixels): an enemy in sight, its state and what a click
+## does; or empty.
+func hover_tip(p: Vector2) -> Array:
+	if level == null or paused():
+		return []
+	for e in enemies:
+		if e.alive() and not e.fled and can_see(e) and views[e].position.distance_to(p) <= MovementRules.px(MovementRules.ENEMY_RADIUS) + 8.0:
+			var words := [e.health_word()] + Array(e.condition_words())
+			var click := "Click: attack"
+			if not in_fight():
+				click = "Click: strike from the dark" if not _after_him(e) and e.alert < 1.0 else "Click: attack"
+			elif selected >= 0:
+				click = "Click: " + hero_unit.abilities[selected].name
+			return [e.name, ", ".join(words), click]
+	return []

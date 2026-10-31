@@ -97,3 +97,17 @@ func test_the_journal_opens_over_the_death_screen() -> void:
 	check(game.journal_screen.get_index() > game.run_screen.get_index(), "drawn over it")
 	game.toggle_journal()
 	check(game.run_screen.visible, "and closing it goes back to the death screen")
+
+
+func test_the_title_sea_moves_once_its_mask_is_painted() -> void:
+	var art := ImageTexture.create_from_image(Image.create(64, 36, false, Image.FORMAT_RGBA8))
+	var mask := ImageTexture.create_from_image(Image.create(64, 36, false, Image.FORMAT_RGBA8))
+	game.run_screen.open_title(0)
+	game.run_screen.set_title_art(art, null, null)
+	check(not game.run_screen.sea_moving(), "the painting alone stays still")
+	check(game.run_screen._backdrop.visible, "but it is shown")
+	game.run_screen.set_title_art(art, mask, null)
+	check(game.run_screen.sea_moving(), "with its sea's mask, the sea moves")
+	game.run_screen.set_title_art(null, null, null)
+	check(not game.run_screen._backdrop.visible and game.run_screen._title.text != "", "no art: the plain title")
+	game.run_screen.close()

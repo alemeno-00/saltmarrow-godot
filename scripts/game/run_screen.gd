@@ -18,6 +18,15 @@ const PEARL := Color(0.82, 0.86, 0.9)
 
 var mode := ""        # "title", "dead" or "won" while open
 var _dim: ColorRect
+var _backdrop: TextureRect      # the title's painting of Saltmarrow (ART_JOBS 20), once it arrives
+var _logo: TextureRect          # the carved title, once it arrives
+var _rain: Rain                  # rain over the title's painting
+var _bands: Array[ColorRect] = []  # dark bands behind the title and the buttons, so they read over the painting
+var _flash := 0.0                # a distant lightning flash fading
+var _next_flash := 9.0
+const BACKDROP := "res://assets/ui/title_background.png"
+const SEA_MASK := "res://assets/ui/title_background_sea.png"   # red: open sea; green: surf (ART_JOBS 20)
+const LOGO := "res://assets/ui/title.png"
 var _title: Label
 var _sub: Label
 var _body: Label
@@ -33,6 +42,27 @@ func _ready() -> void:
 	_dim.size = Vector2(1280, 720)
 	_dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_dim)
+	_backdrop = TextureRect.new()
+	_backdrop.size = Vector2(1280, 720)
+	_backdrop.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_backdrop.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_backdrop)
+	_rain = Rain.new()
+	add_child(_rain)
+	for r in [Rect2(0, 140, 1280, 112), Rect2(0, 506, 1280, 68)]:
+		var band := ColorRect.new()
+		band.color = Color(0.02, 0.03, 0.05, 0.62)
+		band.position = r.position
+		band.size = r.size
+		band.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		band.visible = false
+		add_child(band)
+		_bands.append(band)
+	_logo = TextureRect.new()
+	_logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_logo)
+	set_title_art(UiStyle.tex(BACKDROP), UiStyle.tex(SEA_MASK), UiStyle.tex(LOGO))
 	_title = _label(Vector2(0, 150), 44, INK)
 	_sub = _label(Vector2(0, 214), 17, DIM)
 	_body = _label(Vector2(0, 268), 16, INK)
@@ -44,6 +74,7 @@ func _ready() -> void:
 		b.focus_mode = Control.FOCUS_NONE
 		b.size = Vector2(200, 40)
 		b.add_theme_font_size_override("font_size", 17)
+		UiStyle.style_button(b)
 		add_child(b)
 		_buttons.append(b)
 	_buttons[0].pressed.connect(func(): wake.emit())
@@ -52,10 +83,43 @@ func _ready() -> void:
 
 
 ## The game's opening: its name, and Wake, the journal, Quit (not on the web, where there is nothing to quit to).
+## The title's painting, the mask of its sea (which then moves: canvas_ui_title_sea), and the carved title. Any may
+## be null until ChatGPT's art arrives.
+func set_title_art(backdrop: Texture2D, sea: Texture2D, logo: Texture2D) -> void:
+	_backdrop.texture = backdrop
+	_backdrop.material = null
+	if backdrop != null and sea != null:
+		var m := ShaderMaterial.new()
+		m.shader = load("res://scripts/game/canvas_ui_title_sea.gdshader")
+		m.set_shader_parameter("sea_mask", sea)
+		m.set_shader_parameter("art_size", Vector2(backdrop.get_size()))
+		_backdrop.material = m
+	_logo.texture = logo
+	if logo != null:
+		_logo.position = Vector2((1280 - logo.get_width()) / 2.0, 110)
+	if mode == "title":
+		_backdrop.visible = backdrop != null
+		_rain.visible = backdrop != null
+		for band in _bands:
+			band.visible = backdrop != null
+		_logo.visible = logo != null
+		_title.text = "" if logo != null else "SALTMARROW DEEP"
+
+
+## Is the sea in the title moving (the painting and its mask are both in)?
+func sea_moving() -> bool:
+	return _backdrop.material != null
+
+
 func open_title(found: int) -> void:
 	mode = "title"
 	_dim.color = Color(0.02, 0.03, 0.05, 1.0)
-	_title.text = "SALTMARROW DEEP"
+	_backdrop.visible = _backdrop.texture != null
+	_rain.visible = _backdrop.visible
+	for band in _bands:
+		band.visible = _backdrop.visible
+	_logo.visible = _logo.texture != null
+	_title.text = "" if _logo.visible else "SALTMARROW DEEP"
 	_title.add_theme_color_override("font_color", INK)
 	_sub.text = "A star fell into the sea beside Saltmarrow. Your sister went down to find it."
 	_body.text = ""
@@ -66,6 +130,11 @@ func open_title(found: int) -> void:
 ## He is dead: how, how far he got, and what the next life keeps.
 func open_dead(stats: Dictionary) -> void:
 	mode = "dead"
+	_backdrop.visible = false
+	_rain.visible = false
+	for band in _bands:
+		band.visible = false
+	_logo.visible = false
 	_dim.color = Color(0.03, 0.02, 0.02, 0.86)
 	_title.text = "Thomas Wren is dead."
 	_title.add_theme_color_override("font_color", Color(0.85, 0.5, 0.45))
@@ -78,6 +147,11 @@ func open_dead(stats: Dictionary) -> void:
 ## Garrick's tally tag is in his hand: the First Shift is over.
 func open_won(stats: Dictionary) -> void:
 	mode = "won"
+	_backdrop.visible = false
+	_rain.visible = false
+	for band in _bands:
+		band.visible = false
+	_logo.visible = false
 	_dim.color = Color(0.02, 0.03, 0.05, 0.88)
 	_title.text = "The First Shift is over."
 	_title.add_theme_color_override("font_color", AMBER)
@@ -116,6 +190,15 @@ func _open() -> void:
 
 
 func _process(delta: float) -> void:
+	# now and then, far out to sea, lightning: the painting brightens and fades
+	if _backdrop.visible:
+		_next_flash -= delta
+		if _next_flash <= 0.0:
+			_flash = 1.0
+			_next_flash = randf_range(7.0, 16.0)
+		_flash = maxf(0.0, _flash - delta * 2.5)
+		var k := 1.0 + 0.35 * _flash * (0.6 + 0.4 * sin(_flash * 40.0))
+		_backdrop.modulate = Color(k, k, k * 1.05)
 	if visible and _fade < 1.0:
 		_fade = minf(1.0, _fade + delta / 0.8)
 		modulate.a = _fade
@@ -130,3 +213,34 @@ func _label(at: Vector2, size: int, colour: Color) -> Label:
 	l.add_theme_color_override("font_color", colour)
 	add_child(l)
 	return l
+
+
+## Thin rain slanting down over the title's painting, drawn in the dark slate's pale grey.
+class Rain extends Control:
+	const DROPS := 140
+	const SPEED := 620.0        # px a second
+	const SLANT := Vector2(-0.28, 1.0)
+	var _drops: Array[Vector3] = []   # x, y, length
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		size = Vector2(1280, 720)
+		visible = false
+		for i in DROPS:
+			_drops.append(Vector3(randf() * 1400.0, randf() * 720.0, randf_range(6.0, 14.0)))
+
+	func _process(delta: float) -> void:
+		if not visible:
+			return
+		for i in _drops.size():
+			var d := _drops[i]
+			d.x += SLANT.x * SPEED * delta
+			d.y += SLANT.y * SPEED * delta
+			if d.y > 720.0:
+				d = Vector3(randf() * 1400.0, -20.0, d.z)
+			_drops[i] = d
+		queue_redraw()
+
+	func _draw() -> void:
+		for d in _drops:
+			draw_line(Vector2(d.x, d.y), Vector2(d.x, d.y) + SLANT * d.z, Color(0.7, 0.75, 0.82, 0.18), 1.0)
