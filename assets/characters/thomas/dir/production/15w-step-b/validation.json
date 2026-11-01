@@ -1,0 +1,154 @@
+{
+  "job": "15-W",
+  "status": "DELIVERED; IN-GAME REVIEW PENDING",
+  "step_a_approval": {
+    "date": "2026-11-01",
+    "approval_text": "yeah they look good",
+    "approved_key_frames": [
+      1,
+      3,
+      5,
+      7
+    ],
+    "key_sha256": {
+      "1": "560ffe32dec6565e25579ffeaa35981376c58d4c62e68151ed7dc4c987f184c7",
+      "3": "86b5b6955b8f21b696997372b99caeb2fce2349a250a70389af4466f7867f0c2",
+      "5": "5fa860f4fd662ec34a9aa582f56c3bb97e0a9fd7ca702f5324ab07b21a804acf",
+      "7": "f14cc5e0f598caa311caa25951a630dd026d8fd286e17ea1c87c9c48af69519e"
+    },
+    "upstream_prompt_sha256": "933258b7bb844e5e0ef500314d716ac657c45a7046a2eecbf3f34aa80f81ceb5"
+  },
+  "runtime_size": [
+    640,
+    160
+  ],
+  "painting_row_size": [
+    2560,
+    320
+  ],
+  "idle": "6 exact model copies + 2 transparent cells",
+  "walk": "8 frames, 10fps",
+  "alpha": "binary, diffuse and normal identical",
+  "palette": "approved model diffuse/normal only",
+  "normal_vector_length_range": [
+    0.9947111196006265,
+    1.0053528400262595
+  ],
+  "frames": [
+    {
+      "frame": 1,
+      "outline_iou": 0.8980978260869565,
+      "guide_envelope_px": 1,
+      "head_and_boot_regions": "exact own guide",
+      "approved_key_unchanged": true,
+      "connected_component_sizes": [
+        723
+      ],
+      "minor_components": []
+    },
+    {
+      "frame": 2,
+      "outline_iou": 0.8828229027962716,
+      "guide_envelope_px": 1,
+      "head_and_boot_regions": "exact own guide",
+      "approved_key_unchanged": false,
+      "connected_component_sizes": [
+        734
+      ],
+      "minor_components": []
+    },
+    {
+      "frame": 3,
+      "outline_iou": 0.8779840848806366,
+      "guide_envelope_px": 1,
+      "head_and_boot_regions": "exact own guide",
+      "approved_key_unchanged": true,
+      "connected_component_sizes": [
+        745
+      ],
+      "minor_components": []
+    },
+    {
+      "frame": 4,
+      "outline_iou": 0.882907133243607,
+      "guide_envelope_px": 1,
+      "head_and_boot_regions": "exact own guide",
+      "approved_key_unchanged": false,
+      "connected_component_sizes": [
+        729
+      ],
+      "minor_components": []
+    },
+    {
+      "frame": 5,
+      "outline_iou": 0.9102209944751382,
+      "guide_envelope_px": 1,
+      "head_and_boot_regions": "exact own guide",
+      "approved_key_unchanged": true,
+      "connected_component_sizes": [
+        706,
+        3
+      ],
+      "minor_components": [
+        [
+          [
+            48,
+            53
+          ],
+          [
+            49,
+            52
+          ],
+          [
+            48,
+            52
+          ]
+        ]
+      ]
+    },
+    {
+      "frame": 6,
+      "outline_iou": 0.8808567603748326,
+      "guide_envelope_px": 1,
+      "head_and_boot_regions": "exact own guide",
+      "approved_key_unchanged": false,
+      "connected_component_sizes": [
+        726
+      ],
+      "minor_components": []
+    },
+    {
+      "frame": 7,
+      "outline_iou": 0.904054054054054,
+      "guide_envelope_px": 1,
+      "head_and_boot_regions": "exact own guide",
+      "approved_key_unchanged": true,
+      "connected_component_sizes": [
+        735
+      ],
+      "minor_components": []
+    },
+    {
+      "frame": 8,
+      "outline_iou": 0.8830645161290323,
+      "guide_envelope_px": 1,
+      "head_and_boot_regions": "exact own guide",
+      "approved_key_unchanged": false,
+      "connected_component_sizes": [
+        729
+      ],
+      "minor_components": []
+    }
+  ],
+  "upstream_checker": "PASS, all 8 actual delivered frames",
+  "protected_files_unchanged": [
+    "assets/characters/thomas/rig/production/model-s.png",
+    "assets/characters/thomas/rig/production/model-s_n.png",
+    "assets/characters/thomas/rig/s.png",
+    "assets/characters/thomas/rig/s_n.png",
+    "assets/characters/thomas/production/sprites/standing-candidate.png",
+    "assets/characters/thomas/production/sprites/steady-portrait-candidate.png",
+    "assets/characters/thomas/production/concepts/canonical-reference-v1.png"
+  ],
+  "wiring": "Claude: prefer painted south idle/walk over rig; do not use missing rows 3-5"
+}

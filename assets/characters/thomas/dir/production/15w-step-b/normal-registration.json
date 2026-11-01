@@ -1,0 +1,258 @@
+[
+  {
+    "frame": 1,
+    "source_bounds": [
+      444,
+      347,
+      810,
+      1177
+    ],
+    "guide_bounds": [
+      112,
+      88,
+      204,
+      300
+    ],
+    "alpha": "exact final diffuse",
+    "preserved_guide_regions_4x": [
+      [
+        0,
+        0,
+        320,
+        128
+      ],
+      [
+        0,
+        268,
+        320,
+        320
+      ]
+    ],
+    "normal_extension_pixels_4x": 518,
+    "extension": "nearest existing normal colour within the same frame only; positive-z normalization"
+  },
+  {
+    "frame": 2,
+    "source_bounds": [
+      461,
+      347,
+      816,
+      1177
+    ],
+    "guide_bounds": [
+      116,
+      88,
+      208,
+      300
+    ],
+    "alpha": "exact final diffuse",
+    "preserved_guide_regions_4x": [
+      [
+        0,
+        0,
+        320,
+        128
+      ],
+      [
+        0,
+        268,
+        320,
+        320
+      ]
+    ],
+    "normal_extension_pixels_4x": 487,
+    "extension": "nearest existing normal colour within the same frame only; positive-z normalization"
+  },
+  {
+    "frame": 3,
+    "source_bounds": [
+      457,
+      350,
+      822,
+      1189
+    ],
+    "guide_bounds": [
+      116,
+      88,
+      208,
+      300
+    ],
+    "alpha": "exact final diffuse",
+    "preserved_guide_regions_4x": [
+      [
+        0,
+        0,
+        320,
+        128
+      ],
+      [
+        0,
+        268,
+        320,
+        320
+      ]
+    ],
+    "normal_extension_pixels_4x": 561,
+    "extension": "nearest existing normal colour within the same frame only; positive-z normalization"
+  },
+  {
+    "frame": 4,
+    "source_bounds": [
+      455,
+      330,
+      814,
+      1162
+    ],
+    "guide_bounds": [
+      116,
+      84,
+      208,
+      296
+    ],
+    "alpha": "exact final diffuse",
+    "preserved_guide_regions_4x": [
+      [
+        0,
+        0,
+        320,
+        128
+      ],
+      [
+        0,
+        268,
+        320,
+        320
+      ]
+    ],
+    "normal_extension_pixels_4x": 429,
+    "extension": "nearest existing normal colour within the same frame only; positive-z normalization"
+  },
+  {
+    "frame": 5,
+    "source_bounds": [
+      450,
+      346,
+      810,
+      1189
+    ],
+    "guide_bounds": [
+      112,
+      88,
+      204,
+      300
+    ],
+    "alpha": "exact final diffuse",
+    "preserved_guide_regions_4x": [
+      [
+        0,
+        0,
+        320,
+        128
+      ],
+      [
+        0,
+        268,
+        320,
+        320
+      ]
+    ],
+    "normal_extension_pixels_4x": 383,
+    "extension": "nearest existing normal colour within the same frame only; positive-z normalization"
+  },
+  {
+    "frame": 6,
+    "source_bounds": [
+      439,
+      363,
+      814,
+      1193
+    ],
+    "guide_bounds": [
+      108,
+      88,
+      200,
+      300
+    ],
+    "alpha": "exact final diffuse",
+    "preserved_guide_regions_4x": [
+      [
+        0,
+        0,
+        320,
+        128
+      ],
+      [
+        0,
+        268,
+        320,
+        320
+      ]
+    ],
+    "normal_extension_pixels_4x": 500,
+    "extension": "nearest existing normal colour within the same frame only; positive-z normalization"
+  },
+  {
+    "frame": 7,
+    "source_bounds": [
+      431,
+      356,
+      810,
+      1197
+    ],
+    "guide_bounds": [
+      108,
+      88,
+      200,
+      300
+    ],
+    "alpha": "exact final diffuse",
+    "preserved_guide_regions_4x": [
+      [
+        0,
+        0,
+        320,
+        128
+      ],
+      [
+        0,
+        268,
+        320,
+        320
+      ]
+    ],
+    "normal_extension_pixels_4x": 523,
+    "extension": "nearest existing normal colour within the same frame only; positive-z normalization"
+  },
+  {
+    "frame": 8,
+    "source_bounds": [
+      443,
+      336,
+      804,
+      1170
+    ],
+    "guide_bounds": [
+      108,
+      84,
+      200,
+      296
+    ],
+    "alpha": "exact final diffuse",
+    "preserved_guide_regions_4x": [
+      [
+        0,
+        0,
+        320,
+        128
+      ],
+      [
+        0,
+        268,
+        320,
+        320
+      ]
+    ],
+    "normal_extension_pixels_4x": 450,
+    "extension": "nearest existing normal colour within the same frame only; positive-z normalization"
+  }
+]

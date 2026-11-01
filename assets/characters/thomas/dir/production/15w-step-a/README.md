@@ -1,6 +1,6 @@
 # Job15-W — Step A key-frame review
 
-Status: **awaiting Julian's approval of frames1,3,5,7**. The current task's source is `design/art-briefs/animation/walk-s/PROMPT.md`, copied word for word as `upstream-PROMPT.md`. It explicitly says to deliver these keys before anything else. Job15-W remains unchecked. No in-between frames, completed normal paintings or runtime s.png/s_n.png are delivered here.
+Status: **approved by Julian on 2026-11-01: “yeah they look good”.** The four approved keys remain unchanged. This folder preserves the original Step A review, including its limited checker scope. The completed eight-frame walk, new in-betweens, normal paintings and runtime-sheet audit are delivered in `../15w-step-b/`; see its README. Job 15-W is ticked with that complete delivery. The source instructions are copied word for word as `upstream-PROMPT.md`.
 
 ## Review outputs
 
@@ -45,9 +45,9 @@ All final alpha edges are binary; every opaque colour belongs to the approved mo
 - `check_keys.gd`: review driver for unchanged upstream checker in an isolated temporary Godot project, containing copied Rig/RigPose/walk_guides.gd and model/part resources. Repo path is its user argument.
 - `guide-check.json`: actual checker output for the four keys and exact QA scope; Godot4.7.2.
 - `export_previews.py`, `validate_keys.py`: mechanical review layouts and palette/alpha/guide-envelope/protected-reference checks.
-- `registration.json`, `validation.json`: fixed source selection, bounds, mask regions, checksums and pending approval status.
+- `registration.json`, `validation.json`: fixed source selection, bounds, mask regions, checksums and recorded Step A approval status.
 - `.gdignore`: all source/review material excluded from Godot imports.
 
-## Approval gate and Claude handoff
+## Original approval gate and completed follow-up
 
-Per Step A, stop here for Julian's review. Do not wire these four keys as a completed walk or substitute them for runtime sheets. After the keys are approved, paint2,4,6,8 as independent edits from their own guides, make the normal paintings over their corresponding guides, assemble the requested2560×320 painting rows and640×160 runtime sheets, and run the full supplied check. Existing model/parts, protected stills/portrait, scripts, scenes and studio files are unchanged. This PR changes only this assets/ production folder.
+The original Step A delivery stopped here for Julian's review; Julian has now approved these four keys. The following describes that original gate: Do not wire these four keys as a completed walk or substitute them for runtime sheets. After the keys are approved, paint2,4,6,8 as independent edits from their own guides, make the normal paintings over their corresponding guides, assemble the requested2560×320 painting rows and640×160 runtime sheets, and run the full supplied check. Existing model/parts, protected stills/portrait, scripts, scenes and studio files are unchanged. The original Step A changes were confined to this production folder. The completed delivery also adds the runtime sheets and ticks only job 15-W outside assets/.

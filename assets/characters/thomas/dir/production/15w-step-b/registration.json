@@ -1,0 +1,242 @@
+[
+  {
+    "frame": 2,
+    "source": "frame-02-source-v1.png",
+    "source_bounds": [
+      468,
+      367,
+      803,
+      1175
+    ],
+    "guide_bounds": [
+      116,
+      88,
+      208,
+      300
+    ],
+    "whole_figure_registration": "nearest-neighbour source bbox to guide bbox",
+    "preserved_guide_regions_4x": [
+      [
+        0,
+        0,
+        320,
+        128
+      ],
+      [
+        0,
+        268,
+        320,
+        320
+      ]
+    ],
+    "clipped_blocks_outside_guide_envelope": [],
+    "restored_original_guide_blocks": [
+      [
+        29,
+        49
+      ],
+      [
+        31,
+        48
+      ],
+      [
+        30,
+        50
+      ],
+      [
+        30,
+        49
+      ],
+      [
+        29,
+        48
+      ],
+      [
+        30,
+        48
+      ],
+      [
+        31,
+        49
+      ],
+      [
+        30,
+        52
+      ],
+      [
+        30,
+        51
+      ]
+    ],
+    "restored_guide_connection_blocks": [
+      [
+        31,
+        50
+      ]
+    ],
+    "preservation_reason": "keep approved head and original boots/sole placement unchanged; only middle painting region accepts the independent edit"
+  },
+  {
+    "frame": 4,
+    "source": "frame-04-source-v1.png",
+    "source_bounds": [
+      461,
+      335,
+      804,
+      1126
+    ],
+    "guide_bounds": [
+      116,
+      84,
+      208,
+      296
+    ],
+    "whole_figure_registration": "nearest-neighbour source bbox to guide bbox",
+    "preserved_guide_regions_4x": [
+      [
+        0,
+        0,
+        320,
+        128
+      ],
+      [
+        0,
+        268,
+        320,
+        320
+      ]
+    ],
+    "clipped_blocks_outside_guide_envelope": [],
+    "restored_original_guide_blocks": [
+      [
+        50,
+        51
+      ],
+      [
+        50,
+        50
+      ]
+    ],
+    "restored_guide_connection_blocks": [
+      [
+        49,
+        50
+      ]
+    ],
+    "preservation_reason": "keep approved head and original boots/sole placement unchanged; only middle painting region accepts the independent edit"
+  },
+  {
+    "frame": 6,
+    "source": "frame-06-source-v1.png",
+    "source_bounds": [
+      441,
+      370,
+      776,
+      1152
+    ],
+    "guide_bounds": [
+      108,
+      88,
+      200,
+      300
+    ],
+    "whole_figure_registration": "nearest-neighbour source bbox to guide bbox",
+    "preserved_guide_regions_4x": [
+      [
+        0,
+        0,
+        320,
+        128
+      ],
+      [
+        0,
+        268,
+        320,
+        320
+      ]
+    ],
+    "clipped_blocks_outside_guide_envelope": [
+      [
+        48,
+        56
+      ],
+      [
+        44,
+        66
+      ]
+    ],
+    "restored_original_guide_blocks": [
+      [
+        48,
+        49
+      ],
+      [
+        47,
+        52
+      ],
+      [
+        49,
+        49
+      ],
+      [
+        48,
+        52
+      ],
+      [
+        48,
+        51
+      ],
+      [
+        48,
+        50
+      ]
+    ],
+    "restored_guide_connection_blocks": [
+      [
+        47,
+        50
+      ]
+    ],
+    "preservation_reason": "keep approved head and original boots/sole placement unchanged; only middle painting region accepts the independent edit"
+  },
+  {
+    "frame": 8,
+    "source": "frame-08-source-v1.png",
+    "source_bounds": [
+      448,
+      340,
+      773,
+      1135
+    ],
+    "guide_bounds": [
+      108,
+      84,
+      200,
+      296
+    ],
+    "whole_figure_registration": "nearest-neighbour source bbox to guide bbox",
+    "preserved_guide_regions_4x": [
+      [
+        0,
+        0,
+        320,
+        128
+      ],
+      [
+        0,
+        268,
+        320,
+        320
+      ]
+    ],
+    "clipped_blocks_outside_guide_envelope": [
+      [
+        44,
+        64
+      ]
+    ],
+    "restored_original_guide_blocks": [],
+    "restored_guide_connection_blocks": [],
+    "preservation_reason": "keep approved head and original boots/sole placement unchanged; only middle painting region accepts the independent edit"
+  }
+]

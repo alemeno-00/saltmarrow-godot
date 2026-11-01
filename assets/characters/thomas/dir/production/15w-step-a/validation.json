@@ -1,6 +1,6 @@
 {
   "job": "15-W step A",
-  "status": "PENDING JULIAN APPROVAL",
+  "status": "APPROVED BY JULIAN 2026-11-01",
   "frames": [
     {
       "frame": 1,
@@ -74,5 +74,7 @@
     ],
     "keys_pass": true,
     "scope": "Only keys1,3,5,7 painted; QA-only temporary sheet uses unchanged supplied guides for2,4,6,8. No runtime sheet delivered."
-  }
+  },
+  "approval_text": "yeah they look good",
+  "scope": "Historical Step A key-only audit; full delivery is ../15w-step-b/validation.json"
 }
