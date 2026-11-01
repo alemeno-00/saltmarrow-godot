@@ -193,7 +193,7 @@ These come first because the first fight is being built next. **Please do jobs 1
     differ, also run by `tests/test_rig.gd`). **Switched on in the game** (2026-10-31): Thomas walks, stands, sneaks
     and limps facing south on the new parts; other directions keep the old art until job 15; F8 swaps to the old
     art to compare. Waiting on Julian's in-game approval of the walk, then job 15.
-- [ ] **15-W. Thomas's south walk, painted frame by frame over moving guides** (`assets/characters/thomas/dir/s.png`
+- [x] **15-W. Thomas's south walk, painted frame by frame over moving guides** (`assets/characters/thomas/dir/s.png`
   and `s_n.png`). Julian, 2026-10-31: the parts turning on the skeleton broke Thomas's pixels; he wants the look of
   the first painted sprites, with the whole body moving correctly. Everything is in
   `design/art-briefs/animation/walk-s/`; **`PROMPT.md` there is the prompt, word for word, with every frame's

@@ -1,0 +1,12 @@
+{
+  "checker": "unchanged tools/pose_guides/walk_guides.gd check",
+  "engine": "4.7.2-stable (official)",
+  "key_lines": [
+    "frame 1: outline 90%  ·  left sole row 74 (guide 74)  ·  right sole row 71 (guide 71)  ·  head 100% his own",
+    "frame 3: outline 88%  ·  left sole row 72 (guide 72)  ·  right sole row 74 (guide 74)  ·  head 100% his own",
+    "frame 5: outline 91%  ·  left sole row 71 (guide 71)  ·  right sole row 74 (guide 74)  ·  head 100% his own",
+    "frame 7: outline 90%  ·  left sole row 74 (guide 74)  ·  right sole row 72 (guide 72)  ·  head 100% his own"
+  ],
+  "keys_pass": true,
+  "scope": "Only keys1,3,5,7 painted; QA-only temporary sheet uses unchanged supplied guides for2,4,6,8. No runtime sheet delivered."
+}
