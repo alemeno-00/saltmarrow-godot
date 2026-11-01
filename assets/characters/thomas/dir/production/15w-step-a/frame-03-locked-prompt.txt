@@ -1,0 +1,31 @@
+Edit target: Image1, the exact320×320 supplied guide for frame3. Image2 is the approved standing model for face/costume identity. Image3 is this frame's anatomical colour key, not colours to paint into the result. There is no other pose to imitate.
+
+# Thomas, south walk: the prompt (ART_JOBS 15-W)
+
+Thomas walks towards the camera. Paint his walk in the look of the **first painted sprites**: hand-painted pixel art,
+the approved model's colours and detail (`assets/characters/thomas/rig/production/model-s.png`), the house style. His
+**whole body moves**: legs stepping, arms swinging against the legs, the body rising and falling, the coat swaying.
+
+**How, for every frame:**
+
+1. Open that frame of `guide_walk_s_4x.png` (320 × 320 a frame, 4 × the game's size). It is Thomas already in the
+   pose, made from the approved model's own pieces: every limb is where it must be, but rough where pieces turned.
+2. **Paint the frame over it at 4 ×,** as a clean painting of Thomas in exactly that pose: same outline, same
+   positions of the feet, hands, head and coat hem (within a pixel of the game's size, so 4 px at this size). Fix
+   every rough edge, doubled pixel and gap; make the folds of the coat follow the step.
+3. **Keep him the approved Thomas:** the same face and hair, the red scarf, the strap, satchel and lantern, the long
+   warm dark-brown coat. Paint **the head as in the model**: it barely changes between frames.
+4. **Left and right never swap.** In `key_walk_s_4x.png` his LEFT leg is red and LEFT arm orange, his RIGHT leg blue
+   and RIGHT arm cyan. Facing us, his left is on the picture's **right**. Each arm swings with the opposite leg.
+5. Paint each frame as **its own edit**, starting from its guide, never from the frame before (that is how the walk
+   drifted last time).
+6. Paint on a transparent background, 4 × 4 screen pixels for every game pixel, colours from the model. Then the
+   normal map the same way, over `guide_walk_s_n_4x.png`.
+
+
+**Frame 3 (key frame).** Compared with standing, his body is 1 px lower and 1 px further to the picture's right. His LEFT side (red leg, orange arm, on the picture's right): foot planted under him, sole flat on the floor at row 72; arm hanging straight. His RIGHT side (blue leg, cyan arm, on the picture's left): foot lifted 3 px and swinging forward, under him, sole at row 74; arm hanging straight.
+
+Work only on this ONE frame, independently. Preserve the entire target canvas and transparent margins. Do not zoom, recenter or enlarge the figure. The head's pixels already match the approved model: leave the head unchanged. Clean the rotated limb/coattail roughness and folds within4screen pixels of the supplied outline. Keep the long coat through mid-calf and retain both legs, individual boots, both hands, satchel, strap and lantern. Use flat4×4screen-pixel blocks per game pixel, never fine subpixel drawing, smoothing or dithering. No environment, floor, shadows, glow, lettering, panel border or guide colours in the painted result. A true transparent background. Return just the edited full320×320 frame, same position and framing.
+
+POSE LOCK: The edit target already contains the correct walk. Make only small local brushwork repairs along rotated pixels and folds. Do not re-imagine the figure, shift his weight, change a hand/boot size or move either boot. Keep the head, both feet and both hands literally at their target coordinates; leave them unchanged if necessary. Keep the separate left and right shin lengths from the guide. Preserve the empty alpha margin to the canvas bottom. The two boots are at different heights; do not exaggerate the depth/height difference. This is a pixel cleanup, not a new illustration.
+

@@ -1,0 +1,78 @@
+{
+  "job": "15-W step A",
+  "status": "PENDING JULIAN APPROVAL",
+  "frames": [
+    {
+      "frame": 1,
+      "size": [
+        80,
+        80
+      ],
+      "palette": "approved model only",
+      "outline_iou": 0.8980978260869565,
+      "guide_envelope_pixels": 1,
+      "head_and_boot_regions": "exact guide pixels",
+      "sha256": "560ffe32dec6565e25579ffeaa35981376c58d4c62e68151ed7dc4c987f184c7"
+    },
+    {
+      "frame": 3,
+      "size": [
+        80,
+        80
+      ],
+      "palette": "approved model only",
+      "outline_iou": 0.8779840848806366,
+      "guide_envelope_pixels": 1,
+      "head_and_boot_regions": "exact guide pixels",
+      "sha256": "86b5b6955b8f21b696997372b99caeb2fce2349a250a70389af4466f7867f0c2"
+    },
+    {
+      "frame": 5,
+      "size": [
+        80,
+        80
+      ],
+      "palette": "approved model only",
+      "outline_iou": 0.9102209944751382,
+      "guide_envelope_pixels": 1,
+      "head_and_boot_regions": "exact guide pixels",
+      "sha256": "5fa860f4fd662ec34a9aa582f56c3bb97e0a9fd7ca702f5324ab07b21a804acf"
+    },
+    {
+      "frame": 7,
+      "size": [
+        80,
+        80
+      ],
+      "palette": "approved model only",
+      "outline_iou": 0.904054054054054,
+      "guide_envelope_pixels": 1,
+      "head_and_boot_regions": "exact guide pixels",
+      "sha256": "f14cc5e0f598caa311caa25951a630dd026d8fd286e17ea1c87c9c48af69519e"
+    }
+  ],
+  "protected_files_unchanged": [
+    "assets/characters/thomas/rig/production/model-s.png",
+    "assets/characters/thomas/rig/production/model-s_n.png",
+    "assets/characters/thomas/rig/s.png",
+    "assets/characters/thomas/rig/s_n.png",
+    "assets/characters/thomas/production/sprites/standing-candidate.png",
+    "assets/characters/thomas/production/sprites/steady-portrait-candidate.png"
+  ],
+  "upstream_prompt_sha256": "933258b7bb844e5e0ef500314d716ac657c45a7046a2eecbf3f34aa80f81ceb5",
+  "runtime_sheet_delivered": false,
+  "in_between_frames_painted": false,
+  "normal_maps_painted": false,
+  "checker": {
+    "checker": "unchanged tools/pose_guides/walk_guides.gd check",
+    "engine": "4.7.2-stable (official)",
+    "key_lines": [
+      "frame 1: outline 90%  \u00b7  left sole row 74 (guide 74)  \u00b7  right sole row 71 (guide 71)  \u00b7  head 100% his own",
+      "frame 3: outline 88%  \u00b7  left sole row 72 (guide 72)  \u00b7  right sole row 74 (guide 74)  \u00b7  head 100% his own",
+      "frame 5: outline 91%  \u00b7  left sole row 71 (guide 71)  \u00b7  right sole row 74 (guide 74)  \u00b7  head 100% his own",
+      "frame 7: outline 90%  \u00b7  left sole row 74 (guide 74)  \u00b7  right sole row 72 (guide 72)  \u00b7  head 100% his own"
+    ],
+    "keys_pass": true,
+    "scope": "Only keys1,3,5,7 painted; QA-only temporary sheet uses unchanged supplied guides for2,4,6,8. No runtime sheet delivered."
+  }
+}
