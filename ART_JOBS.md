@@ -193,6 +193,24 @@ These come first because the first fight is being built next. **Please do jobs 1
     differ, also run by `tests/test_rig.gd`). **Switched on in the game** (2026-10-31): Thomas walks, stands, sneaks
     and limps facing south on the new parts; other directions keep the old art until job 15; F8 swaps to the old
     art to compare. Waiting on Julian's in-game approval of the walk, then job 15.
+- [ ] **15-W. Thomas's south walk, painted frame by frame over moving guides** (`assets/characters/thomas/dir/s.png`
+  and `s_n.png`). Julian, 2026-10-31: the parts turning on the skeleton broke Thomas's pixels; he wants the look of
+  the first painted sprites, with the whole body moving correctly. Everything is in
+  `design/art-briefs/animation/walk-s/`; **`PROMPT.md` there is the prompt, word for word, with every frame's
+  numbers.** In short:
+  - `guide_walk_s_4x.png`: eight frames, 320 × 320 each, of Thomas already in each pose of the walk (the approved
+    model's own pieces moved by the skeleton: legs stepping, arms swinging against them, body rising and falling).
+    Right in every position, rough where pieces turned. **Paint each frame over its guide at 4 ×**, as a clean
+    painting in the first sprites' look, keeping the outline, feet, hands and head where the guide has them.
+  - `key_walk_s_4x.png`: his LEFT leg red and arm orange, RIGHT leg blue and arm cyan (his left is on the picture's
+    right). Left and right never swap. Each frame is its own edit, started from its guide, never from the last frame.
+  - **Step A: the key frames 1, 3, 5, 7** (each foot down, each passing), for Julian to approve. **Step B:** frames
+    2, 4, 6, 8 between them.
+  - Shrink the 4 × row with the tool (it snaps every pixel to the model's colours), build `s.png` (row 1: the model
+    six times; row 2: the walk) and `s_n.png`, and run the check in `PROMPT.md`: it must print PASS (outline close to
+    the guide's, each sole on its own side and height, the head his own).
+  - The game then shows the painted walk facing south instead of the skeleton. The other directions follow the same
+    way once this one is approved.
 - [ ] **15. Thomas's parts sheets, all five directions** (`assets/characters/thomas/rig/se.png`, `e.png`, `ne.png`, `n.png`, with `_n` normal maps). After 15-R is approved, by the same two steps: a whole model sprite per direction, approved, then cut into parts. Templates: `design/art-briefs/animation/rig/template_<dir>.png`. The game then walks, stands, sneaks and limps him in every direction from these alone.
 - [ ] **16. Thomas fighting, in five directions** (`assets/characters/thomas/dir/<dir>_mace.png`). After 15. *May move to the skeleton (a maul part held in the hand) once 15 is in; Claude will say before you start.* Rows: maul wind-up (4), strike (3, one smear frame), recovery (4), critical overhead (10), hurt (4), pushed back (4), knocked prone (5), lying prone (2, looped), getting up (5). Brief as job 15.
 - [ ] **17. Normal maps** for the sheets in jobs 15 and 16: the same names with `_n` (`s_n.png`, `s_mace_n.png`), same frames, OpenGL normal colours (green up), rounded volumes. Then the Drowned Miner, the Faithful and Garrick get idle, walk, attack and hurt in five directions, with normal maps.

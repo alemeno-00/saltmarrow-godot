@@ -44,6 +44,12 @@ const HIP_TILT := 0.8      # px the hip over the swinging leg drops
 const WALK_TIME := 0.8     # s for a whole walk cycle (two steps) at full walking speed
 const IDLE_TIME := 2.4     # s for one breath
 
+# the painted walk (tools/pose_guides/walk_guides.gd): frames ChatGPT paints play straight after the standing frame,
+# with no easing between, so the body must stay near its standing height: shorter steps, knees nearly straight
+const PAINTED_STRIDE := 0.67
+const PAINTED_DROP := 1.0
+const PAINTED_BOB := 0.6
+
 # sneaking: crouched, short steps, leaning in
 const SNEAK_DROP := 4.0
 const SNEAK_STRIDE := 0.6
@@ -60,14 +66,16 @@ static func foot(q: float, stride := STRIDE, lift := LIFT) -> Vector2:
 	return Vector2(-stride + 2.0 * stride * smoothstep(0.0, 1.0, u), lift * sin(PI * u))
 
 
-## A walk, `t` (0-1) of the way through its cycle. `kind`: "walk", "sneak" (crouched) or "limp" (the left leg hurt:
-## a short step on it and a dip).
+## A walk, `t` (0-1) of the way through its cycle. `kind`: "walk", "sneak" (crouched), "limp" (the left leg hurt:
+## a short step on it and a dip) or "painted" (the walk ChatGPT paints frame by frame: short steps, the body near its
+## standing height).
 static func walk(t: float, kind := "walk") -> Dictionary:
-	var stride := STRIDE * (SNEAK_STRIDE if kind == "sneak" else 1.0)
+	var stride := STRIDE * ({"sneak": SNEAK_STRIDE, "painted": PAINTED_STRIDE}.get(kind, 1.0) as float)
 	var lift := LIFT * (0.6 if kind == "sneak" else 1.0)
 	var left := foot(t, stride * (0.55 if kind == "limp" else 1.0), lift)
 	var right := foot(t + 0.5, stride, lift)
-	var hip_y := HIP_Y - WALK_DROP - BOB * cos(4.0 * PI * (t - 0.125))
+	var drop := PAINTED_DROP if kind == "painted" else WALK_DROP
+	var hip_y := HIP_Y - drop - BOB * (PAINTED_BOB if kind == "painted" else 1.0) * cos(4.0 * PI * (t - 0.125))
 	if kind == "sneak":
 		hip_y -= SNEAK_DROP
 	if kind == "limp" and fposmod(t, 1.0) < 0.5:
