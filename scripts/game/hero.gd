@@ -16,7 +16,8 @@ func _ready() -> void:
 	sheet = Sheet.thomas()
 	dir_sheets = Sheet.thomas_dirs()
 	rig_parts = Rig.load_from("res://assets/characters/thomas/rig/")
-	rig = rig_parts if RIG_APPROVED else null
+	# painted walk frames (ART_JOBS 15-W, dir/s.png) take over from the skeleton for the directions they cover
+	rig = rig_parts if RIG_APPROVED and not dir_sheets.has("s") else null
 	is_hero = true
 
 
